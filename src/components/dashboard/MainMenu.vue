@@ -1,5 +1,5 @@
 <!-- Main menu component used within the dashboard
-Some buttons are disabled as functionality hasn't been added yet to 
+Some buttons are disabled as functionality hasn't been added yet to
 use some of these features.
  -->
 
@@ -25,6 +25,7 @@ use some of these features.
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     computed:{
@@ -54,7 +55,7 @@ export default {
                 window.clearTimeout(i)
             }
             try{
-                axios.post(logoutRoute)
+                axios.get(logoutRoute)
             }catch(error){
                 console.log(error)
             }
@@ -135,7 +136,7 @@ export default {
 
     .option-item{
         box-sizing:border-box;
-        margin: 0px 16px; 
+        margin: 0px 16px;
         font-weight: 600;
         font-size: 24px;
         position: relative;
