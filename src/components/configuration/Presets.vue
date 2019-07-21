@@ -46,7 +46,7 @@ export default {
                 plantSpecies:[],
             },
             humansonly:{
-                location:"none",
+                location:"mars",
                 duration:{type:"none",amount:'30',units:"day"},
                 humans:{type:"none",amount:2,units:""},
                 food:{type:"none",amount:'10000',units:""},
@@ -57,9 +57,9 @@ export default {
                 greenhouse:{type:"none",amount:'0',units:""},
                 plantSpecies:[],
             },
-        
+
             hybridone:{
-                location:"none",
+                location:"mars",
                 duration:{type:"none",amount:'90',units:"day"},
                 humans:{type:"none",amount:2,units:""},
                 food:{type:"none",amount:'10000',units:""},
@@ -71,7 +71,7 @@ export default {
                 plantSpecies:[{"type":"cabbage","amount":100}],
             },
             hybridtwo:{
-                location:"none",
+                location:"mars",
                 duration:{type:"none",amount:'90',units:"day"},
                 humans:{type:"none",amount:2,units:""},
                 food:{type:"none",amount:'10000',units:""},
@@ -83,7 +83,7 @@ export default {
                 plantSpecies:[{"type":"wheat","amount":100}],
             },
             hybridthree:{
-                location:"none",
+                location:"mars",
                 duration:{type:"none",amount:'90',units:"day"},
                 humans:{type:"none",amount:2,units:""},
                 food:{type:"none",amount:'10000',units:""},
@@ -95,7 +95,7 @@ export default {
                 plantSpecies:[{"type":"wheat","amount":100}],
             },
             hybridfour:{
-                location:"none",
+                location:"mars",
                 duration:{type:"none",amount:'90',units:"day"},
                 humans:{type:"none",amount:4,units:""},
                 food:{type:"none",amount:'10000',units:""},
