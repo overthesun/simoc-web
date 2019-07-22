@@ -30,7 +30,7 @@
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
-export default {   
+export default {
     data(){
         return{
             humans:undefined,
@@ -39,7 +39,7 @@ export default {
             eclss:undefined,
         }
     },
-    mounted:function(){
+    beforeMount:function(){
       //Get the values from the configuration that is initially set
         const {humans,food,crewQuarters,eclss} = this.getConfiguration
         this.humans = humans
@@ -77,7 +77,7 @@ export default {
             deep:true //Must be used if the watched value is an object.
         }
     }
-    
+
 }
 </script>
 

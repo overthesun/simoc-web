@@ -1,9 +1,9 @@
-<!-- This particular component has one job and that is to populate and create the PRESETS field at the top of the finalization screen. This would also be at the 
+<!-- This particular component has one job and that is to populate and create the PRESETS field at the top of the finalization screen. This would also be at the
 top of the expert(finalized screen only) configuration screen too. Selecting one of these will trigger the getConfiguration watcher in all configuration form components.
 
 Presets should really be stored within the database and retrieved similar to that of the plant names.
 
-Future version would also retrieve any saved configurations the user has saved either in cookies or under a user profile. 
+Future version would also retrieve any saved configurations the user has saved either in cookies or under a user profile.
 
 Future version should also automatically switch the selected preset to 'custom' if the current configuration doesn't match all field values within each configuration
 -->
@@ -21,11 +21,11 @@ Future version should also automatically switch the selected preset to 'custom' 
                     <option :value=hybridtwo>Hybrid Two</option>
                     <option :value=hybridthree>Hybrid Three</option>
                     <option :value=hybridfour>Hybrid Four</option>
-                    
+
                 </select>
             </div>
         </label>
-    </form>    
+    </form>
 </template>
 
 <script>

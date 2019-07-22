@@ -21,7 +21,7 @@
                 </select>
             </div>
         </label>
-    </form>    
+    </form>
 </template>
 
 <script>
@@ -33,7 +33,7 @@ export default {
             duration:undefined,
         }
     },
-    mounted:function(){
+    beforeMount:function(){
         //Get the values from the configuration that is initially set
         const {duration,location} = this.getConfiguration
         this.location = location
@@ -45,7 +45,7 @@ export default {
     methods:{
         ...mapMutations('wizard',['SETINITIAL']),
         ...mapMutations('wizard',['SETACTIVEREFENTRY']),
-        
+
 
         //Called when any of the field's values are changed, or input happens. Updates all related fields to the Initial form within the wizard store.
         setInitial:function(){

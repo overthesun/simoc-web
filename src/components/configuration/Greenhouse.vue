@@ -13,24 +13,24 @@
         <label class='input-wrapper'>
             <div class='input-title'  @click="SETACTIVEREFENTRY('PlantSpecies')">Plant Species</div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>The plants that will be growing in your greenhouse</div>
-            <!-- This is the row object for each plant entry within the wizard. v-for automatically rebuilds the fields if one is added or deleted. Index is used as a key to 
-            store which plant field has been updated within the configuration 
+            <!-- This is the row object for each plant entry within the wizard. v-for automatically rebuilds the fields if one is added or deleted. Index is used as a key to
+            store which plant field has been updated within the configuration
             -->
             <div class='input-plant-wrapper' v-for="(item,index) in plantSpecies" :key=index>
                 <select class='input-field-select' v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
                     <option value="none">None</option>
-                    <!-- create options for each plant species within plantValue. Formats them before displaying the. As the plantValue is used for the actual value of the field 
+                    <!-- create options for each plant species within plantValue. Formats them before displaying the. As the plantValue is used for the actual value of the field
                     for the configuration call. Unique plant names function would normally be called here to retrieve the unique names not already used.
                     -->
                     <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
                 </select>
                 <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-model="plantSpecies[index].amount" v-on:input="updatePlantSpecies(index)">
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
-                    <fa-icon :icon="['fas','plus-circle']" /> 
+                    <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)"> <!-- Deletes the object at the specicied key within the wizard store. -->
-                    <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7"/> 
+                    <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7"/>
                 </fa-layers>
             </div>
         </label>
@@ -50,14 +50,14 @@ export default {
             plantFormatted:[],
         }
     },
-    mounted(){
+    beforeMount(){
         const{plantSpecies,greenhouse} = this.getConfiguration //Get the values from the configuration that is initially set
 
         //If there isn't a plant present object in the configuration add at least one.
-        //This forces the above v-for to populate with at the very least one plant row. 
+        //This forces the above v-for to populate with at the very least one plant row.
         //This is done this way to prevent from having to duplicate the above HTML for the platns section for the single starting plant.
         if(plantSpecies.length <= 0){
-            this.ADDPLANTSPECIES() 
+            this.ADDPLANTSPECIES()
         }
 
         this.greenhouse = greenhouse
@@ -69,13 +69,13 @@ export default {
         ...mapGetters('wizard',['getConfiguration']),  // Gets the configuration from the store
         ...mapGetters(['getUseLocalHost']), //Do I use localhost or relative.
 
-        
+
     },
     methods:{
         ...mapMutations('wizard',['SETGREENHOUSE','ADDPLANTSPECIES','UPDATEPLANTSPECIES','REMOVEPLANTSPECIES']),
         ...mapMutations('wizard',['SETACTIVEREFENTRY']),
-        
-        //This method creates a new plant object within the wizard store. It also makes sure that the user 
+
+        //This method creates a new plant object within the wizard store. It also makes sure that the user
         // can't add more fields than there are options for plants.
         addPlantSpecies:function(){
             let {plantSpecies} = this.getConfiguration
@@ -86,7 +86,7 @@ export default {
                 this.ADDPLANTSPECIES()
             }
         },
-        
+
         //This method is used to update a plant at the specified index, updates the plant species and amount.
         //The index is passed in from the above v-for index key when the fields are created.
         //Indexes are repopulated on deletion of any row. Row 3 becomes 2 if row 2 is deleted. This is done
@@ -96,13 +96,13 @@ export default {
             //let amount = parseInt(this.plantSpecies[index].amount)
             let amount = this.plantSpecies[index].amount.toString()
             //const regex = RegExp('^/d+$')
-            
+
             plantSpecies.amount = amount
-            
+
             this.UPDATEPLANTSPECIES({'index':index,'plantSpecies':plantSpecies})
         },
 
-        //Set the greenhouse type within the wizard store. It also sets the default number of greenhouses to one 
+        //Set the greenhouse type within the wizard store. It also sets the default number of greenhouses to one
         //if any type other than 'none' is selected. Plants are not included as they do their own thing differently than other form elemetns.
         setGreenhouse:function(){
             this.greenhouse.amount = this.greenhouse.type == "none" ? 0 : 1
@@ -132,7 +132,7 @@ export default {
             })
 
             console.log(plantTypes)
-            
+
 
             let selectedOptions = currentOption != null ? plantTypes.filter(x => !currentOption.includes(x)) : plantTypes
             let uniqueOptions = this.plantNames.filter(x => !selectedOptions.includes(x))
@@ -150,11 +150,11 @@ export default {
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(" ")
 
-            this.plantFormatted.push(formatted)           
+            this.plantFormatted.push(formatted)
         },
 
-        //Call the '/get_agent_types' route to retrieve all agents with the class of plants. 
-        //This is used to populate the selection field for the plant species. Stored within the plantValue array on 
+        //Call the '/get_agent_types' route to retrieve all agents with the class of plants.
+        //This is used to populate the selection field for the plant species. Stored within the plantValue array on
         //OK code.
 
         //this method should also be switch over to the try/catch block of similar route calls. Simply to reduce the callback hell look.
@@ -174,7 +174,7 @@ export default {
                         this.plantValue.push(name)
                         //console.log(this.formatPlantName(name))
                         this.formatPlantName(name)
-                        
+
                     })
                 }
             }).catch(error=>{

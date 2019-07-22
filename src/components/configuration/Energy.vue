@@ -18,7 +18,7 @@
             <div class='input-description'>Really big batteries, impossibly good storage</div>
             <input class='input-field-number' v-model="storage.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
         </label>
-    </form>    
+    </form>
 </template>
 
 <script>
@@ -30,14 +30,14 @@ export default {
             storage:undefined,
         }
     },
-    mounted:function(){
+    beforeMount:function(){
         const {powerGeneration,powerStorage} = this.getConfiguration
         this.generator = powerGeneration
         this.storage = powerStorage
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        
+
     },
     methods:{
         ...mapMutations('wizard',['SETENERGY']),
