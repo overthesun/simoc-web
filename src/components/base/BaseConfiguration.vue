@@ -106,12 +106,11 @@ export default {
         //Route function for logging the user out. Called from within the wizard menu
         logout: async function(){
             const localHost = "http://localhost:8000"
-            const path = "/logout"            
+            const path = "/logout"
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
 
             try{
-                axios.post(logoutRoute)
-                this.$router.push("entry")
+                axios.get(logoutRoute)
             }catch(error){
                 console.log(error)
             }
