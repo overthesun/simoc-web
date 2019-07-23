@@ -47,7 +47,7 @@ export default {
             const localHost = "http://localhost:8000"
             const path = "/logout"
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
-            
+
             this.SETTIMERID = null
             this.SETBUFFERCURRENT = 1
             this.SETBUFFERMAX = 1
@@ -104,7 +104,7 @@ export default {
         padding:16px;
         box-sizing:border-box;
         display:flex;
-        justify-content:start-flex;
+        justify-content:flex-start;
         align-items:center;
         flex-direction:column;
     }
