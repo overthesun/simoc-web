@@ -6,14 +6,14 @@
         <BaseEntry>
             <template v-slot:option-items>
                 <div class='option-item option-item-active'> MAIN MENU </div>
-            </template>            
+            </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
-                <button form='login-form' class='btn-normal btn-disabled'>LOAD SESSION</button>               
-            </template>       
+                <button form='login-form' class='btn-normal btn-disabled'>LOAD SESSION</button>
+            </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
-                    <button form='login-form' class='btn-warning'>LOG OUT</button>
+                    <button form='login-form' class='btn-warning' @click="logout">Log Out</button>
                 </div>
             </template>
             <template v-slot:entry-footer>
@@ -51,11 +51,11 @@ export default {
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
 
             try{
-                axios.post(logoutRoute)
-                this.$router.push("entry")
+                axios.get(logoutRoute)
             }catch(error){
                 console.log(error)
             }
+            this.$router.push("entry")
         }
     }
 }
