@@ -150,7 +150,7 @@ export default {
 
     .line-item{
         font-size: 18px;
-        font-weight: 600px;
+        font-weight: 600;
     }
 
     .plant-wrapper{
