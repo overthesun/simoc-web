@@ -46,16 +46,16 @@ export default {
             }
 
             return data
-            
+
         },
     },
 
     watch:{
-        getSteNumber:function(){
+        getStepNumber:function(){
             this.chart.data.labels =[]
             this.chart.data.labels = this.graphData.types
             this.chart.data.datasets[0].data.pop()
-            this.chart.data.datasets[0].data = this.graphData.amounts            
+            this.chart.data.datasets[0].data = this.graphData.amounts
             this.chart.update()
         },
 
