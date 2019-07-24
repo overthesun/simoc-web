@@ -60,4 +60,28 @@ export default {
 
 <style lang="scss" scoped>
 
+    .panel-graph{
+        position:relative;
+    }
+
+    .panel-graph-gauge{
+        display:grid;
+        grid-template-columns: repeat(3,1fr);
+        grid-template-rows: repeat(2,1fr);
+        grid-row-gap: 16px;
+        grid-column-gap: 16px;
+    }
+
+    .gauge-wrapper{
+        display:grid;
+        grid-template-rows: minmax(0px,1fr) 24px;
+        grid-row-gap: 8px;
+        text-align:center;
+    }
+
+    .gauge-text{
+        font-size:18px;
+        font-weight: 400;
+    }
+
 </style>
