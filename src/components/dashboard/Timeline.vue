@@ -34,24 +34,26 @@ export default {
     computed:{
         ...mapGetters('dashboard',['getStepBuffer','getTimerID','getForcedPause']),
         ...mapGetters('wizard',['getTotalMissionHours'])
-        
+
     },
     methods:{
         ...mapMutations('dashboard',['SETTIMERID','SETBUFFERCURRENT']),
 
-        //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user 
+        //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user
         //interactives with the timeline.
         pauseBuffer:function(){
-            this.getTimerID.pause()
+            if (this.getTimerID != null) {
+                this.getTimerID.pause()
+            }
         },
 
         //If the user has set the slider to a new value, reset everything to the new step.
         //Remember pause actually kills the old timer within the stepTimer.js
         updateBuffer:function(){
-            this.SETBUFFERCURRENT(parseInt(this.currentStep))            
+            this.SETBUFFERCURRENT(parseInt(this.currentStep))
 
             //Create a new timer object once the user has deselected the indicator
-            //The interval also needs to be stored universally to allow this to create a 
+            //The interval also needs to be stored universally to allow this to create a
             //new timer object with the last used speed.
             let stepTimer = new StepTimer( () => {
                 let {max} = this.getStepBuffer

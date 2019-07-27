@@ -49,6 +49,7 @@ export default{
         },
         terminated:false,
         timerID:undefined,
+        getStepsTimerID:undefined,
         forcedPause:false,
         isTimerRunning:false,
         menuActive:false
@@ -57,19 +58,20 @@ export default{
         getMenuActive:(state) => state.menuActive,
         getStepParams:(state) => state.parameters,
         getStepBuffer:(state) => state.stepBuffer,
-    
+
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
         getTotalAgentMass: state => stepNumber => state.totalAgentMass[stepNumber],
         getTotalProduction: state => stepNumber => state.totalProduction[stepNumber],
         getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
-        getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],  
+        getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
         getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
 
         getTerminated: state => state.terminated,
-        
+
         getUpdateTimer: state => state.updateTimer,
         getTimerID: state => state.timerID,
+        getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state =>state.isTimerRunning,
         getForcedPause: state => state.forcedPause, //Used for menus and such when the range bar absolute must not have input
     },
@@ -94,10 +96,13 @@ export default{
         SETTIMERID:function(state,value){
             state.timerID = value
         },
+        SETGETSTEPSTIMERID:function(state,value){
+            state.getStepsTimerID = value
+        },
 
         SETTERMINATED:function(state,value){
             state.terminated = value
-        },  
+        },
         //Is the step_timer already been created and running initiall?
         SETISTIMERRUNNING:function(state,value){
             state.isTimerRunning = value
@@ -105,10 +110,13 @@ export default{
         SETGAMEID:function(state,value){
             state.parameters.game_id = value
         },
-        //This is used for the starting step of get_step batches. Updated after every get_step call
         SETMINSTEPNUMBER:function(state,value){
+            state.parameters.min_step_num = value
+        },
+        //This is used for the starting step of get_step batches. Updated after every get_step call
+        UPDATEMINSTEPNUMBER:function(state,value){
             let {step_num:step} = value
-            state.parameters.min_step_num = Math.max(step,state.parameters.min_step_num) 
+            state.parameters.min_step_num = Math.max(step,state.parameters.min_step_num)
         },
         //This is used for the number of steps to grab from get_step_to, after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS:function(state,value){
@@ -117,10 +125,14 @@ export default{
         },
         //This is used for the max value of the current number of steps currently in the buffer.
         SETBUFFERMAX:function(state,value){
+            state.stepBuffer.max = value
+        },
+        //This is used for the max value of the current number of steps currently in the buffer.
+        UPDATEBUFFERMAX:function(state,value){
             let {step_num:step} = value
             state.stepBuffer.max = Math.max(step,state.stepBuffer.max)
         },
-        //The current step the simulation is displaying. 
+        //The current step the simulation is displaying.
         SETBUFFERCURRENT:function(state,value){
             state.stepBuffer.current = value
         },
@@ -173,9 +185,9 @@ export default{
                 commit('SETAGENTTYPE',item)
                 commit('SETTOTALAGENTMASS',item)
                 commit('SETSTORAGERATIOS',item)
-                commit('SETBUFFERMAX',item)
+                commit('UPDATEBUFFERMAX',item)
                 commit('SETNSTEPS',item)
-                commit('SETMINSTEPNUMBER',item)
+                commit('UPDATEMINSTEPNUMBER',item)
                 //commit('SETTERMINATED',item)
             })
         },

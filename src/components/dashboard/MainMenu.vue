@@ -16,6 +16,7 @@ use some of these features.
             <main class='main-menu'>
                 <button class='btn-normal btn-disabled'>Reset Session</button>
                 <button class='btn-normal' @click="toConfiguration">New Simulation</button>
+                <button class='btn-normal' @click="stopSimulation">Stop Simulation</button>
                 <button class='btn-normal btn-disabled'>Save Session</button>
                 <button class='btn-outline-warning' @click="close">Close Menu</button>
                 <button class='btn-warning btn-logout'  @click="logout">Log Out</button>
@@ -29,31 +30,54 @@ import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     computed:{
-        ...mapGetters('dashboard',['getTimerID']),
+        ...mapGetters('dashboard',['getTimerID', 'getGetStepsTimerID']),
         ...mapGetters(['getUseLocalHost']),
 
 
     },
     methods:{
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETBUFFERCURRENT','SETBUFFERMAX']),
+        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','SETISTIMERRUNNING']),
 
+        // Called when the menu is closed, resumes the timer
         close:function(){
             this.SETMENUACTIVE(false)
-            this.getTimerID.resume()
+            if (this.getTimerID != null) {
+                this.getTimerID.resume()
+            }
         },
+        // Stop Simulation button, this stops the timers and the simulation
+        stopSimulation: async function() {
+            const localHost = "http://localhost:8000"
+            const path = "/kill_all_games"
+            const killRoute = this.getUseLocalHost ? localHost + path : path
 
-        //Logout button route, this should reset and kill all timers and reset all step / timer related values to their defaults within the store.
+            // stop timers that updates the dashboard
+            if (this.getTimerID != null) {
+                this.getTimerID.stop()
+                this.SETTIMERID(null)
+            }
+            // stop timer that sends requests to get_steps
+            if (this.getGetStepsTimerID != null) {
+                window.clearTimeout(this.getGetStepsTimerID)
+                this.SETGETSTEPSTIMERID(null)
+            }
+            // stop the simulation
+            this.SETISTIMERRUNNING(false)
+            this.SETTERMINATED(true)
+
+            try{
+                axios.post(killRoute)
+            }catch(error){
+                console.log(error)
+            }
+            console.log('Simulation stopped.')
+        },
+        // Logout button route
         logout: async function(){
             const localHost = "http://localhost:8000"
             const path = "/logout"
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
-
-            this.SETTIMERID = null
-            this.SETBUFFERCURRENT = 1
-            this.SETBUFFERMAX = 1
-            for(let i=0; i<100; i++){
-                window.clearTimeout(i)
-            }
+            this.stopSimulation()
             try{
                 axios.get(logoutRoute)
             }catch(error){
@@ -62,14 +86,9 @@ export default {
             this.$router.push("entry")
         },
 
-        //To New Simulation button route, this should reset and kill all timers and reset all step / timer related values to their defaults within the store.
+        // New Simulation button
         toConfiguration: async function(){
-            for(let i=0; i<100; i++){
-                window.clearTimeout(i)
-            }
-            this.SETTIMERID = null
-            this.SETBUFFERCURRENT = 1
-            this.SETBUFFERMAX = 1
+            this.stopSimulation()
             this.$router.push("configuration")
         }
     }
