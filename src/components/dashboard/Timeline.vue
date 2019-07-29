@@ -1,15 +1,15 @@
-<!-- Timeline component 
-There is an issues with this that causes the stepTimer to resume once the user slides the timeline indicator to a new place. It will override the current state of the timer. 
-A condition needs to be added in if the timer is paused by some other means than just by the timeline indicator methods 
+<!-- Timeline component
+There is an issues with this that causes the stepTimer to resume once the user slides the timeline indicator to a new place. It will override the current state of the timer.
+A condition needs to be added in if the timer is paused by some other means than just by the timeline indicator methods
 -->
 
 <template>
         <div class='timeline-wrapper'>
-<!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">    
+<!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
             -->
             <div class='timeline-item timeline-text'>{{getStepBuffer.current}}</div>
             <span class='timeline-item'>
-                <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >    
+                <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
             <div class='timeline-item timeline-text'>{{getTotalMissionHours}}</div>
         </div>
@@ -63,7 +63,7 @@ export default {
 
             this.SETTIMERID(stepTimer) // Set the new timer ID to the dashboard store
             this.getTimerID.resume() // Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
-            
+
         }
     },
     watch:{

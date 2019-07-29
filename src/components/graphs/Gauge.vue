@@ -16,7 +16,7 @@ See chart.js documentation for further explantion of below fucntionality.
 <script>
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex' 
+import {mapState,mapGetters} from 'vuex'
 export default {
     props:{
         id:String,
@@ -33,9 +33,9 @@ export default {
         //...mapGetters('stepData',['getStepNumber'])
     },
 
-    watch:{      
+    watch:{
         //Update the chart datasets and labels when the step buffer has changed.
-        //This actually causes a bug where charts are updated even when just the 'max' is 
+        //This actually causes a bug where charts are updated even when just the 'max' is
         //updated within the object. This needs to be changed to watch just the step number only to prevent
         //uncessary updates as seen currently in the energy versus chart.
         getStepBuffer:{
@@ -102,7 +102,7 @@ export default {
                     ctx.restore();
                     var fontSize = (height/144).toFixed(2);
                     ctx.font = fontSize + "em sans-serif";
-                    ctx.textBaseline = "bottom";                  
+                    ctx.textBaseline = "bottom";
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),

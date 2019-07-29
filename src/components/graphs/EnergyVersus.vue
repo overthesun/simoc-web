@@ -1,7 +1,7 @@
 <!--
 Energy versus chart component used within the dashboard.
 
-Updates values from the approriate step data getters when it sees an updated value within the 
+Updates values from the approriate step data getters when it sees an updated value within the
 getStepBuffer object. This causes the bug that makes the line chart 'crawl' during the initial buffering period.
 
 See chart.js documentation for further details on the related mounted functions.
@@ -24,7 +24,7 @@ export default {
 
     watch:{
         //Update the chart datasets and labels when the step buffer has changed.
-        //This actually causes a bug where charts are updated even when just the 'max' is 
+        //This actually causes a bug where charts are updated even when just the 'max' is
         //updated within the object. This needs to be changed to watch just the step number only to prevent
         //uncessary updates as seen currently in the energy versus chart.
         getStepBuffer:{

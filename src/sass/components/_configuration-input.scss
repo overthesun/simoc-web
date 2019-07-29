@@ -6,7 +6,7 @@
 .input-wrapper{
     width:100%;
     height:auto;
-    min-height:96px;    
+    min-height:96px;
     display:grid;
     grid-template-rows: auto minmax(16px,auto) 36px;
     grid-row-gap: 12px;
@@ -55,7 +55,7 @@
     border-radius: 8px;
     border:none;
     box-sizing: border-box;
-    font-weight: 600;       
+    font-weight: 600;
 }
 
 .input-field-select{
@@ -65,5 +65,5 @@
     border-radius:8px;
     border:none;
     box-sizing:border-box;
-    font-weight: 600; 
+    font-weight: 600;
 }

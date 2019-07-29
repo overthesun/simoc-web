@@ -1,9 +1,9 @@
-<!-- Component to house all graphs related to the reference sectoin of the wizard. This component would have a 
+<!-- Component to house all graphs related to the reference sectoin of the wizard. This component would have a
 similar functionality to that of the reference wiki. Table of contents to select which graph is active.
 -->
 
 <template>
-        <GreenhouseDoughnut/>   
+        <GreenhouseDoughnut/>
 </template>
 
 <script>

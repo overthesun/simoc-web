@@ -5,11 +5,11 @@
         <BaseEntry>
             <template v-slot:option-items>
                 <div class='option-item option-item-active'> CONFIGURATION MENU </div>
-            </template>            
+            </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form='login-form' class='btn-normal btn-disabled' @click="toExpert">EXPERT CONFIGURATION</button>                
-            </template>       
+                <button form='login-form' class='btn-normal btn-disabled' @click="toExpert">EXPERT CONFIGURATION</button>
+            </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
                     <button form='login-form' class='btn-warning' @click="toMainMenu">MAIN MENU</button>
@@ -30,7 +30,7 @@ import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 
-export default {  
+export default {
     components:{
         'BaseEntry':BaseEntry,
     },

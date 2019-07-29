@@ -1,16 +1,16 @@
 <!--
-This component is the base component for creating the configuration wizard view. The slots within are 
+This component is the base component for creating the configuration wizard view. The slots within are
 used to populate the various sections with the approriate component passed in via the 'ConfigurationView' component.<template>
-The plan was that by configuring the base component in this way that the layout could be used for future features such as 
-payload creator, greenhouse editor, etc for within the dashboard. With a fimiliar layout, and only the need to populate the slots with the 
-approriate filler. A number of modifications would be needed to modify things like the title, and the configuration 
+The plan was that by configuring the base component in this way that the layout could be used for future features such as
+payload creator, greenhouse editor, etc for within the dashboard. With a fimiliar layout, and only the need to populate the slots with the
+approriate filler. A number of modifications would be needed to modify things like the title, and the configuration
 menu button being present on other unrelated configurations.
  -->
 
 <template>
     <div class='configuration-wrapper' >
-        <!-- 
-            Uses absolute positioning and overflow-hidden to remain off screen when not active 
+        <!--
+            Uses absolute positioning and overflow-hidden to remain off screen when not active
             Uses class-binding to the menuActive variable to toggle displaying the menu.
         -->
         <section class='menu-wrapper ' :class="{'menu-wrapper-active': menuActive}">
@@ -39,10 +39,10 @@ menu button being present on other unrelated configurations.
                 </div>
             </header>
             <nav class='navigation-wrapper'>
-                <slot name='navigation-section-select'></slot>                
+                <slot name='navigation-section-select'></slot>
             </nav>
             <main class='main main-wizard'>
-                <slot name='main-wizard-input'></slot>           
+                <slot name='main-wizard-input'></slot>
             </main>
             <footer class='footer'>
                 <slot name='wizard-configuration-footer'></slot>
@@ -74,7 +74,7 @@ menu button being present on other unrelated configurations.
                 <slot name='footer-wizard-reference'></slot>
             </footer>
         </section>
-    </div>    
+    </div>
 </template>
 
 <script>
@@ -140,13 +140,13 @@ export default {
         top: 0;
         left:100%;
         z-index:10;
-        transition: left .3s ease; 
+        transition: left .3s ease;
         display:grid;
-        grid-template-rows: 32px 1fr;        
+        grid-template-rows: 32px 1fr;
         grid-row-gap: 88px;
         padding:16px;
         box-sizing:border-box;
-    
+
         &-active{
             left:50%
         }
@@ -165,13 +165,13 @@ export default {
         padding:16px;
         background-color:#1e1e1e;
         box-sizing:border-box;
-    
+
 
     }
 
     .wizard-wrapper,.reference-wrapper{
         display:grid;
-        grid-template-rows: 32px 32px minmax(0,1fr) 48px;        
+        grid-template-rows: 32px 32px minmax(0,1fr) 48px;
         grid-row-gap: 32px;
     }
 
@@ -240,7 +240,7 @@ export default {
         &:focus{
             outline:none;
         }
-    
+
         option{
             font-size: 16px;
             color:#1e1e1e;
@@ -259,7 +259,7 @@ export default {
         align-items:center;
         font-size:24px;
         font-weight:600;
-    }    
+    }
 
     .main-wizard{
         min-height:0;
@@ -380,5 +380,5 @@ export default {
             outline:none;
         }
     }
-   
+
 </style>

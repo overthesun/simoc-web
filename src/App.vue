@@ -48,8 +48,8 @@ export default {
     width: 100vw;
     height: 100vh;
     min-width: 600px;
-    //position: relative;  
-  
+    //position: relative;
+
     display:flex;
     justify-content:center;
     align-items:center;

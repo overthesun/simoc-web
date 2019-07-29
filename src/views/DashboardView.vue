@@ -1,6 +1,6 @@
 <template>
     <div class='base-dashboard-wrapper'>
-        <router-view>            
+        <router-view>
         </router-view>
     </div>
 </template>
@@ -43,7 +43,7 @@ export default {
         this.SETTIMERID(stepTimer) // The timer is set within the dashboard store
         //This sets the get_step paramter for the totalAgentMass filter. This should actually be done
         //in tandem with the configuration wizard plant updates.
-        this.SETPLANTSPECIESPARAM(this.getConfiguration) 
+        this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
 
 

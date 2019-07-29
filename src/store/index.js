@@ -9,7 +9,7 @@ export default new Vuex.Store({
         useLocalHost:true,
         localHost:"http://localhost:8000",
         gameID:""
-    },  
+    },
     mutations: {
         SETGAMEID:function(state,value){
             state.gameID = value

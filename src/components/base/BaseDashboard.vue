@@ -1,10 +1,10 @@
-<!-- This component is incomplete, as such there are no slots added currently for the addition of 
+<!-- This component is incomplete, as such there are no slots added currently for the addition of
 future dashboard views
 -->
 
 <template>
     <div class='dashboard-wrapper'>
-        <MainMenu v-if="getMenuActive" /> <!-- Menu component for the dashboard. Uses a simple v-if statement to show the menu active or hidden. 
+        <MainMenu v-if="getMenuActive" /> <!-- Menu component for the dashboard. Uses a simple v-if statement to show the menu active or hidden.
         <!--<section class='toolbar-wrapper'></section>-->
         <section class='main-wrapper'>
             <Main/>
@@ -25,18 +25,18 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
     components:{
         "Timeline":Timeline,
-        "Controls":Controls, 
+        "Controls":Controls,
         "Main":Main,
         "MainMenu":MainMenu
     },
     computed:{
-        ...mapGetters('dashboard',['getMenuActive']) 
+        ...mapGetters('dashboard',['getMenuActive'])
     },
     methods:{
 
         ...mapMutations('dashboard',['SETMENUACTIVE','SETTERMINATED','SETISTIMERRUNNING','SETTIMERID'])
     }
-    
+
 }
 </script>
 

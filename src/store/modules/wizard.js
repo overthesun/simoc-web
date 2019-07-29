@@ -6,7 +6,7 @@
 
 export default{
     state:{
-        //Default configuration 
+        //Default configuration
         configuration:{
             location:"none",
             duration:{type:"none",amount:'0',units:"none"},
@@ -32,18 +32,18 @@ export default{
 
 
         //This method converts the total mission time to hours regardless of the units selected.
-        // As one step = one hour. 
+        // As one step = one hour.
         getTotalMissionHours:function(state){
             let totalHours = 0
             let durationLength = state.configuration.duration.amount
             let durationUnits = state.configuration.duration.units
-        
+
             if(durationUnits === 'day'){
                 totalHours = durationLength * 24
-            
+
             } else if(durationUnits == 'year'){
                 totalHours = durationLength * 8760
-            
+
             } else{
                 totalHours = durationLength
             }
@@ -53,7 +53,7 @@ export default{
 
         //Returns a formatted configuration object in the format required by the backend.
         getFormattedConfiguration:function(state){
-             
+
             let config = {
                 duration:{value:parseInt(state.configuration.duration.amount),type:state.configuration.duration.units},
                 human_agent:{amount:parseInt(state.configuration.humans.amount)},
@@ -62,7 +62,7 @@ export default{
                 power_storage:{amount:parseInt(state.configuration.powerStorage.amount)},
                 eclss:{amount:parseInt(state.configuration.eclss.amount)},
                 single_agent:1,
-                plants:new Array()                
+                plants:new Array()
             }
 
             state.configuration.plantSpecies.forEach(element =>{
@@ -78,7 +78,7 @@ export default{
             if(state.configuration.crewQuarters.type != 'none'){
                 config['habitat'] = state.configuration.crewQuarters.type
             }
-        
+
             return config
         }
     },
@@ -88,8 +88,8 @@ export default{
             state.configuration = value
         },
         SETINITIAL:function(state,value){
-            const {location,duration} = value 
-            state.configuration.location = location 
+            const {location,duration} = value
+            state.configuration.location = location
             state.configuration.duration = duration
         },
         SETINHABITANTS:function(state,value){
@@ -115,7 +115,7 @@ export default{
         //Updates the plant at the index with the new values
         UPDATEPLANTSPECIES:(state,value) => {
             const {index,plantSpecies} = value
-            state.configuration.plantSpecies[index] = plantSpecies  
+            state.configuration.plantSpecies[index] = plantSpecies
         },
         //Removes the plant at the index
         REMOVEPLANTSPECIES:(state,value)=>{
@@ -123,7 +123,7 @@ export default{
             const arrLength = state.configuration.plantSpecies.length
 
             if(arrLength > 1){
-                state.configuration.plantSpecies.splice(index,1) 
+                state.configuration.plantSpecies.splice(index,1)
             } else if( length === 1){
                 state.configuration.plantSpecies[0] = {type:"",amount:""}
             }
@@ -133,7 +133,7 @@ export default{
         },
         SETACTIVEREFENTRY:(state,value)=>{
             state.activeRefEntry = value
-            state.activeReference = 'Reference' // This is set here so I don't have to call it on every link. 
+            state.activeReference = 'Reference' // This is set here so I don't have to call it on every link.
             //It is redundant for the table of contents navigation.
         }
     }

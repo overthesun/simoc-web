@@ -7,7 +7,7 @@
 import Chart from 'chart.js';
 import axios from 'axios'
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex' 
+import {mapState,mapGetters} from 'vuex'
 export default {
     data(){
         return{
@@ -34,7 +34,7 @@ export default {
             let species = this.getPlantSpecies
             let amounts = []
             let types = []
-            
+
             species.forEach((item) =>{
                 amounts.push(item.amount)
                 types.push(item.type)
@@ -81,26 +81,26 @@ export default {
             this.chart.data.labels =[]
             this.chart.data.labels = this.graphData.types
             this.chart.data.datasets[0].data.pop()
-            this.chart.data.datasets[0].data = this.graphData.amounts            
+            this.chart.data.datasets[0].data = this.graphData.amounts
             this.chart.update()
         }
     },
 
 
-    mounted(){        
+    mounted(){
         const ctx = document.getElementById("canvas");
         this.chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: [1,2,3],
-                    datasets: [{ 
+                    datasets: [{
                         lineTension: 0,
                         data: [],
                         label: "Produced",
                         borderColor: "#00aaee",
                         backgroundColor: "#00aaee",
                         fill:false,
-                    }, { 
+                    }, {
                         lineTension: 0,
                         data: [0,0,0,0,0,0,0,0,0,0,0],
                         label: "Consumed",
@@ -113,9 +113,9 @@ export default {
                     responsive: true,
                     maintainAspectRatio:false,
                     legend: {
-                        display:false, 
+                        display:false,
                         position: 'top',
-                        
+
                     },
                     title: {
                         display:false,
@@ -152,19 +152,19 @@ export default {
                     }
                 }
             });
-        
+
         /*new Chart(ctx, {
 				type: 'bar',
                 data: {
                     labels: [1,2,3],
-                    datasets: [{ 
+                    datasets: [{
                         lineTension: 0,
                         data: [],
                         label: "Produced",
                         borderColor: "#00aaee",
                         backgroundColor: "#00aaee",
                         fill:false,
-                    }, { 
+                    }, {
                         lineTension: 0,
                         data: [0,0,0,0,0,0,0,0,0,0,0],
                         label: "Consumed",
@@ -191,7 +191,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    
+
     canvas{
         top: 0;
         right: 0;

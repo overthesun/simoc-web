@@ -1,22 +1,22 @@
 <template>
     <div class='entry-wrapper'>
         <!-- This sectoin uses absolute positioning and overflow:hidden on the parent to hide it from the user.
-        class binding is used to display / hide the warning.  v-if will simply display it or not, and will not activate the 
-        animation for displaying or hiding 
+        class binding is used to display / hide the warning.  v-if will simply display it or not, and will not activate the
+        animation for displaying or hiding
         -->
         <div class='warning-wrapper' :class="{'warning-active': activeWarning}">
             <fa-icon class='fa-icon dismiss-icon' :icon="['fas','times']" @click="dismissWarning"/>
             <div class='warning-item' v-for="(item,index) in activeWarnings" :key="index">
                 <!-- removed because of missing pro-light-svg-icon dependency <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
                 {{activeWarnings[index]}}
-            </div>     
+            </div>
         </div>
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
                 <div class='option-item' :class="{'option-item-active' : 'login'===activeOption}" @click="activateOption('login')"> SIGN IN </div>
                 <div class='option-item' :class="{'option-item-active' : 'register'===activeOption}" @click="activateOption('register')"> SIGN UP </div>
-            </template>            
+            </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
                 <form @submit.prevent="loginUser" id='login-form' class='entry-form entry-form-login' :class="{'entry-form-active' : 'login'===activeOption}">
@@ -28,7 +28,7 @@
                     <input v-model="register.password" type='password' class='input-field-text' placeholder="Enter Password"/>
                     <input v-model="register.confirmPassword" type='password' class='input-field-text' placeholder="Confirm Password"/>
                 </form>
-            </template>       
+            </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
                 <div class='btn-wrapper btn-wrapper-login' :class="{'btn-wrapper-active' : 'login'===activeOption}">
@@ -50,7 +50,7 @@
 import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-export default {  
+export default {
     components:{
         'BaseEntry':BaseEntry,
     },
@@ -97,12 +97,12 @@ export default {
             //If no warning were present pass in the username object to the register route.
             if(!this.activeWarning){
                 const {username,password} = this.register
-                
+
                 const params = {
                     'username':username,
                     'password':password
                 }
-                
+
                 await this.entryHandler(params,'/register') //Attempt the route
             }
         },
@@ -132,13 +132,13 @@ export default {
             const target = this.getUseLocalHost ? localHost + route : route
             axios.post(target,params).then(response => {
                 const {status} = response
-                
+
                 if(status === 200){
                     this.$router.push('menu')
                 }
             }).catch(error => {
                 const {status} = error.response
-                
+
                 if(status === 401){
                     this.activeWarnings.push("Login Error")
                     this.activeWarning = true
@@ -162,20 +162,20 @@ export default {
 
             return true
         },
-        
-        //Disabled due to too heavy of restrictions 
+
+        //Disabled due to too heavy of restrictions
         //SImply returns true if not empty
         verifyUsername:function(){
             const {username} = this.register
             const userRegex = RegExp('^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$');
-            
+
             if(username.length <= 0){
                 return false
-            } 
+            }
 
-            return true//userRegex.test(username);            
+            return true//userRegex.test(username);
         },
-        //Disabled due to too heavy of restrictions 
+        //Disabled due to too heavy of restrictions
         //SImply returns true if not empty
         verifyPassword:function(){
             const {password,confirmPassword} = this.register
@@ -185,7 +185,7 @@ export default {
                 return false
             }
 
-           
+
             return true//(passRegex.test(password) && passRegex.test(confirmPassword));
         },
 
@@ -209,7 +209,7 @@ export default {
         },
 
         //Used to activate which section the user is under Sign In or Sign Up
-        //Called from the above options sections within the HTMl, passes in the 
+        //Called from the above options sections within the HTMl, passes in the
         //name value of the section that should have the active class.
         activateOption:function(string){
             this.activeOption = string

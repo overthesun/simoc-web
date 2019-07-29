@@ -1,4 +1,4 @@
-<!-- Greenhouse Doughnut Graph 
+<!-- Greenhouse Doughnut Graph
 
 Updates and uses the values from the greenhouse and the plant species within the wizard store to populate the graph values. Currently
 has enough color values for up to 30 plants.
@@ -39,7 +39,7 @@ export default {
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getStepBuffer']),
-        
+
 
         /*
         No longer used
@@ -48,7 +48,7 @@ export default {
             let {greenhouse,plantSpecies} = this.getConfiguration
             let amounts = []
             let types = []
-            
+
             let totalUsed = 0
 
             plantSpecies.forEach((item) =>{
@@ -65,7 +65,7 @@ export default {
             }
 
             return data
-        }*/            
+        }*/
     },
 
     methods:{
@@ -73,9 +73,9 @@ export default {
 
         greenhouseConfiguration:function(){
             const {greenhouse,plantSpecies} = this.getConfiguration // get the plants and greehouse from the configuration
-            let values ={data:[this.greenhouseSize[greenhouse.type]],labels:["Free Space"]} // Set the first value of the dataset to the size of the greenhouse and add the label free space               
+            let values ={data:[this.greenhouseSize[greenhouse.type]],labels:["Free Space"]} // Set the first value of the dataset to the size of the greenhouse and add the label free space
             plantSpecies.forEach((item)=>{
-                values.data[0] = Math.max(0,values.data[0] - item.amount) //Calculates the total free space left after all the plants are added, modifies the first index initialized above. 
+                values.data[0] = Math.max(0,values.data[0] - item.amount) //Calculates the total free space left after all the plants are added, modifies the first index initialized above.
                 values.data.push(item.amount) //Push in the amount of the plant that is present.
                 //values.labels.push(this.stringFormatter(item.type))
                 values.labels.push(StringFormatter(item.type)) //format the plant name string for display
@@ -93,7 +93,7 @@ export default {
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(" ")
 
-            return formatted   
+            return formatted
         }
     },
     watch:{
@@ -107,8 +107,8 @@ export default {
                 this.chart.data.labels =[]
                 this.chart.data.labels = labels
                 this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data    
-                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"        
+                this.chart.data.datasets[0].data = data
+                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
                 this.chart.update()
             },
             deep:true
@@ -183,7 +183,7 @@ export default {
                     ctx.restore();
                     var fontSize = (height/300).toFixed(2);
                     ctx.font = fontSize + "em sans-serif";
-                    ctx.textBaseline = "bottom";                  
+                    ctx.textBaseline = "bottom";
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),

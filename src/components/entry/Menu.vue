@@ -30,7 +30,7 @@
 import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-export default {  
+export default {
     components:{
         'BaseEntry':BaseEntry,
     },

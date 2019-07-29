@@ -14,14 +14,14 @@
         <span class='icon-wrapper'>
             <fa-icon class='fa-icon menu-icon' :icon="['fas','forward']" @click="increaseStepsPerSecond"/>
         </span>
-    </div>    
+    </div>
 </template>
 
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
     data(){
-        return{ 
+        return{
             isPaused:false,
             stepInterval:1000,
         }
@@ -36,7 +36,7 @@ export default {
             this.getTimerID.pause()
         },
         //Calls the resume method on the timer object stored within the dashboard store.
-        resumeTimer:function(){            
+        resumeTimer:function(){
             this.isPaused = false
             this.getTimerID.resume()
         },
@@ -71,7 +71,7 @@ export default {
     }
 
     .icon-play{
-        font-size: 36px;    
+        font-size: 36px;
         &:hover{
             font-size:42px;
         }

@@ -37,12 +37,12 @@
                 </keep-alive>
                 <!--<Reference/>-->
                 <!--<GreenhouseDoughnut/>-->
-            </template>  
+            </template>
             <template v-slot:footer-wizard-reference>
-            </template>         
+            </template>
         </router-view>
     </div>
-        
+
 </template>
 
 <script>
@@ -67,7 +67,7 @@ export default {
             formIndex:0, //Current index of the form that should be used from the wizard store
             activeForm:"Initial", //Default starting form
             menuActive:false, //Used with class binding to display the menu.
-            stepMax:1, 
+            stepMax:1,
             greenhouseSize:{
                 'none':0,
                 'greenhouse_small':490,
@@ -96,7 +96,7 @@ export default {
     },
     methods:{
         ...mapMutations(['SETGAMEID']),
-        
+
 
         toggleMenu:function(){
             this.menuActive = !this.menuActive
@@ -110,18 +110,18 @@ export default {
         },
 
         decrementIndex:function(){
-            let index = Math.max(0,(this.formIndex-1))      
+            let index = Math.max(0,(this.formIndex-1))
             this.formIndex = index
         },
 
-        incrementIndex:function(){            
+        incrementIndex:function(){
             let max = this.getFormLength-1
-            this.formIndex = Math.min(max,(this.formIndex+1))       
+            this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
         finalizeConfiguration:async function(){
             const configParams = {game_config:this.getFormattedConfiguration} //Get the formatted configuration from wizard store
-            const localHost = "http://localhost:8000" 
+            const localHost = "http://localhost:8000"
             const path ="/new_game"
             const configurationRoute = this.getUseLocalHost ? localHost + path : path
 
@@ -243,4 +243,3 @@ export default {
         }
     }
 </style>
-    

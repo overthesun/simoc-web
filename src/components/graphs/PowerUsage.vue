@@ -7,7 +7,7 @@
 import axios from 'axios'
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex' 
+import {mapState,mapGetters} from 'vuex'
 export default {
 
     data(){
@@ -55,7 +55,7 @@ export default {
                 this.energyConsumption.plantSpecies = 0
                 this.plantSpecies.forEach((element)=>{
                     if(element.type != null && element.amount > 0){
-                        this.retrievePower(element.type,element.amount,(response)=>{                            
+                        this.retrievePower(element.type,element.amount,(response)=>{
                             let {energy_input} = response
                             this.energyConsumption.plantSpecies += energy_input
                         })
@@ -71,7 +71,7 @@ export default {
                     let {energy_input} = response
                     this.energyConsumption.crewQuarters = energy_input
                 })
-               
+
             },
             deep:true
         },
@@ -105,10 +105,10 @@ export default {
                     let {energy_input} = response
                     this.energyConsumption.greenhouse = energy_input
                 })
-            },  
+            },
             deep:true
         },
-        
+
     },
 
     methods:{
@@ -140,13 +140,13 @@ export default {
     },
 
     mounted(){
-        
+
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    
+
     canvas{
         top: 0;
         right: 0;

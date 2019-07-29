@@ -4,21 +4,21 @@
 
 //Step data - broken doewn into objects based on filter type. These can be accessed via the below getters.
 //The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
-// agentCount | totalAgentMass | totalProduction | totalConsumption | storageRatio 
+// agentCount | totalAgentMass | totalProduction | totalConsumption | storageRatio
 
-//stepBuffer - This actually needs to be broken down into individual pieces for each value, and refactored in the 
+//stepBuffer - This actually needs to be broken down into individual pieces for each value, and refactored in the
 //called places to the approriate variable. A number of watcher functions within components reference this for updating various data points
 //such as panels and charts.
 
-//Timer ID - this is used to pause, resume, speed controls or kill the setTimeout object within. SEE stepTimer.js within js folder for 
+//Timer ID - this is used to pause, resume, speed controls or kill the setTimeout object within. SEE stepTimer.js within js folder for
 //further details.
 
 //Termination flag - Universally accessible point to check if the simulation has terminated.
 
 //ACTIONS
-//ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that 
+//ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
 //it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
-//So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two 
+//So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
 //different step objects
 
 //To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
@@ -27,7 +27,7 @@ export default{
     state:{
         parameters:{
             "game_id":undefined,
-            "min_step_num": 1, 
+            "min_step_num": 1,
             "n_steps": 10,
             "total_agent_count":["human_agent"],
             "total_agent_mass":[],
@@ -35,7 +35,7 @@ export default{
             "total_consumption":["atmo_o2","h2o_potb","enrg_kwh"],
             "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
             "parse_filters":[],
-            "single_agent":1,                
+            "single_agent":1,
         },
 
         agentCount:{1:{"human_agent":0}},
@@ -83,8 +83,8 @@ export default{
             state.menuActive = value
         },
 
-        // Starts the step timer. This object is actually created within the 
-        // DashboardView component on mounted. The timer is not started until the conditions 
+        // Starts the step timer. This object is actually created within the
+        // DashboardView component on mounted. The timer is not started until the conditions
         // are met for a reasonable buffer amount.
         STARTTIMER:function(state,value){
             //if((state.stepBuffer.max >= 100 || state.terminated ) && !state.isTimerRunning){
@@ -151,7 +151,7 @@ export default{
 
             state.totalConsumption[step] = total_consumption
         },
-        SETTOTALPRODUCTION:function(state,value){            
+        SETTOTALPRODUCTION:function(state,value){
             let {step_num:step} = value
             let {total_production} = value
 
@@ -164,9 +164,9 @@ export default{
             state.storageRatio[step] = storage_ratios
         },
 
-        //Populates the parameters object with the selected plants from the 
+        //Populates the parameters object with the selected plants from the
         //configuration wizard. This should actually called and updated similar to how the
-        //wizard store updates its plants list on the fly. 
+        //wizard store updates its plants list on the fly.
         SETPLANTSPECIESPARAM:function(state,value){
             let {plantSpecies} = value
 

@@ -20,7 +20,7 @@ export default {
         height: 600px;
         max-height: 600px;
         background-color: #1e1e1e;
-        
+
         box-sizing:border-box;
         padding: 16px;
 

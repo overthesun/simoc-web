@@ -14,7 +14,7 @@ to prevent uncessary duplication as additional planels are created.
                 <select class='panel-select' v-model="activePanel[index]"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
                     <option selected disabled>Jump To Section</option>
                     <option value="MissionInformation">Mission Information</option>
-                    <option value="MissionConfiguration">Mission Configuration</option>                    
+                    <option value="MissionConfiguration">Mission Configuration</option>
                     <option value="PlantGrowth">Greenhouse Plant Growth</option>
                     <option value="EnergyVersus" >Energy Versus - Graph</option>
                     <option value="GreenhouseConfig" >Greenhouse Configuration - Graph</option>
@@ -50,7 +50,7 @@ export default {
     },
     components:{
         'BasePanel':BasePanel,
-        
+
         //Graph components imported to be used within the panels.
         'EnergyVersus':EnergyVersus,
         //'Gauge':Gauge,
@@ -78,7 +78,7 @@ export default {
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(" ")
 
-            return formatted   
+            return formatted
         }
     }
 }
@@ -90,7 +90,7 @@ export default {
     .dashboard-view-wrapper{
         width:100%;
         height:100%;
-        padding: 16px; 
+        padding: 16px;
         box-sizing:border-box;
 
         display: grid;

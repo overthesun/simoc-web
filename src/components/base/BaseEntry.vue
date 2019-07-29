@@ -10,7 +10,7 @@
             <slot name="option-items"></slot>
         </div>
         <main class='main'>
-            <slot name='entry-main'></slot>           
+            <slot name='entry-main'></slot>
         </main>
         <div class='entry-button-wrapper'>
             <slot name='entry-button'></slot>
@@ -75,7 +75,7 @@ export default {
     .warning-active{
         top:0px;
     }
-    
+
     .header{
         display:flex;
         justify-content:center;
@@ -103,7 +103,7 @@ export default {
 
     .option-item{
         box-sizing:border-box;
-        margin: 0px 16px; 
+        margin: 0px 16px;
         font-weight: 600;
         font-size: 24px;
         position: relative;
@@ -129,7 +129,7 @@ export default {
         }
     }
 
-    .main{        
+    .main{
         box-sizing:border-box;
         width:100%;
         height:100%;
@@ -195,7 +195,7 @@ export default {
         height: 48px;
         min-height:48px;
         margin-top: auto;
-        border-radius: 24px; 
+        border-radius: 24px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
