@@ -72,7 +72,7 @@ export default {
                     {
                         lineTension: 0,
                         data: Array(24),
-                        label: 'Produced',
+                        label: 'Consumed',
                         borderColor: "#cd0000",
                         fill: false
                     }
