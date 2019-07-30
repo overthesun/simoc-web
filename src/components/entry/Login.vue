@@ -81,43 +81,46 @@ export default {
     },
     methods:{
 
-    //On registration make sure the username + password meet the criteria before attempting to register.
-    //Warnings cannot be active before attempting login.
-    registerUser: async function(){
-            this.activeWarning = false;
-
-            const usernameRegex = await this.verifyUsername()
-            const passwordRegex = await this.verifyPassword()
-            const passwordMatch = await this.verifyPasswordMatch()
-            if(!usernameRegex) {this.activeWarnings.push("Username Regex")}
-            if(!passwordRegex) {this.activeWarnings.push("Password Regex")}
-            if(!passwordMatch) {this.activeWarnings.push("Password Match")}
-            if(this.activeWarnings.length > 0) {this.activeWarning = true} //If any warnings were added from the above set the state.
-
-            //If no warning were present pass in the username object to the register route.
-            if(!this.activeWarning){
-                const {username,password} = this.register
-
-                const params = {
-                    'username':username,
-                    'password':password
-                }
-
-                await this.entryHandler(params,'/register') //Attempt the route
+        // On registration make sure the username + password meet the criteria before attempting to register.
+        // Warnings cannot be active before attempting login.
+        registerUser: async function() {
+            this.dismissWarning()  // clear existing warnings before starting
+            // check criteria
+            const usernameIsValid = await this.verifyUsername()
+            const passwordIsValid = await this.verifyPassword()
+            const passwordsMatch = await this.verifyPasswordMatch()
+            if (!usernameIsValid) {
+                this.addWarning(
+                    'Invalid Username: can only contain letters, ' +
+                    'numbers, underscores (_), dashes (-), dots (.), ' +
+                    'and must be at least 4 characters long.')
+            }
+            if (!passwordIsValid) {
+                this.addWarning('Invalid Password: must be at least 8 characters long.')
+            }
+            if (!passwordsMatch) {
+                this.addWarning('Confirmation password does not match.')
+            }
+            // if no warnings were present pass in the username object to the register route
+            if (!this.activeWarning) {
+                const {username, password} = this.register
+                const params = {'username': username, 'password': password}
+                await this.entryHandler(params, '/register')  // Attempt the route
             }
         },
 
         //Login the user if the criteria is met.
-        loginUser: async function(){
-            this.activeWarning = false;
+        loginUser: async function() {
+            this.dismissWarning()
             const loginCorrect = await this.verifyLogin()
 
-            if(!loginCorrect) {this.activeWarnings.push("Login Error")}
-            if(this.activeWarnings.length > 0) {this.activeWarning = true}
+            if (!loginCorrect) {
+                this.addWarning("Invalid username or password")
+            }
 
-            if(loginCorrect){
+            if (loginCorrect) {
                const params = this.user
-               await this.entryHandler(params,'/login') //Atempt the route
+               await this.entryHandler(params,'/login')  // Attempt the route
             }
         },
 
@@ -132,9 +135,8 @@ export default {
             const target = this.getUseLocalHost ? localHost + route : route
             axios.post(target,params).then(response => {
                 const {status} = response
-                if (response.data.status == 'ERROR'){
-                    this.activeWarnings.push("Login Error: " + response.data.message)
-                    this.activeWarning = true
+                if (response.data.status == 'ERROR') {
+                    this.addWarning('Error: ' + response.data.message)
                 }
                 else if(status === 200){
                     // this is currently always true
@@ -143,81 +145,58 @@ export default {
             }).catch(error => {
                 // this branch is currently unused because the server always returns 200
                 const {status} = error.response
-
-                if(status === 401){
-                    this.activeWarnings.push("Login Error")
-                    this.activeWarning = true
+                if (status === 401) {
+                    this.addWarning("Login Error")
                 }
-
-                if(status === 409){
-                    console.log("Username Unavailable")
-                    this.activeWarnings.push("Username Unavailable")
-                    this.activeWarning = true
+                if (status === 409) {
+                    this.addWarning("Username Unavailable")
                 }
             })
         },
 
         //Make sure that the password and username are at least not empty before proceeding.
-        verifyLogin:function(){
+        verifyLogin: function() {
             const {username,password} = this.user
-
-            if(username.length < 0 || password.length < 0){
-                return false
-            }
-
-            return true
+            return username.length > 0 && password.length > 0
         },
 
-        //Disabled due to too heavy of restrictions
-        //SImply returns true if not empty
-        verifyUsername:function(){
+        verifyUsername: function() {
             const {username} = this.register
-            const userRegex = RegExp('^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$');
-
-            if(username.length <= 0){
-                return false
-            }
-
-            return true//userRegex.test(username);
+            const userRegex = RegExp('^[a-zA-Z0-9_.-]{4,}$')
+            return userRegex.test(username)
         },
-        //Disabled due to too heavy of restrictions
-        //SImply returns true if not empty
-        verifyPassword:function(){
-            const {password,confirmPassword} = this.register
-            const passRegex = RegExp('(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9].*[0-9])(?=.*[^a-zA-Z0-9]).{8,}');
-
-            if(password.length <= 0 || confirmPassword.length <= 0){
-                return false
-            }
-
-
-            return true//(passRegex.test(password) && passRegex.test(confirmPassword));
+        verifyPassword: function() {
+            const {password} = this.register
+            const passRegex = RegExp('.{8,}')
+            return passRegex.test(password)
         },
 
         //Verifies that both the password field and confirm field match and neither is empty
         //Returns the solved boolean value
-        verifyPasswordMatch:function(){
-            const {password,confirmPassword} = this.register
-
-            if(password.length <= 0 || confirmPassword.length <= 0){
-                return false
-            }
-
+        verifyPasswordMatch: function() {
+            const {password, confirmPassword} = this.register
             return password === confirmPassword
+        },
+
+        // add a warning and set the state to true
+        addWarning: function(warningsMsg) {
+            this.activeWarnings.push(warningsMsg)
+            this.activeWarning = true
         },
 
         //Called when the user closes the warning message popup.
         //Clears all warning entries.
-        dismissWarning:function(string){
-            this.activeWarning = false
+        dismissWarning: function() {
             this.activeWarnings = []
+            this.activeWarning = false
         },
 
         //Used to activate which section the user is under Sign In or Sign Up
         //Called from the above options sections within the HTMl, passes in the
         //name value of the section that should have the active class.
-        activateOption:function(string){
-            this.activeOption = string
+        activateOption: function(sectionName) {
+            this.dismissWarning()
+            this.activeOption = sectionName
         },
     }
 }
@@ -296,12 +275,11 @@ export default {
         top:-256px;
         z-index:99;
         height: auto;
-        min-height:96px;
         max-height:256px;
         width:100%;
         background-color:#ff3100;
         transition: top .3s ease;
-        padding:16px;
+        padding:10px;
         box-sizing:border-box;
         border-bottom: 1px solid #eee;
         display:flex;
