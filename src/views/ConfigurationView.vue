@@ -127,7 +127,7 @@ export default {
 
             try{
                 const response = await axios.post(configurationRoute,configParams) //Wait for the new game to be created
-                const gameID = response.data //store the game ID from the response
+                const gameID = response.data.game_id //store the game ID from the response
                 this.SETGAMEID(gameID)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
             }catch(error){

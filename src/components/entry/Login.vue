@@ -132,11 +132,16 @@ export default {
             const target = this.getUseLocalHost ? localHost + route : route
             axios.post(target,params).then(response => {
                 const {status} = response
-
-                if(status === 200){
+                if (response.data.status == 'ERROR'){
+                    this.activeWarnings.push("Login Error: " + response.data.message)
+                    this.activeWarning = true
+                }
+                else if(status === 200){
+                    // this is currently always true
                     this.$router.push('menu')
                 }
             }).catch(error => {
+                // this branch is currently unused because the server always returns 200
                 const {status} = error.response
 
                 if(status === 401){

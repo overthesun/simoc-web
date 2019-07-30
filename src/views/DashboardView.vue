@@ -89,7 +89,7 @@ export default {
                 let getStepsTimerID = setTimeout( async () =>{
                     try{
                         const response = await axios.post(getStepsRoute,stepParams)  // Grab the batch of steps
-                        this.updateStepBuffer(response)  // Call the function that will parse and reset the timer
+                        this.updateStepBuffer(response.data.step_data)  // Call the function that will parse and reset the timer
                     }catch(error){
                         console.log(error)
                     }
@@ -98,9 +98,9 @@ export default {
             }
         },
 
-        updateStepBuffer: async function(response){
+        updateStepBuffer: async function(step_data){
             //Add in termination condition check
-            await this.parseStep(Object.values(response.data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
+            await this.parseStep(Object.values(step_data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
 
             //If the max of the buffer size is at the end, turn on the terminated condition
             if(this.getStepBuffer.max >= parseInt(this.getTotalMissionHours)){
