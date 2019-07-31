@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss">
   body{
-    font-family:'open sans';
+    font-family: "Open Sans", sans-serif;
 
     padding: 0px;
     margin: 0px;
