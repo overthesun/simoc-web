@@ -13,7 +13,7 @@
                 {{getConfiguration.plantSpecies[index].amount}}
             </div>
             <div class='line-item' style="text-align:right;">
-                {{getTotalAgentMass(getStepBuffer.current)[getConfiguration.plantSpecies[index].type].value + "%"}}
+                {{getTotalAgentMassPerc(index)}}
             </div>
         </section>
     </div>
@@ -28,6 +28,15 @@ export default {
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
     },
     methods:{
+        getTotalAgentMassPerc: function(index) {
+            let totalAgentMass = this.getTotalAgentMass(this.getStepBuffer.current)
+            if (totalAgentMass === undefined) {
+                return '[loading data...]'
+            }
+            else {
+                return totalAgentMass[this.getConfiguration.plantSpecies[index].type].value + "%"
+            }
+        },
         stringFormatter: function(value){
             let formatted = ""
 
