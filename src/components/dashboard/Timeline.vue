@@ -7,11 +7,14 @@ A condition needs to be added in if the timer is paused by some other means than
         <div class='timeline-wrapper'>
 <!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
             -->
-            <div class='timeline-item timeline-text'>{{getStepBuffer.current}}</div>
+            <div class='timeline-item timeline-text'>{{formatHours(getStepBuffer.current-1)}}</div>
             <span class='timeline-item'>
                 <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
-            <div class='timeline-item timeline-text'>{{getTotalMissionHours}}</div>
+            <div class='timeline-item timeline-text'
+                 :title="formatHours(getStepBuffer.current-1) + '/' + formatHours(getTotalMissionHours)">
+              {{getStepBuffer.current}}/{{getTotalMissionHours}}
+            </div>
         </div>
 </template>
 
@@ -34,11 +37,16 @@ export default {
     computed:{
         ...mapGetters('dashboard',['getStepBuffer','getTimerID','getForcedPause']),
         ...mapGetters('wizard',['getTotalMissionHours'])
-
     },
     methods:{
         ...mapMutations('dashboard',['SETTIMERID','SETBUFFERCURRENT']),
 
+        // the step starts at 1, so make sure to pass getStepBuffer.current-1
+        formatHours: function (totalHours) {
+            let days = Math.floor(totalHours/24)
+            let hours = totalHours%24
+            return days + 'd ' + hours + 'h'
+        },
         //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user
         //interactives with the timeline.
         pauseBuffer:function(){
