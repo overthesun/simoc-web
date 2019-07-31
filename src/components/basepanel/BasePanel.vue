@@ -80,17 +80,6 @@ export default {
         font-weight: 600;
     }
 
-    .plant-wrapper{
-        display:grid;
-        grid-template-rows: repeat(auto-fill,minmax(32px,1fr));
-        grid-template-columns: minmax(0px,1fr);
-        grid-row-gap: 4px;
-        font-size: 14px;
-
-        *{
-            margin: auto 0px;
-        }
-    }
 
 
 
