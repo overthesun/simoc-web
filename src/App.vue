@@ -18,9 +18,11 @@ export default {
 
 
 <style lang="scss">
+  /* Use Roboto for the dashboard, Open Sans for everything else */
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Roboto:100,300,400,500,700,900&display=swap');
+
   body{
     font-family: "Open Sans", sans-serif;
-
     padding: 0px;
     margin: 0px;
     background-image:url('./assets/mars-bg.jpg');
