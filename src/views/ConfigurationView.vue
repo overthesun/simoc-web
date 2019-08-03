@@ -76,8 +76,9 @@ export default {
             },
         }
     },
-    mounted:function(){
-        this.activeForm = this.getActiveForm(this.formIndex)
+    beforeMount:function(){
+        this.RESETCONFIG()
+        this.activeForm = this.getActiveForm
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration','getActiveForm','getFormLength','getFormattedConfiguration']),
@@ -95,7 +96,7 @@ export default {
         },
     },
     methods:{
-        ...mapMutations('wizard',['SETACTIVEFORMINDEX']),
+        ...mapMutations('wizard',['RESETCONFIG','SETACTIVEFORMINDEX']),
         ...mapMutations(['SETGAMEID']),
 
 
