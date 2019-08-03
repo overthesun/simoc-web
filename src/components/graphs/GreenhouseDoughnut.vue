@@ -35,7 +35,6 @@ export default {
             backgroundColor:["#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"]
         }
     },
-
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getStepBuffer']),
@@ -84,13 +83,21 @@ export default {
             return values
         },
         updateChart: function(){
-            console.log('updateChart called')
             const {greenhouse,plantSpecies} = this.getConfiguration
             const {data,labels} = this.greenhouseConfiguration()
-            this.chart.data.labels = labels
-            this.chart.data.datasets[0].data.pop()
-            this.chart.data.datasets[0].data = data
-            this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
+            this.chart.data.labels = labels  // labels are always visible
+            // only show the text if the greenhouse type is none
+            if (greenhouse.type === 'none') {
+                this.chart.data.datasets[0].data = []
+                var text = 'No Greenhouse Type Selected'
+            }
+            // otherwise show both the doughnut and the text
+            else {
+                this.chart.data.datasets[0].data.pop()
+                this.chart.data.datasets[0].data = data
+                var text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
+            }
+            this.chart.options.elements.centerText.text = text
             this.chart.update()
         },
         //Format the plant names before displaying them.
@@ -148,7 +155,7 @@ export default {
                         borderWidth: 0
                     },
                     centerText:{
-                        text:"Greenhouse Doughnut Calculating",
+                        text: '',
                     }
                 },
                 legend:{
@@ -191,6 +198,7 @@ export default {
                 }
             }]
         })
+    this.updateChart()  // this will set the center text and other things
     }
 }
 

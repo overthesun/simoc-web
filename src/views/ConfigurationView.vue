@@ -141,7 +141,6 @@ export default {
         //If the active form changes update the activeForm variable with the one at the formIndex
         getActiveForm:{
             handler:function(){
-                console.log('getActiveForm changed')
                 this.activeForm = this.getActiveForm
             },
             deep:true
@@ -150,7 +149,6 @@ export default {
         //Mostly used for when either the buttons or the select menu or used to navigate
         formIndex:{
             handler:function(){
-                console.log('SETACTIVEFORMINDEX is', this.SETACTIVEFORMINDEX)
                 this.SETACTIVEFORMINDEX(this.formIndex)
                 this.activeForm = this.getActiveForm
             }

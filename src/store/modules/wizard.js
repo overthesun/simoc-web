@@ -120,7 +120,6 @@ export default{
             }
         },
         SETACTIVEFORMINDEX:(state,value)=>{
-            console.log('setting activeFormIndex to', value)
             state.activeFormIndex = value
         },
         SETACTIVEREFERENCE:(state,value)=>{
@@ -132,7 +131,6 @@ export default{
             //It is redundant for the table of contents navigation.
         },
         RESETCONFIG: function(state) {
-            console.log('RESETCONFIG called')
             state.configuration = {
                 location: "none",
                 duration: {type:"none", amount:'0', units:"none"},
