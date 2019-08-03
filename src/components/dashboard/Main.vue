@@ -88,6 +88,7 @@ export default {
 
 
     .dashboard-view-wrapper{
+        font-family: "Roboto", sans-serif;
         width:100%;
         height:100%;
         padding: 16px;
