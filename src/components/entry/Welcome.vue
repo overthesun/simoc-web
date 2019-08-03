@@ -77,6 +77,7 @@ export default {
     }
 
     .welcome-paragraph{
+        font-family: "Open Sans", sans-serif;
         &:not(:last-of-type){
             margin-bottom:12px;
         }

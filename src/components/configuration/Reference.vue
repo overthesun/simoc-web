@@ -304,6 +304,7 @@ export default {
     }
 
     .reference-item{
+        font-family: "Open Sans", sans-serif;
         margin-right: 16px;
     }
 

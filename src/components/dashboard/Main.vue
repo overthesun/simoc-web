@@ -88,6 +88,7 @@ export default {
 
 
     .dashboard-view-wrapper{
+        font-family: "Roboto", sans-serif;
         width:100%;
         height:100%;
         padding: 16px;
@@ -147,36 +148,6 @@ export default {
         font-size: 14px;
         font-weight: 200;
     }
-
-    .line-item{
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .plant-wrapper{
-        display:grid;
-        grid-template-rows: repeat(auto-fill,minmax(32px,1fr));
-        grid-template-columns: minmax(0px,1fr);
-        grid-row-gap: 4px;
-        font-size: 14px;
-
-        *{
-            margin: auto 0px;
-        }
-    }
-
-    .plant-row-wrapper{
-        display:grid;
-        grid-template-columns: minmax(0px,1fr) minmax(0px,1fr) minmax(0px,1fr);
-        grid-column-gap: 8px;
-    }
-
-    .section-title{
-        font-size: 14px;
-        text-decoration: underline;
-        font-weight: 200;
-    }
-
     .gauge-wrapper{
         display:grid;
         grid-template-rows: minmax(0px,1fr) 24px;

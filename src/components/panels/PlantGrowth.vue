@@ -1,22 +1,24 @@
 <template>
-    <div class='plant-wrapper'>
-        <section class='plant-row-wrapper'>
-            <span class='section-title'>Plant Species</span>
-            <span class='section-title' style="text-align:center;">Qty</span>
-            <span class='section-title' style="text-align:right;">% of Growth</span>
-        </section>
-        <section class='plant-row-wrapper' v-for="(item,index) in getConfiguration.plantSpecies" :key="index">
-            <div class='line-item' >
-                {{stringFormatter(getConfiguration.plantSpecies[index].type)}}
-            </div>
-            <div class='line-item' style="text-align:center;">
-                {{getConfiguration.plantSpecies[index].amount}}
-            </div>
-            <div class='line-item' style="text-align:right;">
-                {{getTotalAgentMassPerc(index)}}
-            </div>
-        </section>
-    </div>
+  <section class="plant-growth-wrapper">
+      <table class="plant-growth">
+          <tr>
+              <th>Plant Species</th>
+              <th>Qty</th>
+              <th>% of Growth</th>
+          </tr>
+          <tr v-for="(item,index) in getConfiguration.plantSpecies" :key="index">
+              <td >
+                  {{stringFormatter(getConfiguration.plantSpecies[index].type)}}
+              </td>
+              <td>
+                  {{getConfiguration.plantSpecies[index].amount}}
+              </td>
+              <td>
+                  {{getTotalAgentMassPerc(index)}}
+              </td>
+          </tr>
+      </table>
+  </section>
 </template>
 
 
@@ -34,7 +36,7 @@ export default {
                 return '[loading data...]'
             }
             else {
-                return totalAgentMass[this.getConfiguration.plantSpecies[index].type].value + "%"
+                return totalAgentMass[this.getConfiguration.plantSpecies[index].type].value.toExponential(3) + "%"
             }
         },
         stringFormatter: function(value){
@@ -54,9 +56,25 @@ export default {
 
 
 <style lang="scss" scoped>
-    .plant-row-wrapper{
-        display:grid;
-        grid-template-columns: minmax(0px,1fr) minmax(0px,1fr) minmax(0px,1fr);
-        grid-column-gap: 8px;
-    }
+.plant-growth-wrapper {
+    overflow-y: auto;
+}
+.plant-growth {
+    width: 100%;
+}
+.plant-growth th,
+.plant-growth td {
+    text-align: center;
+    padding: 2px 0;
+}
+
+.plant-growth th:first-child,
+.plant-growth td:first-child {
+    text-align: left;
+}
+.plant-growth th:last-child,
+.plant-growth td:last-child {
+    text-align: right;
+}
+
 </style>
