@@ -25,7 +25,8 @@ export default{
     },
     getters:{
         getConfiguration: state => state.configuration,
-        getActiveForm: state => index => state.formOrder[index],
+        getActiveFormIndex: state => state.activeFormIndex,
+        getActiveForm: state => state.formOrder[state.activeFormIndex],
         getActiveReference: state => state.activeReference,
         getActiveRefEntry: state => state.activeRefEntry,
         getFormLength: state => state.formOrder.length,
@@ -127,6 +128,10 @@ export default{
             } else if( length === 1){
                 state.configuration.plantSpecies[0] = {type:"",amount:""}
             }
+        },
+        SETACTIVEFORMINDEX:(state,value)=>{
+            console.log('setting activeFormIndex to', value)
+            state.activeFormIndex = value
         },
         SETACTIVEREFERENCE:(state,value)=>{
             state.activeReference = value
