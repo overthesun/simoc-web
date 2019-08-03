@@ -72,7 +72,7 @@ export default {
         //Format the plant data to be used within the chart object.
 
         greenhouseConfiguration:function(){
-            const {greenhouse,plantSpecies} = this.getConfiguration // get the plants and greehouse from the configuration
+            const {greenhouse,plantSpecies} = this.getConfiguration // get the plants and greenhouse from the configuration
             let values ={data:[this.greenhouseSize[greenhouse.type]],labels:["Free Space"]} // Set the first value of the dataset to the size of the greenhouse and add the label free space
             plantSpecies.forEach((item)=>{
                 values.data[0] = Math.max(0,values.data[0] - item.amount) //Calculates the total free space left after all the plants are added, modifies the first index initialized above.
@@ -82,6 +82,16 @@ export default {
             })
 
             return values
+        },
+        updateChart: function(){
+            console.log('updateChart called')
+            const {greenhouse,plantSpecies} = this.getConfiguration
+            const {data,labels} = this.greenhouseConfiguration()
+            this.chart.data.labels = labels
+            this.chart.data.datasets[0].data.pop()
+            this.chart.data.datasets[0].data = data
+            this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
+            this.chart.update()
         },
         //Format the plant names before displaying them.
         stringFormatter: function(value){
@@ -97,34 +107,20 @@ export default {
         }
     },
     watch:{
-        //Both watchers repeat the same functionality. This should really be moved into a method to cut down on the amount of code.
-
-        //Watches for changes within the getStepBuffer object within dashboard store.
+        // Watches for changes within the getStepBuffer object within
+        // dashboard storeto update the graph in the dashboard
         getStepBuffer:{
-            handler:function(){
-                const {greenhouse,plantSpecies} = this.getConfiguration
-                const {data,labels} = this.greenhouseConfiguration()
-                this.chart.data.labels =[]
-                this.chart.data.labels = labels
-                this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data
-                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
-                this.chart.update()
+            handler: function() {
+                this.updateChart()
             },
             deep:true
         },
 
-        //Watches for changes within the getConfiguration object within the wizard store.
+        // Watches for changes within the getConfiguration object within
+        // the wizard store to update the graph in the config wizard
         getConfiguration:{
-            handler:function(){
-                const {greenhouse,plantSpecies} = this.getConfiguration
-                const {data,labels} = this.greenhouseConfiguration()
-                this.chart.data.labels =[]
-                this.chart.data.labels = labels
-                this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data
-                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
-                this.chart.update()
+            handler: function() {
+                this.updateChart()
             },
             deep:true
         },
