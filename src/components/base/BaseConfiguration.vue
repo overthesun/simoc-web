@@ -208,6 +208,7 @@ export default {
     }
 
     .simoc-logo-title{
+        font-family: "Nasalization", "Open Sans", sans-serif;
         font-weight: 600;
         font-size: 12px;
     }
