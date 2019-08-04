@@ -3,15 +3,22 @@ similar functionality to that of the reference wiki. Table of contents to select
 -->
 
 <template>
-        <GreenhouseDoughnut/>
+        <GreenhouseDoughnut class="greenhouse-config-graph" v-if="getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize')" :id="'gh-config-canvas-'+ canvasNumber"/>
 </template>
 
 <script>
 import {GreenhouseDoughnut} from '../../components/graphs'
+import {mapGetters} from 'vuex'
 export default {
+    props:{
+        canvasNumber:0,
+    },
     components:{
         'GreenhouseDoughnut':GreenhouseDoughnut
-    }
+    },
+    computed:{
+        ...mapGetters('wizard',['getActiveReference','getActiveForm']),
+    },
 }
 </script>
 

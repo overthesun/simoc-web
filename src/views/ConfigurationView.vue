@@ -76,8 +76,9 @@ export default {
             },
         }
     },
-    mounted:function(){
-        this.activeForm = this.getActiveForm(this.formIndex)
+    beforeMount:function(){
+        this.RESETCONFIG()
+        this.activeForm = this.getActiveForm
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration','getActiveForm','getFormLength','getFormattedConfiguration']),
@@ -95,6 +96,7 @@ export default {
         },
     },
     methods:{
+        ...mapMutations('wizard',['RESETCONFIG','SETACTIVEFORMINDEX']),
         ...mapMutations(['SETGAMEID']),
 
 
@@ -102,11 +104,11 @@ export default {
             this.menuActive = !this.menuActive
         },
 
-        //Sets the active form, using the value from the select field
+        // Sets the active form, using the value from the select field
+        // This happens automatically by changing the watched formIndex
         setActiveForm:function(event){
             let {value:index} = event.target
             this.formIndex = parseInt(index)
-            this.activeForm = this.getActiveForm(index)
         },
 
         decrementIndex:function(){
@@ -139,7 +141,7 @@ export default {
         //If the active form changes update the activeForm variable with the one at the formIndex
         getActiveForm:{
             handler:function(){
-                this.activeForm = this.getActiveForm(this.formIndex)
+                this.activeForm = this.getActiveForm
             },
             deep:true
         },
@@ -147,7 +149,8 @@ export default {
         //Mostly used for when either the buttons or the select menu or used to navigate
         formIndex:{
             handler:function(){
-                this.activeForm = this.getActiveForm(this.formIndex)
+                this.SETACTIVEFORMINDEX(this.formIndex)
+                this.activeForm = this.getActiveForm
             }
         }
     }

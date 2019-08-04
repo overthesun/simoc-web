@@ -7,25 +7,16 @@
 export default{
     state:{
         //Default configuration
-        configuration:{
-            location:"none",
-            duration:{type:"none",amount:'0',units:"none"},
-            humans:{type:"none",amount:'0',units:""},
-            food:{type:"none",amount:'0',units:""},
-            crewQuarters:{type:"none",amount:'0',units:""},
-            eclss:{type:"none",amount:'0',units:""},
-            powerGeneration:{type:"none",amount:'0',units:""},
-            powerStorage:{type:"none",amount:'0',units:""},
-            greenhouse:{type:"none",amount:'0',units:""},
-            plantSpecies:[],
-        },
+        configuration:{},
+        activeFormIndex: 0,
         formOrder:['Initial','Inhabitants','Greenhouse','Energy','Finalize'], // Array of component names used within the ConfigurationView. Used to display by index
         activeReference:'Reference', //Which window on the reference side is active
         activeRefEntry:'Welcome', //Which entry is currently active within the reference.
     },
     getters:{
         getConfiguration: state => state.configuration,
-        getActiveForm: state => index => state.formOrder[index],
+        getActiveFormIndex: state => state.activeFormIndex,
+        getActiveForm: state => state.formOrder[state.activeFormIndex],
         getActiveReference: state => state.activeReference,
         getActiveRefEntry: state => state.activeRefEntry,
         getFormLength: state => state.formOrder.length,
@@ -128,6 +119,9 @@ export default{
                 state.configuration.plantSpecies[0] = {type:"",amount:""}
             }
         },
+        SETACTIVEFORMINDEX:(state,value)=>{
+            state.activeFormIndex = value
+        },
         SETACTIVEREFERENCE:(state,value)=>{
             state.activeReference = value
         },
@@ -135,6 +129,23 @@ export default{
             state.activeRefEntry = value
             state.activeReference = 'Reference' // This is set here so I don't have to call it on every link.
             //It is redundant for the table of contents navigation.
+        },
+        RESETCONFIG: function(state) {
+            state.configuration = {
+                location: "none",
+                duration: {type:"none", amount:'0', units:"none"},
+                humans: {type:"none", amount:'0', units:""},
+                food: {type:"none", amount:'0', units:""},
+                crewQuarters: {type:"none", amount:'0', units:""},
+                eclss: {type:"none", amount:'0', units:""},
+                powerGeneration: {type:"none", amount:'0', units:""},
+                powerStorage: {type:"none", amount:'0', units:""},
+                greenhouse: {type:"none", amount:'0', units:""},
+                plantSpecies: [{type:"", amount:""}],
+            }
+            state.activeFormIndex = 0
+            state.activeReference = 'Reference'
+            state.activeRefEntry = 'Welcome'
         }
     }
 }
