@@ -76,7 +76,6 @@ export default {
             plantSpecies.forEach((item)=>{
                 values.data[0] = Math.max(0,values.data[0] - item.amount) //Calculates the total free space left after all the plants are added, modifies the first index initialized above.
                 values.data.push(item.amount) //Push in the amount of the plant that is present.
-                //values.labels.push(this.stringFormatter(item.type))
                 values.labels.push(StringFormatter(item.type)) //format the plant name string for display
             })
 
@@ -100,18 +99,6 @@ export default {
             this.chart.options.elements.centerText.text = text
             this.chart.update()
         },
-        //Format the plant names before displaying them.
-        stringFormatter: function(value){
-            let formatted = ""
-
-            formatted = value.replace(/_/g," ")
-            formatted = formatted.toLowerCase()
-                    .split(" ")
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
-
-            return formatted
-        }
     },
     watch:{
         // Watches for changes within the getStepBuffer object within

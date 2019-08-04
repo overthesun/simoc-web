@@ -41,19 +41,6 @@ export default {
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
     },
-    methods:{
-        stringFormatter: function(value){
-            let formatted = ""
-
-            formatted = value.replace(/_/g," ")
-            formatted = formatted.toLowerCase()
-                    .split(" ")
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
-
-            return formatted
-        }
-    }
 }
 </script>
 

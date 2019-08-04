@@ -29,10 +29,10 @@ to prevent uncessary duplication as additional planels are created.
 </template>
 
 <script>
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BasePanel} from '../../components/basepanel'
 import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import AtmosphereConfigVue from '../panels/AtmosphereConfig.vue';
+
 export default {
     data(){
         return{
@@ -66,20 +66,8 @@ export default {
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
     },
     watch:{
-
     },
     methods:{
-        stringFormatter: function(value){
-            let formatted = ""
-
-            formatted = value.replace(/_/g," ")
-            formatted = formatted.toLowerCase()
-                    .split(" ")
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
-
-            return formatted
-        }
     }
 }
 </script>

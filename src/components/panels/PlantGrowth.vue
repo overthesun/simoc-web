@@ -24,12 +24,15 @@
 
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {StringFormatter} from '../../javascript/stringFormatter'
+
 export default {
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
     },
     methods:{
+        stringFormatter: StringFormatter,
         getTotalAgentMassPerc: function(index) {
             let totalAgentMass = this.getTotalAgentMass(this.getStepBuffer.current)
             if (totalAgentMass === undefined) {
@@ -39,17 +42,6 @@ export default {
                 return totalAgentMass[this.getConfiguration.plantSpecies[index].type].value.toExponential(3) + "%"
             }
         },
-        stringFormatter: function(value){
-            let formatted = ""
-
-            formatted = value.replace(/_/g," ")
-            formatted = formatted.toLowerCase()
-                    .split(" ")
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
-
-            return formatted
-        }
     }
 }
 </script>
