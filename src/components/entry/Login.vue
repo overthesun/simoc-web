@@ -143,7 +143,6 @@ export default {
                     this.$router.push('menu')
                 }
             }).catch(error => {
-                console.log(error, error.request, error.response, error.message)
                 if (!error.response) {
                     // we didn't get a response from the server
                     this.addWarning('Error: No response from the server')
