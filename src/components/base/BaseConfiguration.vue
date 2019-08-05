@@ -64,8 +64,8 @@ menu button being present on other unrelated configurations.
             -->
             <nav class='configuration-options reference-options'>
                 <div class='option-item' @click="SETACTIVEREFERENCE('Reference')" :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
-                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')" :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div> Enabled Once Recommended Is Completed-->
-                <div class='option-item option-item-disabled'>RECOMMENDED</div>
+                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')" :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div> Enabled Once Recommended Is Completed
+                <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
                 <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')" :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
             </nav>
             <main class='main main-reference'>
@@ -261,7 +261,9 @@ export default {
     .configuration-options{
         width:100%;
         display:flex;
-        justify-content:space-between;
+        /* use this when Recommended is restored
+        justify-content:space-between;*/
+        justify-content: space-evenly;
         align-items:center;
         font-size:24px;
         font-weight:600;
