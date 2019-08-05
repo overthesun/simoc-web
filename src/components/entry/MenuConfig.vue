@@ -8,7 +8,7 @@
             </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form='login-form' class='btn-normal btn-disabled' @click="toExpert">EXPERT CONFIGURATION</button>
+                <button form='login-form' class='btn-normal' @click="toExpert">EXPERT CONFIGURATION</button>
             </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
@@ -35,19 +35,21 @@ export default {
         'BaseEntry':BaseEntry,
     },
     computed:{
-        ...mapGetters('wizard',['getFormLength'])
+        ...mapGetters('wizard', [])
     },
     methods:{
-        ...mapMutations('wizard',[]),
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
 
         toMainMenu:function(){
             this.$router.push("menu")
         },
         toGuided:function(){
+            this.SETACTIVECONFIGTYPE('Guided')
             this.$router.push("configuration")
         },
         toExpert:function(){
-            //let lastIndex = this.getFormLength - 1
+            this.SETACTIVECONFIGTYPE('Expert')
+            this.$router.push("configuration")
 
         }
     }
