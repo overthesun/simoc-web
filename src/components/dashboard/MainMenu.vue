@@ -74,6 +74,9 @@ export default {
         },
         // Logout button route
         logout: async function(){
+            if (!confirm('Stop the current simulation and log out?')) {
+                return;
+            }
             const localHost = "http://localhost:8000"
             const path = "/logout"
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
@@ -88,6 +91,9 @@ export default {
 
         // New Simulation button
         toConfiguration: async function(){
+            if (!confirm('Stop the current simulation and configure a new one?')) {
+                return;
+            }
             this.stopSimulation()
             this.$router.push("configuration")
         }
