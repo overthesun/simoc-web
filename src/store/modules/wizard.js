@@ -6,12 +6,16 @@
 
 export default{
     state:{
-        //Default configuration
-        configuration:{},
+        // default configuration, initialized in RESETCONFIG
+        configuration: {},
+        // the index of the currently-selected form
         activeFormIndex: 0,
-        formOrder:['Initial','Inhabitants','Greenhouse','Energy','Finalize'], // Array of component names used within the ConfigurationView. Used to display by index
-        activeReference:'Reference', //Which window on the reference side is active
-        activeRefEntry:'Welcome', //Which entry is currently active within the reference.
+        // array of component names used within the ConfigurationView. Used to display by index
+        formOrder: ['Initial','Inhabitants','Greenhouse','Energy','Finalize'],
+        // which window on the reference side is active
+        activeReference: 'Reference',
+        // which entry is currently active within the reference
+        activeRefEntry: 'Welcome',
     },
     getters:{
         getConfiguration: state => state.configuration,
