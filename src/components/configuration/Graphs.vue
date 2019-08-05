@@ -3,7 +3,8 @@ similar functionality to that of the reference wiki. Table of contents to select
 -->
 
 <template>
-        <GreenhouseDoughnut class="greenhouse-config-graph" v-if="getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize')" :id="'gh-config-canvas-'+ canvasNumber"/>
+        <GreenhouseDoughnut class="greenhouse-config-graph" :id="'gh-config-canvas-'+ canvasNumber"
+            v-if="getActiveConfigType === 'Expert' || (getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>
 </template>
 
 <script>
@@ -17,7 +18,7 @@ export default {
         'GreenhouseDoughnut':GreenhouseDoughnut
     },
     computed:{
-        ...mapGetters('wizard',['getActiveReference','getActiveForm']),
+        ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
     },
 }
 </script>
