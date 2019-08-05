@@ -139,7 +139,6 @@ export default {
                     this.addWarning('Error: ' + response.data.message)
                 }
                 else if(status === 200){
-                    // this is currently always true
                     this.$router.push('menu')
                 }
             }).catch(error => {
@@ -149,13 +148,16 @@ export default {
                 }
                 else {
                     // we got a response back from the server
-                    // this branch is currently unused because the server always returns 200
                     const {status} = error.response
+                    const {message} = error.response.data
                     if (status === 401) {
-                        this.addWarning("Login Error")
+                        this.addWarning('Login Error: ' + message)
                     }
-                    if (status === 409) {
-                        this.addWarning("Username Unavailable")
+                    else if (status === 409) {
+                        this.addWarning('Registration Error: ' + message)
+                    }
+                    else {
+                        this.addWarning('Error: ' + message)
                     }
                 }
             })
