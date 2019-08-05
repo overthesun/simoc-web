@@ -8,6 +8,8 @@ export default{
     state:{
         // default configuration, initialized in RESETCONFIG
         configuration: {},
+        // the type of configuration being used (e.g. guided, expert)
+        activeConfigType: null,
         // the index of the currently-selected form
         activeFormIndex: 0,
         // array of component names used within the ConfigurationView. Used to display by index
@@ -19,6 +21,7 @@ export default{
     },
     getters:{
         getConfiguration: state => state.configuration,
+        getActiveConfigType: state => state.activeConfigType,
         getActiveFormIndex: state => state.activeFormIndex,
         getActiveForm: state => state.formOrder[state.activeFormIndex],
         getActiveReference: state => state.activeReference,
@@ -122,6 +125,9 @@ export default{
             } else if( length === 1){
                 state.configuration.plantSpecies[0] = {type:"",amount:""}
             }
+        },
+        SETACTIVECONFIGTYPE:(state,value)=>{
+            state.activeConfigType = value
         },
         SETACTIVEFORMINDEX:(state,value)=>{
             state.activeFormIndex = value

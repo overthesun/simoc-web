@@ -1,9 +1,10 @@
 <template>
     <div class='base-configuration-wrapper'>
         <router-view>
-            <!-- Wizard Jump Options -->
+            <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
-                <select class='section-select' v-on:change="setActiveForm"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                <select class='section-select' v-on:change="setActiveForm">
                     <option selected disabled>Jump To Section</option>
                     <option value=0 :selected="formIndex === 0">Initial</option>
                     <option value=1 :selected="formIndex === 1">Inhabitants</option>
@@ -13,8 +14,10 @@
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <component :is="activeForm" v-if="activeForm != 'Finalize'"/> <!-- show the activeForm component if it's not the finalize form, uses the name of the component stored within activeForm -->
-                <section class='form-wrapper' v-if="activeForm === 'Finalize'"> <!-- show all components below if it's the finalize form section. This prevents having to repeat and create the actual component -->
+                <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
+                <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
+                <!-- Else, if we are in the Expert config or in the Finalize step of the Guided config, show all components -->
+                <section class='form-wrapper' v-else-if="activeConfigType === 'Expert' || activeForm === 'Finalize'">
                     <Presets/>
                     <Initial/>
                     <Inhabitants/>
@@ -23,11 +26,17 @@
                 </section>
             </template>
             <template v-slot:wizard-configuration-footer>
-                <nav class='configuration-button-wrapper'>
-                    <!-- These use v-if instead of class binding, since they are simply either displayed or hidden. No animations present to require it. -->
+                <!-- Guided config bottom nav, with prev/next section and finalize buttons -->
+                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Guided'"">
+                    <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
+                         No animations present to require it. -->
                     <button class='btn-previous' @click='decrementIndex' v-if="!isFirstForm">Previous Section</button>
                     <button class='btn-next' @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
                     <button class='btn-finalize' @click="finalizeConfiguration" v-if="isFinalForm">Finalize Settings</button>
+                </nav>
+                <!-- Expert config bottom nav, no sections, only finalize button -->
+                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Expert'"">
+                    <button class='btn-finalize' @click="finalizeConfiguration">Finalize Settings</button>
                 </nav>
             </template>
 
@@ -79,9 +88,10 @@ export default {
     beforeMount:function(){
         this.RESETCONFIG()
         this.activeForm = this.getActiveForm
+        this.activeConfigType = this.getActiveConfigType
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration','getActiveForm','getFormLength','getFormattedConfiguration']),
+        ...mapGetters('wizard',['getConfiguration','getActiveConfigType','getActiveForm','getFormLength','getFormattedConfiguration']),
         ...mapGetters('wizard',['getActiveReference','getActiveRefEntry']),
         ...mapGetters('dashboard',['getStepParams']),
         ...mapGetters(['getUseLocalHost']),

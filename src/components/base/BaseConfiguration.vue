@@ -13,7 +13,7 @@ menu button being present on other unrelated configurations.
             Uses absolute positioning and overflow-hidden to remain off screen when not active
             Uses class-binding to the menuActive variable to toggle displaying the menu.
         -->
-        <section class='menu-wrapper ' :class="{'menu-wrapper-active': menuActive}">
+        <section class='menu-wrapper' :class="{'menu-wrapper-active': menuActive}">
             <header class='header'>
                 <div class='simoc-logo-title'>
                     <div class='logo-title'>SIMOC</div>
@@ -30,7 +30,7 @@ menu button being present on other unrelated configurations.
             </main>
         </section>
         <!-- The form side of the wizard screen -->
-        <section class='wizard-wrapper'>
+        <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Expert'}">
             <header class='header'>
                 <!--<img src='../../assets/simoc-logo.svg' class='simoc-logo'/>-->
                 <div class='simoc-logo-title'>
@@ -38,7 +38,8 @@ menu button being present on other unrelated configurations.
                     <div class='logo-title-italic'>CONFIGURATION WIZARD</div>
                 </div>
             </header>
-            <nav class='navigation-wrapper'>
+            <!-- Dropdown used to select sections, only available in Guided Configuration -->
+            <nav v-if="getActiveConfigType === 'Guided'" class='navigation-wrapper'>
                 <slot name='navigation-section-select'></slot>
             </nav>
             <main class='main main-wizard'>
@@ -88,10 +89,11 @@ export default {
     },
 
     computed:{
-        ...mapGetters('wizard',['getActiveReference']), // Used to dictate which navigation title is underlined.
+        ...mapGetters('wizard',['getActiveConfigType','getActiveReference']),
         ...mapGetters(['getUseLocalHost']), //Flag for using localhost within route calls
 
-        //Used to flag which section link is active within the reference navigation. Uses class-binding to activate the class. See wizard store for more details
+        // used to flag which section link is active within the reference navigation
+        // uses class-binding to activate the class and underline the title
         activeOption:function(){
             return this.getActiveReference
         }
@@ -174,7 +176,10 @@ export default {
         grid-template-rows: 32px 32px minmax(0,1fr) 48px;
         grid-row-gap: 32px;
     }
-
+    /* omit the form select dropdown from the expert config grid template */
+    .wizard-wrapper.no-form-select-dropdown{
+        grid-template-rows: 32px minmax(0,1fr) 48px;
+    }
 
     .reference-wrapper{
         height:100%;
