@@ -7,9 +7,7 @@ to prevent uncessary duplication as additional planels are created.
 <template>
     <div class='dashboard-view-wrapper'>
         <BasePanel v-for="(item,index) in 6" :key="index">
-            <template v-slot:panel-title>
-                {{panelTitles[activePanel[index]]}}
-            </template>
+            <template v-slot:panel-title>{{panels[activePanel[index]].panelTitle}}</template>
             <template v-slot:panel-select>
                 <select class='panel-select' v-model="activePanel[index]"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
                     <option selected disabled>Jump To Section</option>
@@ -32,28 +30,20 @@ to prevent uncessary duplication as additional planels are created.
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BasePanel} from '../../components/basepanel'
 // import all panels
-import * as panels from '../../components/panels'
+import panels from '../../components/panels'
 // import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
-console.log((panels['default']))
 export default {
     data(){
         return{
             humans:0,
-            activePanel: Object.keys(panels['default']),
-            panelTitles:{
-                "MissionInfo":"Mission Information",
-                "EnergyVersus":"Energy Consumption V. Production - Graph",
-                "MissionConfig":"Mission Configuration",
-                "PlantGrowth":"Greenhouse Plant Growth",
-                "GreenhouseConfig":"Greenhouse Configuration - Graph",
-                "AtmosphereConfig":"Atmospheric Levels - Gauges"
-            }
+            activePanel: Object.keys(panels),
+            panels: panels,
         }
     },
     components:{
         'BasePanel':BasePanel,
         // add all panels as components
-        ...panels['default'],
+        ...panels,
         /*
         //Graph components imported to be used within the panels.
         'EnergyVersus': panels.EnergyVersus,
@@ -70,10 +60,6 @@ export default {
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
     },
-    watch:{
-    },
-    methods:{
-    }
 }
 </script>
 

@@ -9,6 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {EnergyVersus} from '../../components/graphs'
 
 export default {
+    panelTitle: 'Energy Levels',
     props:{
         canvasNumber:0,
     },

@@ -27,6 +27,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/stringFormatter'
 
 export default {
+    panelTitle: 'Greenhouse Plant Growth',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
