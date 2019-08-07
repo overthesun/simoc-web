@@ -1,6 +1,11 @@
-export {default as MissionInfo} from './MissionInfo'
-export {default as MissionConfig} from './MissionConfig'
-export {default as EnergyVersus} from './EnergyVersus'
-export {default as PlantGrowth} from './PlantGrowth'
-export {default as GreenhouseConfig} from './GreenhouseConfig'
-export {default as AtmosphereConfig} from './AtmosphereConfig'
+// extract all vue files from the panels/ dir
+const requireModule = require.context(".", false, /\.vue$/);
+const panels = {};
+
+requireModule.keys().forEach(fileName => {
+    // remove leading ./ and trailing .vue
+    const panelName = fileName.replace(/(^\.\/|\.vue$)/g, "");
+    panels[panelName] = requireModule(fileName).default;
+});
+
+export default panels;

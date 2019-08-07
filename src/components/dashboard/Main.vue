@@ -13,8 +13,8 @@ to prevent uncessary duplication as additional planels are created.
             <template v-slot:panel-select>
                 <select class='panel-select' v-model="activePanel[index]"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
                     <option selected disabled>Jump To Section</option>
-                    <option value="MissionInformation">Mission Information</option>
-                    <option value="MissionConfiguration">Mission Configuration</option>
+                    <option value="MissionInfo">Mission Information</option>
+                    <option value="MissionConfig">Mission Configuration</option>
                     <option value="PlantGrowth">Greenhouse Plant Growth</option>
                     <option value="EnergyVersus" >Energy Versus - Graph</option>
                     <option value="GreenhouseConfig" >Greenhouse Configuration - Graph</option>
@@ -31,17 +31,19 @@ to prevent uncessary duplication as additional planels are created.
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BasePanel} from '../../components/basepanel'
-import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
-
+// import all panels
+import * as panels from '../../components/panels'
+// import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
+console.log((panels['default']))
 export default {
     data(){
         return{
             humans:0,
-            activePanel:["MissionInformation","EnergyVersus","MissionConfiguration","PlantGrowth","GreenhouseConfig","AtmosphereConfig"],
+            activePanel: Object.keys(panels['default']),
             panelTitles:{
-                "MissionInformation":"Mission Information",
+                "MissionInfo":"Mission Information",
                 "EnergyVersus":"Energy Consumption V. Production - Graph",
-                "MissionConfiguration":"Mission Configuration",
+                "MissionConfig":"Mission Configuration",
                 "PlantGrowth":"Greenhouse Plant Growth",
                 "GreenhouseConfig":"Greenhouse Configuration - Graph",
                 "AtmosphereConfig":"Atmospheric Levels - Gauges"
@@ -50,16 +52,19 @@ export default {
     },
     components:{
         'BasePanel':BasePanel,
-
+        // add all panels as components
+        ...panels['default'],
+        /*
         //Graph components imported to be used within the panels.
-        'EnergyVersus':EnergyVersus,
+        'EnergyVersus': panels.EnergyVersus,
         //'Gauge':Gauge,
-        'GreenhouseConfig':GreenhouseConfig,
+        'GreenhouseConfig': panels.GreenhouseConfig,
         //'GreenhouseDoughnut':GreenhouseDoughnut,
-        'MissionInformation':MissionInfo,
-        'MissionConfiguration':MissionConfig,
-        'PlantGrowth':PlantGrowth,
-        'AtmosphereConfig':AtmosphereConfig
+        'MissionInfo': panels.MissionInfo,
+        'MissionConfig': panels.MissionConfig,
+        'PlantGrowth': panels.PlantGrowth,
+        'AtmosphereConfig': panels.AtmosphereConfig
+        */
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
