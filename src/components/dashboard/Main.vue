@@ -6,21 +6,18 @@ to prevent uncessary duplication as additional planels are created.
 
 <template>
     <div class='dashboard-view-wrapper'>
-        <BasePanel v-for="(item,index) in 6" :key="index">
-            <template v-slot:panel-title>{{panels[activePanel[index]].panelTitle}}</template>
+        <BasePanel v-for="(panelName,index) in activePanels" :key="index">
+            <template v-slot:panel-title>{{panels[panelName].panelTitle}}</template>
             <template v-slot:panel-select>
-                <select class='panel-select' v-model="activePanel[index]"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                <!-- on change, update the panel name at index in the list of active panels -->
+                <select class='panel-select' v-model="activePanels[index]">
                     <option selected disabled>Jump To Section</option>
-                    <option value="MissionInfo">Mission Information</option>
-                    <option value="MissionConfig">Mission Configuration</option>
-                    <option value="PlantGrowth">Greenhouse Plant Growth</option>
-                    <option value="EnergyVersus" >Energy Versus - Graph</option>
-                    <option value="GreenhouseConfig" >Greenhouse Configuration - Graph</option>
-                    <option value="AtmosphereConfig" >Atmospheric Levels - Graph</option>
+                    <!-- populate the drop-down with all the available panels -->
+                    <option v-for="(panel, panelName) in panels" :value="panelName">{{panel.panelTitle}}</option>
                 </select>
             </template>
             <template v-slot:panel-content>
-                <component :is="activePanel[index]" :canvasNumber="index"></component>
+                <component :is="panelName" :canvasNumber="index"></component>
             </template>
         </BasePanel>
     </div>
@@ -36,7 +33,9 @@ export default {
     data(){
         return{
             humans:0,
-            activePanel: Object.keys(panels),
+            // list of default panels, update this to change the panels displayed
+            activePanels: ["MissionConfig", "EnergyVersus", "AtmosphereConfig",
+                           "MissionInfo", "GreenhouseConfig", "PlantGrowth"],
             panels: panels,
         }
     },
