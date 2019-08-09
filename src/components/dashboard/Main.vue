@@ -7,14 +7,31 @@ to prevent uncessary duplication as additional planels are created.
 <template>
     <div class='dashboard-view-wrapper'>
         <BasePanel v-for="(panelName,index) in activePanels" :key="index">
-            <template v-slot:panel-title>{{panels[panelName].panelTitle}}</template>
+            <template v-slot:panel-title><div class='panel-title'>{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-select>
-                <!-- on change, update the panel name at index in the list of active panels -->
-                <select class='panel-select' v-model="activePanels[index]">
-                    <option selected disabled>Jump To Section</option>
-                    <!-- populate the drop-down with all the available panels -->
-                    <option v-for="(panel, panelName) in panels" :value="panelName">{{panel.panelTitle}}</option>
-                </select>
+                <div class='panel-menu'>
+                    <!-- the menu icon, shows the options menu when clicked -->
+                    <div class='menu-icon-wrapper' @click="openPanelMenu(index)">
+                        <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']"/>
+                    </div>
+                    <!-- the options menu -->
+                    <div class='panel-menu-options' v-if="index === visibleMenu">
+                        <!-- this menu has two steps: first shows the add/change/remove options;
+                             if the user selects add/change, hide the options and show the dropdown -->
+                        <ul v-if="index !== visiblePanelSelect">
+                          <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
+                          <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
+                          <li><button @click="removePanel(index)" v-if="activePanels.length > 1">Remove Panel</button></li>
+                        </ul>
+                        <!-- panel select dropdown: on change, update the activePanels list by changing
+                             the panel name at index or by adding the panel name at index+1 -->
+                        <select v-else class='panel-select' v-model="selectedPanel" @change="updatePanels(index, replacePanel)">
+                            <option hidden selected value="null">Select Panel:</option>
+                            <!-- populate the drop-down with all the available panels, sorted by title -->
+                            <option v-for="[pTitle, pName] in sortedPanels" :value="pName">{{pTitle}}</option>
+                        </select>
+                    </div>
+                </div>
             </template>
             <template v-slot:panel-content>
                 <component :is="panelName" :canvasNumber="index"></component>
@@ -30,13 +47,16 @@ import {BasePanel} from '../../components/basepanel'
 import panels from '../../components/panels'
 // import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
 export default {
-    data(){
-        return{
-            humans:0,
-            // list of default panels, update this to change the panels displayed
+    data() {
+        return {
+            // list of default panels; update this to change the initial panels displayed
             activePanels: ["MissionConfig", "EnergyVersus", "AtmosphereConfig",
                            "MissionInfo", "GreenhouseConfig", "PlantGrowth"],
-            panels: panels,
+            panels: panels,  // object mapping all available panel names with their corresponding object
+            visibleMenu: null,  // the index of the visible panel menu, null if no panel menu is open
+            visiblePanelSelect: null,  // the index of the visible panel select dropdown
+            selectedPanel: null,  // store the name of the panel selected through the dropdown
+            replacePanel: null,  // if 0, updatePanels will add a new panel; if 1, it will replace the panel
         }
     },
     components:{
@@ -58,13 +78,49 @@ export default {
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
+        sortedPanels: function () {
+            // return a sorted array of [[title, name], [..., ...], ...]
+            let sorted = []
+            Object.entries(this.panels).forEach(([panelName, panel]) => {
+                sorted.push([panel.panelTitle, panelName])
+            })
+            return sorted.sort()
+        },
+    },
+    methods:{
+        openPanelMenu: function(index) {
+            // open the panel menu at index or close it if it's already open
+            this.visibleMenu = (this.visibleMenu === index) ? null : index
+        },
+        closePanelMenu: function(index) {
+            // reset variables and close the menu
+            this.replacePanel = null
+            this.selectedPanel = null
+            this.visiblePanelSelect = null
+            this.visibleMenu = null
+        },
+        showPanelSelect: function(index, replace) {
+            // show the panel select dropdown
+            this.visiblePanelSelect = index
+            // set whether the selected panel will replace the one at index or added at index+1
+            this.replacePanel = replace  // 1: replace panel, 0: add new one
+        },
+        updatePanels: function(index, replace) {
+            // replace or add the selected panel
+            let panelName = this.selectedPanel
+            this.activePanels.splice(replace?index:index+1, replace, panelName)
+            this.closePanelMenu()
+        },
+        removePanel: function(index) {
+            // remove the selected panel
+            this.activePanels.splice(index, 1)
+            this.closePanelMenu()
+        },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-
-
     .dashboard-view-wrapper{
         font-family: "Roboto", sans-serif;
         width:100%;
@@ -78,6 +134,37 @@ export default {
         grid-row-gap: 16px;
         grid-column-gap: 16px;
         overflow:hidden;
+    }
+
+    .panel-menu {
+        position: relative;
+
+    }
+    .panel-menu .menu-icon-wrapper {
+        text-align: right;
+        display: block;
+    }
+    .panel-menu .menu-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .panel-menu-options {
+        border: 1px solid #999999;
+        position: absolute;
+        right: 0;
+        z-index: 10;
+        background-color: #1e1e1e;
+        min-width: 150px;
+    }
+    .panel-menu-options ul {
+        margin: 0;
+        padding: 0;
+    }
+    .panel-menu-options ul li {
+        list-style-type: none;
+    }
+    .panel-menu-options ul li button {
+        width: 100%;
     }
 
     /*.panel{
