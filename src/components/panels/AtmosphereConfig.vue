@@ -31,6 +31,7 @@
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {Gauge} from '../../components/graphs'
 export default {
+    panelTitle: 'Atmospheric Levels',
     props:{
         canvasNumber:0,
     },

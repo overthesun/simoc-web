@@ -9,6 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {GreenhouseDoughnut} from '../../components/graphs'
 
 export default {
+    panelTitle: 'Greenhouse Configuration',
     props:{
         canvasNumber:0,
     },

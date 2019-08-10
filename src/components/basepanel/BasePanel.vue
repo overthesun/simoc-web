@@ -1,9 +1,9 @@
 <template v-slot:panel-content>
     <div class='panel'>
-        <div class='panel-title'>
+        <header class='panel-header'>
             <slot name='panel-title'></slot>
-            <slot name='panel-select'></slot>
-        </div>
+            <slot name='panel-menu'></slot>
+        </header>
         <slot name='panel-content'></slot>
     </div>
 </template>
@@ -21,22 +21,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .panel{
         background-color: #1e1e1e;
-        display:grid;
-        grid-template-rows: 32px 1fr;
+        display: grid;
+        grid-template-rows: 26px 1fr;
         grid-row-gap: 16px;
-        padding:8px;
+        padding: 8px;
     }
 
-    .panel-title{
-        margin:auto 0px;
+    .panel-header{
+        margin: 0;
         border-bottom: 1px solid #999;
-        font-weight: 200;
-        font-style:italic;
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
+        font-size: 18px;
+        font-weight: 300;
+        display:grid;
+        /* maybe using a single grid layout for
+           title/icon/content would be better */
+        grid-template-columns: 1fr 26px;
     }
 
     .panel-select{
