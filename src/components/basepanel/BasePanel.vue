@@ -2,7 +2,7 @@
     <div class='panel'>
         <header class='panel-header'>
             <slot name='panel-title'></slot>
-            <slot name='panel-select'></slot>
+            <slot name='panel-menu'></slot>
         </header>
         <slot name='panel-content'></slot>
     </div>
@@ -36,6 +36,8 @@ export default {
         font-size: 18px;
         font-weight: 300;
         display:grid;
+        /* maybe using a single grid layout for
+           title/icon/content would be better */
         grid-template-columns: 1fr 26px;
     }
 

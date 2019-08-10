@@ -1,14 +1,16 @@
-<!-- This is the main view of the dashboard. The intent was to break up each 'panel' into it's own component and use a 'BasePanel' component with slots to populate
-the title, and content. Allowing for things like the configuration menu orginally seen on other version, and additional functionality to be placed within the BasePanel
-to prevent uncessary duplication as additional planels are created.
-
+<!--
+This is the main view of the dashboard.  It dynamically loads all the panels found in the panels/ dir
+and shows a list of default panels as defined in the activePanels variable.
+Each panel has a menu that allows adding, changing, or removing panels, that is populated with all the
+panels found in the panels/ dir.
+The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
     <div class='dashboard-view-wrapper'>
         <BasePanel v-for="(panelName,index) in activePanels" :key="index">
             <template v-slot:panel-title><div class='panel-title'>{{panels[panelName].panelTitle}}</div></template>
-            <template v-slot:panel-select>
+            <template v-slot:panel-menu>
                 <div class='panel-menu'>
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class='menu-icon-wrapper' @click="openPanelMenu(index)">
@@ -19,9 +21,9 @@ to prevent uncessary duplication as additional planels are created.
                         <!-- this menu has two steps: first shows the add/change/remove options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
-                          <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
-                          <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                          <li><button @click="removePanel(index)" v-if="activePanels.length > 1">Remove Panel</button></li>
+                            <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
+                            <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
+                            <li><button @click="removePanel(index)" v-if="activePanels.length > 1">Remove Panel</button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
@@ -43,9 +45,8 @@ to prevent uncessary duplication as additional planels are created.
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BasePanel} from '../../components/basepanel'
-// import all panels
-import panels from '../../components/panels'
-// import {MissionInfo,MissionConfig,EnergyVersus,PlantGrowth,GreenhouseConfig,AtmosphereConfig} from '../../components/panels'
+import panels from '../../components/panels'  // import all panels
+
 export default {
     data() {
         return {
@@ -60,20 +61,8 @@ export default {
         }
     },
     components:{
-        'BasePanel':BasePanel,
-        // add all panels as components
-        ...panels,
-        /*
-        //Graph components imported to be used within the panels.
-        'EnergyVersus': panels.EnergyVersus,
-        //'Gauge':Gauge,
-        'GreenhouseConfig': panels.GreenhouseConfig,
-        //'GreenhouseDoughnut':GreenhouseDoughnut,
-        'MissionInfo': panels.MissionInfo,
-        'MissionConfig': panels.MissionConfig,
-        'PlantGrowth': panels.PlantGrowth,
-        'AtmosphereConfig': panels.AtmosphereConfig
-        */
+        'BasePanel': BasePanel,
+        ...panels,  // add all panels as components
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
