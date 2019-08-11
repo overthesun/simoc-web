@@ -7,7 +7,7 @@ A condition needs to be added in if the timer is paused by some other means than
         <div class='timeline-wrapper'>
 <!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
             -->
-            <div class='timeline-item timeline-text'>{{getStepBuffer.current}}</div>
+            <div class='timeline-item timeline-text'>{{getCurrentStepBuffer}}</div>
             <span class='timeline-item'>
                 <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
@@ -27,12 +27,12 @@ export default {
         }
     },
 
-    mounted:function(){
-        const {current} = this.getStepBuffer
+    mounted:function() {
+        const current = this.getCurrentStepBuffer
     },
 
     computed:{
-        ...mapGetters('dashboard',['getStepBuffer','getTimerID','getForcedPause']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getForcedPause']),
         ...mapGetters('wizard',['getTotalMissionHours'])
 
     },
@@ -56,27 +56,26 @@ export default {
             //The interval also needs to be stored universally to allow this to create a
             //new timer object with the last used speed.
             let stepTimer = new StepTimer( () => {
-                let {max} = this.getStepBuffer
-                let current = Math.min(max,this.getStepBuffer.current+1) //Don't go beyond what's buffered already.
+                // don't go beyond what's buffered already
+                let current = Math.min(this.getMaxStepBuffer, this.getCurrentStepBuffer+1)
                 this.SETBUFFERCURRENT(current)
             },1000)
 
             this.SETTIMERID(stepTimer) // Set the new timer ID to the dashboard store
             this.getTimerID.resume() // Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
+        },
+        updatePercentages: function() {
+            this.currentStep = this.getCurrentStepBuffer
+            this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100
+            this.bufferPercentage = (this.getMaxStepBuffer / this.getTotalMissionHours) * 100
+        },
 
-        }
     },
-    watch:{
-        getStepBuffer:{
-            handler:function(){
-                let {max,current} = this.getStepBuffer
-                this.currentStep = current
-                this.currentPercentage = (current / this.getTotalMissionHours) * 100
-                this.bufferPercentage = (max / this.getTotalMissionHours) * 100
-            },
-            deep:true
-        }
-    }
+    watch: {
+        // update scrubber percentages when the current and/or max step change
+        getCurrentStepBuffer: function() { this.updatePercentages() },
+        getMaxStepBuffer: function() { this.updatePercentages() },
+    },
 }
 </script>
 

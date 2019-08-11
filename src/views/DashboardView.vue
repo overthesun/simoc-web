@@ -35,8 +35,8 @@ export default {
         //It defaults to being called every second. Also this is not started until at least 100 steps have been buffered in.
         //See below methods for where the timer is started.
         let stepTimer = new StepTimer( () => {
-            let {max} = this.getStepBuffer  // Get the max step that has been buffered in
-            let current = Math.min(max,this.getStepBuffer.current+1) //Don't go beyond what's buffered already.
+            // don't go beyond what's buffered already
+            let current = Math.min(this.getMaxStepBuffer, this.getCurrentStepBuffer+1)
             this.SETBUFFERCURRENT(current)  //Set the current step number
         },1000)
 
@@ -51,7 +51,7 @@ export default {
     },
     computed:{
         //Getterss from the vuex stores
-        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
+        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard',['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getUseLocalHost']),
@@ -103,7 +103,7 @@ export default {
             await this.parseStep(Object.values(step_data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
 
             //If the max of the buffer size is at the end, turn on the terminated condition
-            if(this.getStepBuffer.max >= parseInt(this.getTotalMissionHours)){
+            if(this.getMaxStepBuffer >= parseInt(this.getTotalMissionHours)){
                 this.SETTERMINATED(true)
             }
 
@@ -111,7 +111,7 @@ export default {
             //step update timer.
 
             //Termination condition is added in so that simulations less than 100 steps can still run.
-            if(this.getStepBuffer.max >= 100 || this.getTerminated){
+            if(this.getMaxStepBuffer >= 100 || this.getTerminated){
                 if(!this.getIsTimerRunning && this.getTimerID != null){ //If the timer isn't running yet, get it started.
                     this.STARTTIMER() //Call the mutation used within the dashboard store to start the timer.
                 }
@@ -122,17 +122,13 @@ export default {
         },
     },
     watch:{
-        //This method pauses the current simulation if the current step is at or beyond the
-        //amount of steps that are currently buffered.
-        getStepBuffer:{
-            handler:function(){
-                let {current,max} = this.getStepBuffer
-                if(current >= max){
-                    this.getTimerID.pause()
-                }
-            },
-            deep:true
-        }
+        // this method pauses the current simulation if the current step
+        // is at or beyond the amount of steps that are currently buffered
+        getCurrentStepBuffer: function() {
+            if (this.getCurrentStepBuffer >= this.getMaxStepBuffer) {
+                this.getTimerID.pause()
+            }
+        },
     }
 }
 </script>

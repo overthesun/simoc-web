@@ -30,12 +30,12 @@ export default {
     panelTitle: 'Greenhouse Plant Growth',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
+        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getCurrentStepBuffer','getAgentType']),
     },
     methods:{
         stringFormatter: StringFormatter,
         getTotalAgentMassPerc: function(index) {
-            let totalAgentMass = this.getTotalAgentMass(this.getStepBuffer.current)
+            let totalAgentMass = this.getTotalAgentMass(this.getCurrentStepBuffer)
             if (totalAgentMass === undefined) {
                 return '[loading data...]'
             }

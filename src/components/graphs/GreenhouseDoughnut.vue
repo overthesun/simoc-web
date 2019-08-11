@@ -37,7 +37,7 @@ export default {
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getStepBuffer']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer']),
 
 
         /*
@@ -101,13 +101,10 @@ export default {
         },
     },
     watch:{
-        // Watches for changes within the getStepBuffer object within
-        // dashboard storeto update the graph in the dashboard
-        getStepBuffer:{
-            handler: function() {
-                this.updateChart()
-            },
-            deep:true
+        // Watches for changes in getCurrentStepBuffer within the
+        // dashboard store to update the graph in the dashboard
+        getCurrentStepBuffer: function() {
+            this.updateChart()
         },
 
         // Watches for changes within the getConfiguration object within

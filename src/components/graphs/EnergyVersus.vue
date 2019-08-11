@@ -1,8 +1,7 @@
 <!--
 Energy versus chart component used within the dashboard.
 
-Updates values from the approriate step data getters when it sees an updated value within the
-getStepBuffer object. This causes the bug that makes the line chart 'crawl' during the initial buffering period.
+Updates values from the approriate step data getters when the getCurrentStepBuffer value changes.
 
 See chart.js documentation for further details on the related mounted functions.
 -->
@@ -19,29 +18,23 @@ export default {
     },
 
     computed:{
-        ...mapGetters('dashboard',['getStepBuffer','getTotalProduction','getTotalConsumption'])
+        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption'])
     },
 
     watch:{
-        //Update the chart datasets and labels when the step buffer has changed.
-        //This actually causes a bug where charts are updated even when just the 'max' is
-        //updated within the object. This needs to be changed to watch just the step number only to prevent
-        //uncessary updates as seen currently in the energy versus chart.
-        getStepBuffer:{
-            handler:function(){
-                this.updateChart()
-            },
-            deep:true
-        }
+        //Update the chart datasets and labels when the current step buffer has changed.
+        getCurrentStepBuffer: function() {
+            this.updateChart()
+        },
     },
 
     methods:{
 
         //Could actually be placed within the watch method.
         updateChart:function(){
-            console.log(this.getTotalProduction(this.getStepBuffer.current))
-            let{enrg_kwh:consumption} = this.getTotalConsumption(this.getStepBuffer.current)
-            let{enrg_kwh:production} = this.getTotalProduction(this.getStepBuffer.current)
+            console.log(this.getTotalProduction(this.getCurrentStepBuffer))
+            let{enrg_kwh:consumption} = this.getTotalConsumption(this.getCurrentStepBuffer)
+            let{enrg_kwh:production} = this.getTotalProduction(this.getCurrentStepBuffer)
 
             this.chart.data.datasets[0].data.shift()
             this.chart.data.datasets[1].data.shift()
@@ -49,7 +42,7 @@ export default {
 
             this.chart.data.datasets[0].data.push(production.value)
             this.chart.data.datasets[1].data.push(consumption.value)
-            this.chart.data.labels.push(this.getStepBuffer.current)
+            this.chart.data.labels.push(this.getCurrentStepBuffer)
 
             this.chart.update()
         }
