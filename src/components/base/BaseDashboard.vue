@@ -30,11 +30,10 @@ export default {
         "MainMenu":MainMenu
     },
     computed:{
-        ...mapGetters('dashboard',['getMenuActive'])
+        ...mapGetters('dashboard', ['getMenuActive'])
     },
     methods:{
-
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTERMINATED','SETISTIMERRUNNING','SETTIMERID'])
+        ...mapMutations('dashboard', ['SETMENUACTIVE'])
     }
 
 }

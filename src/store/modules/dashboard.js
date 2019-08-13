@@ -43,9 +43,9 @@ export default{
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        maxStepBuffer: 1,
-        currentStepBuffer: 1,
-        terminated:false,
+        maxStepBuffer: 1,  // the number of steps in the buffer
+        currentStepBuffer: 1,  // the step the simulation is displaying
+        terminated: false,  // true if we retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
         forcedPause:false,
@@ -92,6 +92,18 @@ export default{
                 state.isTimerRunning = true
             //}
         },
+        PAUSETIMER:function(state,value){
+            console.log("Step Timer paused")
+            state.timerID.pause()
+            state.isTimerRunning = false
+        },
+        STOPTIMER:function(state,value){
+            console.log("Step Timer stopped")
+            if (this.getTimerID != null) {
+                state.timerID.stop()
+            }
+            state.isTimerRunning = false
+        },
         SETTIMERID:function(state,value){
             state.timerID = value
         },
@@ -122,18 +134,22 @@ export default{
             let {step_num:step} = value
             state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // unconditionally set the maxStepBuffer
         SETBUFFERMAX:function(state,value){
             state.maxStepBuffer = value
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // conditionally update maxStepBuffer
         UPDATEBUFFERMAX:function(state,value){
             let {step_num:step} = value
-            state.maxStepBuffer = Math.max(step,state.maxStepBuffer)
+            state.maxStepBuffer = Math.max(step, state.maxStepBuffer)
         },
-        //The current step the simulation is displaying.
+        // unconditionally set the currentStepBuffer
         SETBUFFERCURRENT:function(state,value){
             state.currentStepBuffer = value
+        },
+        // update the currentStepBuffer, making sure it's <= maxStepBuffer
+        UPDATEBUFFERCURRENT:function(state,value){
+            state.currentStepBuffer = Math.min(value, state.maxStepBuffer)
         },
         SETAGENTTYPE:function(state,value){
             let{step_num:step} = value

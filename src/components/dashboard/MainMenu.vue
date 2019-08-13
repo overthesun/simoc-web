@@ -30,19 +30,21 @@ import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     computed:{
-        ...mapGetters('dashboard',['getTimerID', 'getGetStepsTimerID']),
+        ...mapGetters('dashboard',['getTimerID', 'getIsTimerRunning', 'getGetStepsTimerID']),
         ...mapGetters(['getUseLocalHost']),
 
 
     },
     methods:{
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','SETISTIMERRUNNING']),
+        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','STARTTIMER','PAUSETIMER']),
 
         // Called when the menu is closed, resumes the timer
         close:function(){
             this.SETMENUACTIVE(false)
-            if (this.getTimerID != null) {
-                this.getTimerID.resume()
+            if (this.getIsTimerRunning) {
+                console.log('mainmenu:45')
+                this.STARTTIMER()
+                // TODO usa a local var to determine the prev status
             }
         },
         // Stop Simulation button, this stops the timers and the simulation
@@ -51,18 +53,13 @@ export default {
             const path = "/kill_all_games"
             const killRoute = this.getUseLocalHost ? localHost + path : path
 
-            // stop timers that updates the dashboard
-            if (this.getTimerID != null) {
-                this.getTimerID.stop()
-                this.SETTIMERID(null)
-            }
+            this.PAUSETIMER() // pause the step timer
             // stop timer that sends requests to get_steps
             if (this.getGetStepsTimerID != null) {
                 window.clearTimeout(this.getGetStepsTimerID)
                 this.SETGETSTEPSTIMERID(null)
             }
             // stop the simulation
-            this.SETISTIMERRUNNING(false)
             this.SETTERMINATED(true)
 
             try{

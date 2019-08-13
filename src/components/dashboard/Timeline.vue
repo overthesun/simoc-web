@@ -28,7 +28,10 @@ export default {
     },
 
     mounted:function() {
-        const current = this.getCurrentStepBuffer
+        //Create a new timer object once the user has deselected the indicator
+        //The interval also needs to be stored universally to allow this to create a
+        //new timer object with the last used speed.
+        this.startTimer(1000)
     },
 
     computed:{
@@ -37,32 +40,45 @@ export default {
 
     },
     methods:{
-        ...mapMutations('dashboard',['SETTIMERID','SETBUFFERCURRENT']),
+        ...mapMutations('dashboard',['SETTIMERID','STARTTIMER','PAUSETIMER','STOPTIMER','UPDATEBUFFERCURRENT']),
+
+        startTimer: function(interval) {
+            // initialize and return the step timer that updates the
+            // current step and triggers watches that update the panels
+            this.STOPTIMER()  // if a timer exists already, stop it
+            let stepTimer = new StepTimer( () => {
+                // increment the step only if we have enough buffered steps
+                // TODO check the number of steps requests so we can still
+                // run simulations with a number of steps <= the limit
+                if (this.getMaxStepBuffer >= 30) {
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+                }
+            }, interval)
+            this.SETTIMERID(stepTimer)
+            this.STARTTIMER()
+            return stepTimer
+        },
 
         //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user
         //interactives with the timeline.
         pauseBuffer:function(){
+            // TODO save current state to local var and restore it in updatebuffer
             if (this.getTimerID != null) {
-                this.getTimerID.pause()
+                this.PAUSETIMER()
             }
         },
 
         //If the user has set the slider to a new value, reset everything to the new step.
         //Remember pause actually kills the old timer within the stepTimer.js
         updateBuffer:function(){
-            this.SETBUFFERCURRENT(parseInt(this.currentStep))
+            console.log('updateBuffer called')
+            this.UPDATEBUFFERCURRENT(parseInt(this.currentStep))
 
             //Create a new timer object once the user has deselected the indicator
             //The interval also needs to be stored universally to allow this to create a
             //new timer object with the last used speed.
-            let stepTimer = new StepTimer( () => {
-                // don't go beyond what's buffered already
-                let current = Math.min(this.getMaxStepBuffer, this.getCurrentStepBuffer+1)
-                this.SETBUFFERCURRENT(current)
-            },1000)
-
-            this.SETTIMERID(stepTimer) // Set the new timer ID to the dashboard store
-            this.getTimerID.resume() // Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
+            console.log('timeline:78')
+            this.startTimer(1000)  // TODO Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
         },
         updatePercentages: function() {
             this.currentStep = this.getCurrentStepBuffer
