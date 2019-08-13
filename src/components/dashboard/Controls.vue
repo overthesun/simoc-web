@@ -5,10 +5,10 @@
         <span class='icon-wrapper'>
             <fa-icon class='fa-icon menu-icon' :icon="['fas','backward']" @click="decreaseStepsPerSecond"/>
         </span>
-        <span class='icon-wrapper icon-play' :class="{'icon-play-hidden':isPaused}">
+        <span v-if="getIsTimerRunning" class='icon-wrapper icon-play'>
              <fa-icon class='fa-icon menu-icon' :icon="['fas','pause']"  @click="pauseTimer"/>
         </span>
-        <span class='icon-wrapper icon-play' :class="{'icon-play-hidden':!isPaused}" >
+        <span v-else class='icon-wrapper icon-play'>
              <fa-icon class='fa-icon menu-icon' :icon="['fas','play']" @click="resumeTimer"/>
         </span>
         <span class='icon-wrapper'>
@@ -22,33 +22,30 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
     data(){
         return{
-            isPaused:false,
-            stepInterval:1000,
+
         }
     },
     computed:{
-        ...mapGetters('dashboard',['getTimerID'])
+        ...mapGetters('dashboard',['getIsTimerRunning'])
     },
     methods:{
-        //Calls the pause method on the timer object stored within the dashboard store.
+        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER',
+                                      'INCSTEPINTERVAL', 'DECSTEPINTERVAL']),
         pauseTimer:function(){
-            this.isPaused = true
-            this.getTimerID.pause()
+            // pause the timer when the user clicks on the pause button
+            this.PAUSETIMER()
         },
-        //Calls the resume method on the timer object stored within the dashboard store.
         resumeTimer:function(){
-            this.isPaused = false
-            this.getTimerID.resume()
+            // start/resume the timer when the user clicks on the play button
+            this.STARTTIMER()
         },
-        //Calls the changeInterval method on the timer object stored within the dashboard store.
         increaseStepsPerSecond:function(){
-            this.stepInterval = Math.max(250,this.stepInterval-250)
-            this.getTimerID.changeInterval(this.stepInterval)
+            // decrease the step interval and make the steps advance faster
+            this.DECSTEPINTERVAL(250)
         },
-        //Calls the changeInterval method on the timer object stored within the dashboard store.
         decreaseStepsPerSecond:function(){
-            this.stepInterval = Math.min(2000,this.stepInterval+250)
-            this.getTimerID.changeInterval(this.stepInterval)
+            // increase the step interval and make the steps advance slower
+            this.INCSTEPINTERVAL(250)
         }
     }
 }
@@ -74,10 +71,6 @@ export default {
         font-size: 36px;
         &:hover{
             font-size:42px;
-        }
-
-        &-hidden{
-            display:none;
         }
     }
 </style>

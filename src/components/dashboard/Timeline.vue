@@ -21,28 +21,29 @@ import {StepTimer} from '../../javascript/stepTimer'
 export default {
     data(){
         return{
-            currentPercentage:1,
-            bufferPercentage:1,
-            currentStep:1
+            currentPercentage: 1,
+            bufferPercentage: 1,
+            currentStep: 1,
+            timerWasRunning: null,  // the status of timer before drag&dropping
+            userIsDragging: false,  // true when the user is dragging the slider
         }
     },
 
     mounted:function() {
-        //Create a new timer object once the user has deselected the indicator
-        //The interval also needs to be stored universally to allow this to create a
-        //new timer object with the last used speed.
-        this.startTimer(1000)
+        // start the timer when the component is mounted, the actual
+        // visualization will start only when the buffer has enough data
+        this.startTimer()
     },
 
     computed:{
-        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getForcedPause']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getIsTimerRunning','getForcedPause','getStepInterval']),
         ...mapGetters('wizard',['getTotalMissionHours'])
 
     },
     methods:{
         ...mapMutations('dashboard',['SETTIMERID','STARTTIMER','PAUSETIMER','STOPTIMER','UPDATEBUFFERCURRENT']),
 
-        startTimer: function(interval) {
+        startTimer: function() {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
@@ -53,33 +54,39 @@ export default {
                 if (this.getMaxStepBuffer >= 30) {
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
                 }
-            }, interval)
+            }, this.getStepInterval)
             this.SETTIMERID(stepTimer)
             this.STARTTIMER()
             return stepTimer
         },
 
-        //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user
-        //interactives with the timeline.
+        // called when the user starts dragging the timeline slider to
+        // prevent updates while the user is interacting with the slider
         pauseBuffer:function(){
-            // TODO save current state to local var and restore it in updatebuffer
+            if (this.userIsDragging) {
+                // the user is still dragging, do nothing
+                return
+            }
+            // save the current state before pausing
+            this.timerWasRunning = this.getIsTimerRunning
+            this.userIsDragging = true
             if (this.getTimerID != null) {
                 this.PAUSETIMER()
             }
         },
 
-        //If the user has set the slider to a new value, reset everything to the new step.
-        //Remember pause actually kills the old timer within the stepTimer.js
+        // called when the user selects a new step on the timeline slider
         updateBuffer:function(){
-            console.log('updateBuffer called')
+            this.userIsDragging = false  // the user released the slider
             this.UPDATEBUFFERCURRENT(parseInt(this.currentStep))
-
-            //Create a new timer object once the user has deselected the indicator
-            //The interval also needs to be stored universally to allow this to create a
-            //new timer object with the last used speed.
-            console.log('timeline:78')
-            this.startTimer(1000)  // TODO Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
+            // when the timer is paused and the slider moved beyond the max
+            // the position is not updated unless we call updatePercentages()
+            this.updatePercentages()
+            if (this.timerWasRunning) {
+                this.startTimer()
+            }
         },
+
         updatePercentages: function() {
             this.currentStep = this.getCurrentStepBuffer
             this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100

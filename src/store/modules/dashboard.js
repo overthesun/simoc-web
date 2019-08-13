@@ -43,9 +43,10 @@ export default{
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        maxStepBuffer: 1,  // the number of steps in the buffer
+        maxStepBuffer: 1,      // the number of steps in the buffer
         currentStepBuffer: 1,  // the step the simulation is displaying
-        terminated: false,  // true if we retrieved all steps from the server
+        stepInterval: 1000,    // the time between the steps, in milliseconds
+        terminated: false,     // true if we retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
         forcedPause:false,
@@ -57,6 +58,7 @@ export default{
         getStepParams:(state) => state.parameters,
         getMaxStepBuffer:(state) => state.maxStepBuffer,
         getCurrentStepBuffer:(state) => state.currentStepBuffer,
+        getStepInterval:(state) => state.stepInterval,
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
@@ -150,6 +152,21 @@ export default{
         // update the currentStepBuffer, making sure it's <= maxStepBuffer
         UPDATEBUFFERCURRENT:function(state,value){
             state.currentStepBuffer = Math.min(value, state.maxStepBuffer)
+        },
+        SETSTEPINTERVAL:function(state,value){
+            state.stepInterval = value
+        },
+        // increase the stepInterval, make the steps advance slower
+        INCSTEPINTERVAL:function(state,value){
+            // highest interval is 2s (1 step every 2 seconds)
+            state.stepInterval = Math.min(2000, state.stepInterval+value)
+            state.timerID.changeInterval(state.stepInterval)
+        },
+        // decrease the stepInterval, make the steps advance faster
+        DECSTEPINTERVAL:function(state,value){
+            // slowest interval is 250ms (4 steps per second)
+            state.stepInterval = Math.max(250, state.stepInterval-value)
+            state.timerID.changeInterval(state.stepInterval)
         },
         SETAGENTTYPE:function(state,value){
             let{step_num:step} = value
