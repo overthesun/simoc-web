@@ -60,7 +60,8 @@ export default {
             const path = "/kill_all_games"
             const killRoute = this.getUseLocalHost ? localHost + path : path
 
-            this.PAUSETIMER() // pause the step timer
+            this.PAUSETIMER()  // pause the step timer
+            this.timerWasRunning = false  // make sure it doesn't restart
             // stop timer that sends requests to get_steps
             if (this.getGetStepsTimerID != null) {
                 window.clearTimeout(this.getGetStepsTimerID)
