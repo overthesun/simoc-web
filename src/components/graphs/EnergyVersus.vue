@@ -41,23 +41,26 @@ export default {
             // and we need to redraw the previous 24 steps, otherwise we add one step
             let s = (currentStep == this.prevStep+1) ? currentStep : currentStep-23
             for (; s <= currentStep; s++) {
-                // if the step is <= 0, fill the data with null
-                if (s > 0) {
-                    var {enrg_kwh: {value: production}} = this.getTotalProduction(s)
-                    var {enrg_kwh: {value: consumption}} = this.getTotalConsumption(s)
-                }
-                else {
-                    var production = null
-                    var consumption = null
-                }
                 // remove the oldest values
                 data.datasets[0].data.shift()
                 data.datasets[1].data.shift()
                 data.labels.shift()
-                // add the new ones
-                data.datasets[0].data.push(production)
-                data.datasets[1].data.push(consumption)
-                data.labels.push(s)
+                if (s > 0) {
+                    let {enrg_kwh: {value: production}} = this.getTotalProduction(s)
+                    let {enrg_kwh: {value: consumption}} = this.getTotalConsumption(s)
+                    // add the new values
+                    data.datasets[0].data.push(production)
+                    data.datasets[1].data.push(consumption)
+                    data.labels.push(s)
+                }
+                else {
+                    // if the step is <= 0 there are no data to add, but none/undefined
+                    // are plotted, so just increase the length to keep it equal to 24
+                    // without adding a plottable value (it creates an empty slot)
+                    data.datasets[0].data.length++
+                    data.datasets[1].data.length++
+                    data.labels.length++
+                }
             }
             this.chart.update()
             this.prevStep = currentStep
