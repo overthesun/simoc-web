@@ -9,7 +9,7 @@ A condition needs to be added in if the timer is paused by some other means than
             -->
             <div class='timeline-item timeline-text'>{{getCurrentStepBuffer}}</div>
             <span class='timeline-item'>
-                <input class='timeline' type='range' min='1' :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
+                <input class='timeline' type='range' min='1' :max="getTotalMissionHours" v-model.number="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
             <div class='timeline-item timeline-text'>{{getTotalMissionHours}}</div>
         </div>
@@ -63,8 +63,10 @@ export default {
         // called when the user starts dragging the timeline slider to
         // prevent updates while the user is interacting with the slider
         pauseBuffer:function(){
+            // update the graphs in real-time while the user drags
+            this.UPDATEBUFFERCURRENT(this.currentStep)
             if (this.userIsDragging) {
-                // the user is still dragging, do nothing
+                // the user is still dragging, do nothing else
                 return
             }
             // save the current state before pausing
@@ -78,7 +80,7 @@ export default {
         // called when the user selects a new step on the timeline slider
         updateBuffer:function(){
             this.userIsDragging = false  // the user released the slider
-            this.UPDATEBUFFERCURRENT(parseInt(this.currentStep))
+            this.UPDATEBUFFERCURRENT(this.currentStep)
             // when the timer is paused and the slider moved beyond the max
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
