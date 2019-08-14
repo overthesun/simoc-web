@@ -13,6 +13,11 @@ See chart.js documentation for further details on the related mounted functions.
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
+    data(){
+        return{
+          prevStep: 0,
+        }
+    },
     props:{
         id:String,
     },
@@ -30,23 +35,32 @@ export default {
 
     methods:{
         updateChart: function() {
-            // TODO when the user selects an arbitrary step, it will be added
-            // after the others; ideally the previous 23 steps should be
-            // retrieved and displayed instead
-            const step = this.getCurrentStepBuffer
+            const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
-            let {enrg_kwh:consumption} = this.getTotalConsumption(step)
-            let {enrg_kwh:production} = this.getTotalProduction(step)
-            // remove the oldest values
-            data.datasets[0].data.shift()
-            data.datasets[1].data.shift()
-            data.labels.shift()
-            // add the new ones
-            data.datasets[0].data.push(production.value)
-            data.datasets[1].data.push(consumption.value)
-            data.labels.push(step)
-
+            // if the currentStep is not prevStep+1, the user moved the scrubber
+            // and we need to redraw the previous 24 steps, otherwise we add one step
+            let s = (currentStep == this.prevStep+1) ? currentStep : currentStep-23
+            for (; s <= currentStep; s++) {
+                // if the step is <= 0, fill the data with null
+                if (s > 0) {
+                    var {enrg_kwh: {value: production}} = this.getTotalProduction(s)
+                    var {enrg_kwh: {value: consumption}} = this.getTotalConsumption(s)
+                }
+                else {
+                    var production = null
+                    var consumption = null
+                }
+                // remove the oldest values
+                data.datasets[0].data.shift()
+                data.datasets[1].data.shift()
+                data.labels.shift()
+                // add the new ones
+                data.datasets[0].data.push(production)
+                data.datasets[1].data.push(consumption)
+                data.labels.push(s)
+            }
             this.chart.update()
+            this.prevStep = currentStep
         }
     },
 
