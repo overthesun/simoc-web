@@ -1,27 +1,27 @@
-//Contains the shared state for all things related to the dashboard.
+// Contains the shared state for all things related to the dashboard.
 
-//Parameters for the get_step route
+// Parameters for the get_step route
 
-//Step data - broken doewn into objects based on filter type. These can be accessed via the below getters.
-//The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
+// Step data: broken down into objects based on filter type. These can be accessed via the below getters.
+// The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
 // agentCount | totalAgentMass | totalProduction | totalConsumption | storageRatio
 
-//stepBuffer - This actually needs to be broken down into individual pieces for each value, and refactored in the
-//called places to the approriate variable. A number of watcher functions within components reference this for updating various data points
-//such as panels and charts.
 
-//Timer ID - this is used to pause, resume, speed controls or kill the setTimeout object within. SEE stepTimer.js within js folder for
-//further details.
+// currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized, and the highest step in the buffer.
+// A number of watcher functions within components reference currentStepBuffer for updating various data points such as panels and charts.
 
-//Termination flag - Universally accessible point to check if the simulation has terminated.
+// Timer ID: this is used to pause, resume, speed controls or kill the setTimeout object within.
+// SEE stepTimer.js within js folder for further details.
 
-//ACTIONS
-//ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
-//it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
-//So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
-//different step objects
+// Termination flag: Universally accessible point to check if the simulation has terminated.
 
-//To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
+// ACTIONS
+// ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
+// it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
+// So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
+// different step objects
+
+// To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
 
 export default{
     state:{
@@ -43,21 +43,21 @@ export default{
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        stepBuffer:{
-            max:1,
-            current:1
-        },
-        terminated:false,
+        maxStepBuffer: 1,      // the number of steps in the buffer
+        currentStepBuffer: 1,  // the step the simulation is displaying
+        stepInterval: 1000,    // the time between the steps, in milliseconds
+        terminated: false,     // true if we retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
-        forcedPause:false,
         isTimerRunning:false,
         menuActive:false
     },
     getters:{
         getMenuActive:(state) => state.menuActive,
         getStepParams:(state) => state.parameters,
-        getStepBuffer:(state) => state.stepBuffer,
+        getMaxStepBuffer:(state) => state.maxStepBuffer,
+        getCurrentStepBuffer:(state) => state.currentStepBuffer,
+        getStepInterval:(state) => state.stepInterval,
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
@@ -73,12 +73,12 @@ export default{
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state =>state.isTimerRunning,
-        getForcedPause: state => state.forcedPause, //Used for menus and such when the range bar absolute must not have input
     },
     mutations:{
         SETPARAMETERS:function(state,value){
             state.parameters = value
         },
+        // show the dashboard menu when true, hide it otherwise
         SETMENUACTIVE:function(state,value){
             state.menuActive = value
         },
@@ -87,11 +87,23 @@ export default{
         // DashboardView component on mounted. The timer is not started until the conditions
         // are met for a reasonable buffer amount.
         STARTTIMER:function(state,value){
-            //if((state.stepBuffer.max >= 100 || state.terminated ) && !state.isTimerRunning){
+            //if((state.maxStepBuffer >= 100 || state.terminated ) && !state.isTimerRunning){
                 console.log("Step Timer Running")
                 state.timerID.resume()
                 state.isTimerRunning = true
             //}
+        },
+        PAUSETIMER:function(state,value){
+            console.log("Step Timer paused")
+            state.timerID.pause()
+            state.isTimerRunning = false
+        },
+        STOPTIMER:function(state,value){
+            console.log("Step Timer stopped")
+            if (this.getTimerID != null) {
+                state.timerID.stop()
+            }
+            state.isTimerRunning = false
         },
         SETTIMERID:function(state,value){
             state.timerID = value
@@ -121,20 +133,39 @@ export default{
         //This is used for the number of steps to grab from get_step_to, after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS:function(state,value){
             let {step_num:step} = value
-            state.parameters.n_steps = state.stepBuffer.max > 100 ? 100 : 10
+            state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // unconditionally set the maxStepBuffer
         SETBUFFERMAX:function(state,value){
-            state.stepBuffer.max = value
+            state.maxStepBuffer = value
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // conditionally update maxStepBuffer
         UPDATEBUFFERMAX:function(state,value){
             let {step_num:step} = value
-            state.stepBuffer.max = Math.max(step,state.stepBuffer.max)
+            state.maxStepBuffer = Math.max(step, state.maxStepBuffer)
         },
-        //The current step the simulation is displaying.
+        // unconditionally set the currentStepBuffer
         SETBUFFERCURRENT:function(state,value){
-            state.stepBuffer.current = value
+            state.currentStepBuffer = value
+        },
+        // update the currentStepBuffer, making sure it's <= maxStepBuffer
+        UPDATEBUFFERCURRENT:function(state,value){
+            state.currentStepBuffer = Math.min(value, state.maxStepBuffer)
+        },
+        SETSTEPINTERVAL:function(state,value){
+            state.stepInterval = value
+        },
+        // increase the stepInterval, make the steps advance slower
+        INCSTEPINTERVAL:function(state,value){
+            // highest interval is 2s (1 step every 2 seconds)
+            state.stepInterval = Math.min(2000, state.stepInterval+value)
+            state.timerID.changeInterval(state.stepInterval)
+        },
+        // decrease the stepInterval, make the steps advance faster
+        DECSTEPINTERVAL:function(state,value){
+            // slowest interval is 250ms (4 steps per second)
+            state.stepInterval = Math.max(250, state.stepInterval-value)
+            state.timerID.changeInterval(state.stepInterval)
         },
         SETAGENTTYPE:function(state,value){
             let{step_num:step} = value

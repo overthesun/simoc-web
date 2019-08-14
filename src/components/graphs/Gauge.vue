@@ -29,18 +29,14 @@ export default {
     },
 
     computed:{
-        ...mapGetters('dashboard',['getStepBuffer'])
-        //...mapGetters('stepData',['getStepNumber'])
+        ...mapGetters('dashboard',['getCurrentStepBuffer'])
     },
 
     watch:{
-        //Update the chart datasets and labels when the step buffer has changed.
-        //This actually causes a bug where charts are updated even when just the 'max' is
-        //updated within the object. This needs to be changed to watch just the step number only to prevent
-        //uncessary updates as seen currently in the energy versus chart.
-        getStepBuffer:{
+        // update the chart datasets and labels when the current step buffer has changed.
+        getCurrentStepBuffer:{
             handler:function(){
-                const {current} = this.getStepBuffer
+                const current = this.getCurrentStepBuffer
                 let retrieved = this.getter(current)
                 let value = retrieved[this.keyValue]
                 let remainder = this.maximum - value

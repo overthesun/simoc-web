@@ -28,7 +28,7 @@ export default {
     panelTitle: 'Mission Information',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getStepBuffer','getAgentType']),
+        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getAgentType']),
     },
     methods:{
         stringFormatter: StringFormatter,

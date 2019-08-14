@@ -4,7 +4,7 @@ use some of these features.
  -->
 
 <template>
-    <div class='main-menu-wrapper' @click='close'>
+    <div class='main-menu-wrapper' @click="close">
         <div class='menu-wrapper'>
             <header class='header'>
                 <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
@@ -29,20 +29,29 @@ use some of these features.
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
+    data(){
+        return{
+            timerWasRunning: null,  // the status of timer before opening the menu
+        }
+    },
+    mounted: function() {
+        // save the status of the timer and pause it when the menu is opened
+        this.timerWasRunning = this.getIsTimerRunning
+        this.PAUSETIMER()
+    },
     computed:{
-        ...mapGetters('dashboard',['getTimerID', 'getGetStepsTimerID']),
+        ...mapGetters('dashboard',['getTimerID', 'getIsTimerRunning', 'getGetStepsTimerID']),
         ...mapGetters(['getUseLocalHost']),
-
-
     },
     methods:{
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','SETISTIMERRUNNING']),
+        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','STARTTIMER','PAUSETIMER']),
 
         // Called when the menu is closed, resumes the timer
-        close:function(){
+        close: function() {
             this.SETMENUACTIVE(false)
-            if (this.getTimerID != null) {
-                this.getTimerID.resume()
+            if (this.timerWasRunning) {
+                // restart the timer if it was running
+                this.STARTTIMER()
             }
         },
         // Stop Simulation button, this stops the timers and the simulation
@@ -51,18 +60,13 @@ export default {
             const path = "/kill_all_games"
             const killRoute = this.getUseLocalHost ? localHost + path : path
 
-            // stop timers that updates the dashboard
-            if (this.getTimerID != null) {
-                this.getTimerID.stop()
-                this.SETTIMERID(null)
-            }
+            this.PAUSETIMER() // pause the step timer
             // stop timer that sends requests to get_steps
             if (this.getGetStepsTimerID != null) {
                 window.clearTimeout(this.getGetStepsTimerID)
                 this.SETGETSTEPSTIMERID(null)
             }
             // stop the simulation
-            this.SETISTIMERRUNNING(false)
             this.SETTERMINATED(true)
 
             try{

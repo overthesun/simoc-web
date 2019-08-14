@@ -7,9 +7,9 @@ A condition needs to be added in if the timer is paused by some other means than
         <div class='timeline-wrapper'>
 <!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
             -->
-            <div class='timeline-item timeline-text'>{{getStepBuffer.current}}</div>
+            <div class='timeline-item timeline-text'>{{getCurrentStepBuffer}}</div>
             <span class='timeline-item'>
-                <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
+                <input class='timeline' type='range' min='1' :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
             <div class='timeline-item timeline-text'>{{getTotalMissionHours}}</div>
         </div>
@@ -21,62 +21,84 @@ import {StepTimer} from '../../javascript/stepTimer'
 export default {
     data(){
         return{
-            currentPercentage:1,
-            bufferPercentage:1,
-            currentStep:1
+            currentPercentage: 1,
+            bufferPercentage: 1,
+            currentStep: 1,
+            timerWasRunning: null,  // the status of timer before drag&dropping
+            userIsDragging: false,  // true when the user is dragging the slider
         }
     },
 
-    mounted:function(){
-        const {current} = this.getStepBuffer
+    mounted:function() {
+        // start the timer when the component is mounted, the actual
+        // visualization will start only when the buffer has enough data
+        this.startTimer()
     },
 
     computed:{
-        ...mapGetters('dashboard',['getStepBuffer','getTimerID','getForcedPause']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getIsTimerRunning','getStepInterval']),
         ...mapGetters('wizard',['getTotalMissionHours'])
 
     },
     methods:{
-        ...mapMutations('dashboard',['SETTIMERID','SETBUFFERCURRENT']),
+        ...mapMutations('dashboard',['SETTIMERID','STARTTIMER','PAUSETIMER','STOPTIMER','UPDATEBUFFERCURRENT']),
 
-        //Pause the timer if the user has started to drag the timeline slider. This prevents updates while the user
-        //interactives with the timeline.
+        startTimer: function() {
+            // initialize and return the step timer that updates the
+            // current step and triggers watches that update the panels
+            this.STOPTIMER()  // if a timer exists already, stop it
+            let stepTimer = new StepTimer( () => {
+                // increment the step only if we have enough buffered steps
+                // TODO check the number of steps requests so we can still
+                // run simulations with a number of steps <= the limit
+                if (this.getMaxStepBuffer >= 30) {
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+                }
+            }, this.getStepInterval)
+            this.SETTIMERID(stepTimer)
+            this.STARTTIMER()
+            return stepTimer
+        },
+
+        // called when the user starts dragging the timeline slider to
+        // prevent updates while the user is interacting with the slider
         pauseBuffer:function(){
+            if (this.userIsDragging) {
+                // the user is still dragging, do nothing
+                return
+            }
+            // save the current state before pausing
+            this.timerWasRunning = this.getIsTimerRunning
+            this.userIsDragging = true
             if (this.getTimerID != null) {
-                this.getTimerID.pause()
+                this.PAUSETIMER()
             }
         },
 
-        //If the user has set the slider to a new value, reset everything to the new step.
-        //Remember pause actually kills the old timer within the stepTimer.js
+        // called when the user selects a new step on the timeline slider
         updateBuffer:function(){
-            this.SETBUFFERCURRENT(parseInt(this.currentStep))
+            this.userIsDragging = false  // the user released the slider
+            this.UPDATEBUFFERCURRENT(parseInt(this.currentStep))
+            // when the timer is paused and the slider moved beyond the max
+            // the position is not updated unless we call updatePercentages()
+            this.updatePercentages()
+            if (this.timerWasRunning) {
+                this.startTimer()
+            }
+        },
 
-            //Create a new timer object once the user has deselected the indicator
-            //The interval also needs to be stored universally to allow this to create a
-            //new timer object with the last used speed.
-            let stepTimer = new StepTimer( () => {
-                let {max} = this.getStepBuffer
-                let current = Math.min(max,this.getStepBuffer.current+1) //Don't go beyond what's buffered already.
-                this.SETBUFFERCURRENT(current)
-            },1000)
+        updatePercentages: function() {
+            this.currentStep = this.getCurrentStepBuffer
+            this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100
+            this.bufferPercentage = (this.getMaxStepBuffer / this.getTotalMissionHours) * 100
+        },
 
-            this.SETTIMERID(stepTimer) // Set the new timer ID to the dashboard store
-            this.getTimerID.resume() // Resume the timer. This is also the spot that causes a bug with the timeline starting up regardless of the state.
-
-        }
     },
-    watch:{
-        getStepBuffer:{
-            handler:function(){
-                let {max,current} = this.getStepBuffer
-                this.currentStep = current
-                this.currentPercentage = (current / this.getTotalMissionHours) * 100
-                this.bufferPercentage = (max / this.getTotalMissionHours) * 100
-            },
-            deep:true
-        }
-    }
+    watch: {
+        // update scrubber percentages when the current and/or max step change
+        getCurrentStepBuffer: function() { this.updatePercentages() },
+        getMaxStepBuffer: function() { this.updatePercentages() },
+    },
 }
 </script>
 

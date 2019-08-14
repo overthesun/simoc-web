@@ -10,13 +10,12 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import axios from 'axios'
 import {StepTimer} from '../javascript/stepTimer'
 export default {
-    mounted:function(){
+    beforeMount:function(){
+        // reinitialize everything before mounting
         this.SETGAMEID(this.getGameID)  //Set the game id for the get_step parameters
 
         // Kill the timer if there is still one running somehow
-        if(this.getTimerID != null){
-            this.getTimerID.stop()
-        }
+        this.STOPTIMER()
         // do the same with the get_steps timer
         if(this.getGetStepsTimerID){
             window.clearTimeout(this.getGetStepsTimerID)
@@ -27,31 +26,29 @@ export default {
         this.SETBUFFERCURRENT(1)            // Reset the current buffer value
         this.SETBUFFERMAX(1)                // Reset the max buffer value
         this.SETMINSTEPNUMBER(1)            // Reset the starting step
-        this.SETISTIMERRUNNING(false)       // Reset the timer has been created flag
         this.SETTERMINATED(false)           // Reset the termination conditions have been met flag
+        //This sets the get_step paramter for the totalAgentMass filter. This should actually be done
+        //in tandem with the configuration wizard plant updates.
+        this.SETPLANTSPECIESPARAM(this.getConfiguration)
         this.initialSetup()
 
+        /*
         //This is the timer object that will be called whenever the step number is increased.
         //It defaults to being called every second. Also this is not started until at least 100 steps have been buffered in.
         //See below methods for where the timer is started.
         let stepTimer = new StepTimer( () => {
-            let {max} = this.getStepBuffer  // Get the max step that has been buffered in
-            let current = Math.min(max,this.getStepBuffer.current+1) //Don't go beyond what's buffered already.
-            this.SETBUFFERCURRENT(current)  //Set the current step number
+            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
         },1000)
 
         this.SETTIMERID(stepTimer) // The timer is set within the dashboard store
-        //This sets the get_step paramter for the totalAgentMass filter. This should actually be done
-        //in tandem with the configuration wizard plant updates.
-        this.SETPLANTSPECIESPARAM(this.getConfiguration)
-
+        */
 
 
         //stepTimer.resume()
     },
     computed:{
         //Getterss from the vuex stores
-        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
+        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard',['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getUseLocalHost']),
@@ -59,7 +56,7 @@ export default {
     },
     methods:{
         //
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','SETISTIMERRUNNING','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETBUFFERMAX','SETBUFFERCURRENT','SETTERMINATED']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETTERMINATED','PAUSETIMER','STOPTIMER']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
@@ -102,37 +99,23 @@ export default {
             //Add in termination condition check
             await this.parseStep(Object.values(step_data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
 
-            //If the max of the buffer size is at the end, turn on the terminated condition
-            if(this.getStepBuffer.max >= parseInt(this.getTotalMissionHours)){
+            // keep requesting steps until we retrieved them all, then terminate
+            if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours)) {
+                this.stepBufferTimer()
+            }
+            else {
                 this.SETTERMINATED(true)
-            }
-
-            //If the buffer has at least 100 steps or if it's been terminated then start the
-            //step update timer.
-
-            //Termination condition is added in so that simulations less than 100 steps can still run.
-            if(this.getStepBuffer.max >= 100 || this.getTerminated){
-                if(!this.getIsTimerRunning && this.getTimerID != null){ //If the timer isn't running yet, get it started.
-                    this.STARTTIMER() //Call the mutation used within the dashboard store to start the timer.
-                }
-            }
-            if (!this.getTerminated) {
-                this.stepBufferTimer() //Rinse and repeat
             }
         },
     },
     watch:{
-        //This method pauses the current simulation if the current step is at or beyond the
-        //amount of steps that are currently buffered.
-        getStepBuffer:{
-            handler:function(){
-                let {current,max} = this.getStepBuffer
-                if(current >= max){
-                    this.getTimerID.pause()
-                }
-            },
-            deep:true
-        }
+        // this method pauses the current simulation if the current step
+        // is at or beyond the amount of steps that are currently buffered
+        getCurrentStepBuffer: function() {
+            if (this.getCurrentStepBuffer >= this.getMaxStepBuffer) {
+                this.PAUSETIMER()
+            }
+        },
     }
 }
 </script>
