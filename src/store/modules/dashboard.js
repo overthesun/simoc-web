@@ -49,7 +49,6 @@ export default{
         terminated: false,     // true if we retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
-        forcedPause:false,
         isTimerRunning:false,
         menuActive:false
     },
@@ -74,12 +73,12 @@ export default{
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state =>state.isTimerRunning,
-        getForcedPause: state => state.forcedPause, //Used for menus and such when the range bar absolute must not have input
     },
     mutations:{
         SETPARAMETERS:function(state,value){
             state.parameters = value
         },
+        // show the dashboard menu when true, hide it otherwise
         SETMENUACTIVE:function(state,value){
             state.menuActive = value
         },

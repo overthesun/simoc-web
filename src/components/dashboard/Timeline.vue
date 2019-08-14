@@ -9,7 +9,7 @@ A condition needs to be added in if the timer is paused by some other means than
             -->
             <div class='timeline-item timeline-text'>{{getCurrentStepBuffer}}</div>
             <span class='timeline-item'>
-                <input class='timeline' type='range' min='1' :disabled="getForcedPause" :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
+                <input class='timeline' type='range' min='1' :max="getTotalMissionHours" v-model="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
             </span>
             <div class='timeline-item timeline-text'>{{getTotalMissionHours}}</div>
         </div>
@@ -36,7 +36,7 @@ export default {
     },
 
     computed:{
-        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getIsTimerRunning','getForcedPause','getStepInterval']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getIsTimerRunning','getStepInterval']),
         ...mapGetters('wizard',['getTotalMissionHours'])
 
     },

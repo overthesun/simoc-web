@@ -4,7 +4,7 @@ use some of these features.
  -->
 
 <template>
-    <div class='main-menu-wrapper' @click='close'>
+    <div class='main-menu-wrapper' @click="close">
         <div class='menu-wrapper'>
             <header class='header'>
                 <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
@@ -29,22 +29,29 @@ use some of these features.
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
+    data(){
+        return{
+            timerWasRunning: null,  // the status of timer before opening the menu
+        }
+    },
+    mounted: function() {
+        // save the status of the timer and pause it when the menu is opened
+        this.timerWasRunning = this.getIsTimerRunning
+        this.PAUSETIMER()
+    },
     computed:{
         ...mapGetters('dashboard',['getTimerID', 'getIsTimerRunning', 'getGetStepsTimerID']),
         ...mapGetters(['getUseLocalHost']),
-
-
     },
     methods:{
         ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','STARTTIMER','PAUSETIMER']),
 
         // Called when the menu is closed, resumes the timer
-        close:function(){
+        close: function() {
             this.SETMENUACTIVE(false)
-            if (this.getIsTimerRunning) {
-                console.log('mainmenu:45')
+            if (this.timerWasRunning) {
+                // restart the timer if it was running
                 this.STARTTIMER()
-                // TODO usa a local var to determine the prev status
             }
         },
         // Stop Simulation button, this stops the timers and the simulation
