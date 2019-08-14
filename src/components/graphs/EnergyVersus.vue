@@ -29,20 +29,22 @@ export default {
     },
 
     methods:{
-
-        //Could actually be placed within the watch method.
-        updateChart:function(){
-            console.log(this.getTotalProduction(this.getCurrentStepBuffer))
-            let{enrg_kwh:consumption} = this.getTotalConsumption(this.getCurrentStepBuffer)
-            let{enrg_kwh:production} = this.getTotalProduction(this.getCurrentStepBuffer)
-
-            this.chart.data.datasets[0].data.shift()
-            this.chart.data.datasets[1].data.shift()
-            this.chart.data.labels.shift()
-
-            this.chart.data.datasets[0].data.push(production.value)
-            this.chart.data.datasets[1].data.push(consumption.value)
-            this.chart.data.labels.push(this.getCurrentStepBuffer)
+        updateChart: function() {
+            // TODO when the user selects an arbitrary step, it will be added
+            // after the others; ideally the previous 23 steps should be
+            // retrieved and displayed instead
+            const step = this.getCurrentStepBuffer
+            const data = this.chart.data
+            let {enrg_kwh:consumption} = this.getTotalConsumption(step)
+            let {enrg_kwh:production} = this.getTotalProduction(step)
+            // remove the oldest values
+            data.datasets[0].data.shift()
+            data.datasets[1].data.shift()
+            data.labels.shift()
+            // add the new ones
+            data.datasets[0].data.push(production.value)
+            data.datasets[1].data.push(consumption.value)
+            data.labels.push(step)
 
             this.chart.update()
         }
@@ -77,8 +79,13 @@ export default {
                         ticks:{
                             beginAtZero:true,
                             callback:function(value,index,values){
-                                return value + ' kW'
+                                return value + ' kWh'
                             }
+                        }
+                    }],
+                    xAxes:[{
+                        ticks:{
+                            beginAtZero:true,
                         }
                     }]
                 },
@@ -92,15 +99,6 @@ export default {
                 title:{
                     display:false,
                     text:'(Energy) Consumption Vs Production'
-                },
-                scales:{
-                    xAxes:[{
-                        ticks:{
-                            min:0,
-                            max:24,
-                            beginAtZero:true,
-                        }
-                    }]
                 },
 
                 defaultFontColor: '#1e1e1e',
