@@ -18,7 +18,7 @@
                 <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
                 <!-- Else, if we are in the Expert config or in the Finalize step of the Guided config, show all components -->
                 <section class='form-wrapper' v-else-if="activeConfigType === 'Expert' || activeForm === 'Finalize'">
-                    <Presets/>
+                    <Presets v-if="activeConfigType === 'Expert'" />
                     <Initial/>
                     <Inhabitants/>
                     <Greenhouse/>
