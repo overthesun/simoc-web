@@ -100,7 +100,7 @@ export default {
                 return;
             }
             this.stopSimulation()
-            this.$router.push("configuration")
+            this.$router.push("menuconfig")
         }
     }
 }
