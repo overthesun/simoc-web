@@ -25,6 +25,9 @@ Future version should also automatically switch the selected preset to 'custom' 
                 </select>
             </div>
         </label>
+        <div class="custom-preset">
+            Custom Preset: <button @click="saveToLocalStorage">Save</button><button @click="loadFromLocalStorage">Load</button>
+        </div>
     </form>
 </template>
 
@@ -33,7 +36,21 @@ import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     data(){
         return{
+            // the selected preset is saved here
             presets:{
+                location:"none",
+                duration:{type:"none",amount:'0',units:"none"},
+                humans:{type:"none",amount:'0',units:""},
+                food:{type:"none",amount:'0',units:""},
+                crewQuarters:{type:"none",amount:'0',units:""},
+                eclss:{type:"none",amount:'0',units:""},
+                powerGeneration:{type:"none",amount:'0',units:""},
+                powerStorage:{type:"none",amount:'0',units:""},
+                greenhouse:{type:"none",amount:'0',units:""},
+                plantSpecies:[],
+            },
+            // these are the default presets, none is the initial one
+            none:{
                 location:"none",
                 duration:{type:"none",amount:'0',units:"none"},
                 humans:{type:"none",amount:'0',units:""},
@@ -113,28 +130,32 @@ export default {
                     {"type":"lettuce","amount":34}
                 ],
             },
-            none:{
-                location:"none",
-                duration:{type:"none",amount:'0',units:"none"},
-                humans:{type:"none",amount:'0',units:""},
-                food:{type:"none",amount:'0',units:""},
-                crewQuarters:{type:"none",amount:'0',units:""},
-                eclss:{type:"none",amount:'0',units:""},
-                powerGeneration:{type:"none",amount:'0',units:""},
-                powerStorage:{type:"none",amount:'0',units:""},
-                greenhouse:{type:"none",amount:'0',units:""},
-                plantSpecies:[],
-            },
         }
     },
+    computed:{
+        ...mapGetters('wizard',['getConfiguration']),
+    },
     methods:{
-        ...mapMutations('wizard',['SETCONFIGURATION'])
-    }
+        ...mapMutations('wizard',['SETCONFIGURATION']),
+        saveToLocalStorage: function () {
+            // save custom preset to local storage
+            const config = JSON.stringify(this.getConfiguration)
+            localStorage.setItem('custom-config', config)
+        },
+        loadFromLocalStorage: function () {
+            // load custom preset from the local storage if available,
+            // otherwise load an empty preset
+            const config = localStorage.getItem('custom-config')
+            this.SETCONFIGURATION(config?JSON.parse(config):this.none)
+        },
+    },
 }
 </script>
 
 <style lang="scss" scoped>
-    @import '../../sass/components/configuration-input';
+@import '../../sass/components/configuration-input';
 
-
+.custom-preset {
+    margin-top: 1em;
+}
 </style>
