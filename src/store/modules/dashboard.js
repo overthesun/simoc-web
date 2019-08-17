@@ -25,26 +25,15 @@
 
 export default{
     state:{
-        parameters:{
-            "game_id":undefined,
-            "min_step_num": 1,
-            "n_steps": 10,
-            "total_agent_count":["human_agent"],
-            "total_agent_mass":[],
-            "total_production":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
-            "total_consumption":["atmo_o2","h2o_potb","enrg_kwh"],
-            "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
-            "parse_filters":[],
-            "single_agent":1,
-        },
-
+        // parameters for the get_steps route
+        parameters: {},
         agentCount:{1:{"human_agent":0}},
         totalAgentMass:{},
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        maxStepBuffer: 1,      // the number of steps in the buffer
-        currentStepBuffer: 1,  // the step the simulation is displaying
+        maxStepBuffer: 0,      // the number of steps in the buffer
+        currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
         terminated: false,     // true if we retrieved all steps from the server
         timerID:undefined,
@@ -205,7 +194,29 @@ export default{
                 state.parameters.total_agent_mass.push(item.type)
                 state.totalAgentMass[item.type] = {"value":0,"units":undefined}
             })
-        }
+        },
+        INITGAME: function(state, value) {
+            // set a new game_id and reset all other values
+            console.log('game_id is', value)
+            state.parameters = {
+                // the game is set before reaching the dashboard and
+                // resetting, so preserve its value
+                "game_id": value,
+                "min_step_num": 0,
+                "n_steps": 10,
+                "total_agent_count":["human_agent"],
+                "total_agent_mass":[],
+                "total_production":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
+                "total_consumption":["atmo_o2","h2o_potb","enrg_kwh"],
+                "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
+                "parse_filters":[],
+                "single_agent":1,
+            }
+            state.totalAgentMass = {}
+            state.totalProduction = {}
+            state.totalConsumption = {}
+            state.storageRatio = {}
+        },
     },
     actions:{
         parseStep({commit,dispatch},stepData){
