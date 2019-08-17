@@ -11,13 +11,12 @@ import axios from 'axios'
 import {StepTimer} from '../javascript/stepTimer'
 export default {
     beforeMount:function(){
-        // reinitialize everything before mounting
-        this.SETGAMEID(this.getGameID)  //Set the game id for the get_step parameters
+        // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
         this.STOPTIMER()
         // do the same with the get_steps timer
-        if(this.getGetStepsTimerID){
+        if (this.getGetStepsTimerID) {
             window.clearTimeout(this.getGetStepsTimerID)
         }
         console.log('Starting simulation', this.getGameID)
@@ -27,24 +26,21 @@ export default {
         this.SETBUFFERMAX(1)                // Reset the max buffer value
         this.SETMINSTEPNUMBER(1)            // Reset the starting step
         this.SETTERMINATED(false)           // Reset the termination conditions have been met flag
-        //This sets the get_step paramter for the totalAgentMass filter. This should actually be done
-        //in tandem with the configuration wizard plant updates.
+
+        // init a new game, set game id, reset all data buffers
+        this.INITGAME(this.getGameID)
+        // This sets the get_step parameter for the totalAgentMass filter.
+        // TODO: this should actually be done in tandem with the configuration wizard plant updates.
+        // This must be done after INITGAME or it will be reset
         this.SETPLANTSPECIESPARAM(this.getConfiguration)
-        this.initialSetup()
 
-        /*
-        //This is the timer object that will be called whenever the step number is increased.
-        //It defaults to being called every second. Also this is not started until at least 100 steps have been buffered in.
-        //See below methods for where the timer is started.
-        let stepTimer = new StepTimer( () => {
-            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
-        },1000)
+        console.log('Starting simulation', this.getGameID)
 
-        this.SETTIMERID(stepTimer) // The timer is set within the dashboard store
-        */
+        // this starts the timer that asks the steps to the backend
+        this.requestStepsNum()
 
-
-        //stepTimer.resume()
+        // after this, the Timeline component will be mounted
+        // and it will start the timer that shows the steps
     },
     computed:{
         //Getterss from the vuex stores
@@ -56,16 +52,17 @@ export default {
     },
     methods:{
         //
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETTERMINATED','PAUSETIMER','STOPTIMER']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETTERMINATED','INITGAME']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
-
-        initialSetup: async function(){
+        requestStepsNum: async function(){
+            // tell the backend how many steps we need for this game
             const localHost = "http://localhost:8000"
             const getStepToRoute = this.getUseLocalHost ? localHost + "/get_step_to" : "/get_step_to"
 
-            const stepToParams = {step_num:this.getTotalMissionHours,game_id:this.getGameID} //Use the total number of mission hours as the number of steps to be calculated.
+            // use the total number of mission hours as the number of steps to be calculated
+            const stepToParams = {step_num:this.getTotalMissionHours, game_id:this.getGameID}
             const stepParams = this.getStepParams //Retrieve the parameters to used from the dashboard store
             try{
                 await axios.post(getStepToRoute,stepToParams) //Begin creating the step buffer on the backend using the entire length of the simulation as the base
