@@ -32,8 +32,8 @@ export default{
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        maxStepBuffer: 1,      // the number of steps in the buffer
-        currentStepBuffer: 1,  // the step the simulation is displaying
+        maxStepBuffer: 0,      // the number of steps in the buffer
+        currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
         terminated: false,     // true if we retrieved all steps from the server
         timerID:undefined,

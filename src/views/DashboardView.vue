@@ -19,12 +19,13 @@ export default {
         if (this.getGetStepsTimerID) {
             window.clearTimeout(this.getGetStepsTimerID)
         }
-        console.log('Starting simulation', this.getGameID)
+        // reset more variables
+        // the buffer current should be 0 so its value is updated when step 1 is received
         this.SETTIMERID(undefined)          // Set the timerID to undefined
         this.SETGETSTEPSTIMERID(undefined)  // Set the getStepsTimerID to undefined
-        this.SETBUFFERCURRENT(1)            // Reset the current buffer value
-        this.SETBUFFERMAX(1)                // Reset the max buffer value
-        this.SETMINSTEPNUMBER(1)            // Reset the starting step
+        this.SETBUFFERCURRENT(0)            // Reset the current buffer value
+        this.SETBUFFERMAX(0)                // Reset the max buffer value
+        this.SETMINSTEPNUMBER(0)            // Reset the starting step
         this.SETTERMINATED(false)           // Reset the termination conditions have been met flag
 
         // init a new game, set game id, reset all data buffers
@@ -109,7 +110,10 @@ export default {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
         getCurrentStepBuffer: function() {
-            if (this.getCurrentStepBuffer >= this.getMaxStepBuffer) {
+            // check that we have values in the buffer to avoid pausing
+            // the timer when current/max are set to 0 at the beginning
+            if ((this.getMaxStepBuffer > 1) &&
+                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
                 this.PAUSETIMER()
             }
         },
