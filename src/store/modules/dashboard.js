@@ -116,8 +116,8 @@ export default{
         },
         //This is used for the starting step of get_step batches. Updated after every get_step call
         UPDATEMINSTEPNUMBER:function(state,value){
-            let {step_num:step} = value
-            state.parameters.min_step_num = Math.max(step,state.parameters.min_step_num)
+            let {step_num: step} = value
+            state.parameters.min_step_num = Math.max(step+1, state.parameters.min_step_num)
         },
         //This is used for the number of steps to grab from get_step_to, after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS:function(state,value){
