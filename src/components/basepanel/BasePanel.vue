@@ -20,7 +20,33 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+.panel-dl-wrapper {
+    overflow-y: auto;
+}
+.panel-dl-wrapper dl {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-rows: 25px;
+    align-items: end;
+    margin: 0;
+}
+
+.panel-dl-wrapper dt,
+.panel-dl-wrapper dd {
+    padding: 2px;
+}
+
+.panel-dl-wrapper dt {
+    font-weight: 500;
+}
+.panel-dl-wrapper dd {
+    text-indent: 0;
+    text-align: right;
+}
+
+
 
 .panel{
         background-color: #1e1e1e;

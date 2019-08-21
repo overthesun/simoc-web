@@ -1,26 +1,28 @@
 <template>
-    <div class='two-line-wrapper'>
-        <div class='line-title'>Mission ID:</div>
-        <div class='line-item'>{{getGameID}}</div>
-        <div class='line-title'>Location:</div>
-        <div class='line-item'>{{stringFormatter(getConfiguration.location)}}</div>
-        <div class='line-title'>Duration:</div>
-        <div class='line-item'>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</div>
-        <div class='line-title'>Mars days:</div>
-        <div class='line-item'>{{calcSols(getCurrentStepBuffer-1)}}</div>
-        <div class='line-title'>Earth days:</div>
-        <div class='line-item'>{{calcDays(getCurrentStepBuffer-1)}}</div>
-        <div class='line-title'>Inhabitants:</div>
-        <div class='line-item'>{{humanCount()}}/{{getConfiguration.humans.amount}}</div>
+    <section class="panel-dl-wrapper">
+        <dl>
+            <dt>Mission ID:</dt>
+                <dd>{{getGameID}}</dd>
+            <dt>Location:</dt>
+                <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dt>Duration:</dt>
+                <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dt>Mars days:</dt>
+                <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dt>Earth days:</dt>
+                <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dt>Inhabitants:</dt>
+                <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
         <!-- TODO: restore this when we get the value from the backend
-        <div class='line-title'>Food:</div>
-        <div class='line-item'>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</div>-->
+            <dt>Food:</dt>
+                <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
         <!-- TODO: make the next two dynamic? -->
-        <div class='line-title'>Surface Temp.:</div>
-        <div class='line-item'>210K | -63C</div>
-        <div class='line-title'>Solar Gain:</div>
-        <div class='line-item'>500 W/m<sup>2</sup></div>
-    </div>
+            <dt>Surface Temp.:</dt>
+                <dd>210K | -63C</dd>
+            <dt>Solar Gain:</dt>
+                <dd>500 W/m<sup>2</sup></dd>
+        </dl>
+    </section>
 </template>
 
 

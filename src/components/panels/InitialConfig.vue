@@ -1,24 +1,26 @@
 <template>
-    <div class='two-line-wrapper'>
-        <div class='line-title'>Location:</div>
-        <div class='line-item'>Mars</div>
-        <div class='line-title'>Duration Length:</div>
-        <div class='line-item'>{{getConfiguration.duration.amount}} {{stringFormatter(getConfiguration.duration.units)}}</div>
-        <div class='line-title'>Inhabitants:</div>
-        <div class='line-item'>{{getConfiguration.humans.amount}}</div>
-        <div class='line-title'>Food:</div>
-        <div class='line-item'>{{getConfiguration.food.amount}}</div>
-        <div class='line-title'>Crew Quarters:</div>
-        <div class='line-item'>{{stringFormatter(getConfiguration.crewQuarters.type)}}</div>
-        <div class='line-title'>Greenhouse:</div>
-        <div class='line-item'>{{stringFormatter(getConfiguration.greenhouse.type)}}</div>
-        <div class='line-title'>Solar PV Array:</div>
-        <div class='line-item'>{{getConfiguration.powerGeneration.amount}}</div>
-        <div class='line-title'>Batteries:</div>
-        <div class='line-item'>{{getConfiguration.powerStorage.amount}}</div>
-        <div class='line-title'>ECLSS:</div>
-        <div class='line-item'>{{getConfiguration.eclss.amount}}</div>
-    </div>
+    <section class="panel-dl-wrapper">
+        <dl>
+            <dt>Location:</dt>
+                <dd>Mars</dd>
+            <dt>Duration Length:</dt>
+                <dd>{{getConfiguration.duration.amount}} {{stringFormatter(getConfiguration.duration.units)}}</dd>
+            <dt>Inhabitants:</dt>
+                <dd>{{getConfiguration.humans.amount}}</dd>
+            <dt>Food:</dt>
+                <dd>{{getConfiguration.food.amount}}</dd>
+            <dt>Crew Quarters:</dt>
+                <dd>{{stringFormatter(getConfiguration.crewQuarters.type)}}</dd>
+            <dt>Greenhouse:</dt>
+                <dd>{{stringFormatter(getConfiguration.greenhouse.type)}}</dd>
+            <dt>Solar PV Array:</dt>
+                <dd>{{getConfiguration.powerGeneration.amount}}</dd>
+            <dt>Batteries:</dt>
+                <dd>{{getConfiguration.powerStorage.amount}}</dd>
+            <dt>ECLSS:</dt>
+                <dd>{{getConfiguration.eclss.amount}}</dd>
+        </dl>
+    </section>
 </template>
 
 <script>
