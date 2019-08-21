@@ -7,7 +7,7 @@ See chart.js documentation for further details on the related mounted functions.
 -->
 
 <template>
-    <canvas :id="id" style="height: 100%; width: 100%;" height='auto' width='auto'/>
+    <canvas :id="id" />
 </template>
 
 <script>
@@ -119,7 +119,7 @@ export default {
                 },
 
                 defaultFontColor: '#1e1e1e',
-                response: true,
+                responsive: true,
                 maintainAspectRatio: false,
                 drawborder:false,
                 cutoutPercentage: 70,

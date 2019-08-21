@@ -71,8 +71,11 @@ export default {
         margin-left:auto;
     }
 
-    .panel-graph{
+    .panel-graph {
         position:relative;
+        /* see https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 */
+        min-width: 0;
+        min-height: 0;
     }
 
     .panel-graph-gauge{
@@ -81,11 +84,6 @@ export default {
         grid-template-rows: repeat(2,1fr);
         grid-row-gap: 16px;
         grid-column-gap: 16px;
-    }
-
-    .panel-graph-doughnut{
-        width: 100%;
-        height: 100%;
     }
 
     .two-line-wrapper{

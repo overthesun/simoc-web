@@ -1,5 +1,5 @@
 <template>
-    <div class='panel-graph-doughnut'>
+    <div class='panel-graph'>
         <GreenhouseDoughnut :id="'canvas'+ canvasNumber"/>
     </div>
 </template>

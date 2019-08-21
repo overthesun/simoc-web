@@ -9,7 +9,7 @@ See chart.js documentation for further explantion of below fucntionality.
 
 <template>
     <div style='position:relative'>
-        <canvas :id="id" style="height: 100%; width: 100%;" height='auto' width='auto'/>
+        <canvas :id="id" />
     </div>
 </template>
 
@@ -82,7 +82,7 @@ export default {
                     animateRotate:false
                 },
                 defaultFontColor: '#1e1e1e',
-                response: true,
+                responsive: true,
                 maintainAspectRatio: false,
                 drawborder:false,
                 cutoutPercentage: 70,

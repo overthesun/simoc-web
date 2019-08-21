@@ -1,7 +1,7 @@
 <!-- This chart is currently out of date. Needs to be updated to the new format for retrieving the configuration and poweru usage -->
 
 <template>
-    <canvas id="canvas" style='height: 100%; width: 100%;' height='auto' width='auto'></canvas>
+    <canvas id="canvas" />
 </template>
 <script>
 import axios from 'axios'

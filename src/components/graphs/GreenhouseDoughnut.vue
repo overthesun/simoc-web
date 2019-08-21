@@ -7,7 +7,7 @@ See chart.js documentation for more details.
 -->
 
 <template>
-    <canvas :id="id" style='height: 100%; width: 100%;' height='auto' width='auto'></canvas>
+    <canvas :id="id" />
 </template>
 
 <script>
@@ -131,9 +131,9 @@ export default {
                 }]
             },
             options:{
-                response:true,
-                maintainAspectRatio:false,
-                           cutoutPercentage: 70,
+                responsive: true,
+                maintainAspectRatio: false,
+                cutoutPercentage: 70,
                 elements:{
                     arc:{
                         borderWidth: 0

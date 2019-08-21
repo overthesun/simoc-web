@@ -1,7 +1,7 @@
 <!-- no longer used SEE GreenhouseDoughnut -->
 
 <template>
-    <canvas id="canvas" style='height: 100%; width: 100%;' height='auto' width='auto'></canvas>
+    <canvas id="canvas" />
 </template>
 <script>
 import Chart from 'chart.js';
@@ -111,7 +111,7 @@ export default {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio:false,
+                    maintainAspectRatio: false,
                     legend: {
                         display:false,
                         position: 'top',
