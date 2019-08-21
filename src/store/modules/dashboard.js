@@ -157,9 +157,9 @@ export default{
             state.timerID.changeInterval(state.stepInterval)
         },
         SETAGENTTYPE:function(state,value){
-            let{step_num:step} = value
-            let{total_agent_count} = value
-            state.agentCount = total_agent_count
+            let {step_num: step} = value
+            let {total_agent_count} = value
+            state.agentCount[step] = total_agent_count
         },
         SETTOTALAGENTMASS:function(state,value){
             let{step_num:step,total_agent_mass} = value

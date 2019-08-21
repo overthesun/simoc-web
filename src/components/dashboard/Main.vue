@@ -51,8 +51,8 @@ export default {
     data() {
         return {
             // list of default panels; update this to change the initial panels displayed
-            activePanels: ["MissionConfig", "EnergyVersus", "AtmosphereConfig",
-                           "MissionInfo", "GreenhouseConfig", "PlantGrowth"],
+            activePanels: ["InitialConfig", "EnergyVersus", "AtmosphereConfig",
+                           "MissionStatus", "GreenhouseConfig", "PlantGrowth"],
             panels: panels,  // object mapping all available panel names with their corresponding object
             visibleMenu: null,  // the index of the visible panel menu, null if no panel menu is open
             visiblePanelSelect: null,  // the index of the visible panel select dropdown

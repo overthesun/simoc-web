@@ -1,0 +1,72 @@
+<template>
+    <section class="panel-dl-wrapper">
+        <dl>
+            <dt>Mission ID:</dt>
+                <dd>{{getGameID}}</dd>
+            <dt>Location:</dt>
+                <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dt>Duration:</dt>
+                <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dt>Mars days:</dt>
+                <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dt>Earth days:</dt>
+                <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dt>Inhabitants:</dt>
+                <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
+        <!-- TODO: restore this when we get the value from the backend
+            <dt>Food:</dt>
+                <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
+        <!-- TODO: make the next two dynamic? -->
+            <dt>Surface Temp.:</dt>
+                <dd>210K | -63C</dd>
+            <dt>Solar Gain:</dt>
+                <dd>500 W/m<sup>2</sup></dd>
+        </dl>
+    </section>
+</template>
+
+
+<script>
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {StringFormatter} from '../../javascript/stringFormatter'
+
+export default {
+    panelTitle: 'Mission Status',
+    computed:{
+        ...mapGetters(['getGameID']),
+        ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
+        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer']),
+    },
+    methods:{
+        stringFormatter: StringFormatter,
+        humanCount: function() {
+            let agents = this.getAgentType(this.getCurrentStepBuffer)
+            if (agents !== undefined && agents['human_agent'] !== undefined) {
+                return agents['human_agent']
+            }
+            else {
+                // if we don't know the humans count, return the initial value
+                return this.getConfiguration.humans.amount
+            }
+        },
+        calcDays: function (totalHours) {
+            var totalHours = Math.max(totalHours, 0)
+            let days = Math.floor(totalHours/24)
+            let hours = totalHours%24
+            return days + 'd ' + hours + 'h 0m'
+        },
+        calcSols: function (totalHours) {
+            var totalHours = Math.max(totalHours, 0)
+            let days = Math.floor(totalHours/24.629444)
+            let hours = totalHours%24.629444
+            let minutes = Math.floor(hours%1*60)
+            return days + 'd ' + Math.floor(hours) + 'h ' + minutes + 'm'
+        },
+    },
+}
+</script>
+
+
+<style lang="scss" scoped>
+
+</style>
