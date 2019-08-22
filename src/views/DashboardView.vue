@@ -73,19 +73,20 @@ export default {
             }
         },
 
-        stepBufferTimer: async function(){
+        stepBufferTimer: async function() {
             const localHost = "http://localhost:8000"
             const getStepsRoute = this.getUseLocalHost ? localHost +  "/get_steps" : "/get_steps"
-            const stepParams = this.getStepParams //Filter parameters stored in dashboard store
+            const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
-            //If the termination conditiona hasn't been terminated yet.
-            //Keep grabbing step batches
-            if(!this.getTerminated){
-                let getStepsTimerID = setTimeout( async () =>{
-                    try{
-                        const response = await axios.post(getStepsRoute,stepParams)  // Grab the batch of steps
-                        this.updateStepBuffer(response.data.step_data)  // Call the function that will parse and reset the timer
-                    }catch(error){
+            if (!this.getTerminated) {
+                // if the sim is not terminated, set a timer that will
+                // retrieve and parse a batch of step
+                let getStepsTimerID = setTimeout(async () => {
+                    try {
+                        const response = await axios.post(getStepsRoute, stepParams)
+                        this.updateStepBuffer(response.data.step_data)
+                    }
+                    catch (error) {
                         console.log(error)
                     }
                 }, 500)
@@ -93,9 +94,10 @@ export default {
             }
         },
 
-        updateStepBuffer: async function(step_data){
-            //Add in termination condition check
-            await this.parseStep(Object.values(step_data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
+        updateStepBuffer: async function(step_data) {
+            // wait until all the steps have been parsed by parseStep
+            // this also updates the min step number for the next request
+            await this.parseStep(Object.values(step_data))
 
             // keep requesting steps until we retrieved them all, then terminate
             if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours)) {
