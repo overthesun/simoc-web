@@ -89,7 +89,7 @@ export default {
                     catch (error) {
                         console.log(error)
                     }
-                }, 500)
+                }, 2000)
                 this.SETGETSTEPSTIMERID(getStepsTimerID)
             }
         },
