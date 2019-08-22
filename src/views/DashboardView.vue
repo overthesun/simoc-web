@@ -88,6 +88,7 @@ export default {
                     }
                     catch (error) {
                         console.log(error)
+                        this.stepBufferTimer()  // retry
                     }
                 }, 2000)
                 this.SETGETSTEPSTIMERID(getStepsTimerID)
