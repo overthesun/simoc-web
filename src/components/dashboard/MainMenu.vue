@@ -41,7 +41,7 @@ export default {
     },
     computed:{
         ...mapGetters('dashboard',['getTimerID', 'getIsTimerRunning', 'getGetStepsTimerID']),
-        ...mapGetters(['getUseLocalHost']),
+        ...mapGetters(['getGameID','getUseLocalHost']),
     },
     methods:{
         ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','STARTTIMER','PAUSETIMER']),
@@ -57,7 +57,7 @@ export default {
         // Stop Simulation button, this stops the timers and the simulation
         stopSimulation: async function() {
             const localHost = "http://localhost:8000"
-            const path = "/kill_all_games"
+            const path = "/kill_game"
             const killRoute = this.getUseLocalHost ? localHost + path : path
 
             this.PAUSETIMER()  // pause the step timer
@@ -70,8 +70,9 @@ export default {
             // stop the simulation
             this.SETTERMINATED(true)
 
+            const params = {game_id: this.getGameID}
             try{
-                axios.post(killRoute)
+                axios.post(killRoute, params)
             }catch(error){
                 console.log(error)
             }
