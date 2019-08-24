@@ -35,7 +35,8 @@ export default{
         maxStepBuffer: 0,      // the number of steps in the buffer
         currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
-        terminated: false,     // true if we retrieved all steps from the server
+        stopped: false,        // true if we forced termination, also set terminated
+        terminated: false,     // true if we stopped or retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
         isTimerRunning:false,
@@ -56,6 +57,7 @@ export default{
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
         getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
 
+        getStopped: state => state.stopped,
         getTerminated: state => state.terminated,
 
         getUpdateTimer: state => state.updateTimer,
@@ -77,7 +79,7 @@ export default{
         // are met for a reasonable buffer amount.
         STARTTIMER:function(state,value){
             //if((state.maxStepBuffer >= 100 || state.terminated ) && !state.isTimerRunning){
-                console.log("Step Timer Running")
+                console.log("Step Timer running")
                 state.timerID.resume()
                 state.isTimerRunning = true
             //}
@@ -88,8 +90,8 @@ export default{
             state.isTimerRunning = false
         },
         STOPTIMER:function(state,value){
-            console.log("Step Timer stopped")
-            if (this.getTimerID != null) {
+            if (state.timerID != null) {
+                console.log("Step Timer stopped")
                 state.timerID.stop()
             }
             state.isTimerRunning = false
@@ -99,6 +101,15 @@ export default{
         },
         SETGETSTEPSTIMERID:function(state,value){
             state.getStepsTimerID = value
+        },
+
+        SETSTOPPED:function(state,value){
+            // this var should be set only when we interrupt the
+            // simulation before receiving all the steps
+            state.stopped = value
+            // if the sim has been stopped, it's also terminated
+            // but it could terminate cleanly without being stopped
+            state.terminated = value
         },
 
         SETTERMINATED:function(state,value){

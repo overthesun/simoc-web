@@ -26,7 +26,7 @@ export default {
         this.SETBUFFERCURRENT(0)            // Reset the current buffer value
         this.SETBUFFERMAX(0)                // Reset the max buffer value
         this.SETMINSTEPNUMBER(0)            // Reset the starting step
-        this.SETTERMINATED(false)           // Reset the termination conditions have been met flag
+        this.SETSTOPPED(false)              // Reset stopped and terminated flags
 
         // init a new game, set game id, reset all data buffers
         this.INITGAME(this.getGameID)
@@ -37,23 +37,33 @@ export default {
 
         console.log('Starting simulation', this.getGameID)
 
+        // make sure that to stop the sim when the user closes the tab
+        window.addEventListener('beforeunload', this.killGame)
         // this starts the timer that asks the steps to the backend
         this.requestStepsNum()
 
         // after this, the Timeline component will be mounted
         // and it will start the timer that shows the steps
     },
+    beforeDestroy: function() {
+        // if the sim is still running upon leaving the page, stop it;
+        // some methods in MainMenu.vue rely on this to stop the sim
+        this.STOPTIMER()   // stop the step timer
+        if (!this.getTerminated) {
+            this.killGame()
+        }
+        // we don't need this anymore if the dashboard has been destroyed
+        window.removeEventListener('beforeunload', this.killGame)
+    },
     computed:{
         //Getterss from the vuex stores
-        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
-        ...mapGetters(['getGameID']),
-        ...mapGetters('wizard',['getTotalMissionHours','getConfiguration']),
-        ...mapGetters(['getUseLocalHost']),
-
+        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer']),
+        ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
+        ...mapGetters(['getGameID', 'getUseLocalHost']),
     },
     methods:{
         //
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETTERMINATED','INITGAME']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
@@ -108,6 +118,32 @@ export default {
                 this.SETTERMINATED(true)
             }
         },
+
+        killGame: async function() {
+            // See https://github.com/kstaats/simoc-web/issues/51#issuecomment-524494720
+            // for some background on this method.
+            // Stop the get_steps timer and tell the server
+            // to stop calculating steps
+            const localHost = "http://localhost:8000"
+            const path = "/kill_game"
+            const killRoute = this.getUseLocalHost ? localHost + path : path
+
+            this.SETTERMINATED(true)  // terminate the sim
+            // stop timer that sends requests to get_steps
+            if (this.getGetStepsTimerID != null) {
+                window.clearTimeout(this.getGetStepsTimerID)
+                this.SETGETSTEPSTIMERID(null)
+            }
+
+            const params = {game_id: this.getGameID}
+            try{
+                axios.post(killRoute, params)  // kill the game
+                console.log('Simulation stopped.')
+            }catch(error){
+                console.log(error)
+            }
+        },
+
     },
     watch:{
         // this method pauses the current simulation if the current step
@@ -120,6 +156,12 @@ export default {
                 this.PAUSETIMER()
             }
         },
+        getStopped: function() {
+            // if the simulation got stopped, tell the server
+            if (this.getStopped) {
+                this.killGame()
+            }
+        }
     }
 }
 </script>

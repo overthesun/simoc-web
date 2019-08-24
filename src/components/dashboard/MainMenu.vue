@@ -40,11 +40,11 @@ export default {
         this.PAUSETIMER()
     },
     computed:{
-        ...mapGetters('dashboard',['getTimerID', 'getIsTimerRunning', 'getGetStepsTimerID']),
+        ...mapGetters('dashboard',['getIsTimerRunning']),
         ...mapGetters(['getGameID','getUseLocalHost']),
     },
     methods:{
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTIMERID','SETGETSTEPSTIMERID','SETTERMINATED','STARTTIMER','PAUSETIMER']),
+        ...mapMutations('dashboard',['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER']),
 
         // Called when the menu is closed, resumes the timer
         close: function() {
@@ -56,42 +56,26 @@ export default {
         },
         // Stop Simulation button, this stops the timers and the simulation
         stopSimulation: async function() {
-            const localHost = "http://localhost:8000"
-            const path = "/kill_game"
-            const killRoute = this.getUseLocalHost ? localHost + path : path
-
+            console.log('clicked on stop simulation')
             this.PAUSETIMER()  // pause the step timer
-            this.timerWasRunning = false  // make sure it doesn't restart
-            // stop timer that sends requests to get_steps
-            if (this.getGetStepsTimerID != null) {
-                window.clearTimeout(this.getGetStepsTimerID)
-                this.SETGETSTEPSTIMERID(null)
-            }
-            // stop the simulation
-            this.SETTERMINATED(true)
-
-            const params = {game_id: this.getGameID}
-            try{
-                axios.post(killRoute, params)
-            }catch(error){
-                console.log(error)
-            }
-            console.log('Simulation stopped.')
+            this.timerWasRunning = false  // make sure the timer doesn't restart
+            this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
         },
         // Logout button route
         logout: async function(){
             if (!confirm('Stop the current simulation and log out?')) {
                 return;
             }
+            this.timerWasRunning = false  // make sure the timer doesn't restart
             const localHost = "http://localhost:8000"
             const path = "/logout"
             const logoutRoute = this.getUseLocalHost ? localHost + path : path
-            this.stopSimulation()
             try{
                 axios.get(logoutRoute)
             }catch(error){
                 console.log(error)
             }
+            // rely on DashboardView.beforeDestroy to stop the sim
             this.$router.push("entry")
         },
 
@@ -100,7 +84,8 @@ export default {
             if (!confirm('Stop the current simulation and configure a new one?')) {
                 return;
             }
-            this.stopSimulation()
+            this.timerWasRunning = false  // make sure the timer doesn't restart
+            // rely on DashboardView.beforeDestroy to stop the sim
             this.$router.push("menuconfig")
         }
     }
