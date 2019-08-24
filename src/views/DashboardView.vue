@@ -49,6 +49,7 @@ export default {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in MainMenu.vue rely on this to stop the sim
         this.STOPTIMER()   // stop the step timer
+        this.SETMENUACTIVE(false)  // close the menu if it was open
         if (!this.getTerminated) {
             this.killGame()
         }
@@ -63,7 +64,7 @@ export default {
     },
     methods:{
         //
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
