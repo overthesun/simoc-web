@@ -94,7 +94,6 @@ export default {
         ...mapGetters('wizard',['getConfiguration','getActiveConfigType','getActiveForm','getFormLength','getFormattedConfiguration']),
         ...mapGetters('wizard',['getActiveReference','getActiveRefEntry']),
         ...mapGetters('dashboard',['getStepParams']),
-        ...mapGetters(['getUseLocalHost']),
 
         //Used to hide the normal button and display the active button
         isFinalForm:function() {
@@ -132,13 +131,10 @@ export default {
         },
 
         finalizeConfiguration:async function(){
-            const configParams = {game_config:this.getFormattedConfiguration} //Get the formatted configuration from wizard store
-            const localHost = "http://localhost:8000"
-            const path ="/new_game"
-            const configurationRoute = this.getUseLocalHost ? localHost + path : path
+            const configParams = {game_config: this.getFormattedConfiguration} //Get the formatted configuration from wizard store
 
             try{
-                const response = await axios.post(configurationRoute,configParams) //Wait for the new game to be created
+                const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
                 const gameID = response.data.game_id //store the game ID from the response
                 this.SETGAMEID(gameID)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen

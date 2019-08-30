@@ -34,10 +34,6 @@ export default {
     components:{
         'BaseEntry':BaseEntry,
     },
-    computed:{
-        ...mapGetters(['getUseLocalHost']),
-
-    },
     methods:{
         //Sends the user to the configuration menu screen. See router.js
         toConfiguration:function(){
@@ -46,12 +42,8 @@ export default {
         //Logout method called when the user hits the logout button
         //Sends the user back to the entry screen regardless if the server has successfully logged them out
         logout: async function(){
-            const localHost = "http://localhost:8000"
-            const path = "/logout"
-            const logoutRoute = this.getUseLocalHost ? localHost + path : path
-
             try{
-                axios.get(logoutRoute)
+                axios.get('/logout')
             }catch(error){
                 console.log(error)
             }

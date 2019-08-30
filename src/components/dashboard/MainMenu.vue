@@ -41,7 +41,7 @@ export default {
     },
     computed:{
         ...mapGetters('dashboard',['getIsTimerRunning']),
-        ...mapGetters(['getGameID','getUseLocalHost']),
+        ...mapGetters(['getGameID']),
     },
     methods:{
         ...mapMutations('dashboard',['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER']),
@@ -67,11 +67,8 @@ export default {
                 return;
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
-            const localHost = "http://localhost:8000"
-            const path = "/logout"
-            const logoutRoute = this.getUseLocalHost ? localHost + path : path
             try{
-                axios.get(logoutRoute)
+                axios.get('/logout')
             }catch(error){
                 console.log(error)
             }

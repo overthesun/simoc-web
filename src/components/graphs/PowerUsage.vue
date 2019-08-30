@@ -27,7 +27,6 @@ export default {
 
     computed:{
         ...mapGetters('configuration',['getCrewQuarters','getEclss','getPowerGenerator','getPowerStorage','getGreenhouse','getPlantSpecies']),
-        ...mapGetters(['getUseLocalHost']),
 
         crewQuarters: function(){
             return this.getCrewQuarters
@@ -122,12 +121,8 @@ export default {
 
             axios.defaults.withCredentials = true
 
-            const localHost = "http://localhost:8000"
-            const path = "/get_energy"
-
-            const target = this.getUseLocalHost ? localHost + path : path
             const params = {agent_name:agent,quantity:amount}
-            return axios.get(target,{params:params})
+            return axios.get('/get_energy', {params: params})
                 .then(response =>{
                     if(response.status === 200){
                         callback(response.data)

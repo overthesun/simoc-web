@@ -67,9 +67,6 @@ export default {
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),  // Gets the configuration from the store
-        ...mapGetters(['getUseLocalHost']), //Do I use localhost or relative.
-
-
     },
     methods:{
         ...mapMutations('wizard',['SETGREENHOUSE','ADDPLANTSPECIES','UPDATEPLANTSPECIES','REMOVEPLANTSPECIES']),
@@ -161,13 +158,9 @@ export default {
         retrievePlantSpecies:function(){
             axios.defaults.withCredentials = true
 
-            const localHost = "http://localhost:8000"
-            const route = "/get_agent_types"
-            const path = this.getUseLocalHost ? localHost + route : route
+            const params = {agent_class: 'plants'}
 
-            const params = {agent_class:'plants'}
-
-            axios.get(path,{params:params}).then( response => {
+            axios.get('/get_agent_types', {params: params}).then(response => {
                 if(response.status === 200){
                     response.data.forEach((item) =>{
                         let {name} = item

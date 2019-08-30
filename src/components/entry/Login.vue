@@ -75,10 +75,6 @@ export default {
             },
         }
     },
-    computed:{
-        ...mapGetters(['getUseLocalHost']), //Should I be using the local host or relative.
-
-    },
     methods:{
 
         // On registration make sure the username + password meet the criteria before attempting to register.
@@ -120,7 +116,7 @@ export default {
 
             if (loginCorrect) {
                const params = this.user
-               await this.entryHandler(params,'/login')  // Attempt the route
+               await this.entryHandler(params, '/login')  // Attempt the route
             }
         },
 
@@ -129,11 +125,7 @@ export default {
         //It would also need to be made async in that case.
         entryHandler:function(params,route){
             axios.defaults.withCredentials = true;
-
-            //const target = this.getUseLocalHost ? this.getUseLocalHost + route : route
-            const localHost = "http://localhost:8000"
-            const target = this.getUseLocalHost ? localHost + route : route
-            axios.post(target,params).then(response => {
+            axios.post(route, params).then(response => {
                 const {status} = response
                 if (response.data.status == 'ERROR') {
                     this.addWarning('Error: ' + response.data.message)

@@ -90,7 +90,6 @@ export default {
 
     computed:{
         ...mapGetters('wizard',['getActiveConfigType','getActiveReference']),
-        ...mapGetters(['getUseLocalHost']), //Flag for using localhost within route calls
 
         // used to flag which section link is active within the reference navigation
         // uses class-binding to activate the class and underline the title
@@ -107,12 +106,8 @@ export default {
         },
         //Route function for logging the user out. Called from within the wizard menu
         logout: async function(){
-            const localHost = "http://localhost:8000"
-            const path = "/logout"
-            const logoutRoute = this.getUseLocalHost ? localHost + path : path
-
             try{
-                axios.get(logoutRoute)
+                axios.get('/logout')
             }catch(error){
                 console.log(error)
             }

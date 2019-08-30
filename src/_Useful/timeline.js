@@ -16,7 +16,6 @@ export default {
         }
     },
     computed:{
-        ...mapGetters(['getUseLocalHost'])
     },
     methods:{
         updateStep:function(){

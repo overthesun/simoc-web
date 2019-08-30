@@ -60,7 +60,7 @@ export default {
         //Getterss from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer']),
         ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
-        ...mapGetters(['getGameID', 'getUseLocalHost']),
+        ...mapGetters(['getGameID']),
     },
     methods:{
         //
@@ -70,14 +70,12 @@ export default {
 
         requestStepsNum: async function(){
             // tell the backend how many steps we need for this game
-            const localHost = "http://localhost:8000"
-            const getStepToRoute = this.getUseLocalHost ? localHost + "/get_step_to" : "/get_step_to"
 
             // use the total number of mission hours as the number of steps to be calculated
             const stepToParams = {step_num:this.getTotalMissionHours, game_id:this.getGameID}
-            const stepParams = this.getStepParams //Retrieve the parameters to used from the dashboard store
             try{
-                await axios.post(getStepToRoute,stepToParams) //Begin creating the step buffer on the backend using the entire length of the simulation as the base
+                // begin creating the step buffer on the backend using the entire length of the simulation as the base
+                await axios.post('/get_step_to', stepToParams)
                 this.stepBufferTimer() //If everything went retrieve the first batch of steps.
             }catch(error){
                 console.log(error)
@@ -85,8 +83,6 @@ export default {
         },
 
         stepBufferTimer: async function() {
-            const localHost = "http://localhost:8000"
-            const getStepsRoute = this.getUseLocalHost ? localHost +  "/get_steps" : "/get_steps"
             const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
             if (!this.getTerminated) {
@@ -94,7 +90,7 @@ export default {
                 // retrieve and parse a batch of step
                 let getStepsTimerID = setTimeout(async () => {
                     try {
-                        const response = await axios.post(getStepsRoute, stepParams)
+                        const response = await axios.post('/get_steps', stepParams)
                         this.updateStepBuffer(response.data.step_data)
                     }
                     catch (error) {
@@ -125,10 +121,6 @@ export default {
             // for some background on this method.
             // Stop the get_steps timer and tell the server
             // to stop calculating steps
-            const localHost = "http://localhost:8000"
-            const path = "/kill_game"
-            const killRoute = this.getUseLocalHost ? localHost + path : path
-
             this.SETTERMINATED(true)  // terminate the sim
             // stop timer that sends requests to get_steps
             if (this.getGetStepsTimerID != null) {
@@ -138,7 +130,7 @@ export default {
 
             const params = {game_id: this.getGameID}
             try{
-                axios.post(killRoute, params)  // kill the game
+                axios.post('/kill_game', params)  // kill the game
                 console.log('Simulation stopped.')
             }catch(error){
                 console.log(error)
