@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     data(){

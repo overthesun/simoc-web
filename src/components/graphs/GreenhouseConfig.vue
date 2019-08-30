@@ -5,7 +5,6 @@
 </template>
 <script>
 import Chart from 'chart.js';
-import axios from 'axios'
 import "chartjs-plugin-annotation";
 import {mapState,mapGetters} from 'vuex'
 export default {
