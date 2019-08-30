@@ -52,25 +52,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .controls-wrapper{
-        height: 48px;
-        width:196px;
-        display:flex;
-        justify-content: space-between;
-        align-items:center;
-    }
-    .icon-wrapper{
-        font-size:32px;
-    }
+.controls-wrapper {
+    height: 48px;
+    width: 196px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .icon-disabled{
-        color: #999;
-    }
+.icon-wrapper {
+    font-size: 24px;
+    width: 30px;
+    text-align: center;
+}
 
-    .icon-play{
-        font-size: 36px;
-        &:hover{
-            font-size:42px;
-        }
-    }
+.icon-wrapper:hover {
+    font-size: 28px;
+}
+
+.icon-disabled {
+    color: #999;
+}
 </style>

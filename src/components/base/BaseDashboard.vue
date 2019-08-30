@@ -10,11 +10,11 @@ future dashboard views
             <Main/>
         </section>
         <section class='footer-wrapper'>
-            <div class='menu-icon'>
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']" @click='SETMENUACTIVE(true)'/> <!-- Menu button on the tool bar. On click call the mutation method within the dashboard store -->
-            </div>
             <Controls/> <!-- Speed controls component -->
             <Timeline/> <!-- Timeline bar component -->
+            <div class='menu-icon'>
+                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']" @click='SETMENUACTIVE(true)'/>
+            </div>
         </section>
     </div>
 </template>
@@ -40,47 +40,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .fa-icon{
-        font-size:44px;
-    }
+.dashboard-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: minmax(0px,1fr) 60px;
+}
 
-    .dashboard-wrapper{
-        position:relative;
-        width:100vw;
-        height:100vh;
-        min-width:100vw;
-        min-height:100vh;
+.menu-icon {
+    width: 36px;
+    height: 36px;
+}
 
-        display:grid;
-        grid-template-rows: minmax(0px,1fr) 128px;
-        grid-template-columns: 196px minmax(0px,1fr);
-    }
+.toolbar-wrapper {
+    background-color: #252525;
+}
 
-    .menu-icon{
-        position: absolute;
-        width:48px;
-        height:48px;
-        top:50%;
-        transform:translateY(-50%);
-        left:16px;
-    }
-
-    .toolbar-wrapper{
-        background-color: #252525;
-    }
-    .main-wrapper{
-        grid-column: span 2;
-    }
-
-    .footer-wrapper{
-        position: relative;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction: column;
-        grid-column: span 2;
-        background-color: #1e1e1e;
-        box-sizing:border-box;
-    }
+.footer-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1e1e1e;
+    box-sizing: border-box;
+}
 
 </style>
