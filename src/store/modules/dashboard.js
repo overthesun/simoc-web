@@ -150,7 +150,7 @@ export default{
         },
         // update the currentStepBuffer, making sure it's <= maxStepBuffer
         UPDATEBUFFERCURRENT:function(state,value){
-            state.currentStepBuffer = Math.min(value, state.maxStepBuffer)
+            state.currentStepBuffer = Math.max(1, Math.min(value, state.maxStepBuffer))
         },
         SETSTEPINTERVAL:function(state,value){
             state.stepInterval = value
