@@ -1,0 +1,44 @@
+<!-- Speed controls component used on the dashboard. -->
+
+<template>
+    <div id='speed-controls'>
+        <!-- Looks like: - 1x + -->
+        <span class='icon-wrapper' @click='changeSpeed(-1)' title='Decrease speed'>
+            <fa-icon class='fa-icon' :icon="['fas','minus']"/>
+        </span>
+        <span title="Current speed">{{speeds[speedIndex]}}x</span>
+        <span class='icon-wrapper' @click='changeSpeed(+1)' title='Increase speed'>
+            <fa-icon class='fa-icon' :icon="['fas','plus']"/>
+        </span>
+    </div>
+</template>
+
+<script>
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+export default {
+    data(){
+        return {
+            speeds: [0.25, 0.5, 1, 2, 4, 8],  // available speeds
+            speedIndex: null,
+        }
+    },
+    beforeMount: function() {
+        // set the initial speed to 1x
+        this.speedIndex = 2
+        this.changeSpeed(0)
+    },
+    methods:{
+        ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
+        changeSpeed: function(offset) {
+            // Change the speed of the step timer.
+            // offset can be -1 or +1 to use the previous/next speed in the array
+            this.speedIndex = Math.max(0, Math.min(this.speeds.length-1, this.speedIndex+offset))
+            // if the speed is e.g. 4x, the interval must be 250ms
+            this.SETSTEPINTERVAL(1 / this.speeds[this.speedIndex] * 1000)
+        },
+    },
+}
+</script>
+
+<style lang="scss">
+</style>
