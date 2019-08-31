@@ -150,22 +150,13 @@ export default{
         },
         // update the currentStepBuffer, making sure it's <= maxStepBuffer
         UPDATEBUFFERCURRENT:function(state,value){
-            state.currentStepBuffer = Math.min(value, state.maxStepBuffer)
+            state.currentStepBuffer = Math.max(1, Math.min(value, state.maxStepBuffer))
         },
         SETSTEPINTERVAL:function(state,value){
             state.stepInterval = value
-        },
-        // increase the stepInterval, make the steps advance slower
-        INCSTEPINTERVAL:function(state,value){
-            // highest interval is 2s (1 step every 2 seconds)
-            state.stepInterval = Math.min(2000, state.stepInterval+value)
-            state.timerID.changeInterval(state.stepInterval)
-        },
-        // decrease the stepInterval, make the steps advance faster
-        DECSTEPINTERVAL:function(state,value){
-            // slowest interval is 250ms (4 steps per second)
-            state.stepInterval = Math.max(250, state.stepInterval-value)
-            state.timerID.changeInterval(state.stepInterval)
+            if (state.timerID != null) {
+                state.timerID.changeInterval(state.stepInterval)
+            }
         },
         SETAGENTTYPE:function(state,value){
             let {step_num: step} = value

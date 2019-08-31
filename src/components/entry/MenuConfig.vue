@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 
