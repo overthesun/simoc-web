@@ -1,126 +1,141 @@
-<!-- This chart is currently out of date. Needs to be updated to the new format for retrieving the configuration and poweru usage -->
+<!-- This chart compares the total production and consumption of energy in the configuration wizard. -->
 
 <template>
-    <canvas id="canvas" />
+    <canvas :id="id" />
 </template>
+
 <script>
 import axios from 'axios'
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
 import {mapState,mapGetters} from 'vuex'
 export default {
-
-    data(){
-        return{
-            energyConsumption:{
-                crewQuarters:0,
-                eclss:0,
-                powerStorage:0,
-                greenhouse:0,
-                plantSpecies:0
+    props: {
+        id: String,
+    },
+    data() {
+        return {
+            energy: {
+                // agent: [production, consumption],
+                // these only produce
+                powerGenerator: [0, null],
+                // powerStorage: [0, null], TODO: handle batteries
+                // these only consume
+                plantSpecies: [null, 0],
+                eclss: [null, 0],
+                crewQuarters: [null, 0],
+                greenhouse: [null, 0],
             },
-            energyProduction:{
-                powerGenerator:0,
-            }
+            // these two arrays should match the items in this.energy
+            labels: ['Solar array', /*'Batteries',*/ 'Plants', 'ECLSS', 'Crew quarters', 'Greenhouse'],
+            colors: ['#0000ff', /*'#0000ee',*/ '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
         }
     },
 
     computed:{
-        ...mapGetters('configuration',['getCrewQuarters','getEclss','getPowerGenerator','getPowerStorage','getGreenhouse','getPlantSpecies']),
+        ...mapGetters('wizard',['getConfiguration']),
 
         crewQuarters: function(){
-            return this.getCrewQuarters
+            return this.getConfiguration.crewQuarters
         },
         eclss: function(){
-            return this.getEclss
+            return this.getConfiguration.eclss
         },
         powerGenerator: function(){
-            return this.getPowerGenerator
+            return this.getConfiguration.powerGeneration
         },
         powerStorage: function(){
-            return this.getPowerStorage
+            return this.getConfiguration.powerStorage
         },
         greenhouse: function(){
-            return this.getGreenhouse
+            return this.getConfiguration.greenhouse
         },
         plantSpecies: function(){
-            return this.getPlantSpecies
+            return this.getConfiguration.plantSpecies
         }
     },
 
     watch:{
         plantSpecies:{
-            handler: function(){
-                this.energyConsumption.plantSpecies = 0
+            handler: function() {
+                this.energy.plantSpecies[1] = 0
                 this.plantSpecies.forEach((element)=>{
                     if(element.type != null && element.amount > 0){
                         this.retrievePower(element.type,element.amount,(response)=>{
                             let {energy_input} = response
-                            this.energyConsumption.plantSpecies += energy_input
+                            this.energy.plantSpecies[1] += energy_input
+                            this.updateChart()
                         })
                     }
                 })
             },
+            immediate: true,
             deep:true
         },
 
+        eclss:{
+            handler:function() {
+                this.retrievePower(this.eclss.type,this.eclss.amount,(response)=>{
+                    let {energy_input} = response
+                    this.energy.eclss[1] = energy_input
+                    this.updateChart()
+                })
+            },
+            immediate: true,
+            deep:true
+        },
         crewQuarters:{
-            handler: function(){
+            handler: function() {
                 this.retrievePower(this.crewQuarters.type,1,(response)=>{
                     let {energy_input} = response
-                    this.energyConsumption.crewQuarters = energy_input
+                    this.energy.crewQuarters[1] = energy_input
+                    this.updateChart()
                 })
 
             },
-            deep:true
-        },
-        eclss:{
-            handler:function(){
-                this.energyConsumption.eclss = this.retrievePower(this.eclss.type,this.eclss.amount,(response)=>{
-                    let {energy_input} = response
-                    this.energyConsumption.eclss = energy_input
-                })
-            },
-            deep:true
-        },
-        /*powerGenerator:{
-            handler:function(){
-                this.retrievePower(this.powerGenerator.type)
-            },
-            deep:true
-        },*/
-        powerStorage:{
-            handler:function(){
-                this.retrievePower(this.powerStorage.type,this.powerStorage.amount,(response)=>{
-                    let {energy_input} = response
-                    this.energyConsumption.powerStorage = energy_input
-                })
-            },
+            immediate: true,
             deep:true
         },
         greenhouse:{
-            handler:function(){
-                this.energyConsumption.greenhouse = this.retrievePower(this.greenhouse.type,1,(response)=>{
+            handler:function() {
+                this.retrievePower(this.greenhouse.type,1,(response)=>{
                     let {energy_input} = response
-                    this.energyConsumption.greenhouse = energy_input
+                    this.energy.greenhouse[1] = energy_input
+                    this.updateChart()
                 })
             },
+            immediate: true,
             deep:true
         },
-
+        powerGenerator:{
+            handler:function() {
+                this.retrievePower(this.powerGenerator.type, this.powerGenerator.amount, (response)=>{
+                    let {energy_output} = response
+                    this.energy.powerGenerator[0] = energy_output
+                    this.updateChart()
+                })
+            },
+            immediate: true,
+            deep:true
+        },
+        powerStorage:{
+            handler:function() {
+                this.retrievePower(this.powerStorage.type,this.powerStorage.amount,(response)=>{
+                    let {energy_capacity} = response
+                    // TODO: handle batteries
+                    //this.energy.powerStorage = energy_capacity
+                    //this.updateChart()
+                })
+            },
+            immediate: true,
+            deep:true
+        },
     },
 
     methods:{
-
-        updateGraph:function(){
-            this.chart.data.labels = []
-            this.chart.data.labels = "Power Production"
-        },
-
+        // TODO request all data as a single json, do math client-side
         retrievePower: function(agent,amount=1,callback){
-
             axios.defaults.withCredentials = true
-
             const params = {agent_name:agent,quantity:amount}
             return axios.get('/get_energy', {params: params})
                 .then(response =>{
@@ -128,27 +143,84 @@ export default {
                         callback(response.data)
                     }
                 }).catch(error => {
-                    const {status} = error.response
-                    console.log(status)
+                    console.log(error)
                 })
-        }
+        },
+        updateChart: function() {
+            // Instead of accepting a dataset for each row (i.e. one for
+            // production and one for consumption), ChartJS wants several
+            // datasets with a 2-elems [production, consumption] array.
+            // Since values in the same dataset share label/color, a
+            // workaround is to use e.g. [10, null] for production and
+            // [null, 10] for consumption: these will show respectively a
+            // 10 in the production row and nothing in the consumption row
+            // and vice versa.
+            this.chart.data.datasets = []
+            Object.keys(this.energy).forEach((key, i) => {
+                let dataset = {
+                    label: this.labels[i],
+                    backgroundColor: this.colors[i],
+                    data: this.energy[key]
+                }
+                this.chart.data.datasets.push(dataset)
+            })
+            this.chart.update()
+        },
     },
 
-    mounted(){
-
+    mounted() {
+        // TODO this is mostly duplicated with GreenhouseConfiguration.vue: remove duplication
+        const ctx = document.getElementById(this.id)
+        this.chart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: ['Prod.', 'Cons.'],
+                datasets: [],  // see updateChart for info
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: true,
+                title: {
+                    display: true,
+                    text: 'Total Energy Production vs Consumption',
+                    fontColor: "#eeeeee",
+                },
+                tooltips: {
+                    mode: 'point',  // show single value
+                },
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        ticks:{
+                            beginAtZero:true,
+                            fontColor: "#eeeeee",
+                            callback: function(value, index, values) {
+                                return value + ' kWh'
+                            }
+                        },
+                        gridLines: {
+                            color: "#666666"
+                        },
+                    }],
+                    yAxes:[{
+                        stacked: true,
+                        ticks:{
+                            fontColor: "#eeeeee",
+                        },
+                        gridLines: {
+                            color: "#666666"
+                        },
+                    }],
+                }
+            },
+        })
+        this.updateChart()
     }
 }
 </script>
 
 <style lang="scss" scoped>
-
-    canvas{
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        position:absolute;
-        width:100%;
-        height:100%;
-    }
 </style>
