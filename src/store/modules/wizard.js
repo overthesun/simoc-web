@@ -56,7 +56,7 @@ export default{
                 duration:{value:parseInt(state.configuration.duration.amount),type:state.configuration.duration.units},
                 human_agent:{amount:parseInt(state.configuration.humans.amount)},
                 food_storage:{amount:parseInt(state.configuration.food.amount)},
-                solar_arrays:{amount:parseInt(state.configuration.powerGeneration.amount)},
+                solar_pv_array_mars:{amount:parseInt(state.configuration.powerGeneration.amount)},
                 power_storage:{amount:parseInt(state.configuration.powerStorage.amount)},
                 eclss:{amount:parseInt(state.configuration.eclss.amount)},
                 single_agent:1,
@@ -82,7 +82,6 @@ export default{
     },
     mutations:{
         SETCONFIGURATION:function(state,value){
-            console.log(value)
             state.configuration = value
         },
         SETINITIAL:function(state,value){
@@ -144,12 +143,12 @@ export default{
             state.configuration = {
                 location: "none",
                 duration: {type:"none", amount:'0', units:"none"},
-                humans: {type:"none", amount:'0', units:""},
-                food: {type:"none", amount:'0', units:""},
+                humans: {type:"human_agent", amount:'0', units:""},
+                food: {type:"food_storage", amount:'0', units:""},
+                eclss: {type:"eclss", amount:'0', units:""},
+                powerGeneration: {type:"solar_pv_array_mars", amount:'0', units:""},
+                powerStorage: {type:"power_storage", amount:'0', units:""},
                 crewQuarters: {type:"none", amount:'0', units:""},
-                eclss: {type:"none", amount:'0', units:""},
-                powerGeneration: {type:"none", amount:'0', units:""},
-                powerStorage: {type:"none", amount:'0', units:""},
                 greenhouse: {type:"none", amount:'0', units:""},
                 plantSpecies: [{type:"", amount:""}],
             }
