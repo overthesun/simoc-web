@@ -8,7 +8,8 @@
             <div class='input-generator-wrapper'>
                 <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy"> <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
                     <option value='none' selected>None</option>
-                    <option value='solar_arrays'>Solar PV Array</option>
+                    <!-- TODO: this is hardcoded on Mars -->
+                    <option value='solar_pv_array_mars'>Solar PV Array</option>
                 </select>
                 <input class='input-field-number' v-model="generator.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
             </div>

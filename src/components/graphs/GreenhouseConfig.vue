@@ -1,203 +1,141 @@
-<!-- no longer used SEE GreenhouseDoughnut -->
+<!-- This chart compares the total and the used space of the greenhouse in the configuration wizard. -->
 
 <template>
-    <canvas id="canvas" />
+    <canvas :id="id" />
 </template>
+
 <script>
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
 import {mapState,mapGetters} from 'vuex'
 export default {
-    data(){
-        return{
-            greenhouseSize:{
-                'greenhouse_small':490,
-                'greenhouse_medium':2454,
-                'greenhouse_large':5610
-            }
+    props: {
+        id: String,
+    },
+
+    data() {
+        return {
+            greenhouseSizes: {
+                'greenhouse_small': 490,
+                'greenhouse_medium': 2454,
+                'greenhouse_large': 5610
+            },
+            // colors used for the plants in the graphs
+            colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',
+                     '#990000', '#880000', '#770000', '#660000', '#550000', '#440000',
+                     '#330000', '#220000', '#110000'],
         }
     },
 
     computed:{
-        ...mapGetters('configuration',['getPlantSpecies','getGreenhouse']),
-        //...mapGetters('stepData',['getStepNumber']),
+        ...mapGetters('wizard', ['getConfiguration']),
 
-
-        maxLine:function(){
-            let greenhouse = this.getGreenhouse.type
-            let maxLine = this.greenhouseSize[greenhouse]
-            return maxLine
+        plantSpecies: function() {
+            return this.getConfiguration.plantSpecies
         },
-
-        graphData:function(){
-            let species = this.getPlantSpecies
-            let amounts = []
-            let types = []
-
-            species.forEach((item) =>{
-                amounts.push(item.amount)
-                types.push(item.type)
-            })
-
-            let data = {
-                amounts:amounts,
-                types:types
-            }
-
-            return data
-
+        greenhouseSize: function() {
+            return this.greenhouseSizes[this.getConfiguration.greenhouse.type]
         },
     },
 
     watch:{
-        getStepNumber:function(){
-            this.chart.data.labels =[]
-            this.chart.data.labels = this.graphData.types
-            this.chart.data.datasets[0].data.pop()
-            this.chart.data.datasets[0].data = this.graphData.amounts
-            this.chart.update()
+        // update graph when the plants or greenhouse change
+        plantSpecies: {
+            handler: function () {
+                this.updateChart()
+            },
+            deep: true,
         },
+        greenhouseSize: function () {
+            this.updateChart()
+        },
+    },
 
-        maxLine:function(){
-            this.chart.options.annotation.annotations.pop()
-            this.chart.options.annotation.annotations.push({
-                type: 'line',
-                mode: 'horizontal',
-                scaleID: 'y-axis-0',
-                value: this.maxLine,
-                borderColor: 'red',
-                borderWidth: 5,
-                label: {
-                    backgroundColor: "red",
-                    content: "Test Label",
-                    enabled: false
-                },
+    methods:{
+        updateChart: function() {
+            // Instead of accepting a dataset for each row (i.e. one for
+            // production and one for consumption), ChartJS wants several
+            // datasets with a 2-elems [production, consumption] array.
+            // Since values in the same dataset share label/color, a
+            // workaround is to use e.g. [10, null] for the total size and
+            // [null, 10] for the plants: these will show respectively a
+            // 10 in the total size row and nothing in the plants row
+            // and vice versa.
+            this.chart.data.datasets = []
+
+            // add dataset for the total size row
+            this.chart.data.datasets.push({
+                label: 'Greenhouse size',
+                backgroundColor: '#0000ff',
+                data: [this.greenhouseSize, null],
+            })
+            // add datasets for each plant in the used row
+            this.plantSpecies.forEach((plant, i) => {
+                let dataset = {
+                    label: plant.type,
+                    backgroundColor: this.colors[i],
+                    data: [null, plant.amount]
+                }
+                this.chart.data.datasets.push(dataset)
             })
             this.chart.update()
         },
-
-        graphData: function(){
-            this.chart.data.labels =[]
-            this.chart.data.labels = this.graphData.types
-            this.chart.data.datasets[0].data.pop()
-            this.chart.data.datasets[0].data = this.graphData.amounts
-            this.chart.update()
-        }
     },
 
 
-    mounted(){
-        const ctx = document.getElementById("canvas");
+    mounted() {
+        // TODO this is mostly duplicated with PowerUsage.vue: remove duplication
+        const ctx = document.getElementById(this.id);
         this.chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [1,2,3],
-                    datasets: [{
-                        lineTension: 0,
-                        data: [],
-                        label: "Produced",
-                        borderColor: "#00aaee",
-                        backgroundColor: "#00aaee",
-                        fill:false,
-                    }, {
-                        lineTension: 0,
-                        data: [0,0,0,0,0,0,0,0,0,0,0],
-                        label: "Consumed",
-                        borderColor: "#cd0000",
-                        fill:false,
-                    }
-                    ]
+            type: 'horizontalBar',
+            data: {
+                labels: ['Total', 'Used'],
+                datasets: [],  // see updateChart for info
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: true,
+                title: {
+                    display: true,
+                    text: 'Total Greenhouse Space vs Used Space',
+                    fontColor: "#eeeeee",
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {
-                        display:false,
-                        position: 'top',
-
-                    },
-                    title: {
-                        display:false,
-                        fontSize:14,
-                        fontColor: "#eeeeee",
-                        text: 'GREENHOUSE CONFIGURATION'
-                    },
-                    scales:{
-                        yAxes:[{
-                            display:true,
-                            ticks:{
-                                min:0,
-                                beginAtZero: true,
+                tooltips: {
+                    mode: 'point',  // show single value
+                },
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        ticks:{
+                            beginAtZero:true,
+                            fontColor: "#eeeeee",
+                            callback: function(value, index, values) {
+                                return value + ' m³'
                             }
-                        }]
-                    },
-                    annotation: {
-                        drawTime: 'afterDatasetsDraw',
-                        events: ['click'],
-                        annotations: [{
-                            //Don't use annotation ID's
-                            type: 'line',
-                            mode: 'horizontal',
-                            scaleID: 'y-axis-0',
-                            value: 0,
-                            borderColor: 'red',
-                            borderWidth: 5,
-                            label: {
-                                backgroundColor: "red",
-                                content: "",
-                                enabled: false
-                            },
-                        }]
-                    }
-                }
-            });
-
-        /*new Chart(ctx, {
-				type: 'bar',
-                data: {
-                    labels: [1,2,3],
-                    datasets: [{
-                        lineTension: 0,
-                        data: [],
-                        label: "Produced",
-                        borderColor: "#00aaee",
-                        backgroundColor: "#00aaee",
-                        fill:false,
-                    }, {
-                        lineTension: 0,
-                        data: [0,0,0,0,0,0,0,0,0,0,0],
-                        label: "Consumed",
-                        borderColor: "#cd0000",
-                        fill:false,
-                    }
-                    ]
+                        },
+                        gridLines: {
+                            color: "#666666"
+                        },
+                    }],
+                    yAxes:[{
+                        stacked: true,
+                        ticks:{
+                            fontColor: "#eeeeee",
+                        },
+                        gridLines: {
+                            color: "#666666"
+                        },
+                    }],
                 },
-				options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-					legend: {
-						position: 'top',
-					},
-					title: {
-						display: true,
-						text: 'Chart.js Bar Chart'
-					},
-				}
-			});*/
-        this.chart.update()
+            }
+        });
+        this.updateChart()
     }
 }
 </script>
 
 <style lang="scss" scoped>
-
-    canvas{
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        position:absolute;
-        width:100%;
-        height:100%;
-    }
 </style>
