@@ -124,7 +124,7 @@ export default {
         height:100%;
         width:100%;
         display:grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 50% 50%;
         grid-template-rows: minmax(0,1fr);
         box-sizing: border-box;
     }
