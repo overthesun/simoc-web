@@ -1,6 +1,6 @@
 <template>
     <div class='panel-graph'>
-        <VersusGraph :id="'canvas-energy-' + canvasNumber" plotted_value='enrg_kwh' unit='kWh' />
+        <VersusGraph :id="'canvas-oxygen-' + canvasNumber" plotted_value='atmo_o2' unit='kg' />
     </div>
 </template>
 
@@ -9,7 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {VersusGraph} from '../../components/graphs'
 
 export default {
-    panelTitle: 'Energy Levels',
+    panelTitle: 'Oxygen Levels',
     props: {
         canvasNumber: 0,
     },

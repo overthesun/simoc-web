@@ -19,7 +19,9 @@ export default {
         }
     },
     props:{
-        id:String,
+        id: String,
+        plotted_value: String,
+        unit: String,
     },
 
     computed:{
@@ -46,8 +48,8 @@ export default {
                 data.datasets[1].data.shift()
                 data.labels.shift()
                 if (s > 0) {
-                    let {enrg_kwh: {value: production}} = this.getTotalProduction(s)
-                    let {enrg_kwh: {value: consumption}} = this.getTotalConsumption(s)
+                    let production = this.getTotalProduction(s)[this.plotted_value].value
+                    let consumption = this.getTotalConsumption(s)[this.plotted_value].value
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)
@@ -70,6 +72,7 @@ export default {
 
     mounted(){
         const ctx = document.getElementById(this.id)
+        const unit = this.unit
         this.chart = new Chart(ctx, {
             type: 'line',
             data:{
@@ -94,9 +97,9 @@ export default {
                 scales:{
                     yAxes:[{
                         ticks:{
-                            beginAtZero:true,
-                            callback:function(value,index,values){
-                                return value + ' kWh'
+                            beginAtZero: true,
+                            callback: function(value, index, values) {
+                                return value + ' ' + unit
                             }
                         }
                     }],
