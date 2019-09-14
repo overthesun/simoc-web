@@ -40,7 +40,8 @@ export default{
         timerID:undefined,
         getStepsTimerID:undefined,
         isTimerRunning:false,
-        menuActive:false
+        menuActive:false,
+        activePanels: [],
     },
     getters:{
         getMenuActive:(state) => state.menuActive,
@@ -63,7 +64,8 @@ export default{
         getUpdateTimer: state => state.updateTimer,
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
-        getIsTimerRunning: state =>state.isTimerRunning,
+        getIsTimerRunning: state => state.isTimerRunning,
+        getActivePanels: state => state.activePanels,
     },
     mutations:{
         SETPARAMETERS:function(state,value){
@@ -196,6 +198,13 @@ export default{
                 state.parameters.total_agent_mass.push(item.type)
                 state.totalAgentMass[item.type] = {"value":0,"units":undefined}
             })
+        },
+        SETACTIVEPANELS: function(state, panels) {
+            state.activePanels = panels
+        },
+        SETDEFAULTPANELS: function(state) {
+            state.activePanels = ["InitialConfig", "EnergyVersus", "AtmosphereConfig",
+                                  "MissionStatus", "GreenhouseConfig", "PlantGrowth"]
         },
         INITGAME: function(state, value) {
             // set a new game_id and reset all other values

@@ -51,8 +51,7 @@ export default {
     data() {
         return {
             // list of default panels; update this to change the initial panels displayed
-            activePanels: ["InitialConfig", "EnergyVersus", "AtmosphereConfig",
-                           "MissionStatus", "GreenhouseConfig", "PlantGrowth"],
+            activePanels: [],
             panels: panels,  // object mapping all available panel names with their corresponding object
             visibleMenu: null,  // the index of the visible panel menu, null if no panel menu is open
             visiblePanelSelect: null,  // the index of the visible panel select dropdown
@@ -60,13 +59,23 @@ export default {
             replacePanel: null,  // if 0, updatePanels will add a new panel; if 1, it will replace the panel
         }
     },
+    beforeMount() {
+        // load saved panels from local storage or use default layout
+        const savedPanels = localStorage.getItem('panels-layout')
+        if (savedPanels) {
+            this.SETACTIVEPANELS(JSON.parse(savedPanels))
+        }
+        else {
+            this.SETDEFAULTPANELS()
+        }
+    },
     components:{
         'BasePanel': BasePanel,
         ...panels,  // add all panels as components
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getAgentType']),
+        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('dashboard', ['getActivePanels']),
         sortedPanels: function () {
             // return a sorted array of [[title, name], [..., ...], ...]
             let sorted = []
@@ -77,6 +86,8 @@ export default {
         },
     },
     methods:{
+        ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
+
         openPanelMenu: function(index) {
             // open the panel menu at index or close it if it's already open
             this.visibleMenu = (this.visibleMenu === index) ? null : index
@@ -98,12 +109,19 @@ export default {
             // replace or add the selected panel
             let panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
+            this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
         },
         removePanel: function(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
+            this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
+        },
+    },
+    watch: {
+        getActivePanels: function () {
+            this.activePanels = this.getActivePanels
         },
     },
 }

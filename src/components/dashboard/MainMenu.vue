@@ -14,9 +14,10 @@ use some of these features.
                 <div class='option-item option-item-active'>Main Menu</div>
             </div>
             <main class='main-menu'>
-                <button class='btn-normal btn-disabled'>Reset Session</button>
                 <button class='btn-normal' @click="toConfiguration">New Simulation</button>
                 <button class='btn-normal' @click="stopSimulation">Stop Simulation</button>
+                <button class='btn-normal' @click="savePanelsLayout">Save Panels Layout</button>
+                <button class='btn-normal' @click="resetPanelsLayout">Reset Panels Layout</button>
                 <button class='btn-normal btn-disabled'>Save Session</button>
                 <button class='btn-outline-warning' @click="close">Close Menu</button>
                 <button class='btn-warning btn-logout'  @click="logout">Log Out</button>
@@ -40,11 +41,11 @@ export default {
         this.PAUSETIMER()
     },
     computed:{
-        ...mapGetters('dashboard',['getIsTimerRunning']),
+        ...mapGetters('dashboard',['getIsTimerRunning', 'getActivePanels']),
         ...mapGetters(['getGameID']),
     },
     methods:{
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER']),
+        ...mapMutations('dashboard',['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER','SETDEFAULTPANELS']),
 
         // Called when the menu is closed, resumes the timer
         close: function() {
@@ -56,10 +57,19 @@ export default {
         },
         // Stop Simulation button, this stops the timers and the simulation
         stopSimulation: async function() {
-            console.log('clicked on stop simulation')
             this.PAUSETIMER()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
             this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
+        },
+        // Save Panels Layout button
+        savePanelsLayout: function() {
+            const panelsLayout = JSON.stringify(this.getActivePanels)
+            localStorage.setItem('panels-layout', panelsLayout)
+        },
+        // Reset Panels Layout button
+        resetPanelsLayout: function() {
+            localStorage.removeItem('panels-layout')
+            this.SETDEFAULTPANELS()
         },
         // Logout button route
         logout: async function(){
@@ -178,12 +188,10 @@ export default {
 
 .btn-normal{
         width: 256px;
-        height: 48px;
-        min-height: 48px;
-
-        margin-bottom: 24px;
+        height: 40px;
+        min-height: 40px;
+        margin-bottom: 12px;
         border-radius: 24px;
-        padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
         background-color: #0099ee;
@@ -219,11 +227,10 @@ export default {
 
     .btn-outline-warning{
         width: 256px;
-        height: 48px;
-        min-height: 48px;
-        margin-bottom: 24px;
+        height: 40px;
+        min-height: 40px;
+        margin-bottom: 12px;
         border-radius: 24px;
-        padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
         background-color: transparent;
@@ -241,10 +248,9 @@ export default {
 
     .btn-warning{
         width: 256px;
-        height: 48px;
-        min-height: 48px;
+        height: 40px;
+        min-height: 40px;
         border-radius: 24px;
-        padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
         background-color: #ff3100;
