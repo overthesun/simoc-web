@@ -218,7 +218,7 @@ export default{
                 "total_agent_count":["human_agent"],
                 "total_agent_mass":[],
                 "total_production":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
-                "total_consumption":["atmo_o2","h2o_potb","enrg_kwh"],
+                "total_consumption":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
                 "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
                 "parse_filters":[],
                 "single_agent":1,
