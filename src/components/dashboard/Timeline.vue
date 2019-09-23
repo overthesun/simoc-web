@@ -105,11 +105,9 @@ export default {
     .timeline-wrapper{
         width: auto;
         height: 32px;
-        background-color: #1e1e1e;
         display:grid;
         grid-template-rows:1fr;
         grid-template-columns: auto 1fr auto;
-        grid-column-gap: 32px;
         margin: 8px 0px;
         position:relative;
     }
@@ -131,7 +129,7 @@ export default {
         z-index:99;
         appearance:none;
         border-radius: 2px;
-        width: 704px;
+        width: 70vw;
         height: 4px;
         outline:none;
         background:transparent;
