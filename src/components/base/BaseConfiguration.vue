@@ -14,11 +14,8 @@ menu button being present on other unrelated configurations.
             Uses class-binding to the menuActive variable to toggle displaying the menu.
         -->
         <section class='menu-wrapper' :class="{'menu-wrapper-active': menuActive}">
-            <header class='header'>
-                <div class='simoc-logo-title'>
-                    <div class='logo-title'>SIMOC</div>
-                    <div class='logo-title-italic logo-title-menu'>CONFIGURATION MENU</div>
-                </div>
+            <header>
+                CONFIGURATION MENU
                 <fa-icon class='fa-icon menu-icon' :icon="['fas','times']" @click='toggleMenu'/>
             </header>
             <main class='menu-main'>
@@ -31,13 +28,7 @@ menu button being present on other unrelated configurations.
         </section>
         <!-- The form side of the wizard screen -->
         <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Expert'}">
-            <header class='header'>
-                <!--<img src='../../assets/simoc-logo.svg' class='simoc-logo'/>-->
-                <div class='simoc-logo-title'>
-                    <div class='logo-title'>SIMOC</div>
-                    <div class='logo-title-italic'>CONFIGURATION WIZARD</div>
-                </div>
-            </header>
+            <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
             <nav v-if="getActiveConfigType === 'Guided'" class='navigation-wrapper'>
                 <slot name='navigation-section-select'></slot>
@@ -51,11 +42,8 @@ menu button being present on other unrelated configurations.
         </section>
         <!-- The reference side of the wizard screen -->
         <section class='reference-wrapper'>
-            <header class='header'>
-                <div class='simoc-logo-title'>
-                    <div class='logo-title'>SIMOC</div>
-                    <div class='logo-title-italic'>ENCYCLOPEDIA</div>
-                </div>
+            <header>
+                REFERENCE
                 <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']" @click='toggleMenu'/>
             </header>
             <!-- This is the navigation section at the top of the wizard reference. class-binding to a universal variable is used to dictate which one is set to active.
@@ -160,7 +148,7 @@ export default {
         height:100%;
         width:100%;
         padding:16px;
-        background-color:#1e1e1e;
+        border-right: 1px solid #666;
         box-sizing:border-box;
 
 
@@ -168,22 +156,24 @@ export default {
 
     .wizard-wrapper,.reference-wrapper{
         display:grid;
-        grid-template-rows: 32px 32px minmax(0,1fr) 48px;
+        grid-template-rows: 22px 32px minmax(0,1fr) 48px;
         grid-row-gap: 32px;
     }
     /* omit the form select dropdown from the expert config grid template */
     .wizard-wrapper.no-form-select-dropdown{
-        grid-template-rows: 32px minmax(0,1fr) 48px;
+        grid-template-rows: 22px minmax(0,1fr) 48px;
     }
 
     .reference-wrapper{
         height:100%;
         padding:16px;
-        background-color:#252525;
         box-sizing:border-box;
     }
 
-    .header{
+    header {
+        font-family: "Nasalization", "Open Sans", sans-serif;
+        font-weight: 200;
+        font-size: 22px;
         display:flex;
         justify-content:flex-start;
         align-items:center;
@@ -201,26 +191,6 @@ export default {
         }
     }
 
-    .simoc-logo{
-        width: auto;
-        height: 32px;
-        margin-right:8px;
-    }
-
-    .simoc-logo-title{
-        font-family: "Nasalization", "Open Sans", sans-serif;
-        font-weight: 600;
-        font-size: 12px;
-    }
-
-    .logo-title-italic{
-        font-weight: 200;
-        font-size:16px;
-    }
-
-    .logo-title-main{
-        margin-top:auto;
-    }
     .section-select{
         border:none;
         background:transparent;
