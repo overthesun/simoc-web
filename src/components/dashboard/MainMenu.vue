@@ -191,7 +191,7 @@ export default {
         height: 40px;
         min-height: 40px;
         margin-bottom: 12px;
-        border-radius: 24px;
+        border-radius: 5px;
         font-size: 16px;
         font-weight: 600;
         background-color: #0099ee;
@@ -230,7 +230,7 @@ export default {
         height: 40px;
         min-height: 40px;
         margin-bottom: 12px;
-        border-radius: 24px;
+        border-radius: 5px;
         font-size: 16px;
         font-weight: 600;
         background-color: transparent;
@@ -250,7 +250,7 @@ export default {
         width: 256px;
         height: 40px;
         min-height: 40px;
-        border-radius: 24px;
+        border-radius: 5px;
         font-size: 16px;
         font-weight: 600;
         background-color: #ff3100;

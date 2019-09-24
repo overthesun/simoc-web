@@ -194,7 +194,7 @@ export default {
         min-height: 48px;
         margin-left: auto;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -216,7 +216,7 @@ export default {
         height: 48px;
         min-height: 48px;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -239,7 +239,7 @@ export default {
         min-height: 48px;
         margin-left:auto;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
