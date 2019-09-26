@@ -1,5 +1,8 @@
 <template>
     <div class='base-configuration-wrapper'>
+        <TheTopBar />
+        <!-- Show the configuration menu component when getMenuActive is true. -->
+        <ConfigurationMenu v-if="getMenuActive" />
         <router-view>
             <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
@@ -57,11 +60,14 @@
 <script>
 import axios from 'axios'
 //import form components
-import {Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     components:{
+        'TheTopBar': TheTopBar,
+        'ConfigurationMenu': ConfigurationMenu,
         'Energy':Energy,
         'Presets':Presets,
         'Inhabitants':Inhabitants,
@@ -69,7 +75,7 @@ export default {
         'Initial':Initial,
         'Reference':Reference,
         'GreenhouseDoughnut':GreenhouseDoughnut,
-        'Graphs':Graphs
+        'Graphs':Graphs,
     },
     data(){
         return{
@@ -91,6 +97,7 @@ export default {
         this.activeConfigType = this.getActiveConfigType
     },
     computed:{
+        ...mapGetters('dashboard', ['getMenuActive']),
         ...mapGetters('wizard',['getConfiguration','getActiveConfigType','getActiveForm','getFormLength','getFormattedConfiguration']),
         ...mapGetters('wizard',['getActiveReference','getActiveRefEntry']),
         ...mapGetters('dashboard',['getStepParams']),
@@ -164,17 +171,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .base-configuration-wrapper{
-        position:relative;
-        width: 1024px;
-        height: 768px;
-        max-height: 768px;
-        overflow:hidden;
-        background-color: #1e1e1eaa;
-        border: 1px solid #666;
-        box-shadow: 5px 5px 5px #333c;
-        border-radius: 5px;
-    }
+.base-configuration-wrapper{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 50px minmax(0px,1fr);
+}
 
     .form-wrapper{
         *:not(:last-of-type){

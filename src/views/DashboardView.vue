@@ -47,7 +47,7 @@ export default {
     },
     beforeDestroy: function() {
         // if the sim is still running upon leaving the page, stop it;
-        // some methods in MainMenu.vue rely on this to stop the sim
+        // some methods in DashboardMenu.vue rely on this to stop the sim
         this.STOPTIMER()   // stop the step timer
         this.SETMENUACTIVE(false)  // close the menu if it was open
         if (!this.getTerminated) {

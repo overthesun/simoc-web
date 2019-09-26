@@ -9,23 +9,6 @@ menu button being present on other unrelated configurations.
 
 <template>
     <div class='configuration-wrapper' >
-        <!--
-            Uses absolute positioning and overflow-hidden to remain off screen when not active
-            Uses class-binding to the menuActive variable to toggle displaying the menu.
-        -->
-        <section class='menu-wrapper' :class="{'menu-wrapper-active': menuActive}">
-            <header>
-                CONFIGURATION MENU
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','times']" @click='toggleMenu'/>
-            </header>
-            <main class='menu-main'>
-                <button class='btn-normal btn-disabled'>Download Configuration</button>
-                <button class='btn-normal btn-disabled'>Save Configuration</button>
-                <button class='btn-normal btn-disabled'>Load Configuration</button>
-                <button class='btn-outline-warning btn-disabled'>Reset To Default</button>
-                <button class='btn-warning' @click="logout">Log Out</button>
-            </main>
-        </section>
         <!-- The form side of the wizard screen -->
         <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Expert'}">
             <header>SIMULATION CONFIGURATION</header>
@@ -42,10 +25,7 @@ menu button being present on other unrelated configurations.
         </section>
         <!-- The reference side of the wizard screen -->
         <section class='reference-wrapper'>
-            <header>
-                REFERENCE
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']" @click='toggleMenu'/>
-            </header>
+            <header>REFERENCE</header>
             <!-- This is the navigation section at the top of the wizard reference. class-binding to a universal variable is used to dictate which one is set to active.
                 The universal variable is used so that things like the wizard form headers can be used to set what the active section is. Such as clicking a title and
                 the approriate reference entry appearing on the right side.
@@ -70,12 +50,6 @@ menu button being present on other unrelated configurations.
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
-    data(){
-        return{
-            menuActive:false
-        }
-    },
-
     computed:{
         ...mapGetters('wizard',['getActiveConfigType','getActiveReference']),
 
@@ -87,62 +61,26 @@ export default {
     },
     methods:{
         ...mapMutations('wizard',['SETACTIVEREFERENCE']),
-
-        //Simple toggle function for showing the menu. Used with class-binding to activate the class to show / hide the menu
-        toggleMenu:function(){
-            this.menuActive = !this.menuActive
-        },
-        //Route function for logging the user out. Called from within the wizard menu
-        logout: async function(){
-            try{
-                axios.get('/logout')
-            }catch(error){
-                console.log(error)
-            }
-            this.$router.push("entry") // Take the user back to the login screen even if the operation fails.
-        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .configuration-wrapper{
-        position:relative;
-        overflow:hidden;
-        height:100%;
-        width:100%;
-        display:grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: minmax(0,1fr);
-        box-sizing: border-box;
-    }
-
-    .menu-wrapper{
-        position: absolute;
-        background-color: #252525;
-        width: 50%;
-        height: 100%;
-        top: 0;
-        left:100%;
-        z-index:10;
-        transition: left .3s ease;
-        display:grid;
-        grid-template-rows: 32px 1fr;
-        grid-row-gap: 88px;
-        padding:16px;
-        box-sizing:border-box;
-
-        &-active{
-            left:50%
-        }
-    }
-
-    .menu-main{
-        display:flex;
-        justify-content:flex-start;;
-        align-items:center;
-        flex-direction: column;
-    }
+.configuration-wrapper {
+    position: relative;
+    height: 80vh;
+    width: 80vw;
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: minmax(0,1fr);
+    box-sizing: border-box;
+    background-color: #1e1e1eaa;
+    border: 1px solid #666;
+    box-shadow: 5px 5px 5px #333c;
+    border-radius: 5px;
+}
 
     .wizard-wrapper{
         height:100%;
@@ -150,8 +88,6 @@ export default {
         padding:16px;
         border-right: 1px solid #666;
         box-sizing:border-box;
-
-
     }
 
     .wizard-wrapper,.reference-wrapper{
@@ -159,6 +95,7 @@ export default {
         grid-template-rows: 22px 32px minmax(0,1fr) 48px;
         grid-row-gap: 32px;
     }
+
     /* omit the form select dropdown from the expert config grid template */
     .wizard-wrapper.no-form-select-dropdown{
         grid-template-rows: 22px minmax(0,1fr) 48px;
@@ -218,11 +155,6 @@ export default {
         }
     }
 
-    .menu-icon{
-        font-size:32px;
-        margin-left:auto;
-    }
-
     .configuration-options{
         width:100%;
         display:flex;
@@ -269,89 +201,4 @@ export default {
             color:#999;
         }
     }
-
-    .btn-normal{
-        width: 256px;
-        height: 48px;
-        min-height: 48px;
-
-        margin-bottom: 24px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: #0099ee;
-        border:none;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
-    .btn-disabled{
-        background-color: transparent !important;
-        border: 1px solid #999 !important;
-        color: #999 !important;
-
-        &:hover{
-            cursor:not-allowed !important;
-        }
-
-        &:focus{
-            outline:none !important;
-        }
-    }
-
-    .btn-logout{
-        margin-top: auto;
-    }
-
-    .btn-outline-warning{
-        width: 256px;
-        height: 48px;
-        min-height: 48px;
-        margin-bottom: 24px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: transparent;
-        border:2px solid #ff3100;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
-    .btn-warning{
-        width: 256px;
-        height: 48px;
-        min-height: 48px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: #ff3100;
-        border:none;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
 </style>
