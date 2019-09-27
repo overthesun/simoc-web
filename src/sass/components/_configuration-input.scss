@@ -9,7 +9,6 @@
     min-height:96px;
     display:grid;
     grid-template-rows: auto minmax(16px,auto) 36px;
-    grid-row-gap: 12px;
     position:relative;
 
     &:not(:last-of-type){
@@ -21,17 +20,23 @@
     font-size:24px;
     font-weight: 600;
     color: lightgreen;
-    text-decoration: underline;
+}
+
+.input-title svg {
+    font-size: 18px;
+    color: #ffffff99;
 
     &:hover{
-        cursor:pointer;
+        cursor: help;
     }
 }
 
 .input-description{
     font-size: 16px;
     font-weight: 400;
-    color:#eee;
+    color: #eee;
+    margin-top: 4px;
+    margin-bottom: 12px;
 }
 
 

@@ -1,7 +1,10 @@
 <template>
     <form class='form-wrapper' @submit.prevent="">
         <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Location')">Location</div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class='input-title'>
+                Location
+                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Location')" />
+            </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>In this beta release, your habitat is located on the equatorial region of Mars.</div>
             <select class='input-field-select' v-model="location" v-on:change="setInitial">
                 <option value="none" disabled hidden selected>Location</option>
@@ -9,7 +12,10 @@
             </select>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Duration')">Mission Duration</div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class='input-title'>
+                Mission Duration
+                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Duration')" />
+            </div>
             <div class='input-description'>Select the duration of your stay on Mars.</div>
             <div class='input-duration-wrapper'>
                 <input class='input-field-number' v-model="duration.amount" pattern="^\d+$" maxlength=8 placeholder="Length" v-on:change="setInitial">
