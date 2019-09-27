@@ -14,27 +14,17 @@
 
             <template v-slot:entry-main>
                 <div class='welcome-wrapper'>
-                    <div class='welcome-paragraph welcome-title'>
-                        WELCOME TO THE SIMOC BETA
-                    </div>
+                    <p class='welcome-title'>WELCOME TO THE SIMOC BETA</p>
 
-                    <div class='welcome-paragraph'>
-                        Below are a few things to keep in mind while using this product.
-                    </div>
-                    <div class='welcome-paragraph'> No personal information will be stored or used by SIMOC services. All
-                        login information is required simply for the creation of each user
-                        session, tracking of user settings, and session data. Server wipes may
-                        occur during the course of this private beta, including user login
-                        information.
-                    </div>
-                    <div class='welcome-paragraph'> This product remains in development. Not all functionality may be
-                        present. If an error or bug occurs, please submit a bug report to bugs@simoc.space,
-                        with as complete a description, including what lead to the issue, as is possible.
-                    </div>
-                    <div class='welcome-paragraph'>
-                        For further details and explanations please visit:
-                        <a class='link' href="https://simoc.space/">SIMOC.SPACE</a>
-                    </div>
+                    <p>Please keep in mind the following while using this closed ecosystem simulation.</p>
+
+                    <p>No personal information will be stored or used by SIMOC services. All login information is
+                    required simply for the creation of each user session, tracking of user settings, and session data.
+                    Server wipes may occur during the course of this private beta, including user login information.</p>
+
+                    <p>This product remains in development, therefore not all functionality may be present. If you experience a bug while using SIMOC, please submit a report to bugs@simoc.space with a complete description, including what you were doing prior to the issue.</p>
+
+                    <p>For further details and explanations please visit: <a class='link' href="https://simoc.space/">www.simoc.space</a></p>
                 </div>
             </template>
 
@@ -60,26 +50,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.entry-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+}
 
-    .entry-wrapper{
-        height:100%;
-        width:100%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-        box-sizing:border-box;
-    }
+.welcome-wrapper {
+    height: 100%;
+    width: 100%;
+}
 
-    .welcome-wrapper{
-        height:100%;
-        width:100%;
-    }
+.welcome-title {
+    text-align: center;
+    margin-top: 0;
+}
 
-    .welcome-paragraph{
-        font-family: "Open Sans", sans-serif;
-        &:not(:last-of-type){
-            margin-bottom:12px;
-        }
-    }
+p {
+    font-family: "Open Sans", sans-serif;
+}
 </style>
