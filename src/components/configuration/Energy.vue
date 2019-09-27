@@ -3,8 +3,8 @@
 <template>
     <form class='form-wrapper'@submit.prevent="">
         <label class='input-wrapper'>
-            <div class='input-title'  @click="SETACTIVEREFENTRY('PowerGeneration')">Power Generation</div>
-            <div class='input-description'>This is the thing that will keep the lights and heat on</div>
+            <div class='input-title' @click="SETACTIVEREFENTRY('PowerGeneration')">Power Generation</div>
+            <div class='input-description'>Select the number of solar photo-voltaic panels required to off-set your power consumption, day and night.</div>
             <div class='input-generator-wrapper'>
                 <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy"> <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
                     <option value='none' selected>None</option>
@@ -15,8 +15,8 @@
             </div>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'  @click="SETACTIVEREFENTRY('PowerStorage')">Power Storage</div>
-            <div class='input-description'>Really big batteries, impossibly good storage</div>
+            <div class='input-title' @click="SETACTIVEREFENTRY('PowerStorage')">Power Storage</div>
+            <div class='input-description'>When the sun goes down, the batteries keep the habitat go'n round.</div>
             <input class='input-field-number' v-model="storage.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
         </label>
     </form>

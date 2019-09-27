@@ -12,7 +12,8 @@ Future version should also automatically switch the selected preset to 'custom' 
     <form class='form-wrapper' @submit.prevent="">
         <label class='input-wrapper'>
             <div class='input-title'>Presets</div>
-            <div class='input-description'>Let us choose for you.</div>
+            <div class='input-description'>Learn from preset configurations how the agents interact with each
+other, or design your own.</div>
             <div class='input-duration-wrapper'>
                 <select class='input-field-select' v-model="presets" v-on:change="SETCONFIGURATION(presets)">
                     <option :value=none hidden disabled selected>Preset</option>

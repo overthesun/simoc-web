@@ -2,17 +2,17 @@
     <form class='form-wrapper' @submit.prevent="">
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('Inhabitants')">Inhabitants</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>The people that will be living in your community.</div>
+            <div class='input-description'>The number of human inhabitants.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="humans.amount">
         </label>
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('Food')">Food Supply</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>People have got to eat something while the plants grow.</div>
+            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until theplants are ready to harvest.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount">
         </label>
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('CrewQuarters')">Crew Quarters</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>Home is where the head rests.</div>
+            <div class='input-description'>Small, medium, or large, just like an ice cream cone.</div>
             <select class='input-field-select' v-on:change="setInhabitants" v-model="crewQuarters.type">
                 <option value="none" selected>None</option>
                 <option value="crew_habitat_small">Small 1000 m³</option>
@@ -22,7 +22,7 @@
         </label>
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('ECLSS')">Environmental Control</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>Very complicated air conditioning rack, air and water filters too. Better than Brita.</div>
+            <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount">
         </label>
     </form>
