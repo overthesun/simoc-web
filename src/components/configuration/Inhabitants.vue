@@ -11,7 +11,7 @@
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount">
         </label>
         <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('CrewQuarters')">Crew Habitat</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class='input-title' @click="SETACTIVEREFENTRY('CrewQuarters')">Crew Quarters</div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>Home is where the head rests.</div>
             <select class='input-field-select' v-on:change="setInhabitants" v-model="crewQuarters.type">
                 <option value="none" selected>None</option>
