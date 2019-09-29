@@ -16,11 +16,6 @@
                     <button form='login-form' class='btn-warning' @click="logout">Log Out</button>
                 </div>
             </template>
-            <template v-slot:entry-footer>
-                <a class='link link-disabled'>View Account</a>
-                <a class='link link-disabled'>Privacy Policy</a>
-                <a class='link link-disabled'>Report Bug</a>
-            </template>
         </BaseEntry>
 
     </div>

@@ -16,7 +16,8 @@
             <slot name='entry-button'></slot>
         </div>
         <footer class='footer'>
-            <slot name='entry-footer'></slot>
+            <a class='link link-disabled'>Privacy Policy</a>
+            <a class='link' href='mailto:bugs@simoc.space'>Report Bug</a>
         </footer>
     </div>
 </template>
@@ -225,7 +226,7 @@ export default {
         height: 24px;
         min-height:24px;
         display:flex;
-        justify-content:space-around;
+        justify-content:space-evenly;
         align-items:center;
     }
 </style>

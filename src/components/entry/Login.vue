@@ -38,9 +38,9 @@
                     <button form='register-form' class='btn-warning'>SIGN UP</button>
                 </div>
             </template>
-            <template v-slot:entry-footer>
-                <!--<a class='link link-disabled'>Forgot Password?</a>-->
-            </template>
+            <!--<template v-slot:entry-footer>
+                <a class='link link-disabled'>Forgot Password?</a>
+            </template>-->
         </BaseEntry>
 
     </div>
