@@ -32,6 +32,7 @@ export default{
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
+        storageCapacities:{},
         maxStepBuffer: 0,      // the number of steps in the buffer
         currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
@@ -57,6 +58,7 @@ export default{
         getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
         getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
+        getStorageCapacities: state => stepNumber => state.storageCapacities[stepNumber],
 
         getStopped: state => state.stopped,
         getTerminated: state => state.terminated,
@@ -187,6 +189,12 @@ export default{
 
             state.storageRatio[step] = storage_ratios
         },
+        SETSTORAGECAPACITIES:function(state,value){
+            let {step_num:step} = value
+            let {storage_capacities} = value
+
+            state.storageCapacities[step] = storage_capacities
+        },
 
         //Populates the parameters object with the selected plants from the
         //configuration wizard. This should actually called and updated similar to how the
@@ -215,11 +223,13 @@ export default{
                 "game_id": value,
                 "min_step_num": 0,
                 "n_steps": 10,
-                "total_agent_count":["human_agent"],
-                "total_agent_mass":[],
-                "total_production":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
-                "total_consumption":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
-                "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
+                "total_agent_count": ["human_agent"],
+                "total_agent_mass": [],
+                "total_production": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
+                "total_consumption": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
+                "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
+                                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
+                "storage_capacities": {}, // empty obj == get all values
                 "parse_filters":[],
                 "single_agent":1,
             }
@@ -227,6 +237,7 @@ export default{
             state.totalProduction = {}
             state.totalConsumption = {}
             state.storageRatio = {}
+            state.storageCapacities = {}
         },
     },
     actions:{
@@ -238,6 +249,7 @@ export default{
                 commit('SETAGENTTYPE',item)
                 commit('SETTOTALAGENTMASS',item)
                 commit('SETSTORAGERATIOS',item)
+                commit('SETSTORAGECAPACITIES',item)
                 commit('UPDATEBUFFERMAX',item)
                 commit('SETNSTEPS',item)
                 commit('UPDATEMINSTEPNUMBER',item)
