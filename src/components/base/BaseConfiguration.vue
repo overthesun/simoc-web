@@ -47,7 +47,6 @@ menu button being present on other unrelated configurations.
 </template>
 
 <script>
-import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     computed:{

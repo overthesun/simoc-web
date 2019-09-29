@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BaseMenu} from '../../components/base'
 
