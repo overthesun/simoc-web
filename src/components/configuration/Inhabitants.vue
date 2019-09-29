@@ -5,7 +5,7 @@
                 Inhabitants
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Inhabitants')" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>The number of human inhabitants.</div>
+            <div class='input-description'>The number of astronaut explorers to live in your habitat.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="humans.amount">
         </label>
         <label class='input-wrapper'>
@@ -13,7 +13,7 @@
                 Food Supply
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Food')" />
             </div>
-            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until theplants are ready to harvest.</div>
+            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount">
         </label>
         <label class='input-wrapper'>
@@ -21,7 +21,7 @@
                 Crew Quarters
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('CrewQuarters')" />
             </div>
-            <div class='input-description'>Small, medium, or large, just like an ice cream cone.</div>
+            <div class='input-description'>Select the size of your crew quarters: small, medium, or large.</div>
             <select class='input-field-select' v-on:change="setInhabitants" v-model="crewQuarters.type">
                 <option value="none" selected>None</option>
                 <option value="crew_habitat_small">Small 1000 m³</option>

@@ -22,7 +22,7 @@
                 Power Storage
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
-            <div class='input-description'>When the sun goes down, the batteries keep the habitat go'n round.</div>
+            <div class='input-description'>Select the size of your battery to meet your power consumption needs.</div>
             <input class='input-field-number' v-model="storage.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
         </label>
     </form>

@@ -6,7 +6,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Greenhouse')" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class='input-description'>If you are going to grow plants, this is a good place to do so.</div>
+            <div class='input-description'>Select the size of your greenouse: small, medium, or large.</div>
             <select class='input-field-select' v-model="greenhouse.type" v-on:change="setGreenhouse">
                 <option value='none' selected>None</option>
                 <option value='greenhouse_small'>Small (490 m³)</option>
@@ -20,7 +20,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PlantSpecies')" />
             </div>
 
-            <div class='input-description'>Unlike Mark Watney, we can grow more than potatoes.</div>
+            <div class='input-description'>Select plants to grow in your greenhouse.</div>
             <!-- This is the row object for each plant entry within the wizard. v-for automatically rebuilds the fields if one is added or deleted. Index is used as a key to
             store which plant field has been updated within the configuration
             -->

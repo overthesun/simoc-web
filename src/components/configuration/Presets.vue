@@ -11,9 +11,11 @@ Future version should also automatically switch the selected preset to 'custom' 
 <template>
     <form class='form-wrapper' @submit.prevent="">
         <label class='input-wrapper'>
-            <div class='input-title'>Presets</div>
-            <div class='input-description'>Learn from preset configurations how the agents interact with each
-other, or design your own.</div>
+            <div class='input-title'>
+                Presets
+                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Presets')" />
+            </div>
+            <div class='input-description'>Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div class='input-duration-wrapper'>
                 <select class='input-field-select' v-model="presets" v-on:change="SETCONFIGURATION(presets)">
                     <option :value=none hidden disabled selected>Preset</option>
@@ -137,7 +139,7 @@ export default {
         ...mapGetters('wizard',['getConfiguration']),
     },
     methods:{
-        ...mapMutations('wizard',['SETCONFIGURATION']),
+        ...mapMutations('wizard',['SETCONFIGURATION','SETACTIVEREFENTRY']),
         saveToLocalStorage: function () {
             // save custom preset to local storage
             const config = JSON.stringify(this.getConfiguration)
