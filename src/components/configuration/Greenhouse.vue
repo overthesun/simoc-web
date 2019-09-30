@@ -33,7 +33,7 @@
                     -->
                     <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
                 </select>
-                <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-model="plantSpecies[index].amount" v-on:input="updatePlantSpecies(index)">
+                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (m³)" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount">
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
@@ -48,6 +48,7 @@
 <script>
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {ensure_within} from '../../javascript/utils'
 export default {
     data(){
         return{
@@ -95,16 +96,29 @@ export default {
         //This method is used to update a plant at the specified index, updates the plant species and amount.
         //The index is passed in from the above v-for index key when the fields are created.
         //Indexes are repopulated on deletion of any row. Row 3 becomes 2 if row 2 is deleted. This is done
-        //automatically be Vue
+        //automatically by Vue
         updatePlantSpecies:function(index){
-            let plantSpecies = this.plantSpecies[index]
-            //let amount = parseInt(this.plantSpecies[index].amount)
-            let amount = this.plantSpecies[index].amount.toString()
-            //const regex = RegExp('^/d+$')
+            let plant = this.plantSpecies[index]
+            // TODO: this is duplicated in a number of places
+            const greenhouse_size = {
+                'none': 0,
+                'greenhouse_small': 490,
+                'greenhouse_medium': 2454,
+                'greenhouse_large': 5610
+            }[this.greenhouse.type]
+            // make sure that the amount doesn't overflow the greenhouse_size:
+            // calculate the available space by subtracting the amount of the
+            // other plants from the greenhouse size and using that as max
+            let max_amount = greenhouse_size
+            this.plantSpecies.forEach((item, i) =>{
+                if (i != index) {
+                    max_amount -= item.amount
+                }
+            })
+            let amount = this.plantSpecies[index].amount
+            plant.amount = ensure_within(amount, 0, max_amount)
 
-            plantSpecies.amount = amount
-
-            this.UPDATEPLANTSPECIES({'index':index,'plantSpecies':plantSpecies})
+            this.UPDATEPLANTSPECIES({'index': index, 'plant': plant})
         },
 
         //Set the greenhouse type within the wizard store. It also sets the default number of greenhouses to one

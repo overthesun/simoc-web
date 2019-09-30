@@ -111,8 +111,8 @@ export default{
         },
         //Updates the plant at the index with the new values
         UPDATEPLANTSPECIES:(state,value) => {
-            const {index,plantSpecies} = value
-            state.configuration.plantSpecies[index] = plantSpecies
+            const {index, plant} = value
+            state.configuration.plantSpecies[index] = plant
         },
         //Removes the plant at the index
         REMOVEPLANTSPECIES:(state,value)=>{

@@ -15,3 +15,8 @@ export function StringFormatter(value){
     return formatted
 
 }
+
+export function ensure_within(value, min, max) {
+    // ensure that min <= value <= max, return 0 if value is not a number
+    return Math.max(min, Math.min(max, parseInt(value) || 0))
+}

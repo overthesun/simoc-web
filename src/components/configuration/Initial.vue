@@ -18,12 +18,13 @@
             </div>
             <div class='input-description'>Select the duration of your stay on Mars.</div>
             <div class='input-duration-wrapper'>
-                <input class='input-field-number' v-model="duration.amount" pattern="^\d+$" maxlength=8 placeholder="Length" v-on:change="setInitial">
-                <select class='input-field-select' v-model="duration.units" v-on:change="setInitial">
+                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Length" v-on:input="setInitial" v-model="duration.amount">
+                <select class='input-field-select' v-on:change="setInitial" v-model="duration.units">
                     <option value="none" hidden disabled selected>Units</option>
                     <option value="hour">Hours</option>
                     <option value="day">Earth Days (24h)</option>
-                    <option value="year">Earth Years (8760h)</option>
+                    <!--<option value="year">Earth Years (8760h)</option>
+                        Currently disabled since the max is 1 year-->
                 </select>
             </div>
         </label>
@@ -32,6 +33,7 @@
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {ensure_within} from '../../javascript/utils'
 export default {
     data(){
         return{
@@ -55,7 +57,17 @@ export default {
 
         //Called when any of the field's values are changed, or input happens. Updates all related fields to the Initial form within the wizard store.
         setInitial:function(){
-            const value = {'location':this.location,'duration':this.duration}
+            if (this.duration.units === 'hour') {
+                this.duration.amount = ensure_within(this.duration.amount, 240, 16488)
+            }
+            else if (this.duration.units === 'day') {
+                this.duration.amount = ensure_within(this.duration.amount, 10, 687)
+            }
+            else if (this.duration.units === 'year') {
+                // currently disabled
+                this.duration.amount = ensure_within(this.duration.amount, 1, 1)
+            }
+            const value = {'location': this.location, 'duration': this.duration}
             this.SETINITIAL(value)
         }
     },

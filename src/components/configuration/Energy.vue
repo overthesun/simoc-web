@@ -9,12 +9,13 @@
             </div>
             <div class='input-description'>Select the number of solar photo-voltaic panels required to meet your daily power consumption, and recharge the batteries for the night. See graph at right.</div>
             <div class='input-generator-wrapper'>
-                <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy"> <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
+                <!-- Use the retrieved generator value as the value for the field. On change set the configuration store value -->
+                <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy">
                     <option value='none' selected>None</option>
                     <!-- TODO: this is hardcoded on Mars -->
                     <option value='solar_pv_array_mars'>Solar PV Array</option>
                 </select>
-                <input class='input-field-number' v-model="generator.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
+                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="generator.amount">
             </div>
         </label>
         <label class='input-wrapper'>
@@ -23,13 +24,14 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
             <div class='input-description'>Select the size of your battery to meet your power nighttime power consumption needs.</div>
-            <input class='input-field-number' v-model="storage.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
+            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="storage.amount">
         </label>
     </form>
 </template>
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {ensure_within} from '../../javascript/utils'
 export default {
     data(){
         return{
@@ -52,8 +54,10 @@ export default {
 
         //This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
         //It is called from all fields on change, and updates with all selected values from this form.
-        setEnergy:function(){
-            const value = {'powerGeneration':this.generator,'powerStorage':this.storage}
+        setEnergy:function() {
+            this.generator.amount = ensure_within(this.generator.amount, 0, 40)
+            this.storage.amount = ensure_within(this.storage.amount, 0, 10)
+            const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
         }
     },

@@ -6,7 +6,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Inhabitants')" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>The number of astronaut explorers to live in your habitat.</div>
-            <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="humans.amount">
+            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="humans.amount">
         </label>
         <label class='input-wrapper'>
             <div class='input-title'>
@@ -14,7 +14,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Food')" />
             </div>
             <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
-            <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount">
+            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (kg)" v-on:input="setInhabitants" v-model="food.amount">
         </label>
         <label class='input-wrapper'>
             <div class='input-title'>
@@ -35,13 +35,14 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
             </div>
             <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount">
+            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount">
         </label>
     </form>
 </template>
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {ensure_within} from '../../javascript/utils'
 export default {
     data(){
         return{
@@ -69,7 +70,11 @@ export default {
 
         //Sets all related values for the inhabitants form into the wizard store. If any of the fields update them all.
         setInhabitants:function(){
-            const value = {'humans':this.humans,'food':this.food,'crewQuarters':this.crewQuarters,'eclss':this.eclss}
+            this.humans.amount = ensure_within(this.humans.amount, 0, 20)
+            this.food.amount = ensure_within(this.food.amount, 0, 17500)
+            this.eclss.amount = ensure_within(this.eclss.amount, 0, 10)
+            const value = {'humans': this.humans, 'food': this.food,
+                           'crewQuarters': this.crewQuarters, 'eclss': this.eclss}
             this.SETINHABITANTS(value)
         }
     },
