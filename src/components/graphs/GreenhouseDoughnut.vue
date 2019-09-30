@@ -14,7 +14,7 @@ See chart.js documentation for more details.
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
 import {mapState,mapGetters} from 'vuex'
-import {StringFormatter} from '../../javascript/stringFormatter'
+import {StringFormatter} from '../../javascript/utils'
 export default {
     props:{
         id:String,

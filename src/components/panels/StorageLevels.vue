@@ -18,7 +18,7 @@
 
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {StringFormatter} from '../../javascript/stringFormatter'
+import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
