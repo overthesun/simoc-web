@@ -7,7 +7,7 @@
                 Power Generation
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerGeneration')" />
             </div>
-            <div class='input-description'>Select the number of solar photo-voltaic panels required to off-set your power consumption, day and night.</div>
+            <div class='input-description'>Select the number of solar photo-voltaic panels required to meet your daily power consumption, and recharge the batteries for the night. See graph at right.</div>
             <div class='input-generator-wrapper'>
                 <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy"> <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
                     <option value='none' selected>None</option>
@@ -22,7 +22,7 @@
                 Power Storage
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
-            <div class='input-description'>Select the size of your battery to meet your power consumption needs.</div>
+            <div class='input-description'>Select the size of your battery to meet your power nighttime power consumption needs.</div>
             <input class='input-field-number' v-model="storage.amount" pattern="^\d+$" maxlength=8 placeholder="Quantity" v-on:input="setEnergy">  <!-- Uses the retrieved generator value as the value for the field. On change sets the configuration store value -->
         </label>
     </form>

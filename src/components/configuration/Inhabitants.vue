@@ -13,7 +13,7 @@
                 Food Supply
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Food')" />
             </div>
-            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest.</div>
+            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
             <input class='input-field-number' pattern="^\d+$" maxlength="8" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount">
         </label>
         <label class='input-wrapper'>

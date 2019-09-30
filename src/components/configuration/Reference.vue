@@ -121,6 +121,7 @@ using v-for to populate all links with the title and the approriate value for th
                 <p>Select the number of solar photovoltaic (PV) panels required to sustain the electrical power needs of your <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a>. This includes electric heat, lighting for the human occupied space, and grow lights for the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> in the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a>, <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> operation, radio communication from the habitat to the orbiter, and personal computers.</p>
                 <p>On Mars, the total solar gain is roughly 1/3 that on Earth (at its maximum potential). Therefore, a 300 watt solar panel on Earth would generate only 100 watts on Mars. This means you will need 3x more panels to produce the same amount of electric power.</p>
                 <p>Keep in mind that not only do you need ample power for all electric devices by day, but also to charge the batteries to operate many of the same devices by night. This will result in a substantial quantity of solar PV panels in your total array.</p>
+                <p>The solar PV panels are 2x1 meters, or 2 sq-meters. The surface of the Earth receives on average 1120 W/m2 energy from the Sun. On Mars, the surface receives on average 590 W/m2. This is then reduced by 30% solar panel efficiency for 177 W/m2 x 2 sq-meters = 354 W/m2.</p>
                 <p><i>POWER is required for all simulated missions.</i></p>
             </div>
             <div class='reference-item-entry'><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Table')">Table Of Contents</a></div>
@@ -130,7 +131,9 @@ using v-for to populate all links with the title and the approriate value for th
             <div class='reference-item-title'>Power Storage</div>
             <div class='reference-item-entry'>
                 <p>While <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">solar PV panels</a> generate power by day, it is the batteries that provide power at night. As such, the total battery capacity should be large enough to carry the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a> through an entire Martian night.</p>
-                <p><i>At this time, SIMOC missions are equipped with a single, massive battery so that provides more than ample storage. The user will be given opportunity to calculate and select power storage in a near-future version of SIMOC.</i></p>
+                <p>In review of the energy graph in the Configuration Wizard, the red consumption bar represents the total power required by the habitat for a full Martian day/night cycle. Therefore, by matching the production to consumption, you will have provided ample solar power generation to recharge the battery array to get through the night.</p>
+                <p>The battery holds 1,000 kW hours.</p>
+                <p><i>POWER STORAGE is generally required. However, it may be interesting to experiment without.</i></p>
             </div>
             <div class='reference-item-entry'><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Table')">Table Of Contents</a></div>
         </div>
