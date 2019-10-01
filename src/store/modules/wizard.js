@@ -50,34 +50,58 @@ export default{
         },
 
         //Returns a formatted configuration object in the format required by the backend.
-        getFormattedConfiguration:function(state){
-
-            let config = {
-                duration:{value:parseInt(state.configuration.duration.amount),type:state.configuration.duration.units},
-                human_agent:{amount:parseInt(state.configuration.humans.amount)},
-                food_storage:{amount:parseInt(state.configuration.food.amount)},
-                solar_pv_array_mars:{amount:parseInt(state.configuration.powerGeneration.amount)},
-                power_storage:{amount:parseInt(state.configuration.powerStorage.amount)},
-                eclss:{amount:parseInt(state.configuration.eclss.amount)},
-                single_agent:1,
-                plants:new Array()
+        getFormattedConfiguration:function(state) {
+            // keep track of invalid entries and throw an error if there are any
+            let invalid_entries = new Array()
+            function validate(value, label) {
+                const int_value = parseInt(value)
+                if (int_value == null || isNaN(int_value)) {
+                    invalid_entries.push(label)
+                }
+                // return 0 if the value is null/undefined/NaN --
+                // an error should be thrown before they get to the server,
+                // but storing 0 is better just in case
+                return int_value || 0
             }
-
-            state.configuration.plantSpecies.forEach(element =>{
-                if(element.type != 'none'){
-                    config.plants.push({species:element.type,amount:parseInt(element.amount)})
+            const config = state.configuration
+            // create formatted configuration
+            let fconfig = {
+                duration: {type: config.duration.units,
+                           value: validate(config.duration.amount, 'Duration')},
+                human_agent: {amount: validate(config.humans.amount, 'Inhabitants')},
+                food_storage: {amount: validate(config.food.amount, 'Food Supply')},
+                solar_pv_array_mars: {amount: validate(config.powerGeneration.amount, 'Power Generation')},
+                power_storage: {amount: validate(config.powerStorage.amount, 'Power Storage')},
+                eclss: {amount: validate(config.eclss.amount, 'Environmental Control')},
+                single_agent: 1,
+                plants: new Array(),
+            }
+            config.plantSpecies.forEach(element => {
+                // ignore plants if the plant type is not selected
+                if (element.type != '' && element.type != 'none') {
+                    fconfig.plants.push({species: element.type,
+                                         amount: validate(element.amount, 'Plant Species')})
                 }
             })
-
-            if(state.configuration.greenhouse.type != 'none'){
-                config['greenhouse'] = state.configuration.greenhouse.type
+            if (config.greenhouse.type != 'none') {
+                fconfig['greenhouse'] = config.greenhouse.type
             }
-
-            if(state.configuration.crewQuarters.type != 'none'){
-                config['habitat'] = state.configuration.crewQuarters.type
+            else if (fconfig.plants.length > 0) {
+                // plants without a greenhouse is an error
+                invalid_entries.push('Greenhouse')
             }
-
-            return config
+            if (config.crewQuarters.type != 'none') {
+                fconfig['habitat'] = config.crewQuarters.type
+            }
+            else if (fconfig.human_agent.amount > 0) {
+                // humans without crew quarters is an error too
+                invalid_entries.push('Crew Quarters')
+            }
+            // abort and throw an error if we have invalid entries
+            if (invalid_entries.length > 0) {
+                throw invalid_entries
+            }
+            return fconfig
         }
     },
     mutations:{
@@ -141,13 +165,13 @@ export default{
         },
         RESETCONFIG: function(state) {
             state.configuration = {
-                location: "none",
-                duration: {type:"none", amount:'0', units:"none"},
-                humans: {type:"human_agent", amount:'0', units:""},
-                food: {type:"food_storage", amount:'0', units:""},
-                eclss: {type:"eclss", amount:'0', units:""},
-                powerGeneration: {type:"solar_pv_array_mars", amount:'0', units:""},
-                powerStorage: {type:"power_storage", amount:'0', units:""},
+                location: "mars",
+                duration: {type:"none", amount:null, units:"day"},
+                humans: {type:"human_agent", amount:null, units:""},
+                food: {type:"food_storage", amount:null, units:""},
+                eclss: {type:"eclss", amount:null, units:""},
+                powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
+                powerStorage: {type:"power_storage", amount:null, units:""},
                 crewQuarters: {type:"none", amount:'0', units:""},
                 greenhouse: {type:"none", amount:'0', units:""},
                 plantSpecies: [{type:"", amount:""}],

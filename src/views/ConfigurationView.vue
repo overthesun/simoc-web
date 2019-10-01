@@ -138,7 +138,14 @@ export default {
         },
 
         finalizeConfiguration:async function(){
-            const configParams = {game_config: this.getFormattedConfiguration} //Get the formatted configuration from wizard store
+            try {
+                // get the formatted configuration from wizard store
+                var configParams = {game_config: this.getFormattedConfiguration}
+            }
+            catch (invalid_names) {
+                alert('Please specify the value(s) for: ' + invalid_names.join(', '))
+                return  // abort if there are invalid values
+            }
 
             try{
                 const response = await axios.post('/new_game', configParams) //Wait for the new game to be created

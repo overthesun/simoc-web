@@ -7,8 +7,8 @@
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>In this beta release, your habitat is located on the equatorial region of Mars.</div>
             <select class='input-field-select' v-model="location" v-on:change="setInitial">
-                <option value="none" disabled hidden selected>Location</option>
-                <option value="mars">Mars</option>
+                <option value="none" disabled hidden>Location</option>
+                <option value="mars" selected>Mars</option>
             </select>
         </label>
         <label class='input-wrapper'>
@@ -20,9 +20,9 @@
             <div class='input-duration-wrapper'>
                 <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Length" v-on:input="setInitial" v-model="duration.amount">
                 <select class='input-field-select' v-on:change="setInitial" v-model="duration.units">
-                    <option value="none" hidden disabled selected>Units</option>
+                    <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
-                    <option value="day">Earth Days (24h)</option>
+                    <option value="day" selected>Earth Days (24h)</option>
                     <!--<option value="year">Earth Years (8760h)</option>
                         Currently disabled since the max is 1 year-->
                 </select>

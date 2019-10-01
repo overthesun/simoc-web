@@ -55,7 +55,7 @@ export default {
         //This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
         //It is called from all fields on change, and updates with all selected values from this form.
         setEnergy:function() {
-            this.generator.amount = ensure_within(this.generator.amount, 0, 40)
+            this.generator.amount = ensure_within(this.generator.amount, 0, 5000)
             this.storage.amount = ensure_within(this.storage.amount, 0, 10)
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
