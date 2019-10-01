@@ -31,7 +31,7 @@
         </label>
         <label class='input-wrapper'>
             <div class='input-title'>
-                Environmental Control
+                Life Support
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
             </div>
             <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>

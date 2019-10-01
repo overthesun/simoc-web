@@ -72,7 +72,7 @@ export default{
                 food_storage: {amount: validate(config.food.amount, 'Food Supply')},
                 solar_pv_array_mars: {amount: validate(config.powerGeneration.amount, 'Power Generation')},
                 power_storage: {amount: validate(config.powerStorage.amount, 'Power Storage')},
-                eclss: {amount: validate(config.eclss.amount, 'Environmental Control')},
+                eclss: {amount: validate(config.eclss.amount, 'Life Support')},
                 single_agent: 1,
                 plants: new Array(),
             }
