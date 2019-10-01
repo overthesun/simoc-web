@@ -58,10 +58,10 @@ export default {
         //Called when any of the field's values are changed, or input happens. Updates all related fields to the Initial form within the wizard store.
         setInitial:function(){
             if (this.duration.units === 'hour') {
-                this.duration.amount = ensure_within(this.duration.amount, 240, 16488)
+                this.duration.amount = ensure_within(this.duration.amount, 24, 16488)
             }
             else if (this.duration.units === 'day') {
-                this.duration.amount = ensure_within(this.duration.amount, 10, 687)
+                this.duration.amount = ensure_within(this.duration.amount, 1, 687)
             }
             else if (this.duration.units === 'year') {
                 // currently disabled
