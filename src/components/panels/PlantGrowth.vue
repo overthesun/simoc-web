@@ -6,16 +6,10 @@
               <th>Qty</th>
               <th>% of Growth</th>
           </tr>
-          <tr v-for="(item,index) in getConfiguration.plantSpecies" :key="index">
-              <td >
-                  {{stringFormatter(getConfiguration.plantSpecies[index].type)}}
-              </td>
-              <td>
-                  {{getConfiguration.plantSpecies[index].amount}}
-              </td>
-              <td>
-                  {{getTotalAgentMassPerc(index)}}
-              </td>
+          <tr v-for="(item,index) in getConfiguration.plantSpecies" v-if="item.type != ''" :key="index">
+              <td >{{stringFormatter(item.type)}}</td>
+              <td>{{item.amount}}</td>
+              <td>{{getTotalAgentMassPerc(index)}}</td>
           </tr>
       </table>
   </section>
