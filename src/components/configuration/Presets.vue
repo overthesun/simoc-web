@@ -19,11 +19,15 @@ Future version should also automatically switch the selected preset to 'custom' 
             <div class='input-duration-wrapper'>
                 <select class='input-field-select' v-model="presets" v-on:change="SETCONFIGURATION(presets)">
                     <option :value=none hidden disabled selected>Preset</option>
+                    <option :value=one_human>One Human</option>
+                    <option :value=ten_humans>Ten Humans</option>
+                    <!--
                     <option :value=humansonly>Humans Only</option>
                     <option :value=hybridone>Hybrid One</option>
                     <option :value=hybridtwo>Hybrid Two</option>
                     <option :value=hybridthree>Hybrid Three</option>
                     <option :value=hybridfour>Hybrid Four</option>
+                    -->
 
                 </select>
             </div>
@@ -50,7 +54,7 @@ export default {
                 powerGeneration:{type:"solar_pv_array_mars",amount:'0',units:""},
                 powerStorage:{type:"power_storage",amount:'0',units:""},
                 greenhouse:{type:"none",amount:'0',units:""},
-                plantSpecies:[],
+                plantSpecies:[{type:"", amount:""}],
             },
             // these are the default presets, none is the initial one
             none:{
@@ -63,8 +67,35 @@ export default {
                 powerGeneration:{type:"solar_pv_array_mars",amount:'0',units:""},
                 powerStorage:{type:"power_storage",amount:'0',units:""},
                 greenhouse:{type:"none",amount:'0',units:""},
-                plantSpecies:[],
+                plantSpecies:[{type:"", amount:""}],
             },
+            one_human: {
+                location: 'mars',
+                duration: {type: 'none', amount: '10', units: 'day'},
+                humans: {type: 'human_agent', amount: '1', units: ''},
+                food: {type: 'food_storage', amount: '100', units: ''},
+                crewQuarters: {type: 'crew_habitat_small', amount: 1, units: ''},
+                eclss: {type: 'eclss', amount: '1', units: ''},
+                powerGeneration: {type: 'solar_pv_array_mars', amount: '30',
+                units: ''},
+                powerStorage: {type: 'power_storage', amount: '1', units: ''},
+                greenhouse: {type: 'none', amount: '0', units: ''},
+                plantSpecies: [{type:"", amount:""}]
+            },
+            ten_humans: {
+                location: 'mars',
+                duration: {type: 'none', amount: '10', units: 'day'},
+                humans: {type: 'human_agent', amount: '10', units: ''},
+                food: {type: 'food_storage', amount: '100', units: ''},
+                crewQuarters: {type: 'crew_habitat_small', amount: 1, units: ''},
+                eclss: {type: 'eclss', amount: '1', units: ''},
+                powerGeneration: {type: 'solar_pv_array_mars', amount: '30',
+                units: ''},
+                powerStorage: {type: 'power_storage', amount: '1', units: ''},
+                greenhouse: {type: 'none', amount: '0', units: ''},
+                plantSpecies: [{type:"", amount:""}]
+            },
+            // these are disabled for now
             humansonly:{
                 location:"mars",
                 duration:{type:"none",amount:'30',units:"day"},
@@ -75,7 +106,7 @@ export default {
                 powerGeneration:{type:"solar_pv_array_mars",amount:'2',units:""},
                 powerStorage:{type:"power_storage",amount:'1',units:""},
                 greenhouse:{type:"none",amount:'0',units:""},
-                plantSpecies:[],
+                plantSpecies:[{type:"", amount:""}],
             },
 
             hybridone:{
