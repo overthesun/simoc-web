@@ -28,7 +28,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
-    panelTitle: 'Initial Configuration',
+    panelTitle: 'Mission Configuration',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
         ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getAgentType']),
