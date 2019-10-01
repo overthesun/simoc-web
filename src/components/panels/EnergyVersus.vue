@@ -1,6 +1,6 @@
 <template>
     <div class='panel-graph'>
-        <VersusGraph :id="'canvas-energy-' + canvasNumber" plotted_value='enrg_kwh' unit='kWh' />
+        <VersusGraph :id="'canvas-energy-' + canvasNumber" plotted_value='enrg_kwh' unit='kW' />
     </div>
 </template>
 
