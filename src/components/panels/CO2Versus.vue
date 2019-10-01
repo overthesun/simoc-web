@@ -9,7 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {VersusGraph} from '../../components/graphs'
 
 export default {
-    panelTitle: 'Carbon Dioxide Levels',
+    panelTitle: 'CO₂ Production / Consumption',
     props: {
         canvasNumber: 0,
     },

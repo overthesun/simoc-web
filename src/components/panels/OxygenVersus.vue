@@ -9,7 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {VersusGraph} from '../../components/graphs'
 
 export default {
-    panelTitle: 'Oxygen Levels',
+    panelTitle: 'O₂ Production / Consumption',
     props: {
         canvasNumber: 0,
     },

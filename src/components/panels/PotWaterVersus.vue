@@ -9,7 +9,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {VersusGraph} from '../../components/graphs'
 
 export default {
-    panelTitle: 'Potable Water Levels',
+    panelTitle: 'Potable H₂O Production / Consumption',
     props: {
         canvasNumber: 0,
     },
