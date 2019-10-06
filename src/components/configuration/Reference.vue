@@ -141,6 +141,9 @@ using v-for to populate all links with the title and the approriate value for th
         <div class='reference-item' v-if="getActiveRefEntry === 'Table'">
             <div class='reference-item-title'>Table Of Contents</div>
             <div class='reference-item-entry'>
+                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Welcome')">Welcome to SIMOC</a>
+            </div>
+            <div class='reference-item-entry'>
                 <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Presets')">Presets</a>
             </div>
             <div class='reference-item-entry'>
