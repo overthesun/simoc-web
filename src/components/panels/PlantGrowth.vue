@@ -9,7 +9,7 @@
           <tr v-for="(item,index) in getConfiguration.plantSpecies" v-if="item.type != ''" :key="index">
               <td >{{stringFormatter(item.type)}}</td>
               <td>{{item.amount}}</td>
-              <td>{{getTotalAgentMassPerc(index)}}</td>
+              <td>{{getAgentGrowthPerc(index)}}</td>
           </tr>
       </table>
   </section>
@@ -24,17 +24,18 @@ export default {
     panelTitle: 'Greenhouse Plant Growth',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getCurrentStepBuffer','getAgentType']),
+        ...mapGetters('dashboard',['getAirStorageRatio','getAgentGrowth','getCurrentStepBuffer','getAgentType']),
     },
     methods:{
         stringFormatter: StringFormatter,
-        getTotalAgentMassPerc: function(index) {
-            let totalAgentMass = this.getTotalAgentMass(this.getCurrentStepBuffer)
-            if (totalAgentMass === undefined) {
+        getAgentGrowthPerc: function(index) {
+            let agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
+            if (agentGrowth === undefined) {
                 return '[loading data...]'
             }
             else {
-                return totalAgentMass[this.getConfiguration.plantSpecies[index].type].value.toExponential(3) + "%"
+                let perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
+                return perc.toPrecision(6) + "%"
             }
         },
     }

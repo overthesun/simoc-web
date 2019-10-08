@@ -30,7 +30,7 @@ export default {
 
         // init a new game, set game id, reset all data buffers
         this.INITGAME(this.getGameID)
-        // This sets the get_step parameter for the totalAgentMass filter.
+        // This sets the get_step parameter for the agentGrowth filter.
         // TODO: this should actually be done in tandem with the configuration wizard plant updates.
         // This must be done after INITGAME or it will be reset
         this.SETPLANTSPECIESPARAM(this.getConfiguration)

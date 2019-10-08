@@ -4,7 +4,7 @@
 
 // Step data: broken down into objects based on filter type. These can be accessed via the below getters.
 // The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
-// agentCount | totalAgentMass | totalProduction | totalConsumption | storageRatio
+// agentCount | agentGrowth | totalProduction | totalConsumption | storageRatio
 
 
 // currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized, and the highest step in the buffer.
@@ -28,7 +28,7 @@ export default{
         // parameters for the get_steps route
         parameters: {},
         agentCount:{1:{"human_agent":0}},
-        totalAgentMass:{},
+        agentGrowth:{},
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
@@ -53,7 +53,7 @@ export default{
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
-        getTotalAgentMass: state => stepNumber => state.totalAgentMass[stepNumber],
+        getAgentGrowth: state => stepNumber => state.agentGrowth[stepNumber],
         getTotalProduction: state => stepNumber => state.totalProduction[stepNumber],
         getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
@@ -167,9 +167,9 @@ export default{
             let {total_agent_count} = value
             state.agentCount[step] = total_agent_count
         },
-        SETTOTALAGENTMASS:function(state,value){
-            let{step_num:step,total_agent_mass} = value
-            state.totalAgentMass[step] = total_agent_mass
+        SETAGENTGROWTH:function(state, value) {
+            let{step_num:step, agent_growth} = value
+            state.agentGrowth[step] = agent_growth
         },
         SETTOTALCONSUMPTION:function(state,value){
             let{step_num:step} = value
@@ -203,8 +203,8 @@ export default{
             let {plantSpecies} = value
 
             plantSpecies.forEach((item) =>{
-                state.parameters.total_agent_mass.push(item.type)
-                state.totalAgentMass[item.type] = {"value":0,"units":undefined}
+                state.parameters.agent_growth.push(item.type)
+                state.agentGrowth[item.type] = 0
             })
         },
         SETACTIVEPANELS: function(state, panels) {
@@ -224,7 +224,7 @@ export default{
                 "min_step_num": 0,
                 "n_steps": 10,
                 "total_agent_count": ["human_agent"],
-                "total_agent_mass": [],
+                "agent_growth": [],
                 "total_production": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
                 "total_consumption": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
                 "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
@@ -233,7 +233,7 @@ export default{
                 "parse_filters":[],
                 "single_agent":1,
             }
-            state.totalAgentMass = {}
+            state.agentGrowth = {}
             state.totalProduction = {}
             state.totalConsumption = {}
             state.storageRatio = {}
@@ -247,7 +247,7 @@ export default{
                 commit('SETTOTALCONSUMPTION',item)
                 commit('SETTOTALPRODUCTION',item)
                 commit('SETAGENTTYPE',item)
-                commit('SETTOTALAGENTMASS',item)
+                commit('SETAGENTGROWTH',item)
                 commit('SETSTORAGERATIOS',item)
                 commit('SETSTORAGECAPACITIES',item)
                 commit('UPDATEBUFFERMAX',item)

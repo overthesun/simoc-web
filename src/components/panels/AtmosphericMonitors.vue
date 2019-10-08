@@ -40,7 +40,7 @@ export default {
     },
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getTotalAgentMass','getAgentType']),
+        ...mapGetters('dashboard',['getAirStorageRatio']),
     },
 }
 </script>
