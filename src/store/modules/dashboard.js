@@ -29,6 +29,7 @@ export default{
         parameters: {},
         agentCount:{1:{"human_agent":0}},
         agentGrowth:{},
+        lastAgentGrowth:{},  // store the last non-null growth
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
@@ -169,6 +170,22 @@ export default{
         },
         SETAGENTGROWTH:function(state, value) {
             let{step_num:step, agent_growth} = value
+            // If the plant skips a step we get a null, indicating that it didn't grow.
+            // Instead of storing null, reuse the last value stored in lastAgentGrowth
+            Object.entries(agent_growth).forEach(([name, value]) => {
+                if (value === null) {
+                    if (name in state.lastAgentGrowth) {  // use last value
+                        agent_growth[name] = state.lastAgentGrowth[name]
+                    }
+                    else {  // no value available, use 0 instead
+                        agent_growth[name] = 0
+                        state.lastAgentGrowth[name] = 0
+                    }
+                }
+                else {  // save the last non-null value
+                    state.lastAgentGrowth[name] = value
+                }
+            })
             state.agentGrowth[step] = agent_growth
         },
         SETTOTALCONSUMPTION:function(state,value){

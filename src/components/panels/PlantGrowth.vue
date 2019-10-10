@@ -35,7 +35,7 @@ export default {
             }
             else {
                 let perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
-                return perc.toPrecision(6) + "%"
+                return perc.toFixed(4) + "%"
             }
         },
     }
