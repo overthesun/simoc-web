@@ -5,9 +5,9 @@ similar functionality to that of the reference wiki. Table of contents to select
 <template>
     <section class='graphs-wrapper'><!--
         <PowerUsage class="power-config-graph" :id="'pu-config-canvas-'+ canvasNumber"
-            v-if="getActiveConfigType === 'Expert' || (getActiveReference === 'Graphs' && (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
+            v-if="getActiveConfigType === 'Custom' || (getActiveReference === 'Graphs' && (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
         <GreenhouseDoughnut class="greenhouse-config-graph" :id="'gh-config-canvas-'+ canvasNumber"
-            v-if="getActiveConfigType === 'Expert' || (getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
+            v-if="getActiveConfigType === 'Custom' || (getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
         <!-- The wrapper divs make ChartJS happy. -->
         <div><PowerUsage class="power-config-graph" id='pu-config-canvas' /></div>
         <div><GreenhouseConfig class="greenhouse-config-graph" id='gh-config-canvas' /></div>

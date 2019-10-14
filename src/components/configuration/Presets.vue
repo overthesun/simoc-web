@@ -1,5 +1,5 @@
 <!-- This particular component has one job and that is to populate and create the PRESETS field at the top of the finalization screen. This would also be at the
-top of the expert(finalized screen only) configuration screen too. Selecting one of these will trigger the getConfiguration watcher in all configuration form components.
+top of the custom (finalized screen only) configuration screen too. Selecting one of these will trigger the getConfiguration watcher in all configuration form components.
 
 Presets should really be stored within the database and retrieved similar to that of the plant names.
 

@@ -8,7 +8,7 @@
             </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form='login-form' class='btn-normal' @click="toExpert">EXPERT CONFIGURATION</button>
+                <button form='login-form' class='btn-normal' @click="toCustom">CUSTOM CONFIGURATION</button>
             </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
@@ -41,8 +41,8 @@ export default {
             this.SETACTIVECONFIGTYPE('Guided')
             this.$router.push("configuration")
         },
-        toExpert:function(){
-            this.SETACTIVECONFIGTYPE('Expert')
+        toCustom:function(){
+            this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
 
         }

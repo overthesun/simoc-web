@@ -10,7 +10,7 @@ menu button being present on other unrelated configurations.
 <template>
     <div class='configuration-wrapper' >
         <!-- The form side of the wizard screen -->
-        <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Expert'}">
+        <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
             <nav v-if="getActiveConfigType === 'Guided'" class='navigation-wrapper'>
@@ -95,7 +95,7 @@ export default {
         grid-row-gap: 32px;
     }
 
-    /* omit the form select dropdown from the expert config grid template */
+    /* omit the form select dropdown from the Custom config grid template */
     .wizard-wrapper.no-form-select-dropdown{
         grid-template-rows: 22px minmax(0,1fr) 48px;
     }

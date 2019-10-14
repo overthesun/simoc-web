@@ -19,9 +19,9 @@
             <template v-slot:main-wizard-input>
                 <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                 <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
-                <!-- Else, if we are in the Expert config or in the Finalize step of the Guided config, show all components -->
-                <section class='form-wrapper' v-else-if="activeConfigType === 'Expert' || activeForm === 'Finalize'">
-                    <Presets v-if="activeConfigType === 'Expert'" />
+                <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
+                <section class='form-wrapper' v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
+                    <Presets v-if="activeConfigType === 'Custom'" />
                     <Initial/>
                     <Inhabitants/>
                     <Greenhouse/>
@@ -37,8 +37,8 @@
                     <button class='btn-next' @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
                     <button class='btn-finalize' @click="finalizeConfiguration" v-if="isFinalForm">Finalize Settings</button>
                 </nav>
-                <!-- Expert config bottom nav, no sections, only finalize button -->
-                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Expert'"">
+                <!-- Custom config bottom nav, no sections, only finalize button -->
+                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Custom'"">
                     <button class='btn-finalize' @click="finalizeConfiguration">Finalize Settings</button>
                 </nav>
             </template>

@@ -8,7 +8,7 @@ export default{
     state:{
         // default configuration, initialized in RESETCONFIG
         configuration: {},
-        // the type of configuration being used (e.g. guided, expert)
+        // the type of configuration being used (e.g. Guided, Custom)
         activeConfigType: null,
         // the index of the currently-selected form
         activeFormIndex: 0,
