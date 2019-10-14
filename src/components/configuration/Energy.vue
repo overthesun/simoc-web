@@ -7,7 +7,7 @@
                 Power Generation
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerGeneration')" />
             </div>
-            <div class='input-description'>Select the number of solar photo-voltaic panels required to meet your daily power consumption, and recharge the batteries for the night. See graph at right.</div>
+            <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See graph at right.</div>
             <div class='input-generator-wrapper'>
                 <!-- Use the retrieved generator value as the value for the field. On change set the configuration store value -->
                 <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy">
@@ -23,8 +23,8 @@
                 Power Storage
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
-            <div class='input-description'>Select the size of your battery to meet your power nighttime power consumption needs.</div>
-            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="storage.amount">
+            <div class='input-description'>Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
+            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (kWh)" v-on:input="setEnergy" v-model="storage.amount">
         </label>
     </form>
 </template>
@@ -56,7 +56,7 @@ export default {
         //It is called from all fields on change, and updates with all selected values from this form.
         setEnergy:function() {
             this.generator.amount = ensure_within(this.generator.amount, 0, 5000)
-            this.storage.amount = ensure_within(this.storage.amount, 0, 10)
+            this.storage.amount = ensure_within(this.storage.amount, 0, 10000)
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
         }

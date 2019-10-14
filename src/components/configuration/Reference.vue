@@ -130,10 +130,9 @@ using v-for to populate all links with the title and the approriate value for th
         <div class='reference-item' v-if="getActiveRefEntry === 'PowerStorage'">
             <div class='reference-item-title'>Power Storage</div>
             <div class='reference-item-entry'>
-                <p>While <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">solar PV panels</a> generate power by day, it is the batteries that provide power at night. As such, the total battery capacity should be large enough to carry the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a> through an entire Martian night.</p>
-                <p>In review of the energy graph in the Configuration Wizard, the red consumption bar represents the total power required by the habitat for a full Martian day/night cycle. Therefore, by matching the production to consumption, you will have provided ample solar power generation to recharge the battery array to get through the night.</p>
-                <p>The battery holds 1,000 kW hours.</p>
-                <p><i>POWER STORAGE is generally required. However, it may be interesting to experiment without.</i></p>
+                <p>While <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">solar PV panels</a> generate power by day, it is the batteries that provide power at night. Therefore, the total battery capacity should be large enough to power the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a> grow lights, which may extend beyond the hours of day light, with ample power for the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a> through an entire Martian night.</p>
+                <p>In review of the <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">energy graph</a> in the Configuration Wizard, the <em>red</em> consumption bar represents the total power required by the habitat for a full Martian day/night cycle. Therefore, by matching the <em>blue</em> production to <em>red</em> consumption, you will have provided ample solar power generation to recharge the battery array to get through the night.</p>
+                <p>The battery holds a maximum of 10,000 kilowatt-hours (kWh).</p>
             </div>
             <div class='reference-item-entry'><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Table')">Table Of Contents</a></div>
         </div>
@@ -190,7 +189,7 @@ export default {
         ...mapGetters('wizard',['getActiveRefEntry'])
     },
     methods:{
-        ...mapMutations('wizard',['SETACTIVEREFENTRY'])
+        ...mapMutations('wizard',['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE'])
     }
 }
 </script>
