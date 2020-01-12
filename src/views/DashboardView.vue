@@ -9,7 +9,15 @@
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import axios from 'axios'
 import {StepTimer} from '../javascript/stepTimer'
+
+import io from 'socket.io-client'
+
 export default {
+    data(){
+        return{
+            socket: null,  // the websocket used to get the steps
+        }
+    },
     beforeMount:function(){
         // reinitialize everything, init a new game, and request steps num before mounting
 
@@ -27,6 +35,14 @@ export default {
         this.SETBUFFERMAX(0)                // Reset the max buffer value
         this.SETMINSTEPNUMBER(0)            // Reset the starting step
         this.SETSTOPPED(false)              // Reset stopped and terminated flags
+
+        // TODO: we switched from using a timer to request steps via HTTP to
+        // websockets, but for now all the old code is still there.
+        // Once the websockets work properly, all that code can be removed.
+        // The switch happens in this.requestStepsNum()
+
+        // reset the websocket
+        this.tearDownWebSocket()
 
         // init a new game, set game id, reset all data buffers
         this.INITGAME(this.getGameID)
@@ -53,6 +69,8 @@ export default {
         if (!this.getTerminated) {
             this.killGame()
         }
+        // disconnect and destroy the websocket
+        this.tearDownWebSocket()
         // we don't need this anymore if the dashboard has been destroyed
         window.removeEventListener('beforeunload', this.killGame)
     },
@@ -68,6 +86,52 @@ export default {
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
+        setupWebsocket: function() {
+            const socket = this.socket = io()
+            console.log('socket created:', socket)
+
+            socket.on('connect', () => {
+                console.log('websocket connected')
+                const req = {data: this.getStepParams}
+                // before using websockets, we requested a batch of n_steps steps,
+                // but now this is no longer necessary since we request them all at once,
+                // so the store should be updated to match getTotalMissionHours,
+                // or getting rid of n_steps altogether
+                req['data']['n_steps'] = this.getTotalMissionHours
+                socket.emit('get_steps', req)
+                console.log('requested', this.getTotalMissionHours, 'steps')
+            })
+            socket.on('step_data_handler', (msg) => {
+                console.log('step_data_handler called, received:', msg)
+                this.parseStep(Object.values(msg.data))
+                console.log('Received and parsed', msg.count, 'steps')
+                // convert the steps to int and find the highest
+                const steps = Object.keys(msg.data).map((step_num) => +step_num)
+                if (Math.max(...steps) >= this.getTotalMissionHours) {
+                    // disconnect once we got all steps
+                    socket.emit('disconnect_request')
+                }
+            })
+
+            socket.on('status', (msg) => {
+                console.log('status called, received:', msg)
+                // close the socket once the server ack'ed the disconnect_request
+                if (msg.message.includes('disconnected')) {
+                    this.tearDownWebSocket()
+                }
+            })
+        },
+
+        tearDownWebSocket: function() {
+            console.log('closing the websocket')
+            if (this.socket !== null) {
+                if (this.socket.connected) {
+                    this.socket.disconnect()
+                }
+                this.socket = null
+            }
+        },
+
         requestStepsNum: async function(){
             // tell the backend how many steps we need for this game
 
@@ -76,13 +140,16 @@ export default {
             try{
                 // begin creating the step buffer on the backend using the entire length of the simulation as the base
                 await axios.post('/get_step_to', stepToParams)
-                this.stepBufferTimer() //If everything went retrieve the first batch of steps.
+                // TODO: the stepBufferTimer() function has been replaced by websocket and can now be removed
+                // this.stepBufferTimer() // If everything went retrieve the first batch of steps.
+                this.setupWebsocket()  // setup the websocket to get the requested steps
             }catch(error){
                 console.log(error)
             }
         },
 
         stepBufferTimer: async function() {
+            // replaced by websockets
             const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
             if (!this.getTerminated) {
@@ -103,6 +170,8 @@ export default {
         },
 
         updateStepBuffer: async function(step_data) {
+            // replaced by websockets
+
             // wait until all the steps have been parsed by parseStep
             // this also updates the min step number for the next request
             await this.parseStep(Object.values(step_data))
