@@ -12,7 +12,7 @@
             <dt title="Inhabitants are terminated after 3 days with no water">
                 Potable Water (sans 3 days):</dt>
                 <dd>{{water}}</dd>
-            <dt title="Inhabitants are terminated after 20 days with no water">
+            <dt title="Inhabitants are terminated after 20 days with no food">
                 Food Rations (sans 20 days):</dt>
                 <dd>{{food}}</dd>
             <dt>Inhabitants:</dt>
