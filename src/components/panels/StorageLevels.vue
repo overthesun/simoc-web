@@ -43,7 +43,7 @@ export default {
                 'atmo_h2': 'Free hydrogen (H₂)',
                 'atmo_h2o': 'Water (H₂0) vapor',
                 'h2o_potb': 'Potable',
-                'h2o_urin': 'Urin',
+                'h2o_urin': 'Urine',
                 'h2o_wste': 'Waste (carries feces)',
                 'h2o_tret': 'Treated',
                 'h2o_totl': 'Total',
