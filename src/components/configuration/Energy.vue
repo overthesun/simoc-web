@@ -15,7 +15,7 @@
                     <!-- TODO: this is hardcoded on Mars -->
                     <option value='solar_pv_array_mars'>Solar PV Array</option>
                 </select>
-                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="generator.amount">
+                 <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="generator.amount"> panels</label>
             </div>
         </label>
         <label class='input-wrapper'>
@@ -24,7 +24,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
             <div class='input-description'>Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
-            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (kWh)" v-on:input="setEnergy" v-model="storage.amount">
+            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
         </label>
     </form>
 </template>

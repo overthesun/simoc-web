@@ -14,7 +14,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Food')" />
             </div>
             <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
-            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (kg)" v-on:input="setInhabitants" v-model="food.amount">
+            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="food.amount"> kg</label>
         </label>
         <label class='input-wrapper'>
             <div class='input-title'>
@@ -35,7 +35,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
             </div>
             <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount">
+            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
         </label>
     </form>
 </template>

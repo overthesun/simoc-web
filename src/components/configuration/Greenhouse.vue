@@ -33,7 +33,7 @@
                     -->
                     <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
                 </select>
-                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Qty (m³)" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount">
+                <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount"> m³</label>
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
@@ -226,10 +226,6 @@ export default {
     }
 
     .input-field-select{
-        margin-right:24px;
-    }
-
-    .input-field-number{
         margin-right:24px;
     }
 
