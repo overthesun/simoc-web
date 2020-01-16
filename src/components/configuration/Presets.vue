@@ -16,25 +16,27 @@ Future version should also automatically switch the selected preset to 'custom' 
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Presets')" />
             </div>
             <div class='input-description'>Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
-            <div class='input-duration-wrapper'>
-                <select class='input-field-select' v-model="presets" v-on:change="SETCONFIGURATION(presets)">
-                    <option :value=none hidden disabled selected>Preset</option>
-                    <option :value=one_human>One Human</option>
-                    <option :value=ten_humans>Ten Humans</option>
-                    <!--
-                    <option :value=humansonly>Humans Only</option>
-                    <option :value=hybridone>Hybrid One</option>
-                    <option :value=hybridtwo>Hybrid Two</option>
-                    <option :value=hybridthree>Hybrid Three</option>
-                    <option :value=hybridfour>Hybrid Four</option>
-                    -->
+            <div>
+                <div class='presets-dropdown'>
+                    <select class='input-field-select' v-model="presets" v-on:change="SETCONFIGURATION(presets)">
+                        <option :value=none hidden disabled selected>Preset</option>
+                        <option :value=one_human>One Human</option>
+                        <option :value=ten_humans>Ten Humans</option>
+                        <!--
+                        <option :value=humansonly>Humans Only</option>
+                        <option :value=hybridone>Hybrid One</option>
+                        <option :value=hybridtwo>Hybrid Two</option>
+                        <option :value=hybridthree>Hybrid Three</option>
+                        <option :value=hybridfour>Hybrid Four</option>
+                        -->
 
-                </select>
+                    </select>
+                </div>
+                <div class="custom-preset">
+                    Custom Preset: <button @click="saveToLocalStorage">Save</button><button @click="loadFromLocalStorage">Load</button>
+                </div>
             </div>
         </label>
-        <div class="custom-preset">
-            Custom Preset: <button @click="saveToLocalStorage">Save</button><button @click="loadFromLocalStorage">Load</button>
-        </div>
     </form>
 </template>
 
@@ -189,7 +191,8 @@ export default {
 <style lang="scss" scoped>
 @import '../../sass/components/configuration-input';
 
+.presets-dropdown,
 .custom-preset {
-    margin-top: 1em;
+    display: inline;
 }
 </style>
