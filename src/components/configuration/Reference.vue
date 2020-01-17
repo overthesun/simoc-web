@@ -68,6 +68,16 @@ using v-for to populate all links with the title and the approriate value for th
             <div class='reference-item-entry'>
                 <p>It is imperative that your astronauts have ample food supply while the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> are growing in the <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
                 <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (cabbage) while others offer very little for the human to digest (wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO2 reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
+                <p>The following table can be used as a reference for the amount of food required (in kg):</p>
+                <table id="food-table">
+                  <tr><td colspan="2" rowspan="2"></td><th colspan="7">Mission Duration (Earth days)</th></tr>
+                  <tr><th>1</th><th>7</th><th>30</th><th>90</th><th>180</th><th>360</th><th>720</th></tr>
+                  <tr><th rowspan="5">Inhabitants</th><th>1</th><td>2.4</td><td>16.8</td><td>72</td><td>216</td><td>432</td><td>864</td><td>1728</td></tr>
+                  <tr><th>2</th><td>4.8</td><td>33.6</td><td>144</td><td>432</td><td>864</td><td>1728</td><td>3456</td></tr>
+                  <tr><th>5</th><td>12</td><td>84</td><td>360</td><td>1080</td><td>2160</td><td>4320</td><td>8640</td></tr>
+                  <tr><th>10</th><td>24</td><td>168</td><td>720</td><td>2160</td><td>4320</td><td>8640</td><td>17280</td></tr>
+                  <tr><th>20</th><td>48</td><td>336</td><td>1440</td><td>4320</td><td>8640</td><td>17280</td><td>34560</td></tr>
+                </table>
                 <p><i>FOOD is not required if no astronauts are selected.</i></p>
             </div>
             <div class='reference-item-entry'><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Table')">Table Of Contents</a></div>
@@ -227,5 +237,21 @@ export default {
             color:lightgreen;
 
         }
+    }
+
+    #food-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #eeeeee;
+    }
+    #food-table th[rowspan="5"] {
+        width: 1.5em;
+        writing-mode: sideways-lr;
+    }
+    #food-table th, #food-table td {
+        border: 1px solid #eeeeee;
+    }
+    #food-table td {
+        text-align: right;
     }
 </style>
