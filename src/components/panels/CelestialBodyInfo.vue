@@ -6,9 +6,9 @@
             <dt>Day length:</dt>
                 <dd>24h 37m 23s</dd>
             <dt>Surface Temperature:</dt>
-                <dd>210K | -63C</dd>
+                <dd>210 K | -63 °C | -81 °F</dd>
             <dt>Solar Gain:</dt>
-                <dd>500 W/m<sup>2</sup></dd>
+                <dd>500 W/m²</dd>
             <dt>Atmospheric Pressure:</dt>
                 <dd>0.636 kPa</dd>
             <dt>Gravity:</dt>

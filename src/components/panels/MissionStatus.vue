@@ -18,9 +18,9 @@
                 <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
         <!-- TODO: make the next two dynamic? -->
             <dt>Surface Temp.:</dt>
-                <dd>210K | -63C</dd>
+                <dd>210 K | -63 °C | -81 °F</dd>
             <dt>Solar Gain:</dt>
-                <dd>500 W/m<sup>2</sup></dd>
+                <dd>500 W/m²</dd>
         </dl>
     </section>
 </template>
