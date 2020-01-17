@@ -1,4 +1,10 @@
-<!-- Component used to display the configuration menu, after the user initially logs in -->
+<!--
+Menu to select between guided and custom configuration.
+
+  THIS MENU IS CURRENTLY UNUSED.
+
+Can be reenabled in Menu.vue if needed.
+-->
 
 <template>
     <div class='entry-wrapper'>

@@ -48,6 +48,7 @@ export default {
         }
     },
     methods:{
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard',['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER','SETDEFAULTPANELS']),
 
         // Stop Simulation button, this stops the timers and the simulation
@@ -88,7 +89,11 @@ export default {
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
             // rely on DashboardView.beforeDestroy to stop the sim
-            this.$router.push("menuconfig")
+            // menuconfig is currently skipped, we default on Custom config
+            //this.$router.push("menuconfig")
+
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push("configuration")
         }
     }
 }

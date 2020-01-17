@@ -30,9 +30,14 @@ export default {
         'BaseEntry':BaseEntry,
     },
     methods:{
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         //Sends the user to the configuration menu screen. See router.js
         toConfiguration:function(){
-            this.$router.push('menuconfig')
+            // menuconfig is currently skipped, we default on Custom config
+            //this.$router.push('menuconfig')
+
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push("configuration")
         },
         //Logout method called when the user hits the logout button
         //Sends the user back to the entry screen regardless if the server has successfully logged them out
