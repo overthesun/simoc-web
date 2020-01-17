@@ -82,14 +82,16 @@ export default {
                         data: Array(24),
                         label: 'Produced',
                         borderColor: "rgba(0,0,255,1)",
-                        fill:false
+                        fill:false,
+                        pointStyle: "line",
                     },
                     {
                         lineTension: 0,
                         data: Array(24),
                         label: 'Consumed',
                         borderColor: "#cd0000",
-                        fill: false
+                        fill: false,
+                        pointStyle: "line",
                     }
                 ]
             },
@@ -110,7 +112,10 @@ export default {
                     }]
                 },
                 legend:{
-                    display:false,
+                    display: true,
+                    position: 'bottom',
+                    // https://stackoverflow.com/a/50450646
+                    labels: { usePointStyle: true },
                 },
                 animation:{
                     animateScale: false,
