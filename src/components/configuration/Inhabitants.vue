@@ -18,6 +18,14 @@
         </label>
         <label class='input-wrapper'>
             <div class='input-title'>
+                Life Support
+                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
+            </div>
+            <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
+            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
+        </label>
+        <label class='input-wrapper'>
+            <div class='input-title'>
                 Crew Quarters
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('CrewQuarters')" />
             </div>
@@ -28,14 +36,6 @@
                 <option value="crew_habitat_medium">Medium 2260 m³</option>
                 <option value="crew_habitat_large">Large 4020 m³</option>
             </select >
-        </label>
-        <label class='input-wrapper'>
-            <div class='input-title'>
-                Life Support
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
-            </div>
-            <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
         </label>
     </form>
 </template>
@@ -71,7 +71,7 @@ export default {
         //Sets all related values for the inhabitants form into the wizard store. If any of the fields update them all.
         setInhabitants:function(){
             this.humans.amount = ensure_within(this.humans.amount, 0, 20)
-            this.food.amount = ensure_within(this.food.amount, 0, 17500)
+            this.food.amount = ensure_within(this.food.amount, 0, 35000)
             this.eclss.amount = ensure_within(this.eclss.amount, 0, 10)
             const value = {'humans': this.humans, 'food': this.food,
                            'crewQuarters': this.crewQuarters, 'eclss': this.eclss}
