@@ -104,26 +104,25 @@ export default {
             socket.on('step_data_handler', (msg) => {
                 console.log('step_data_handler called, received:', msg)
                 this.parseStep(Object.values(msg.data))
-                console.log('Received and parsed', msg.count, 'steps')
-                // convert the steps to int and find the highest
-                const steps = Object.keys(msg.data).map((step_num) => +step_num)
-                if (Math.max(...steps) >= this.getTotalMissionHours) {
-                    // disconnect once we got all steps
-                    socket.emit('disconnect_request')
-                }
+                console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
             })
-
-            socket.on('status', (msg) => {
-                console.log('status called, received:', msg)
+            socket.on('steps_retrieved', (msg) => {
+                console.log(msg.message)
+                // disconnect once we got all the steps
+                socket.emit('disconnect_request')
+            })
+            socket.on('user_connected', (msg) => {
+                console.log(msg.message)
+            })
+            socket.on('user_disconnected', (msg) => {
+                console.log(msg.message)
                 // close the socket once the server ack'ed the disconnect_request
-                if (msg.message.includes('disconnected')) {
-                    this.tearDownWebSocket()
-                }
+                this.tearDownWebSocket()
             })
         },
 
         tearDownWebSocket: function() {
-            console.log('closing the websocket')
+            console.log('Closing the websocket')
             if (this.socket !== null) {
                 if (this.socket.connected) {
                     this.socket.disconnect()
