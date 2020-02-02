@@ -22,10 +22,14 @@
                 <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
                 <section class='form-wrapper' v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
                     <Presets v-if="activeConfigType === 'Custom'" />
-                    <Initial/>
-                    <Inhabitants/>
-                    <Greenhouse/>
-                    <Energy/>
+                    <Initial ref="initial" />
+                    <Inhabitants ref="inhabitants" />
+                    <Greenhouse ref="greenhouse" />
+                    <Energy ref="energy" />
+                    <!--
+                    This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
+                    <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
+                    -->
                 </section>
             </template>
             <template v-slot:wizard-configuration-footer>
@@ -68,19 +72,20 @@ export default {
     components:{
         'TheTopBar': TheTopBar,
         'ConfigurationMenu': ConfigurationMenu,
-        'Energy':Energy,
-        'Presets':Presets,
-        'Inhabitants':Inhabitants,
-        'Greenhouse':Greenhouse,
-        'Initial':Initial,
-        'Reference':Reference,
-        'GreenhouseDoughnut':GreenhouseDoughnut,
-        'Graphs':Graphs,
+        'Presets': Presets,
+        'Initial': Initial,
+        'Inhabitants': Inhabitants,
+        'Greenhouse': Greenhouse,
+        'Energy': Energy,
+        'Reference': Reference,
+        'GreenhouseDoughnut': GreenhouseDoughnut,
+        'Graphs': Graphs,
     },
     data(){
         return{
             formIndex:0, //Current index of the form that should be used from the wizard store
             activeForm:"Initial", //Default starting form
+            forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             menuActive:false, //Used with class binding to display the menu.
             stepMax:1,
             greenhouseSize:{
@@ -137,7 +142,19 @@ export default {
             this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
-        finalizeConfiguration:async function(){
+        finalizeConfiguration:async function() {
+            let forms_are_invalid = false
+            for (let formName of this.forms) {
+                const form = this.$refs[formName].$refs[formName + '-form']
+                const form_is_invalid = !form.checkValidity()
+                forms_are_invalid = forms_are_invalid || form_is_invalid
+                if (form_is_invalid) {
+                    form.reportValidity()
+                }
+            }
+            if (forms_are_invalid) {
+                return  // abort if there are invalid values
+            }
             try {
                 // get the formatted configuration from wizard store
                 var configParams = {game_config: this.getFormattedConfiguration}

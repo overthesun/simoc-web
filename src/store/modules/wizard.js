@@ -18,6 +18,28 @@ export default{
         activeReference: 'Reference',
         // which entry is currently active within the reference
         activeRefEntry: 'Welcome',
+        // valid values and ranges for the form inputs
+        validValues: {
+            locations: ['mars'],
+            duration_ranges: {
+                hour: {min: 24, max: 16488},
+                day: {min: 1, max: 687},
+                year: {min: 1, max: 1},
+            },
+            duration_units: ['hour', 'day'],
+            humans: {min: 0, max: 20},
+            food: {min: 0, max: 35000},
+            eclss: {min: 0, max: 10},
+            crew_quarters_types: ['none', 'crew_habitat_small',
+                                  'crew_habitat_medium', 'crew_habitat_large'],
+            greenhouse_types: ['none', 'greenhouse_small',
+                               'greenhouse_medium', 'greenhouse_large'],
+            // TODO: the list of plants is downloaded and should be cached
+            // the valid range for plants is calculated dinamically
+            generator_types: ['none', 'solar_pv_array_mars'],
+            generator: {min: 0, max: 5000},
+            storage: {min: 0, max: 10000},
+        },
     },
     getters:{
         getConfiguration: state => state.configuration,
@@ -27,6 +49,7 @@ export default{
         getActiveReference: state => state.activeReference,
         getActiveRefEntry: state => state.activeRefEntry,
         getFormLength: state => state.formOrder.length,
+        getValidValues: state => state.validValues,
 
 
         //This method converts the total mission time to hours regardless of the units selected.

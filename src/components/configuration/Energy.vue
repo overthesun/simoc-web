@@ -1,7 +1,7 @@
 <!-- Energy Configuration Wizard Form -->
 
 <template>
-    <form class='form-wrapper'@submit.prevent="">
+    <form class='form-wrapper' ref="energy-form" @submit.prevent="">
         <label class='input-wrapper'>
             <div class='input-title'>
                 Power Generation
@@ -10,12 +10,13 @@
             <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See graph at right.</div>
             <div class='input-generator-wrapper'>
                 <!-- Use the retrieved generator value as the value for the field. On change set the configuration store value -->
-                <select class='input-field-select' v-model="generator.type" v-on:change="setEnergy">
+                <select class='input-field-select' ref='generator_select' v-model="generator.type" v-on:change="setEnergy">
                     <option value='none' selected>None</option>
                     <!-- TODO: this is hardcoded on Mars -->
                     <option value='solar_pv_array_mars'>Solar PV Array</option>
                 </select>
-                 <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="generator.amount"> panels</label>
+                 <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity"
+                               :min="generatorValues.min" :max="generatorValues.max" v-on:input="setEnergy" v-model="generator.amount"> panels</label>
             </div>
         </label>
         <label class='input-wrapper'>
@@ -24,14 +25,15 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
             </div>
             <div class='input-description'>Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
-            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
+            <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity"
+                          :min="storageValues.min" :max="storageValues.max" v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
         </label>
     </form>
 </template>
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
-import {ensure_within} from '../../javascript/utils'
+
 export default {
     data(){
         return{
@@ -45,8 +47,13 @@ export default {
         this.storage = powerStorage
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration']),
-
+        ...mapGetters('wizard',['getConfiguration', 'getValidValues']),
+        generatorValues() {
+            return this.getValidValues.generator
+        },
+        storageValues() {
+            return this.getValidValues.storage
+        },
     },
     methods:{
         ...mapMutations('wizard',['SETENERGY']),
@@ -55,8 +62,6 @@ export default {
         //This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
         //It is called from all fields on change, and updates with all selected values from this form.
         setEnergy:function() {
-            this.generator.amount = ensure_within(this.generator.amount, 0, 5000)
-            this.storage.amount = ensure_within(this.storage.amount, 0, 10000)
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
         }
@@ -66,7 +71,12 @@ export default {
         // a preset changes all values within the configuration object within wizard store.
         getConfiguration:{
             handler:function(){
-                const {powerGeneration,powerStorage} = this.getConfiguration // get the configuration and extract the approriate values using deconstructing
+                // get the configuration and extract the approriate values using deconstructing
+                const {powerGeneration,powerStorage} = this.getConfiguration
+                // validate generator type
+                const generator_is_valid = this.getValidValues.generator_types.includes(powerGeneration.type)
+                this.$refs.generator_select.setCustomValidity(generator_is_valid?'':'Please select a valid generator type')
+
                 this.generator = powerGeneration
                 this.storage = powerStorage
             },

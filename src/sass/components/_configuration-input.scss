@@ -16,6 +16,11 @@
     }
 }
 
+select:invalid,
+input:invalid {
+    background-color: pink;
+}
+
 .input-title{
     font-size:24px;
     font-weight: 600;
