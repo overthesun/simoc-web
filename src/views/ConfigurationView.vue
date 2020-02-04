@@ -168,6 +168,7 @@ export default {
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
             }catch(error){
                 console.log(error)
+                alert(error)
             }
         },
     },
