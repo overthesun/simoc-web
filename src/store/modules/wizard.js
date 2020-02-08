@@ -19,6 +19,8 @@ export default{
         // which entry is currently active within the reference
         activeRefEntry: 'Welcome',
         // valid values and ranges for the form inputs
+        // TODO: the valid values should probably be defined and sent by the server
+        // TODO: these values should be used to populate the forms, instead of duplicating them
         validValues: {
             locations: ['mars'],
             duration_ranges: {

@@ -1,5 +1,5 @@
 <template>
-    <form class='form-wrapper' ref='initial-form' @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
             <div class='input-title'>
                 Location
@@ -30,7 +30,7 @@
                 </select>
             </div>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>

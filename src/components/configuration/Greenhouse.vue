@@ -1,5 +1,5 @@
 <template>
-    <form class='form-wrapper' ref='greenhouse-form' @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
             <div class='input-title'>
                 Greenhouse
@@ -45,7 +45,7 @@
                 </fa-layers>
             </div>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>

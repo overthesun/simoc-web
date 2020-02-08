@@ -16,8 +16,8 @@
     }
 }
 
-select:invalid,
-input:invalid {
+.form-wrapper.validating input:invalid,
+.form-wrapper.validating select:invalid {
     background-color: pink;
 }
 

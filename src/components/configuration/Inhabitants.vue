@@ -1,5 +1,5 @@
 <template>
-    <form class='form-wrapper' ref='inhabitants-form' @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
             <div class='input-title'>
                 Crew Quarters
@@ -40,7 +40,7 @@
             <label><input class='input-field-number' ref='eclss' type="number" pattern="^\d+$" placeholder="Quantity" required
                           :min="ranges.eclss.min" :max="ranges.eclss.max" v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>

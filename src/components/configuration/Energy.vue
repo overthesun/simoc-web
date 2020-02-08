@@ -1,7 +1,7 @@
 <!-- Energy Configuration Wizard Form -->
 
 <template>
-    <form class='form-wrapper' ref="energy-form" @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
             <div class='input-title'>
                 Power Generation
@@ -28,7 +28,7 @@
             <label><input class='input-field-number' ref="power_input" type="number" pattern="^\d+$" placeholder="Quantity" required
                           :min="storageValues.min" :max="storageValues.max" v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>
