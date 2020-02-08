@@ -28,7 +28,6 @@
             <div class='input-plant-wrapper' v-for="(item,index) in plantSpecies" :key=index>
                 <select class='input-field-select' ref="plant_selects" v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
-                    <option value="none">None</option>
                     <!-- create options for each plant species within plantValue. Formats them before displaying the.
                          As the plantValue is used for the actual value of the field for the configuration call.
                          Unique plant names function would normally be called here to retrieve the unique names not already used.
@@ -189,7 +188,7 @@ export default {
             // validate and update greenhouse type
             const greenhouse = this.getConfiguration.greenhouse
             const greenhouse_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
-            this.$refs.greenhouse_type.setCustomValidity(greenhouse_is_valid?'':'Please select a valid greenhouse type')
+            this.$refs.greenhouse_type.setCustomValidity(greenhouse_is_valid?'':'Please select a valid greenhouse type.')
             this.$refs.greenhouse_type.reportValidity()
             this.greenhouse = greenhouse
 
@@ -215,10 +214,28 @@ export default {
                 // when a new plant is added this watcher is called before creating the ref
                 // on the select, so we need to wait the next tick to access its plant_selects
                 plantSpecies.forEach((plant, i) => {
-                    // if the plant quantity is > 0, the plant type must be specified and valid
-                    const plant_is_invalid = (plant.amount > 0 && !this.plantValue.includes(plant.type))
-                    this.$refs.plant_selects[i].setCustomValidity(plant_is_invalid?'Please select a valid plant type':'')
-                    this.$refs.plant_selects[i].reportValidity()
+                    // check that the plant type is '' or one from the list of valid plants
+                    const plant_type_is_valid = (plant.type === '' || this.plantValue.includes(plant.type))
+                    this.$refs.plant_selects[i].setCustomValidity(plant_type_is_valid?'':'Please select a valid plant type.')
+                    if (!plant_type_is_valid) {
+                        this.$refs.plant_selects[i].reportValidity()
+                        return  // if the plant is invalid don't even bother checking the rest
+                    }
+                    // if the plant quantity is > 0, the plant type must be specified
+                    const plant_type_is_invalid = (plant.type === '' && plant.amount > 0)
+                    this.$refs.plant_inputs[i].setCustomValidity(plant_type_is_invalid?'Please select a valid plant type.':'')
+                    if (plant_type_is_invalid) {
+                        this.$refs.plant_inputs[i].reportValidity()
+                        return  // wait for the user to select a valid type before complaining about the value
+                    }
+                    // we got a valid type, check that the greenhouse is selected if the amount is >0
+                    const needs_greenhouse = (plant.amount > 0 && greenhouse.type === 'none')
+                    this.$refs.plant_inputs[i].setCustomValidity(needs_greenhouse?'Please select a greenhouse type.':'')
+                    if (needs_greenhouse) {
+                        this.$refs.plant_inputs[i].reportValidity()
+                        return  // wait for the user to select a valid type before complaining about the value
+                    }
+                    // when we have valid greenhouse type, plant type, and an amount > 0, check if it fits in the greenhouse
                     const msg = (max_amount < 0)?`The total amount (${-max_amount+greenhouse_size} m³) exceeds the greenhouse size (${greenhouse_size} m³) by ${-max_amount} m³.`:''
                     this.$refs.plant_inputs[i].setCustomValidity(msg)
                     this.$refs.plant_inputs[i].reportValidity()
