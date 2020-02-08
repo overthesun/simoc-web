@@ -165,11 +165,13 @@ export default{
         REMOVEPLANTSPECIES:(state,value)=>{
             let index = value
             const arrLength = state.configuration.plantSpecies.length
-
-            if(arrLength > 1){
+            if (arrLength > 1) {
                 state.configuration.plantSpecies.splice(index,1)
-            } else if( length === 1){
-                state.configuration.plantSpecies[0] = {type:"",amount:""}
+            } else if (arrLength === 1) {
+                // plantSpecies[0] = {type:"",amount:''} doesn't
+                // trigger the watchers, but this does
+                state.configuration.plantSpecies[0].type = ''
+                state.configuration.plantSpecies[0].amount = ''
             }
         },
         SETACTIVECONFIGTYPE:(state,value)=>{
