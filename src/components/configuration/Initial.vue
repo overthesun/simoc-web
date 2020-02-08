@@ -6,7 +6,7 @@
                 <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Location')" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>In this beta release, your habitat is located on the equatorial region of Mars.</div>
-            <select class='input-field-select' ref="location" v-model="location" v-on:change="setInitial">
+            <select class='input-field-select' ref="location" required v-model="location" v-on:change="setInitial">
                 <option value="none" disabled hidden>Location</option>
                 <option value="mars" selected>Mars</option>
             </select>
@@ -18,9 +18,9 @@
             </div>
             <div class='input-description'>Select the duration of your stay on Mars.</div>
             <div class='input-duration-wrapper'>
-                <input class='input-field-number' type="number" pattern="^\d+$" placeholder="Length"
-                       :min="duration_min" :max="duration_max" v-on:input="setInitial" v-model="duration.amount">
-                <select class='input-field-select' ref="duration_unit"
+                <input class='input-field-number' ref="duration" type="number" pattern="^\d+$" placeholder="Length"
+                       required :min="duration_min" :max="duration_max" v-on:input="setInitial" v-model="duration.amount">
+                <select class='input-field-select' ref="duration_unit" required
                         v-on:change="setInitial" v-model="duration.units">
                     <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
@@ -66,19 +66,23 @@ export default {
         }
     },
     watch:{
-        getConfiguration:{
-            handler:function(){
-                // When the values in the store are changed, update the form and validate it.
-                // The validation doesn't happen in setInitial because this is also triggered
-                // when a config file is uploaded
+        'getConfiguration.location': function() {
+            // validate and update location
+            const location = this.getConfiguration.location
+            const location_is_valid = this.getValidValues.locations.includes(location)
+            this.$refs.location.setCustomValidity(location_is_valid?'':'Please select a valid location')
+            this.$refs.location.reportValidity()
+            this.location = location
+        },
+        'getConfiguration.duration': {
+            handler: function() {
+                // validate and update duration
+                const duration = this.getConfiguration.duration
                 const validValues = this.getValidValues
-                const {location, duration} = this.getConfiguration
-                // validate location
-                const location_is_valid = validValues.locations.includes(location)
-                this.$refs.location.setCustomValidity(location_is_valid?'':'Please select a valid location')
                 // validate duration units
                 const duration_is_valid = validValues.duration_units.includes(duration.units)
                 this.$refs.duration_unit.setCustomValidity(duration_is_valid?'':'Please select a valid duration unit')
+                this.$refs.duration_unit.reportValidity()
                 if (duration_is_valid) {
                     // validate duration ranges
                     const range = validValues.duration_ranges[duration.units]
@@ -87,13 +91,11 @@ export default {
                 }
                 this.$nextTick(function() {
                     // wait until the min/max are updated to validate
-                    this.$refs['initial-form'].reportValidity()
+                    this.$refs.duration.reportValidity()
                 })
-                this.location = location
                 this.duration = duration
             },
-            // TODO: check if there's a way to watch only the location/duration
-            deep:true //Must be used for watching any object type values.
+            deep: true,  // should trigger when duration.amount/units change
         }
     }
 }

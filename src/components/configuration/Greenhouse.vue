@@ -7,7 +7,7 @@
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
             <div class='input-description'>Select the size of your greenouse: small, medium, or large. See graph at right.</div>
-            <select class='input-field-select' ref='greenhouse_type' v-model="greenhouse.type" v-on:change="setGreenhouse">
+            <select class='input-field-select' ref='greenhouse_type' required v-model="greenhouse.type" v-on:change="setGreenhouse">
                 <option value='none' selected>None</option>
                 <option value='greenhouse_small'>Small (490 m³)</option>
                 <option value='greenhouse_medium'>Medium (2452 m³)</option>
@@ -35,7 +35,7 @@
                     -->
                     <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
                 </select>
-                <label><input class='input-field-number' type="number" min="0" :max="plantMax[index]" pattern="^\d+$"
+                <label><input class='input-field-number' ref="plant_inputs" type="number" min="0" :max="plantMax[index]" pattern="^\d+$"
                               placeholder="Quantity" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount"> m³</label>
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
                     <fa-icon :icon="['fas','plus-circle']" />
@@ -185,56 +185,57 @@ export default {
                 }
             })
         },
+        updateAndValidate: function() {
+            // validate and update greenhouse type
+            const greenhouse = this.getConfiguration.greenhouse
+            const greenhouse_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
+            this.$refs.greenhouse_type.setCustomValidity(greenhouse_is_valid?'':'Please select a valid greenhouse type')
+            this.$refs.greenhouse_type.reportValidity()
+            this.greenhouse = greenhouse
 
+            // validate and update plants
+            const plantSpecies = this.getConfiguration.plantSpecies
+            // TODO: this is duplicated in a number of places
+            const greenhouse_size = {
+                'none': 0,
+                'greenhouse_small': 490,
+                'greenhouse_medium': 2454,
+                'greenhouse_large': 5610
+            }[this.greenhouse.type]
+            // make sure that the amount doesn't overflow the greenhouse_size:
+            // calculate the available space by subtracting the amount of the
+            // previous plants from the greenhouse size and using that as max
+            let max_amount = greenhouse_size
+            plantSpecies.forEach((plant, i) => {
+                this.plantMax[i] = Math.max(0, max_amount)
+                max_amount -= plant.amount
+            })
+
+            this.$nextTick(function() {
+                // when a new plant is added this watcher is called before creating the ref
+                // on the select, so we need to wait the next tick to access its plant_selects
+                plantSpecies.forEach((plant, i) => {
+                    // if the plant quantity is > 0, the plant type must be specified and valid
+                    const plant_is_invalid = (plant.amount > 0 && !this.plantValue.includes(plant.type))
+                    this.$refs.plant_selects[i].setCustomValidity(plant_is_invalid?'Please select a valid plant type':'')
+                    this.$refs.plant_selects[i].reportValidity()
+                    const msg = (max_amount < 0)?`The total amount (${-max_amount+greenhouse_size} m³) exceeds the greenhouse size (${greenhouse_size} m³) by ${-max_amount} m³.`:''
+                    this.$refs.plant_inputs[i].setCustomValidity(msg)
+                    this.$refs.plant_inputs[i].reportValidity()
+                })
+            })
+            this.plantSpecies = plantSpecies
+        },
     },
-    //If any part of the configuration has changed, update the values this form uses too. This is useful for watching when
-    // a preset changes all values within the configuration object within wizard store.
     watch:{
-        getConfiguration:{
-            handler:function(){
-                const {greenhouse, plantSpecies} = this.getConfiguration
-                // validate greenhouse size
-                const greenhouse_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
-                this.$refs.greenhouse_type.setCustomValidity(greenhouse_is_valid?'':'Please select a valid crew greenhouse type')
-
-                // validate plants
-                // TODO: this is duplicated in a number of places
-                const greenhouse_size = {
-                    'none': 0,
-                    'greenhouse_small': 490,
-                    'greenhouse_medium': 2454,
-                    'greenhouse_large': 5610
-                }[this.greenhouse.type]
-                // make sure that the amount doesn't overflow the greenhouse_size:
-                // calculate the available space by subtracting the amount of the
-                // previous plants from the greenhouse size and using that as max
-                let max_amount = greenhouse_size
-                this.plantSpecies.forEach((plant, i) => {
-                    this.plantMax[i] = max_amount
-                    max_amount -= plant.amount
-                })
-
-                this.$nextTick(function() {
-                    // when a new plant is added this watcher is called before creating the ref
-                    // on the select, so we need to wait the next tick to access its plant_selects
-                    this.plantSpecies.forEach((plant, i) => {
-                        // if the plant quantity is > 0, the plant type must be specified and valid
-                        const plant_is_invalid = (plant.amount > 0 && !this.plantValue.includes(plant.type))
-                        this.$refs.plant_selects[i].setCustomValidity(plant_is_invalid?'Please select a valid plant type':'')
-                    })
-                    // even though we updated the plantMax, the max attribute on the <input>s
-                    // will only be updated later, so the values will still be invalid --
-                    // use nextTick to validate after the max attribuets have been updated
-                    const greenhouse_form = this.$refs['greenhouse-form']
-                    if (!greenhouse_form.checkValidity()) {
-                        greenhouse_form.reportValidity()
-                    }
-                })
-
-                this.greenhouse = greenhouse
-                this.plantSpecies = plantSpecies
+        'getConfiguration.greenhouse.type': function() {
+            this.updateAndValidate()
+        },
+        'getConfiguration.plantSpecies':{
+            handler:function() {
+                this.updateAndValidate()
             },
-            deep:true // Watch all values within not just the root value. Necessary for watching objects.
+            deep: true,
         }
     }
 }
