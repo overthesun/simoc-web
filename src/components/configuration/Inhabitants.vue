@@ -79,6 +79,12 @@ export default {
                            'crewQuarters': this.crewQuarters, 'eclss': this.eclss}
             this.SETINHABITANTS(value)
         },
+        validateRef: function(ref) {
+            // wait for the fields to be updated before attempting validation
+            this.$nextTick(function() {
+                this.$refs[ref].reportValidity()
+            })
+        },
     },
     watch:{
         // When the values in the store are changed, update the form and validate it.
@@ -86,39 +92,39 @@ export default {
         // when a config file is uploaded
         'getConfiguration.crewQuarters':{
             handler:function(){
+                const crewQuarters = this.getConfiguration.crewQuarters
                 // TODO: maybe the amount should be a hidden field
-                if (this.crewQuarters.type === "none") {
-                    this.crewQuarters.amount = 0
+                if (crewQuarters.type === "none") {
                     this.humans.amount = 0  // can't have humans without crew quarters
+                    crewQuarters.amount = 0
                 }
                 else {
-                    this.crewQuarters.amount = 1
+                    crewQuarters.amount = 1
                     this.$refs.humans.setCustomValidity('')  // remove custom error
                 }
-                this.$nextTick(function() {
-                    // wait until the min/max are updated to validate
-                    this.$refs.humans.reportValidity()
-                })
+                this.validateRef('humans')  // wait until the min/max are updated to validate
 
-                const crewQuarters = this.getConfiguration.crewQuarters
-                const quarters_are_valid = this.getValidValues.crew_quarters_types.includes(crewQuarters.type)
-                this.$refs.crew_quarters_type.setCustomValidity(quarters_are_valid?'':'Please select a valid crew quarters type.')
-                this.$refs.crew_quarters_type.reportValidity()
                 this.crewQuarters = crewQuarters
+                this.$refs.crew_quarters_type.reportValidity()
             },
             deep:true //Must be used if the watched value is an object.
         },
         'getConfiguration.humans.amount': function() {
             const humans = this.getConfiguration.humans
-            const humans_are_invalid = (this.crewQuarters.type === "none" && humans.amount > 0)
+            this.humans = humans
+            // if we have humans, check that the crew quarter is selected before checking the ranges
+            const humans_are_invalid = (humans.amount > 0 && (this.crewQuarters.type === "none" ||
+                                                              !this.$refs.crew_quarters_type.checkValidity()))
             this.$refs.humans.setCustomValidity(humans_are_invalid?'Please select a crew quarters type.':'')
-            this.$refs.humans.reportValidity()
+            this.validateRef('humans')
         },
         'getConfiguration.food.amount': function() {
-            this.$refs.food.reportValidity()
+            this.food = this.getConfiguration.food
+            this.validateRef('food')
         },
         'getConfiguration.eclss.amount': function() {
-            this.$refs.eclss.reportValidity()
+            this.eclss = this.getConfiguration.eclss
+            this.validateRef('eclss')
         },
     }
 

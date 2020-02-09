@@ -67,33 +67,32 @@ export default {
     },
     watch:{
         'getConfiguration.location': function() {
-            // validate and update location
+            // update location and report validity
             const location = this.getConfiguration.location
-            const location_is_valid = this.getValidValues.locations.includes(location)
-            this.$refs.location.setCustomValidity(location_is_valid?'':'Please select a valid location')
-            this.$refs.location.reportValidity()
             this.location = location
+            this.$refs.location.reportValidity()
         },
         'getConfiguration.duration': {
             handler: function() {
-                // validate and update duration
+                // update and validate duration
                 const duration = this.getConfiguration.duration
-                const validValues = this.getValidValues
+                this.duration = duration
                 // validate duration units
+                const validValues = this.getValidValues
                 const duration_is_valid = validValues.duration_units.includes(duration.units)
-                this.$refs.duration_unit.setCustomValidity(duration_is_valid?'':'Please select a valid duration unit')
-                this.$refs.duration_unit.reportValidity()
                 if (duration_is_valid) {
-                    // validate duration ranges
+                    // set duration ranges
                     const range = validValues.duration_ranges[duration.units]
                     this.duration_min = range.min
                     this.duration_max = range.max
+                }
+                else {
+                    this.$refs.duration_unit.reportValidity()
                 }
                 this.$nextTick(function() {
                     // wait until the min/max are updated to validate
                     this.$refs.duration.reportValidity()
                 })
-                this.duration = duration
             },
             deep: true,  // should trigger when duration.amount/units change
         }
