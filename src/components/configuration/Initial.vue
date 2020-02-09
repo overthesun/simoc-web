@@ -70,7 +70,9 @@ export default {
             // update location and report validity
             const location = this.getConfiguration.location
             this.location = location
-            this.$refs.location.reportValidity()
+            this.$nextTick(function() {
+                this.$refs.location.reportValidity()
+            })
         },
         'getConfiguration.duration': {
             handler: function() {
