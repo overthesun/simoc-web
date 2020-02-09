@@ -76,55 +76,29 @@ export default{
 
         //Returns a formatted configuration object in the format required by the backend.
         getFormattedConfiguration:function(state) {
-            // keep track of invalid entries and throw an error if there are any
-            let invalid_entries = new Array()
-            function validate(value, label) {
-                const int_value = parseInt(value)
-                if (int_value == null || isNaN(int_value)) {
-                    invalid_entries.push(label)
-                }
-                // return 0 if the value is null/undefined/NaN --
-                // an error should be thrown before they get to the server,
-                // but storing 0 is better just in case
-                return int_value || 0
-            }
             const config = state.configuration
             // create formatted configuration
             let fconfig = {
-                duration: {type: config.duration.units,
-                           value: validate(config.duration.amount, 'Duration')},
-                human_agent: {amount: validate(config.humans.amount, 'Inhabitants')},
-                food_storage: {amount: validate(config.food.amount, 'Food Supply')},
-                solar_pv_array_mars: {amount: validate(config.powerGeneration.amount, 'Power Generation')},
-                power_storage: {amount: validate(config.powerStorage.amount, 'Power Storage')},
-                eclss: {amount: validate(config.eclss.amount, 'Life Support')},
+                duration: {type: config.duration.units, value: parseInt(config.duration.amount)},
+                human_agent: {amount: parseInt(config.humans.amount)},
+                food_storage: {amount: parseInt(config.food.amount)},
+                eclss: {amount: parseInt(config.eclss.amount)},
+                solar_pv_array_mars: {amount: parseInt(config.powerGeneration.amount)},
+                power_storage: {amount: parseInt(config.powerStorage.amount)},
                 single_agent: 1,
                 plants: new Array(),
             }
             config.plantSpecies.forEach(element => {
                 // ignore plants if the plant type is not selected
-                if (element.type != '' && element.type != 'none') {
-                    fconfig.plants.push({species: element.type,
-                                         amount: validate(element.amount, 'Plant Species')})
+                if (element.type != '') {
+                    fconfig.plants.push({species: element.type, amount: parseInt(element.amount)})
                 }
             })
-            if (config.greenhouse.type != 'none') {
+            if (state.configuration.greenhouse.type != 'none') {
                 fconfig['greenhouse'] = config.greenhouse.type
             }
-            else if (fconfig.plants.length > 0) {
-                // plants without a greenhouse is an error
-                invalid_entries.push('Greenhouse')
-            }
-            if (config.crewQuarters.type != 'none') {
+            if (state.configuration.crewQuarters.type != 'none') {
                 fconfig['habitat'] = config.crewQuarters.type
-            }
-            else if (fconfig.human_agent.amount > 0) {
-                // humans without crew quarters is an error too
-                invalid_entries.push('Crew Quarters')
-            }
-            // abort and throw an error if we have invalid entries
-            if (invalid_entries.length > 0) {
-                throw invalid_entries
             }
             return fconfig
         }
