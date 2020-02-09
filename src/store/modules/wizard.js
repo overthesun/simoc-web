@@ -6,8 +6,21 @@
 
 export default{
     state:{
-        // default configuration, initialized in RESETCONFIG
+        // stores the configuration values
         configuration: {},
+        // default configuration, used to initialize the configuration above
+        defaultConfig: {
+            location: "mars",
+            duration: {type:"none", amount:null, units:"day"},
+            humans: {type:"human_agent", amount:null, units:""},
+            food: {type:"food_storage", amount:null, units:""},
+            eclss: {type:"eclss", amount:null, units:""},
+            powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
+            powerStorage: {type:"power_storage", amount:null, units:""},
+            crewQuarters: {type:"none", amount:'0', units:""},
+            greenhouse: {type:"none", amount:'0', units:""},
+            plantSpecies: [{type:"", amount:""}],
+        },
         // the type of configuration being used (e.g. Guided, Custom)
         activeConfigType: null,
         // the index of the currently-selected form
@@ -104,8 +117,25 @@ export default{
         }
     },
     mutations:{
-        SETCONFIGURATION:function(state,value){
-            state.configuration = value
+        SETCONFIGURATION: function(state, value) {
+            // Make sure the config contains all required items:
+            // initialize the config with the default, then add
+            // all valid keys from "value" and report invalid ones.
+            let newconfig = state.defaultConfig
+            let invalid_keys = []
+            Object.keys(value).forEach((key, i) => {
+                if (state.defaultConfig.hasOwnProperty(key)) {
+                    newconfig[key] = value[key]
+                }
+                else {
+                    invalid_keys.push(key)
+                }
+            })
+            if (invalid_keys.length > 0) {
+                console.log('* Ignoring invalid keys in the uploaded file:',
+                            invalid_keys.join(', '))
+            }
+            state.configuration = newconfig
         },
         SETINITIAL:function(state,value){
             const {location,duration} = value
@@ -165,18 +195,7 @@ export default{
             //It is redundant for the table of contents navigation.
         },
         RESETCONFIG: function(state) {
-            state.configuration = {
-                location: "mars",
-                duration: {type:"none", amount:null, units:"day"},
-                humans: {type:"human_agent", amount:null, units:""},
-                food: {type:"food_storage", amount:null, units:""},
-                eclss: {type:"eclss", amount:null, units:""},
-                powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
-                powerStorage: {type:"power_storage", amount:null, units:""},
-                crewQuarters: {type:"none", amount:'0', units:""},
-                greenhouse: {type:"none", amount:'0', units:""},
-                plantSpecies: [{type:"", amount:""}],
-            }
+            state.configuration = state.defaultConfig
             state.activeFormIndex = 0
             state.activeReference = 'Reference'
             state.activeRefEntry = 'Welcome'
