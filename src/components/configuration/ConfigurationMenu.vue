@@ -39,14 +39,12 @@ export default {
             this.$router.push("entry")
         },
         downloadConfig: function() {
-            try {
-                // get the configuration from wizard store
-                var config = this.getConfiguration
+            const form = this.$parent.$refs.form
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return  // abort if the form is invalid
             }
-            catch (invalid_names) {
-                alert('Please specify the value(s) for: ' + invalid_names.join(', '))
-                return  // abort if there are invalid values
-            }
+            const config = this.getConfiguration
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(config)
             const blob = new Blob([data], {type: 'text/plain'})
@@ -70,11 +68,10 @@ export default {
         },
         readConfig: function(e) {
             try {
-                var json_config = JSON.parse(e.target.result)
+                const json_config = JSON.parse(e.target.result)
             } catch (error) {
                 alert('An error occurred while reading the file:' + error)
             }
-            console.log('json_config is:', json_config)
             this.SETCONFIGURATION(json_config)
         },
     }
