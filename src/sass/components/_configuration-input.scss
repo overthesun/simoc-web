@@ -10,10 +10,10 @@
     display:grid;
     grid-template-rows: auto minmax(16px,auto) 36px;
     position:relative;
-
-    &:not(:last-of-type){
-        margin-bottom: 32px;
-    }
+    margin-top: 24px;
+}
+.form-presets .input-wrapper {
+    margin-top: 0;
 }
 
 .form-wrapper.validating input:invalid,

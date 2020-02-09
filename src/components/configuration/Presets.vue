@@ -9,7 +9,7 @@ Future version should also automatically switch the selected preset to 'custom' 
 -->
 
 <template>
-    <form class='form-wrapper' @submit.prevent="">
+    <form class='form-wrapper form-presets' @submit.prevent="">
         <label class='input-wrapper'>
             <div class='input-title'>
                 Presets
