@@ -1,5 +1,5 @@
 <template>
-    <form class='form-wrapper' @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
             <div class='input-title'>
                 Greenhouse
@@ -7,7 +7,7 @@
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
             <div class='input-description'>Select the size of your greenouse: small, medium, or large. See graph at right.</div>
-            <select class='input-field-select' v-model="greenhouse.type" v-on:change="setGreenhouse">
+            <select class='input-field-select' ref='greenhouse_type' required v-model="greenhouse.type" v-on:change="setGreenhouse">
                 <option value='none' selected>None</option>
                 <option value='greenhouse_small'>Small (490 m³)</option>
                 <option value='greenhouse_medium'>Medium (2452 m³)</option>
@@ -21,34 +21,37 @@
             </div>
 
             <div class='input-description'>Select plants to grow in your greenhouse. See graph at right.</div>
-            <!-- This is the row object for each plant entry within the wizard. v-for automatically rebuilds the fields if one is added or deleted. Index is used as a key to
-            store which plant field has been updated within the configuration
+            <!-- This is the row object for each plant entry within the wizard.
+                  v-for automatically rebuilds the fields if one is added or deleted.
+                  Index is used as a key to store which plant field has been updated within the configuration
             -->
             <div class='input-plant-wrapper' v-for="(item,index) in plantSpecies" :key=index>
-                <select class='input-field-select' v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
+                <select class='input-field-select' ref="plant_selects" v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
-                    <option value="none">None</option>
-                    <!-- create options for each plant species within plantValue. Formats them before displaying the. As the plantValue is used for the actual value of the field
-                    for the configuration call. Unique plant names function would normally be called here to retrieve the unique names not already used.
+                    <!-- create options for each plant species within plantValue. Formats them before displaying the.
+                         As the plantValue is used for the actual value of the field for the configuration call.
+                         Unique plant names function would normally be called here to retrieve the unique names not already used.
                     -->
                     <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
                 </select>
-                <label><input class='input-field-number' type="number" pattern="^\d+$" placeholder="Quantity" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount"> m³</label>
+                <label><input class='input-field-number' ref="plant_inputs" type="number" min="0" :max="plantMax[index]" pattern="^\d+$"
+                              placeholder="Quantity" v-on:input="updatePlantSpecies(index)" v-model="plantSpecies[index].amount"> m³</label>
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
-                <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)"> <!-- Deletes the object at the specicied key within the wizard store. -->
+                <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)">
+                    <!-- Deletes the object at the specicied key within the wizard store. -->
                     <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7"/>
                 </fa-layers>
             </div>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations} from 'vuex'
-import {ensure_within} from '../../javascript/utils'
+
 export default {
     data(){
         return{
@@ -57,6 +60,7 @@ export default {
             plantSpecies:undefined,
             plantValue:[],
             plantFormatted:[],
+            plantMax:[0],  // the max m2 for each plant species to fit in the greenhouse
         }
     },
     beforeMount(){
@@ -64,7 +68,7 @@ export default {
 
         //If there isn't a plant present object in the configuration add at least one.
         //This forces the above v-for to populate with at the very least one plant row.
-        //This is done this way to prevent from having to duplicate the above HTML for the platns section for the single starting plant.
+        //This is done this way to prevent from having to duplicate the above HTML for the plants section for the single starting plant.
         if(plantSpecies.length <= 0){
             this.ADDPLANTSPECIES()
         }
@@ -75,7 +79,7 @@ export default {
         this.retrievePlantSpecies() //See below. This is used to add all options for the plant names to the selection field.
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration']),  // Gets the configuration from the store
+        ...mapGetters('wizard', ['getConfiguration','getValidValues']),  // Gets the configuration from the store
     },
     methods:{
         ...mapMutations('wizard',['SETGREENHOUSE','ADDPLANTSPECIES','UPDATEPLANTSPECIES','REMOVEPLANTSPECIES']),
@@ -99,25 +103,6 @@ export default {
         //automatically by Vue
         updatePlantSpecies:function(index){
             let plant = this.plantSpecies[index]
-            // TODO: this is duplicated in a number of places
-            const greenhouse_size = {
-                'none': 0,
-                'greenhouse_small': 490,
-                'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
-            }[this.greenhouse.type]
-            // make sure that the amount doesn't overflow the greenhouse_size:
-            // calculate the available space by subtracting the amount of the
-            // other plants from the greenhouse size and using that as max
-            let max_amount = greenhouse_size
-            this.plantSpecies.forEach((item, i) =>{
-                if (i != index) {
-                    max_amount -= item.amount
-                }
-            })
-            let amount = this.plantSpecies[index].amount
-            plant.amount = ensure_within(amount, 0, max_amount)
-
             this.UPDATEPLANTSPECIES({'index': index, 'plant': plant})
         },
 
@@ -199,18 +184,75 @@ export default {
                 }
             })
         },
+        updateAndValidate: function() {
+            // validate and update greenhouse type
+            const greenhouse = this.getConfiguration.greenhouse
+            const greenhouse_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
+            this.$refs.greenhouse_type.setCustomValidity(greenhouse_is_valid?'':'Please select a valid greenhouse type.')
+            this.$refs.greenhouse_type.reportValidity()
+            this.greenhouse = greenhouse
 
+            // validate and update plants
+            const plantSpecies = this.getConfiguration.plantSpecies
+            // TODO: this is duplicated in a number of places
+            const greenhouse_size = {
+                'none': 0,
+                'greenhouse_small': 490,
+                'greenhouse_medium': 2454,
+                'greenhouse_large': 5610
+            }[this.greenhouse.type]
+            // make sure that the amount doesn't overflow the greenhouse_size:
+            // calculate the available space by subtracting the amount of the
+            // previous plants from the greenhouse size and using that as max
+            let max_amount = greenhouse_size
+            plantSpecies.forEach((plant, i) => {
+                this.plantMax[i] = Math.max(0, max_amount)
+                max_amount -= plant.amount
+            })
+
+            this.$nextTick(function() {
+                // when a new plant is added this watcher is called before creating the ref
+                // on the select, so we need to wait the next tick to access its plant_selects
+                plantSpecies.forEach((plant, i) => {
+                    // check that the plant type is '' or one from the list of valid plants
+                    const plant_type_is_valid = (plant.type === '' || this.plantValue.includes(plant.type))
+                    this.$refs.plant_selects[i].setCustomValidity(plant_type_is_valid?'':'Please select a valid plant type.')
+                    if (!plant_type_is_valid) {
+                        this.$refs.plant_selects[i].reportValidity()
+                        return  // if the plant is invalid don't even bother checking the rest
+                    }
+                    // if the plant quantity is > 0, the plant type must be specified
+                    const plant_type_is_invalid = (plant.type === '' && plant.amount > 0)
+                    this.$refs.plant_inputs[i].setCustomValidity(plant_type_is_invalid?'Please select a valid plant type.':'')
+                    if (plant_type_is_invalid) {
+                        this.$refs.plant_inputs[i].reportValidity()
+                        return  // wait for the user to select a valid type before complaining about the value
+                    }
+                    // we got a valid type, check that the greenhouse is selected if the amount is >0
+                    const needs_greenhouse = (plant.amount > 0 && greenhouse.type === 'none')
+                    this.$refs.plant_inputs[i].setCustomValidity(needs_greenhouse?'Please select a greenhouse type.':'')
+                    if (needs_greenhouse) {
+                        this.$refs.plant_inputs[i].reportValidity()
+                        return  // wait for the user to select a valid type before complaining about the value
+                    }
+                    // when we have valid greenhouse type, plant type, and an amount > 0, check if it fits in the greenhouse
+                    const msg = (max_amount < 0)?`The total amount (${-max_amount+greenhouse_size} m³) exceeds the greenhouse size (${greenhouse_size} m³) by ${-max_amount} m³.`:''
+                    this.$refs.plant_inputs[i].setCustomValidity(msg)
+                    this.$refs.plant_inputs[i].reportValidity()
+                })
+            })
+            this.plantSpecies = plantSpecies
+        },
     },
-    //If any part of the configuration has changed, update the values this form uses too. This is useful for watching when
-    // a preset changes all values within the configuration object within wizard store.
     watch:{
-        getConfiguration:{
-            handler:function(){
-                const {greenhouse,plantSpecies} = this.getConfiguration
-                this.greenhouse = greenhouse
-                this.plantSpecies = plantSpecies
+        'getConfiguration.greenhouse.type': function() {
+            this.updateAndValidate()
+        },
+        'getConfiguration.plantSpecies':{
+            handler:function() {
+                this.updateAndValidate()
             },
-            deep:true // Watch all values within not just the root value. Necessary for watching objects.
+            deep: true,
         }
     }
 }

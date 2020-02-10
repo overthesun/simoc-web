@@ -17,16 +17,22 @@
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
-                <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
-                <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
-                <section class='form-wrapper' v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
-                    <Presets v-if="activeConfigType === 'Custom'" />
-                    <Initial/>
-                    <Inhabitants/>
-                    <Greenhouse/>
-                    <Energy/>
-                </section>
+                <form class='form-wrapper' ref='form' @submit.prevent="">
+                    <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
+                    <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
+                    <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
+                    <section class='form-wrapper' :class="{'validating': validating}" v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
+                        <Presets v-if="activeConfigType === 'Custom'" />
+                        <Initial ref="initial" />
+                        <Inhabitants ref="inhabitants" />
+                        <Greenhouse ref="greenhouse" />
+                        <Energy ref="energy" />
+                        <!--
+                        This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
+                        <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
+                        -->
+                    </section>
+                </form>
             </template>
             <template v-slot:wizard-configuration-footer>
                 <!-- Guided config bottom nav, with prev/next section and finalize buttons -->
@@ -68,19 +74,21 @@ export default {
     components:{
         'TheTopBar': TheTopBar,
         'ConfigurationMenu': ConfigurationMenu,
-        'Energy':Energy,
-        'Presets':Presets,
-        'Inhabitants':Inhabitants,
-        'Greenhouse':Greenhouse,
-        'Initial':Initial,
-        'Reference':Reference,
-        'GreenhouseDoughnut':GreenhouseDoughnut,
-        'Graphs':Graphs,
+        'Presets': Presets,
+        'Initial': Initial,
+        'Inhabitants': Inhabitants,
+        'Greenhouse': Greenhouse,
+        'Energy': Energy,
+        'Reference': Reference,
+        'GreenhouseDoughnut': GreenhouseDoughnut,
+        'Graphs': Graphs,
     },
     data(){
         return{
             formIndex:0, //Current index of the form that should be used from the wizard store
             activeForm:"Initial", //Default starting form
+            forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
+            validating: false, // add a CSS class while validating to make missing required fields red
             menuActive:false, //Used with class binding to display the menu.
             stepMax:1,
             greenhouseSize:{
@@ -137,7 +145,13 @@ export default {
             this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
-        finalizeConfiguration:async function(){
+        finalizeConfiguration:async function() {
+            this.validating = true
+            const form = this.$refs.form
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return  // abort until the form is invalid
+            }
             try {
                 // get the formatted configuration from wizard store
                 var configParams = {game_config: this.getFormattedConfiguration}
@@ -189,9 +203,7 @@ export default {
 }
 
     .form-wrapper{
-        *:not(:last-of-type){
-            margin-bottom:24px;
-        }
+        margin-bottom:24px;
     }
 
     .configuration-button-wrapper{
