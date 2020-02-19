@@ -43,10 +43,12 @@ export default{
         getStepsTimerID:undefined,
         isTimerRunning:false,
         menuActive:false,
+        loadFromSimData: false,  // if true, load from imported sim data, not from the server
         activePanels: [],
     },
     getters:{
         getMenuActive:(state) => state.menuActive,
+        getLoadFromSimData:(state) => state.loadFromSimData,
         getStepParams:(state) => state.parameters,
         getMaxStepBuffer:(state) => state.maxStepBuffer,
         getCurrentStepBuffer:(state) => state.currentStepBuffer,
@@ -69,8 +71,32 @@ export default{
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
         getActivePanels: state => state.activePanels,
+        // return a json obj that contains all the simulation data
+        getSimulationData: function(state) {
+            return {
+              'README': 'Format may vary, only import from the main menu.',
+              'steps': state.maxStepBuffer,
+              'parameters': state.parameters,
+              'total_consumption': state.totalConsumption,
+              'total_production': state.totalProduction,
+              'total_agent_count': state.agentCount,
+              'agent_growth': state.agentGrowth,
+              'storage_ratios': state.storageRatio,
+              'storage_capacities': state.storageCapacities,
+            }
+        },
     },
     mutations:{
+        // restore simulation data returned by getSimulationData
+        SETSIMULATIONDATA: function(state, simdata) {
+            state.parameters = simdata.parameters
+            state.totalConsumption = simdata.total_consumption
+            state.totalProduction = simdata.total_production
+            state.agentCount = simdata.total_agent_count
+            state.agentGrowth = simdata.agent_growth
+            state.storageRatio = simdata.storage_ratios
+            state.storageCapacities = simdata.storage_capacities
+        },
         SETPARAMETERS:function(state,value){
             state.parameters = value
         },
@@ -78,6 +104,11 @@ export default{
         SETMENUACTIVE:function(state,value){
             state.menuActive = value
         },
+        // load from uploaded sim data when true, from the server if false
+        SETLOADFROMSIMDATA:function(state,value){
+            state.loadFromSimData = value
+        },
+
 
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions

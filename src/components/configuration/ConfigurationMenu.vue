@@ -47,14 +47,12 @@ export default {
             const config = this.getConfiguration
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(config)
-            const blob = new Blob([data], {type: 'text/plain'})
-            const e = document.createEvent('MouseEvents'),
-            a = document.createElement('a');
-            a.download = "simoc-config.json";
-            a.href = window.URL.createObjectURL(blob);
-            a.dataset.downloadurl = ['application/json', a.download, a.href].join(':');
-            e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-            a.dispatchEvent(e);
+            const blob = new Blob([data], {type: 'application/json'})
+            a = document.createElement('a')
+            a.download = "simoc-config.json"
+            a.href = window.URL.createObjectURL(blob)
+            a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+            a.click()
         },
         uploadConfig: function() {
             this.$refs.configInputFile.click()
@@ -70,7 +68,8 @@ export default {
             try {
                 const json_config = JSON.parse(e.target.result)
             } catch (error) {
-                alert('An error occurred while reading the file:' + error)
+                alert('An error occurred while reading the file: ' + error)
+                return
             }
             this.SETCONFIGURATION(json_config)
         },

@@ -32,7 +32,6 @@ export default {
         this.SETTIMERID(undefined)          // Set the timerID to undefined
         this.SETGETSTEPSTIMERID(undefined)  // Set the getStepsTimerID to undefined
         this.SETBUFFERCURRENT(0)            // Reset the current buffer value
-        this.SETBUFFERMAX(0)                // Reset the max buffer value
         this.SETMINSTEPNUMBER(0)            // Reset the starting step
         this.SETSTOPPED(false)              // Reset stopped and terminated flags
 
@@ -44,20 +43,24 @@ export default {
         // reset the websocket
         this.tearDownWebSocket()
 
-        // init a new game, set game id, reset all data buffers
-        this.INITGAME(this.getGameID)
-        // This sets the get_step parameter for the agentGrowth filter.
-        // TODO: this should actually be done in tandem with the configuration wizard plant updates.
-        // This must be done after INITGAME or it will be reset
-        this.SETPLANTSPECIESPARAM(this.getConfiguration)
+        // if we load the simulation data, there's nothing else to do, otherwise
+        // we have to reset a few more values, init the game, and request steps
+        if (!this.getLoadFromSimData) {
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
+            // init a new game, set game id, reset all data buffers
+            this.INITGAME(this.getGameID)
+            // This sets the get_step parameter for the agentGrowth filter.
+            // TODO: this should actually be done in tandem with the configuration wizard plant updates.
+            // This must be done after INITGAME or it will be reset
+            this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
-        console.log('Starting simulation', this.getGameID)
+            console.log('Starting simulation', this.getGameID)
 
-        // make sure that to stop the sim when the user closes the tab
-        window.addEventListener('beforeunload', this.killGame)
-        // this starts the timer that asks the steps to the backend
-        this.requestStepsNum()
-
+            // make sure that to stop the sim when the user closes the tab
+            window.addEventListener('beforeunload', this.killGame)
+            // this starts the timer that asks the steps to the backend
+            this.requestStepsNum()
+        }
         // after this, the Timeline component will be mounted
         // and it will start the timer that shows the steps
     },
@@ -76,7 +79,7 @@ export default {
     },
     computed:{
         //Getterss from the vuex stores
-        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer']),
+        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getGameID']),
     },

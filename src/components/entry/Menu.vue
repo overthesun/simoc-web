@@ -9,7 +9,8 @@
             </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
-                <button form='login-form' class='btn-normal btn-disabled'>LOAD SESSION</button>
+                <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
@@ -30,7 +31,8 @@ export default {
         'BaseEntry':BaseEntry,
     },
     methods:{
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE','SETCONFIGURATION']),
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
         //Sends the user to the configuration menu screen. See router.js
         toConfiguration:function(){
             // menuconfig is currently skipped, we default on Custom config
@@ -38,6 +40,32 @@ export default {
 
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
+        },
+        // TODO: the next 3 methods are duplicated in the config menu
+        uploadSimData: function() {
+            this.$refs.simDataInputFile.click()
+        },
+        handleSimData: function(e) {
+            const files = e.target.files
+            const simdata = files[0]
+            const reader = new FileReader()
+            reader.onload = ((file) => this.readSimData)(simdata)
+            reader.readAsText(simdata)
+        },
+        // read uploaded file, set vars, and go to the dashboard
+        readSimData: function(e) {
+            try {
+                const json_data = JSON.parse(e.target.result)
+                this.SETCONFIGURATION(json_data.configuration)
+                this.SETSIMULATIONDATA(json_data)
+                this.SETBUFFERMAX(json_data.steps)
+            } catch (error) {
+                console.error(error)  // report full error in the console
+                alert('An error occurred while reading the file.')
+                return
+            }
+            this.SETLOADFROMSIMDATA(true)
+            this.$router.push('dashboard')
         },
         //Logout method called when the user hits the logout button
         //Sends the user back to the entry screen regardless if the server has successfully logged them out
@@ -54,6 +82,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#simDataInputFile {
+    display: none;
+}
     .entry-wrapper{
         height:100%;
         width:100%;
