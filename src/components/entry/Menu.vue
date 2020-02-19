@@ -55,15 +55,15 @@ export default {
         // read uploaded file, set vars, and go to the dashboard
         readSimData: function(e) {
             try {
-                var json_data = JSON.parse(e.target.result)
-                console.log(json_data)
+                const json_data = JSON.parse(e.target.result)
+                this.SETCONFIGURATION(json_data.configuration)
+                this.SETSIMULATIONDATA(json_data)
+                this.SETBUFFERMAX(json_data.steps)
             } catch (error) {
-                alert('An error occurred while reading the file: ' + error)
+                console.error(error)  // report full error in the console
+                alert('An error occurred while reading the file.')
                 return
             }
-            this.SETCONFIGURATION(json_data.configuration)
-            this.SETSIMULATIONDATA(json_data)
-            this.SETBUFFERMAX(json_data.steps)
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
