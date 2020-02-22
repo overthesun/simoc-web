@@ -60,7 +60,7 @@ export default {
             plantSpecies:undefined,
             plantValue:[],
             plantFormatted:[],
-            plantMax:[0],  // the max m2 for each plant species to fit in the greenhouse
+            plantMax:[],  // the max m2 for each plant species to fit in the greenhouse
         }
     },
     beforeMount(){
