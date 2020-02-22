@@ -105,10 +105,10 @@ export default {
         this.activeConfigType = this.getActiveConfigType
     },
     computed:{
-        ...mapGetters('dashboard', ['getMenuActive']),
-        ...mapGetters('wizard',['getConfiguration','getActiveConfigType','getActiveForm','getFormLength','getFormattedConfiguration']),
-        ...mapGetters('wizard',['getActiveReference','getActiveRefEntry']),
-        ...mapGetters('dashboard',['getStepParams']),
+        ...mapGetters('dashboard', ['getMenuActive','getStepParams']),
+        ...mapGetters('wizard', ['getConfiguration','getActiveConfigType','getActiveForm',
+                                 'getFormLength','getTotalMissionHours','getFormattedConfiguration',
+                                 'getActiveReference','getActiveRefEntry']),
 
         //Used to hide the normal button and display the active button
         isFinalForm:function() {
@@ -155,7 +155,8 @@ export default {
             }
             try {
                 // get the formatted configuration from wizard store
-                var configParams = {game_config: this.getFormattedConfiguration}
+                var configParams = {step_num: this.getTotalMissionHours,
+                                    game_config: this.getFormattedConfiguration}
             }
             catch (invalid_names) {
                 alert('Please specify the value(s) for: ' + invalid_names.join(', '))

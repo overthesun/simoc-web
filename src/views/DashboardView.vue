@@ -58,8 +58,8 @@ export default {
 
             // make sure that to stop the sim when the user closes the tab
             window.addEventListener('beforeunload', this.killGame)
-            // this starts the timer that asks the steps to the backend
-            this.requestStepsNum()
+            // setup the websocket to get the requested steps
+            this.setupWebsocket()
         }
         // after this, the Timeline component will be mounted
         // and it will start the timer that shows the steps
