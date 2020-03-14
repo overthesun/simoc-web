@@ -105,22 +105,17 @@ export default {
                 console.log('requested', this.getTotalMissionHours, 'steps')
             })
             socket.on('step_data_handler', (msg) => {
-                console.log('step_data_handler called, received:', msg)
+                // console.log('step_data_handler called, received:', msg)
                 this.parseStep(Object.values(msg.data))
-                console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
+                // console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
             })
-            socket.on('steps_retrieved', (msg) => {
+            socket.on('steps_sent', (msg) => {
                 console.log(msg.message)
                 // disconnect once we got all the steps
-                socket.emit('disconnect_request')
+                this.tearDownWebSocket()
             })
             socket.on('user_connected', (msg) => {
                 console.log(msg.message)
-            })
-            socket.on('user_disconnected', (msg) => {
-                console.log(msg.message)
-                // close the socket once the server ack'ed the disconnect_request
-                this.tearDownWebSocket()
             })
         },
 
