@@ -48,7 +48,7 @@ export default {
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(config)
             const blob = new Blob([data], {type: 'application/json'})
-            a = document.createElement('a')
+            const a = document.createElement('a')
             a.download = "simoc-config.json"
             a.href = window.URL.createObjectURL(blob)
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
@@ -67,11 +67,11 @@ export default {
         readConfig: function(e) {
             try {
                 const json_config = JSON.parse(e.target.result)
+                this.SETCONFIGURATION(json_config)
             } catch (error) {
                 alert('An error occurred while reading the file: ' + error)
                 return
             }
-            this.SETCONFIGURATION(json_config)
         },
     }
 }
