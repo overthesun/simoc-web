@@ -17,8 +17,8 @@ using v-for to populate all links with the title and the approriate value for th
             </div>
             <div class='reference-item-entry'><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Table')">Table Of Contents</a></div>
             <div class='reference-item-entry'>
-                By clicking on a fields title, you can navigate directly to
-                that specific entry.
+                You can click on the <fa-icon :icon="['fas','info-circle']" />
+                icons on the left to navigate to the corresponding entries.
             </div>
         </div>
 
