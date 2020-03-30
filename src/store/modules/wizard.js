@@ -4,23 +4,27 @@
 //Currently selected reference entry - this is used to set which entry should be active within the encylopedia. Mostly
 //used for clicking the form section headers to activate the approriate.
 
+function getDefaultConfig() {
+    // return the default configuration,
+    // and ensures that a new object is returned
+    return {
+        location: "mars",
+        duration: {type:"none", amount:null, units:"day"},
+        humans: {type:"human_agent", amount:null, units:""},
+        food: {type:"food_storage", amount:null, units:""},
+        eclss: {type:"eclss", amount:null, units:""},
+        powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
+        powerStorage: {type:"power_storage", amount:null, units:""},
+        crewQuarters: {type:"none", amount:'0', units:""},
+        greenhouse: {type:"none", amount:'0', units:""},
+        plantSpecies: [{type:"", amount:""}],
+    }
+}
+
 export default{
     state:{
         // stores the configuration values
         configuration: {},
-        // default configuration, used to initialize the configuration above
-        defaultConfig: {
-            location: "mars",
-            duration: {type:"none", amount:null, units:"day"},
-            humans: {type:"human_agent", amount:null, units:""},
-            food: {type:"food_storage", amount:null, units:""},
-            eclss: {type:"eclss", amount:null, units:""},
-            powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
-            powerStorage: {type:"power_storage", amount:null, units:""},
-            crewQuarters: {type:"none", amount:'0', units:""},
-            greenhouse: {type:"none", amount:'0', units:""},
-            plantSpecies: [{type:"", amount:""}],
-        },
         // the type of configuration being used (e.g. Guided, Custom)
         activeConfigType: null,
         // the index of the currently-selected form
@@ -121,10 +125,10 @@ export default{
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
-            let newconfig = state.defaultConfig
+            let newconfig = getDefaultConfig()
             let invalid_keys = []
             Object.keys(value).forEach((key, i) => {
-                if (state.defaultConfig.hasOwnProperty(key)) {
+                if (newconfig.hasOwnProperty(key)) {
                     newconfig[key] = value[key]
                 }
                 else {
@@ -195,7 +199,7 @@ export default{
             //It is redundant for the table of contents navigation.
         },
         RESETCONFIG: function(state) {
-            state.configuration = state.defaultConfig
+            state.configuration = getDefaultConfig()
             state.activeFormIndex = 0
             state.activeReference = 'Reference'
             state.activeRefEntry = 'Welcome'
