@@ -108,7 +108,7 @@ export default {
             //this.$router.push("menuconfig")
 
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("configuration")
+            this.$router.push("menu")
         }
     }
 }
