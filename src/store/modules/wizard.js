@@ -126,15 +126,20 @@ export default{
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             let newconfig = getDefaultConfig()
+            let valid_keys = []
             let invalid_keys = []
             Object.keys(value).forEach((key, i) => {
                 if (newconfig.hasOwnProperty(key)) {
                     newconfig[key] = value[key]
+                    valid_keys.push(key)
                 }
                 else {
                     invalid_keys.push(key)
                 }
             })
+            if (valid_keys.length == 0) {
+                throw 'invalid configuration file.'
+            }
             if (invalid_keys.length > 0) {
                 console.log('* Ignoring invalid keys in the uploaded file:',
                             invalid_keys.join(', '))
