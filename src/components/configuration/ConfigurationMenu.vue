@@ -7,7 +7,7 @@
             <button @click="downloadConfig">Download Configuration</button>
             <button  @click="uploadConfig">Upload Configuration</button>
             <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
-            <button class='btn-outline-warning btn-disabled'>Reset To Default</button>
+            <button @click="resetConfig">Reset Configuration</button>
             <button class='btn-logout' @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -26,7 +26,7 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
     },
     methods: {
-        ...mapMutations('wizard',['SETCONFIGURATION']),
+        ...mapMutations('wizard', ['RESETCONFIG','SETCONFIGURATION']),
         logout: async function() {
             if (!confirm('Do you want to log out?')) {
                 return;
@@ -72,6 +72,12 @@ export default {
                 alert('An error occurred while reading the file: ' + error)
                 return
             }
+        },
+        resetConfig: function() {
+            if (!confirm('Reset the current configuration?')) {
+                return
+            }
+            this.RESETCONFIG()
         },
     }
 }
