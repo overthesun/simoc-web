@@ -229,12 +229,12 @@ export default {
     }
 
     .reference-link{
-        text-decoration: underline;
-        color:lightgreen;
+        text-decoration: none;
+        color: lightgreen;
         font-weight: 600;
 
         &:visited{
-            color:lightgreen;
+            color: lightgreen;
 
         }
     }
