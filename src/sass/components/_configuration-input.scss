@@ -10,7 +10,7 @@
     display:grid;
     grid-template-rows: auto minmax(16px,auto) 36px;
     position:relative;
-    margin-top: 24px;
+    margin-top: 12px;
 }
 .form-presets .input-wrapper {
     margin-top: 0;
@@ -22,22 +22,23 @@
 }
 
 .input-title{
-    font-size:24px;
+    font-size:20px;
     font-weight: 600;
     color: lightgreen;
 }
 
 .input-title svg {
-    font-size: 18px;
+    font-size: 16px;
     color: #ffffff99;
 
     &:hover{
         cursor: help;
+        color: lightgreen;
     }
 }
 
 .input-description{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     color: #eee;
     margin-top: 4px;

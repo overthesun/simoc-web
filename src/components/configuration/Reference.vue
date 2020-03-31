@@ -224,10 +224,11 @@ export default {
 
     .reference-item{
         font-family: "Open Sans", sans-serif;
+        font-size: 14px;
         margin-right: 16px;
     }
 
-    .reference-item-entry,.reference-item-title{
+    .reference-item-entry {
         &:not(:last-of-type){
             margin-bottom: 16px;
         }
