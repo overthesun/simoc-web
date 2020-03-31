@@ -5,7 +5,7 @@
                 Greenhouse <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class='input-description'>Select the size of your greenouse: small, medium, or large. See graph at right.</div>
+            <div class='input-description'>Select the size of your greenouse. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
             <select class='input-field-select' ref='greenhouse_type' required v-model="greenhouse.type" v-on:change="setGreenhouse">
                 <option value='none' selected>None</option>
                 <option value='greenhouse_small'>Small (490 m³)</option>
@@ -18,7 +18,7 @@
                 Plant Species <fa-icon :icon="['fas','info-circle']" />
             </div>
 
-            <div class='input-description'>Select plants to grow in your greenhouse. See graph at right.</div>
+            <div class='input-description'>Select plants to grow in your greenhouse. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
                   Index is used as a key to store which plant field has been updated within the configuration
@@ -80,8 +80,8 @@ export default {
         ...mapGetters('wizard', ['getConfiguration','getValidValues']),  // Gets the configuration from the store
     },
     methods:{
-        ...mapMutations('wizard',['SETGREENHOUSE','ADDPLANTSPECIES','UPDATEPLANTSPECIES','REMOVEPLANTSPECIES']),
-        ...mapMutations('wizard',['SETACTIVEREFENTRY']),
+        ...mapMutations('wizard', ['SETGREENHOUSE','ADDPLANTSPECIES','UPDATEPLANTSPECIES','REMOVEPLANTSPECIES']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY','SETACTIVEREFERENCE']),
 
         //This method creates a new plant object within the wizard store. It also makes sure that the user
         // can't add more fields than there are options for plants.

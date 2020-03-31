@@ -4,7 +4,7 @@
             <div class='input-title' @click="SETACTIVEREFENTRY('CrewQuarters')">
                 Crew Quarters <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Select the size of your crew quarters: small, medium, or large.</div>
+            <div class='input-description'>Select the size of your crew quarters.</div>
             <select class='input-field-select' ref='crew_quarters_type' required v-on:change="setInhabitants" v-model="crewQuarters.type">
                 <option value="none" selected>None</option>
                 <option value="crew_habitat_small">Small 1000 m³</option>
@@ -24,7 +24,7 @@
             <div class='input-title' @click="SETACTIVEREFENTRY('Food')">
                 Food Supply <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
+            <div class='input-description'>Make certain you have ample food for an <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
             <label><input class='input-field-number' ref='food' type="number" pattern="^\d+$" placeholder="Quantity" required
                           :min="ranges.food.min" :max="ranges.food.max" v-on:input="setInhabitants" v-model="food.amount"> kg</label>
         </label>

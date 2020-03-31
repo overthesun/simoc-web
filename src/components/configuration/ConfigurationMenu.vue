@@ -83,8 +83,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #configInputFile {
     display: none;
 }
+.reference-link{
+    text-decoration: none;
+    color: lightgreen;
+    font-weight: 600;
+
+    &:visited{
+        color: lightgreen;
+    }
+}
+
 </style>

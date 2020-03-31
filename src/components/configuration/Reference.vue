@@ -228,17 +228,6 @@ export default {
         font-weight:400;
     }
 
-    .reference-link{
-        text-decoration: none;
-        color: lightgreen;
-        font-weight: 600;
-
-        &:visited{
-            color: lightgreen;
-
-        }
-    }
-
     #food-table {
         width: 100%;
         border-collapse: collapse;

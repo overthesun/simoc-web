@@ -6,7 +6,7 @@
             <div class='input-title' @click="SETACTIVEREFENTRY('PowerGeneration')">
                 Power Generation <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See graph at right.</div>
+            <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
             <div>
                 <!-- Use the retrieved generator value as the value for the field. On change set the configuration store value -->
                 <select class='input-field-select' ref='generator_select' required v-model="generator.type" v-on:change="setEnergy">
@@ -59,8 +59,8 @@ export default {
         },
     },
     methods:{
-        ...mapMutations('wizard',['SETENERGY']),
-        ...mapMutations('wizard',['SETACTIVEREFENTRY']),
+        ...mapMutations('wizard', ['SETENERGY']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY','SETACTIVEREFERENCE']),
 
         //This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
         //It is called from all fields on change, and updates with all selected values from this form.

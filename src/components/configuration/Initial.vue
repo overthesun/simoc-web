@@ -4,7 +4,7 @@
             <div class='input-title' @click="SETACTIVEREFENTRY('Location')">
                 Location <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>In this beta release, your habitat is located on the equatorial region of Mars.</div>
+            <div class='input-description'>Your habitat is located on the equatorial region of Mars.</div>
             <select class='input-field-select' ref="location" required v-model="location" v-on:change="setInitial">
                 <option value="none" disabled hidden>Location</option>
                 <option value="mars" selected>Mars</option>
