@@ -271,7 +271,7 @@ export default {
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
-        background-color: #ff3100;
+        background-color: #0099ee;
         border:none;
         color: #eee;
 
