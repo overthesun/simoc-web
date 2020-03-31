@@ -1,9 +1,8 @@
 <template>
     <div>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Crew Quarters
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('CrewQuarters')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('CrewQuarters')">
+                Crew Quarters <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Select the size of your crew quarters: small, medium, or large.</div>
             <select class='input-field-select' ref='crew_quarters_type' required v-on:change="setInhabitants" v-model="crewQuarters.type">
@@ -14,27 +13,24 @@
             </select >
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Inhabitants
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Inhabitants')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('Inhabitants')">
+                Inhabitants <fa-icon :icon="['fas','info-circle']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>The number of astronaut explorers to live in your habitat.</div>
             <input class='input-field-number' ref='humans' type="number" pattern="^\d+$" placeholder="Quantity" required
                    :min="ranges.humans.min" :max="ranges.humans.max" v-on:input="setInhabitants" v-model="humans.amount">
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Food Supply
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Food')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('Food')">
+                Food Supply <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Make certain you have ample food for an ECLSS only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
             <label><input class='input-field-number' ref='food' type="number" pattern="^\d+$" placeholder="Quantity" required
                           :min="ranges.food.min" :max="ranges.food.max" v-on:input="setInhabitants" v-model="food.amount"> kg</label>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Life Support
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('ECLSS')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('ECLSS')">
+                Life Support <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
             <label><input class='input-field-number' ref='eclss' type="number" pattern="^\d+$" placeholder="Quantity" required

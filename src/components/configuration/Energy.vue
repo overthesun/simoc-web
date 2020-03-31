@@ -3,9 +3,8 @@
 <template>
     <div>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Power Generation
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerGeneration')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('PowerGeneration')">
+                Power Generation <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See graph at right.</div>
             <div>
@@ -20,9 +19,8 @@
             </div>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Power Storage
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PowerStorage')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('PowerStorage')">
+                Power Storage <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
             <div>

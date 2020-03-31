@@ -1,9 +1,8 @@
 <template>
     <div>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Greenhouse
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Greenhouse')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('Greenhouse')">
+                Greenhouse <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
             <div class='input-description'>Select the size of your greenouse: small, medium, or large. See graph at right.</div>
@@ -15,9 +14,8 @@
             </select>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Plant Species
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('PlantSpecies')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('PlantSpecies')">
+                Plant Species <fa-icon :icon="['fas','info-circle']" />
             </div>
 
             <div class='input-description'>Select plants to grow in your greenhouse. See graph at right.</div>

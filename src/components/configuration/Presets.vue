@@ -11,9 +11,8 @@ Future version should also automatically switch the selected preset to 'custom' 
 <template>
     <form class='form-wrapper form-presets' @submit.prevent="">
         <label class='input-wrapper'>
-            <div class='input-title'>
-                Presets
-                <fa-icon :icon="['fas','info-circle']" @click="SETACTIVEREFENTRY('Presets')" />
+            <div class='input-title' @click="SETACTIVEREFENTRY('Presets')">
+                Presets <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div>
