@@ -160,42 +160,20 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class='reference-item' v-if="getActiveRefEntry === 'Table'">
             <div class='reference-item-title'>Table of Contents</div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Welcome')">Welcome to SIMOC</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Presets')">Presets</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Location')">Location</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Duration')">Mission Duration</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Inhabitants')">Inhabitants</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Food')">Food Supply</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">Crew Quarters</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">Environmental Control</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Greenhouse')">Greenhouse</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">Plant Species</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">Power Generation</a>
-            </div>
-            <div class='reference-item-entry'>
-                <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerStorage')">Power Storage</a>
-            </div>
+            <ul>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Welcome')">Welcome to SIMOC</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Presets')">Presets</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Location')">Location</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Duration')">Mission Duration</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Inhabitants')">Inhabitants</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Food')">Food Supply</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">Crew Quarters</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">Environmental Control</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Greenhouse')">Greenhouse</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">Plant Species</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">Power Generation</a></li>
+                <li><a class='reference-link' href="#" @click="SETACTIVEREFENTRY('PowerStorage')">Power Storage</a></li>
+            </ul>
         </div>
 
 
