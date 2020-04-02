@@ -125,6 +125,7 @@ export default{
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
+            value = JSON.parse(JSON.stringify(value))
             let newconfig = getDefaultConfig()
             let valid_keys = []
             let invalid_keys = []
