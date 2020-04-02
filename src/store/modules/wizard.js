@@ -15,8 +15,8 @@ function getDefaultConfig() {
         eclss: {type:"eclss", amount:null, units:""},
         powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
         powerStorage: {type:"power_storage", amount:null, units:""},
-        crewQuarters: {type:"none", amount:'0', units:""},
-        greenhouse: {type:"none", amount:'0', units:""},
+        crewQuarters: {type:"none", amount:0, units:""},
+        greenhouse: {type:"none", amount:0, units:""},
         plantSpecies: [{type:"", amount:""}],
     }
 }
@@ -35,6 +35,8 @@ export default{
         activeReference: 'Reference',
         // which entry is currently active within the reference
         activeRefEntry: 'Welcome',
+        // true if the preset dropdown and the config form should be reset
+        resetConfig: false,
         // valid values and ranges for the form inputs
         // TODO: the valid values should probably be defined and sent by the server
         // TODO: these values should be used to populate the forms, instead of duplicating them
@@ -67,6 +69,7 @@ export default{
         getActiveForm: state => state.formOrder[state.activeFormIndex],
         getActiveReference: state => state.activeReference,
         getActiveRefEntry: state => state.activeRefEntry,
+        getResetConfig: state => state.resetConfig,
         getFormLength: state => state.formOrder.length,
         getValidValues: state => state.validValues,
 
@@ -203,6 +206,9 @@ export default{
             state.activeRefEntry = value
             state.activeReference = 'Reference' // This is set here so I don't have to call it on every link.
             //It is redundant for the table of contents navigation.
+        },
+        SETRESETCONFIG:(state,value)=>{
+            state.resetConfig = value
         },
         RESETCONFIG: function(state) {
             state.configuration = getDefaultConfig()
