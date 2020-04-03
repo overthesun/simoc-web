@@ -35,17 +35,17 @@
                 </form>
             </template>
             <template v-slot:wizard-configuration-footer>
-                <!-- Guided config bottom nav, with prev/next section and finalize buttons -->
+                <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
                 <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Guided'"">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
                          No animations present to require it. -->
                     <button class='btn-previous' @click='decrementIndex' v-if="!isFirstForm">Previous Section</button>
                     <button class='btn-next' @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
-                    <button class='btn-finalize' @click="finalizeConfiguration" v-if="isFinalForm">Finalize Settings</button>
+                    <button class='btn-launch' @click="launchSimulation" v-if="isFinalForm">Launch Simulation</button>
                 </nav>
-                <!-- Custom config bottom nav, no sections, only finalize button -->
+                <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
                 <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Custom'"">
-                    <button class='btn-finalize' @click="finalizeConfiguration">Finalize Settings</button>
+                    <button class='btn-launch' @click="launchSimulation">Launch Simulation</button>
                 </nav>
             </template>
 
@@ -146,7 +146,7 @@ export default {
             this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
-        finalizeConfiguration:async function() {
+        launchSimulation:async function() {
             this.validating = true
             const form = this.$refs.form
             if (!form.checkValidity()) {
@@ -261,7 +261,7 @@ export default {
         }
     }
 
-    .btn-finalize{
+    .btn-launch{
         width: 196px;
         height: 48px;
         min-height: 48px;
