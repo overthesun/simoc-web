@@ -158,9 +158,9 @@ export default {
                 var configParams = {step_num: this.getTotalMissionHours,
                                     game_config: this.getFormattedConfiguration}
             }
-            catch (invalid_names) {
-                alert('Please specify the value(s) for: ' + invalid_names.join(', '))
-                return  // abort if there are invalid values
+            catch (err_msg) {
+                alert(err_msg)
+                return  // abort if there are any errors
             }
 
             try{

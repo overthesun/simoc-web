@@ -109,18 +109,22 @@ export default{
                 single_agent: 1,
                 plants: new Array(),
             }
-            config.plantSpecies.forEach(element => {
-                // ignore plants if the plant type is not selected
-                if (element.type != '') {
-                    fconfig.plants.push({species: element.type, amount: parseInt(element.amount)})
-                }
-            })
+            if ((state.configuration.greenhouse.type == 'none') &&
+                (state.configuration.crewQuarters.type == 'none')) {
+                throw 'Please select a value for the Crew Quarters and/or the Greenhouse.'
+            }
             if (state.configuration.greenhouse.type != 'none') {
                 fconfig['greenhouse'] = config.greenhouse.type
             }
             if (state.configuration.crewQuarters.type != 'none') {
                 fconfig['habitat'] = config.crewQuarters.type
             }
+            config.plantSpecies.forEach(element => {
+                // ignore plants if the plant type is not selected
+                if (element.type != '') {
+                    fconfig.plants.push({species: element.type, amount: parseInt(element.amount)})
+                }
+            })
             return fconfig
         }
     },
