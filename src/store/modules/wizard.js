@@ -101,10 +101,11 @@ export default{
             let fconfig = {
                 duration: {type: config.duration.units, value: parseInt(config.duration.amount)},
                 human_agent: {amount: parseInt(config.humans.amount)},
-                food_storage: {amount: parseInt(config.food.amount)},
+                food_storage: {food_edbl: parseInt(config.food.amount)},
                 eclss: {amount: parseInt(config.eclss.amount)},
                 solar_pv_array_mars: {amount: parseInt(config.powerGeneration.amount)},
-                power_storage: {amount: parseInt(config.powerStorage.amount)},
+                power_storage: {enrg_kwh: parseInt(config.powerStorage.amount)},
+                nutrient_storage: {sold_n: 100, sold_p: 100, sold_k: 100},
                 single_agent: 1,
                 plants: new Array(),
             }
