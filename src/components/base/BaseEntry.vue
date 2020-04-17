@@ -16,8 +16,16 @@
             <slot name='entry-button'></slot>
         </div>
         <footer class='footer'>
-            <a class='link link-disabled'>Privacy Policy</a>
-            <a class='link' href='mailto:bugs@simoc.space'>Report Bug</a>
+            <a class='link' title='Go to the simoc.space homepage' href="https://simoc.space/">
+                SIMOC
+            </a>
+            <a class='link' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
+                Report Bug
+            </a>
+            <a class='link' title='End User License Agreement'
+               href="https://simoc.space/about/end-user-license-agreement/">
+                EULA
+            </a>
         </footer>
     </div>
 </template>
