@@ -264,7 +264,6 @@ export default{
         },
         INITGAME: function(state, value) {
             // set a new game_id and reset all other values
-            console.log('game_id is', value)
             state.parameters = {
                 // the game is set before reaching the dashboard and
                 // resetting, so preserve its value
@@ -289,8 +288,8 @@ export default{
         },
     },
     actions:{
-        parseStep({commit,dispatch},stepData){
-            console.log(stepData)
+        parseStep({commit,dispatch},stepData) {
+            //console.log(stepData)
             stepData.forEach((item) => {
                 commit('SETTOTALCONSUMPTION',item)
                 commit('SETTOTALPRODUCTION',item)
