@@ -91,18 +91,18 @@ export default {
 
         setupWebsocket: function() {
             const socket = this.socket = io()
-            console.log('socket created:', socket)
+            // console.log('socket created:', this.socket)
 
             socket.on('connect', () => {
-                console.log('websocket connected')
+                // console.log('websocket connected')
                 const req = {data: this.getStepParams}
                 // before using websockets, we requested a batch of n_steps steps,
                 // but now this is no longer necessary since we request them all at once,
                 // so the store should be updated to match getTotalMissionHours,
                 // or getting rid of n_steps altogether
                 req['data']['n_steps'] = this.getTotalMissionHours
-                socket.emit('get_steps', req)
-                console.log('requested', this.getTotalMissionHours, 'steps')
+                this.socket.emit('get_steps', req)
+                console.log('Requesting', this.getTotalMissionHours, 'steps')
             })
             socket.on('step_data_handler', (msg) => {
                 // console.log('step_data_handler called, received:', msg)
@@ -120,9 +120,15 @@ export default {
         },
 
         tearDownWebSocket: function() {
-            console.log('Closing the websocket')
             if (this.socket !== null) {
+                /*
+                for (let event of ['connect', 'user_connected', 'step_data_handler', 'steps_sent']) {
+                    console.log('  Removing socket.' + event)
+                    this.socket.off(event)
+                }
+                */
                 if (this.socket.connected) {
+                    console.log('Disconnecting user')
                     this.socket.disconnect()
                 }
                 this.socket = null
