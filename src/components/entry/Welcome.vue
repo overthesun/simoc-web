@@ -32,13 +32,13 @@
                     doing prior to the issue.</p>
 
                     <p>To learn more about SIMOC, enjoy tutorials, and download classroom
-                    curricula visit: <a class='link' href="https://simoc.space/">
-                    www.simoc.space</a></p>
+                    curricula visit: <a class='link' target='_blank' href="https://simoc.space/">
+                    simoc.space</a></p>
 
                     <p>Finally, by pressing the PROCEED button below, you confirm that you have
                     read and agree to the
-                    <a class='link' href="https://simoc.space/about/end-user-license-agreement/">
-                    End User License Agreement</a>.</p>
+                    <a class='link' href="https://simoc.space/about/end-user-license-agreement/"
+                    target='_blank'>End User License Agreement</a>.</p>
                 </div>
             </template>
 
