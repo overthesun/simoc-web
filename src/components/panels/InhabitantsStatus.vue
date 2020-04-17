@@ -13,7 +13,7 @@
                 Potable Water (sans 3 days):</dt>
                 <dd>{{water}}</dd>
             <dt title="Inhabitants are terminated after 20 days with no food">
-                Food Rations (sans 20 days):</dt>
+                Food (sans 20 days):</dt>
                 <dd>{{food}}</dd>
             <dt>Inhabitants:</dt>
                 <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>

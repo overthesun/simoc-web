@@ -31,7 +31,7 @@ export default {
         storage: function (step) {
             let storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
-            delete storage['nutrient_storage'][1]['sold_wste']
+            delete storage['nutrient_storage'][1]['biomass_edible']
             return storage
         },
         label2name: function (label) {
@@ -50,9 +50,10 @@ export default {
                 'sold_n': 'Nitrogen',
                 'sold_p': 'Phosphorus',
                 'sold_k': 'Potassium',
-                'food_edbl': 'Food rations',
-                'biomass_edible': 'Edible (greenhouse)',
-                'biomass_totl': 'Total (edible, inedible)',
+                'sold_wste': 'Unused salts',
+                'food_edbl': 'Food',
+                'biomass_edible': 'Edible (greenhouse)',  // not used
+                'biomass_totl': 'Biomass (edible, inedible)',
                 'enrg_kwh': 'Energy (battery)',
             }[label]
         },
