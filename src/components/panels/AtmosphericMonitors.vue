@@ -18,7 +18,7 @@
         </div>
         <div class='gauge-wrapper' style='position:relative'>
             <Gauge :id="'canvas5'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_n2'" :maximum="1.0" :getter="getAirStorageRatio"/>
-            <div class='gauge-text'>N<sub>2  (0-100%)</sub></div>
+            <div class='gauge-text'>N<sub>2</sub> (0-100%)</div>
         </div>
         <div class='gauge-wrapper' style='position:relative'>
             <Gauge :id="'canvas6'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_ch4'" :maximum=".01" :getter="getAirStorageRatio"/>
