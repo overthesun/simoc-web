@@ -39,11 +39,12 @@ export default {
                 const current = this.getCurrentStepBuffer
                 let retrieved = this.getter(current)
                 let value = retrieved[this.keyValue]
-                let remainder = this.maximum - value
+                let gauge_value = Math.min(value, this.maximum) // clip at max
+                let gauge_remainder = this.maximum - gauge_value
 
                 this.chart.data.labels = [this.label]
                 this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = [value,remainder]
+                this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#fff']
                 this.chart.options.elements.centerText.text = (value*100).toFixed(4)+"%"
                 this.chart.update()
