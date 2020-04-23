@@ -289,7 +289,7 @@ export default{
     },
     actions:{
         parseStep({commit,dispatch},stepData) {
-            //console.log(stepData)
+            console.log(stepData)
             stepData.forEach((item) => {
                 commit('SETTOTALCONSUMPTION',item)
                 commit('SETTOTALPRODUCTION',item)
