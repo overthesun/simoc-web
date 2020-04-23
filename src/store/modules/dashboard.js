@@ -115,19 +115,19 @@ export default{
         // are met for a reasonable buffer amount.
         STARTTIMER:function(state,value){
             //if((state.maxStepBuffer >= 100 || state.terminated ) && !state.isTimerRunning){
-                console.log("Step Timer running")
+                //console.log("Step Timer running")
                 state.timerID.resume()
                 state.isTimerRunning = true
             //}
         },
         PAUSETIMER:function(state,value){
-            console.log("Step Timer paused")
+            //console.log("Step Timer paused")
             state.timerID.pause()
             state.isTimerRunning = false
         },
         STOPTIMER:function(state,value){
             if (state.timerID != null) {
-                console.log("Step Timer stopped")
+                //console.log("Step Timer stopped")
                 state.timerID.stop()
             }
             state.isTimerRunning = false
