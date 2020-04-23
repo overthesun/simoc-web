@@ -129,6 +129,7 @@ export default {
                 */
                 if (this.socket.connected) {
                     console.log('Disconnecting user')
+                    this.socket.emit('user_disconnected')
                     this.socket.disconnect()
                 }
                 this.socket = null
