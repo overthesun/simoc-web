@@ -9,20 +9,20 @@
             <div class='gauge-text'>O<sub>2</sub> (0-100%)</div>
         </div>
         <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas3'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2o'" :maximum="1.0" :getter="getAirStorageRatio"/>
-            <div class='gauge-text'>H<sub>2</sub>O Vapor (0-100%)</div>
+            <Gauge :id="'canvas3'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2o'" :maximum="0.03" :getter="getAirStorageRatio"/>
+            <div class='gauge-text'>H<sub>2</sub>O Vapor (0-3%)</div>
         </div>
         <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas4'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2'" :maximum=".01" :getter="getAirStorageRatio"/>
-            <div class='gauge-text'>H<sub>2</sub> (0-1%)</div>
+            <Gauge :id="'canvas4'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2'" :maximum=".03" :getter="getAirStorageRatio"/>
+            <div class='gauge-text'>H<sub>2</sub> (0-3%)</div>
         </div>
         <div class='gauge-wrapper' style='position:relative'>
             <Gauge :id="'canvas5'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_n2'" :maximum="1.0" :getter="getAirStorageRatio"/>
             <div class='gauge-text'>N<sub>2</sub> (0-100%)</div>
         </div>
         <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas6'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_ch4'" :maximum=".01" :getter="getAirStorageRatio"/>
-            <div class='gauge-text'>CH<sub>4</sub> (0-1%)</div>
+            <Gauge :id="'canvas6'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_ch4'" :maximum=".03" :getter="getAirStorageRatio"/>
+            <div class='gauge-text'>CH<sub>4</sub> (0-3%)</div>
         </div>
     </div>
 </template>
