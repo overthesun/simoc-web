@@ -41,6 +41,7 @@ export default {
         // The switch happens in this.requestStepsNum()
 
         // reset the websocket
+        this.request_sent = false  // true if we already sent a req to get_steps
         this.tearDownWebSocket()
 
         // if we load the simulation data, there's nothing else to do, otherwise
@@ -94,15 +95,19 @@ export default {
             // console.log('socket created:', this.socket)
 
             socket.on('connect', () => {
-                // console.log('websocket connected')
+                // This is triggered when the websocket is first connected but also
+                // if the websocket gets disconnected and reconnects automatically
                 const req = {data: this.getStepParams}
-                // before using websockets, we requested a batch of n_steps steps,
+                // TODO: before using websockets, we requested a batch of n_steps steps,
                 // but now this is no longer necessary since we request them all at once,
                 // so the store should be updated to match getTotalMissionHours,
                 // or getting rid of n_steps altogether
                 req['data']['n_steps'] = this.getTotalMissionHours
+                // the req includes the min_step_num -- in case of reconnection,
+                // it will requests steps starting from the last received + 1
                 this.socket.emit('get_steps', req)
-                console.log('Requesting', this.getTotalMissionHours, 'steps')
+                console.log('Requesting', this.getTotalMissionHours, this.request_sent?'steps again':'steps')
+                this.request_sent = true
             })
             socket.on('step_data_handler', (msg) => {
                 // console.log('step_data_handler called, received:', msg)
@@ -116,6 +121,9 @@ export default {
             })
             socket.on('user_connected', (msg) => {
                 console.log(msg.message)
+            })
+            socket.on('disconnect', (msg) => {
+                console.log('Websocket disconnected')
             })
         },
 
