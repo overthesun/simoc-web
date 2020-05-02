@@ -15,12 +15,12 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "initial",
       component: EntryView,
 
       children:[
         {
-          path:'/',
+          path:'',
+          name: 'initial',
           component:EntryWelcome
         },
         {
