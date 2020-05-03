@@ -39,6 +39,9 @@ export default {
 
 .panel-dl-wrapper dt {
     font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .panel-dl-wrapper dd {
     text-indent: 0;
@@ -127,7 +130,7 @@ export default {
     }
 
     .gauge-text{
-        font-size:18px;
+        font-size:16px;
         font-weight: 400;
     }
 </style>
