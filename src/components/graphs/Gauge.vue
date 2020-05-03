@@ -42,7 +42,7 @@ export default {
                 let gauge_value = Math.min(value, this.maximum) // clip at max
                 let gauge_remainder = this.maximum - gauge_value
 
-                this.chart.data.labels = [this.label]
+                this.chart.data.labels = [this.label, 'to limit']
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#fff']
@@ -59,7 +59,7 @@ export default {
             type: 'doughnut',
             data:{
                 centerText: "TEST",
-                labels: ['Oxygen'],
+                labels: [],
                 datasets:[{
                     backgroundColor: this.color,
                     data:[10]
@@ -73,6 +73,16 @@ export default {
                     },
                     centerText:{
                         text:"Calculating",
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            // show "label: N%" in the tooltip
+                            const label = data.labels[tooltipItems.index]
+                            const value = data.datasets[0].data[tooltipItems.index]
+                            return label + ': ' + (value*100) + "%";
+                        }
                     }
                 },
                 legend:{
