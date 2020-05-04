@@ -55,7 +55,7 @@ export default {
     border: 1px solid #666;
     box-shadow: 5px 5px 5px #333c;
     border-radius: 5px;
-    min-height: 15em;
+    min-height: 17em;
     display: grid;
     grid-template-rows: 26px 1fr;
     grid-row-gap: 16px;

@@ -137,7 +137,9 @@ export default {
 
         display: grid;
         grid-template-columns: repeat(3, minmax(304px,1fr));
-        grid-template-rows: repeat(auto-fit, minmax(15em,1fr));
+        /* the first minmax value should be ~1em more than the panel
+           min-height, or the row gap disappears with multiple rows */
+        grid-template-rows: repeat(auto-fit, minmax(18em,1fr));
         grid-row-gap: 16px;
         grid-column-gap: 16px;
         overflow: auto;
