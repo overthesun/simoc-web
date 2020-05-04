@@ -24,7 +24,7 @@
                 Report Bug
             </a>
             <a class='link' title='End User License Agreement' target='_blank'
-               href="https://simoc.space/about/end-user-license-agreement/">
+               href="https://simoc.space/end-user-license-agreement/">
                 EULA
             </a>
         </footer>
