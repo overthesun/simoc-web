@@ -20,7 +20,7 @@
                href="https://simoc.space/">
                 SIMOC
             </a>
-            <a class='link' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
+            <a class='link' target='_blank' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
                 Report Bug
             </a>
             <a class='link' title='End User License Agreement' target='_blank'
