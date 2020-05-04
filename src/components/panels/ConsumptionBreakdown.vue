@@ -11,7 +11,7 @@
         <dl>
             <template v-for="(agent_data, agent_name) in selected_consumption">
             <dt>{{stringFormatter(agent_name)}}</dt>
-                <dd>{{agent_data.value}} {{fix_unit(agent_data.unit)}}</dd>
+                <dd>{{agent_data.value}} {{units[selected_currency]}}</dd>
             </template>
         </dl>
         </template>
@@ -32,8 +32,9 @@ export default {
                 enrg_kwh: 'Energy',
                 atmo_co2: 'Carbon Dioxide (CO₂)',
             },
+            // TODO: see comment in fix_unit
             units: {
-                enrg_kwh: 'kWh',
+                enrg_kwh: 'kW',
                 atmo_co2: 'kg',
             },
         }
@@ -59,6 +60,9 @@ export default {
     methods:{
         stringFormatter: StringFormatter,
         fix_unit: function (unit) {
+            // TODO: this is currently unused.  The server either sends the
+            // unit or nothing if the value is 0, and if it's kWh we need to
+            // use kW, so use hardcoded units for now
             return unit.split(' ')[1] || this.units[this.selected_currency]
         },
     },
