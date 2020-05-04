@@ -34,6 +34,7 @@ export default{
         totalConsumption:{},
         storageRatio:{},
         storageCapacities:{},
+        detailsPerAgent:{},
         maxStepBuffer: 0,      // the number of steps in the buffer
         currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
@@ -62,6 +63,7 @@ export default{
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
         getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
         getStorageCapacities: state => stepNumber => state.storageCapacities[stepNumber],
+        getDetailsPerAgent: state => stepNumber => state.detailsPerAgent[stepNumber],
 
         getStopped: state => state.stopped,
         getTerminated: state => state.terminated,
@@ -83,6 +85,7 @@ export default{
               'agent_growth': state.agentGrowth,
               'storage_ratios': state.storageRatio,
               'storage_capacities': state.storageCapacities,
+              'details_per_agent': state.detailsPerAgent,
             }
         },
     },
@@ -96,6 +99,7 @@ export default{
             state.agentGrowth = simdata.agent_growth
             state.storageRatio = simdata.storage_ratios
             state.storageCapacities = simdata.storage_capacities
+            state.detailsPerAgent = simdata.details_per_agent
         },
         SETPARAMETERS:function(state,value){
             state.parameters = value
@@ -243,6 +247,13 @@ export default{
 
             state.storageCapacities[step] = storage_capacities
         },
+        SETDETAILSPERAGENT:function(state,value){
+            let {step_num:step} = value
+            let {details_per_agent} = value
+
+            state.detailsPerAgent[step] = details_per_agent
+        },
+
 
         //Populates the parameters object with the selected plants from the
         //configuration wizard. This should actually called and updated similar to how the
@@ -277,6 +288,9 @@ export default{
                 "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
                                                      "atmo_n2", "atmo_h2", "atmo_h2o"],},
                 "storage_capacities": {}, // empty obj == get all values
+                "details_per_agent": {"agent_types": [], // empty obj == get all agents
+                                      "currency_types": ["enrg_kwh", "atmo_co2"],
+                                      "directions": ["in"]},
                 "parse_filters":[],
                 "single_agent":1,
             }
@@ -285,6 +299,7 @@ export default{
             state.totalConsumption = {}
             state.storageRatio = {}
             state.storageCapacities = {}
+            state.detailsPerAgent = {}
         },
     },
     actions:{
@@ -297,6 +312,7 @@ export default{
                 commit('SETAGENTGROWTH',item)
                 commit('SETSTORAGERATIOS',item)
                 commit('SETSTORAGECAPACITIES',item)
+                commit('SETDETAILSPERAGENT',item)
                 commit('UPDATEBUFFERMAX',item)
                 commit('SETNSTEPS',item)
                 commit('UPDATEMINSTEPNUMBER',item)
