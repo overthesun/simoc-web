@@ -58,7 +58,6 @@ export default {
     align-items: center;
     box-sizing: border-box;
     background: linear-gradient(#444, #333);
-    box-shadow: 0 -5px 5px #3339;
 }
 
 #dashboard-play-icon span {

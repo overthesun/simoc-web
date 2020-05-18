@@ -21,7 +21,6 @@ export default {
     max-height: 600px;
     background-color: #1e1e1eaa;
     border: 1px solid #666;
-    box-shadow: 5px 5px 5px #333c;
     border-radius: 5px;
 
     box-sizing:border-box;
