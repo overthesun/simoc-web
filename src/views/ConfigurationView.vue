@@ -169,9 +169,15 @@ export default {
                 this.SETGAMEID(gameID)
                 this.SETLOADFROMSIMDATA(false)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
-            }catch(error){
+            } catch(error){
                 console.log(error)
-                alert(error)
+                if (error.response && error.response.status == 401) {
+                    alert('Please log in again to continue.')
+                    this.$router.push("entry")
+                }
+                else {
+                    alert(error)
+                }
             }
         },
     },
