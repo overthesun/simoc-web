@@ -24,6 +24,26 @@ import {Timeline,PlayButton,StepControls,SpeedControls,Main,DashboardMenu} from 
 import {TheTopBar} from '../../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
+    beforeRouteLeave(to, from, next) {
+        // Triggered when leaving the dashboard to go to another page.
+        // This might happen when the user starts a new sim or logs off,
+        // but also when clicking on the browser back button.
+        // Cases where the user closes the tab or refreshes are handled
+        // in DashboardView.
+        if (this.getLeaveWithoutConfirmation) {
+            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
+            next()  // proceed without asking questions
+        }
+        else {
+            // ask for confirmation before leaving the dashboard
+            if (window.confirm('Terminate simulation and leave?  All unsaved data will be lost.')) {
+                next()  // user confirmed, proceed
+            }
+            else {
+                next(false)  // stay on page
+            }
+        }
+    },
     components:{
         "TheTopBar": TheTopBar,
         "DashboardMenu": DashboardMenu,
@@ -33,8 +53,11 @@ export default {
         "SpeedControls": SpeedControls,
         "Main": Main,
     },
-    computed:{
-        ...mapGetters('dashboard', ['getMenuActive'])
+    computed: {
+        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),
+    },
+    methods: {
+        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),
     },
 }
 </script>

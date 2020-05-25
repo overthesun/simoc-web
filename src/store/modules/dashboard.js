@@ -44,11 +44,13 @@ export default{
         getStepsTimerID:undefined,
         isTimerRunning:false,
         menuActive:false,
+        leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         activePanels: [],
     },
     getters:{
         getMenuActive:(state) => state.menuActive,
+        getLeaveWithoutConfirmation:(state) => state.leaveWithoutConfirmation,
         getLoadFromSimData:(state) => state.loadFromSimData,
         getStepParams:(state) => state.parameters,
         getMaxStepBuffer:(state) => state.maxStepBuffer,
@@ -107,6 +109,9 @@ export default{
         // show the dashboard menu when true, hide it otherwise
         SETMENUACTIVE:function(state,value){
             state.menuActive = value
+        },
+        SETLEAVEWITHOUTCONFIRMATION:function(state,value){
+            state.leaveWithoutConfirmation = value
         },
         // load from uploaded sim data when true, from the server if false
         SETLOADFROMSIMDATA:function(state,value){
