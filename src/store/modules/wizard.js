@@ -39,17 +39,17 @@ export default{
         resetConfig: false,
         // valid values and ranges for the form inputs
         // TODO: the valid values should probably be defined and sent by the server
-        // TODO: these values should be used to populate the forms, instead of duplicating them
         validValues: {
             locations: ['mars'],
             duration_ranges: {
-                hour: {min: 24, max: 16488},
-                day: {min: 1, max: 687},
+                // limited to 1 earth year
+                hour: {min: 24, max: 8760},
+                day: {min: 1, max: 365},
                 year: {min: 1, max: 1},
             },
             duration_units: ['hour', 'day'],
             humans: {min: 0, max: 20},
-            food: {min: 0, max: 35000},
+            food: {min: 0, max: 17520},
             eclss: {min: 0, max: 10},
             crew_quarters_types: ['none', 'crew_habitat_small',
                                   'crew_habitat_medium', 'crew_habitat_large'],
