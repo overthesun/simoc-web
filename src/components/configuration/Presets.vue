@@ -49,10 +49,10 @@ export default {
             dont_set_custom: false,  // when true, avoids setting the custom preset
             // the names of the presets, used for the dropdown
             presets_names: {
-                one_human: 'One Human',
-                four_humans: 'Four Humans',
-                radish: 'Radish',
-                full_garden: 'Full Garden',
+                one_human: '1 Human',
+                one_human_radish: '1 Human + Radish',
+                four_humans: '4 Humans',
+                four_humans_garden: '4 Humans + Garden',
             },
             // the available default presets
             presets: {
@@ -68,6 +68,18 @@ export default {
                     greenhouse: {type:'none', amount:0, units:''},
                     plantSpecies: [{type:'', amount:''}]
                 },
+                one_human_radish: {
+                    location: 'mars',
+                    duration: {type:'none', amount:30, units:'day'},
+                    humans: {type:'human_agent', amount:1, units:''},
+                    food: {type:'food_storage', amount:100, units:''},
+                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
+                    eclss: {type:'eclss', amount:1, units:''},
+                    powerGeneration: {type:'solar_pv_array_mars', amount:120, units:''},
+                    powerStorage: {type:'power_storage', amount:1000, units:''},
+                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
+                    plantSpecies: [{type:'radish', amount:100}],
+                },
                 four_humans: {
                     location:'mars',
                     duration: {type:'none', amount:10, units:'day'},
@@ -80,19 +92,7 @@ export default {
                     greenhouse: {type:'none', amount:0, units:''},
                     plantSpecies: [{type:'', amount:''}]
                 },
-                radish: {
-                    location: 'mars',
-                    duration: {type:'none', amount:30, units:'day'},
-                    humans: {type:'human_agent', amount:1, units:''},
-                    food: {type:'food_storage', amount:100, units:''},
-                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:120, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:''},
-                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
-                    plantSpecies: [{type:'radish', amount:100}],
-                },
-                full_garden: {
+                four_humans_garden: {
                     location: 'mars',
                     duration: {type:'none', amount:100, units:'day'},
                     humans: {type:'human_agent', amount:4, units:''},
