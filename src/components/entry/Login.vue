@@ -14,27 +14,34 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item' :class="{'option-item-active' : 'login'===activeOption}" @click="activateOption('login')"> SIGN IN </div>
-                <div class='option-item' :class="{'option-item-active' : 'register'===activeOption}" @click="activateOption('register')"> SIGN UP </div>
+                <div class='option-item' :class="{'option-item-active': 'login'===activeOption}" @click="activateOption('login')"> SIGN IN </div>
+                <div class='option-item' :class="{'option-item-active': 'register'===activeOption}" @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
-                <form @submit.prevent="loginUser" id='login-form' class='entry-form entry-form-login' :class="{'entry-form-active' : 'login'===activeOption}">
-                    <input v-model="user.username" type='text' class='input-field-text ' placeholder="Username"/>
-                    <input v-model="user.password" type='password' class='input-field-text' placeholder="Password"/>
-                </form>
-                <form @submit.prevent="registerUser" id='register-form' class='entry-form entry-form-register' :class="{'entry-form-active' : 'register'===activeOption}">
-                    <input v-model="register.username" type='text' class='input-field-text' placeholder="Choose Username"/>
-                    <input v-model="register.password" type='password' class='input-field-text' placeholder="Enter Password"/>
-                    <input v-model="register.confirmPassword" type='password' class='input-field-text' placeholder="Confirm Password"/>
-                </form>
+                <section class='entry-form entry-form-login' :class="{'entry-form-active': activeOption==='login'}">
+                    <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id='login-form'>
+                        <input v-model="user.username" type='text' class='input-field-text' placeholder="Username"/>
+                        <input v-model="user.password" type='password' class='input-field-text' placeholder="Password"/>
+                    </form>
+                    <p v-else>If you don't want to create an account, you can log in as a Guest. Guest accounts are temporary and will be deleted on a regular basis.</p>
+                    <a id='guest-login' class='link' @click='showGuestLogin'>{{guestLoginLinkText}}</a>
+                </section>
+                <section class='entry-form entry-form-register' :class="{'entry-form-active': activeOption==='register'}">
+                    <form @submit.prevent="registerUser" id='register-form'>
+                        <input v-model="register.username" type='text' class='input-field-text' placeholder="Choose Username"/>
+                        <input v-model="register.password" type='password' class='input-field-text' placeholder="Enter Password"/>
+                        <input v-model="register.confirmPassword" type='password' class='input-field-text' placeholder="Confirm Password"/>
+                    </form>
+                </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
-                <div class='btn-wrapper btn-wrapper-login' :class="{'btn-wrapper-active' : 'login'===activeOption}">
-                    <button form='login-form' class='btn-warning'>SIGN IN</button>
+                <div class='btn-wrapper btn-wrapper-login' :class="{'btn-wrapper-active': activeOption==='login'}">
+                    <button v-if="activeGuestLogin" form='register-form' class='btn-warning' @click="guestLogin">SIGN IN AS GUEST</button>
+                    <button v-else form='login-form' class='btn-warning'>SIGN IN</button>
                 </div>
-                <div class='btn-wrapper btn-wrapper-register' :class="{'btn-wrapper-active' : 'register'===activeOption}">
+                <div class='btn-wrapper btn-wrapper-register' :class="{'btn-wrapper-active': activeOption==='register'}">
                     <button form='register-form' class='btn-warning'>SIGN UP</button>
                 </div>
             </template>
@@ -59,9 +66,10 @@ export default {
 
         //Initialize all the values that will be used for v-model
         return{
-            activeWarning:false, // Used to hidden or display the warning panel
-            activeOption:'login', //Which 'option' should be active
-            activeWarnings: [], //The current active warnings. This should really be a 'set' so that it only contains unique warnings. Currently will display duplicates.
+            activeOption: 'login', // Which 'option' should be active
+            activeGuestLogin: false, // true: guest login, false: regular login with user/pass form
+            activeWarning: false, // Used to show or hide the warning panel
+            activeWarnings: [], // The current active warnings. This should really be a 'set' so that it only contains unique warnings. Currently will display duplicates.
 
             user:{
                 username:"",
@@ -74,6 +82,11 @@ export default {
                 confirmPassword:""
             },
         }
+    },
+    computed: {
+        guestLoginLinkText: function() {
+            return this.activeGuestLogin?'Return to SIGN IN.':'Sign in as a Guest.'
+        },
     },
     methods:{
 
@@ -204,6 +217,19 @@ export default {
             this.dismissWarning()
             this.activeOption = sectionName
         },
+        showGuestLogin: function() {
+            // swap between guest login and regular login
+            this.activeGuestLogin = !this.activeGuestLogin
+        },
+        guestLogin: function() {
+            // create a random user/pass and use them to login as guest
+            const rand_userid = ('guest-' + Date.now().toString(36) + '-' +
+                                 Math.random().toString(36).substring(2, 15))
+            const rand_password = Math.random().toString(36).substring(2, 15)
+            this.register.username = rand_userid
+            this.register.password = rand_password
+            this.register.confirmPassword = rand_password
+        },
     }
 }
 </script>
@@ -235,10 +261,6 @@ export default {
     .entry-form{
         width:100%;
         position:absolute;
-        display:flex;
-        justify-content: center;
-        align-items:center;
-        flex-direction:column;
         transition: left .5s ease;
 
         &-login{
@@ -252,6 +274,28 @@ export default {
         &-active{
             left:0;
         }
+    }
+    .entry-form-login {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+    }
+    .entry-form form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .entry-form p {
+        width: 256px;
+        text-align: justify;
+        margin: 0;
+        padding: 0;
+    }
+    #guest-login {
+        cursor: pointer;
     }
 
     .btn-wrapper{
