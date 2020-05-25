@@ -57,8 +57,12 @@ export default {
 
             console.log('Starting simulation', this.getGameID)
 
-            // make sure that to stop the sim when the user closes the tab
-            window.addEventListener('beforeunload', this.killGame)
+            // Ask the user confirmation if they try to leave (by closing
+            // the tab/window, by refreshing, or by navigating elsewhere)
+            // and try to kill the game when they do.  Leaving via the
+            // back button is handled in BaseDashboard.beforeRouteLeave
+            window.addEventListener('beforeunload', this.confirmBeforeLeaving)
+            window.addEventListener('unload', this.killGameOnUnload)
             // setup the websocket to get the requested steps
             this.setupWebsocket()
         }
@@ -75,17 +79,17 @@ export default {
         }
         // disconnect and destroy the websocket
         this.tearDownWebSocket()
-        // we don't need this anymore if the dashboard has been destroyed
-        window.removeEventListener('beforeunload', this.killGame)
+        // remove these if when we leave the dashboard
+        window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
+        window.removeEventListener('unload', this.killGameOnUnload)
     },
     computed:{
-        //Getterss from the vuex stores
+        // getters from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getGameID']),
     },
     methods:{
-        //
         ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
@@ -197,24 +201,39 @@ export default {
             }
         },
 
+        confirmBeforeLeaving: function(event) {
+            // Use standard browser popup to ask the user before leaving
+            event.preventDefault()
+            event.returnValue = 'All unsaved data will be lost.'
+            return 'All unsaved data will be lost.'
+        },
+
         killGame: async function() {
             // See https://github.com/kstaats/simoc-web/issues/51#issuecomment-524494720
             // for some background on this method.
             // Stop the get_steps timer and tell the server
-            // to stop calculating steps
-            this.SETTERMINATED(true)  // terminate the sim
-            // stop timer that sends requests to get_steps
-            if (this.getGetStepsTimerID != null) {
-                window.clearTimeout(this.getGetStepsTimerID)
-                this.SETGETSTEPSTIMERID(null)
-            }
-
+            // to stop calculating steps.
             const params = {game_id: this.getGameID}
             try{
                 axios.post('/kill_game', params)  // kill the game
                 console.log('Simulation stopped.')
             }catch(error){
                 console.log(error)
+            }
+            this.SETTERMINATED(true)  // terminate the sim
+            // stop timer that sends requests to get_steps
+            if (this.getGetStepsTimerID != null) {
+                window.clearTimeout(this.getGetStepsTimerID)
+                this.SETGETSTEPSTIMERID(null)
+            }
+        },
+
+        killGameOnUnload: function() {
+            // use sendBeacon to reliably send a kill_game during unload
+            const params = {game_id: this.getGameID}
+            var status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
+            if (status) {
+                console.log('Simulation terminated.')
             }
         },
 
