@@ -5,6 +5,7 @@
         <header class='header'>
             <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
             <span class='simoc-logo-title'>SIMOC</span>
+            <img src='../../assets/natgeo-trans.png' class='natgeo-logo'/>
         </header>
         <div class='main-options'>
             <slot name="option-items"></slot>
@@ -97,6 +98,12 @@ export default {
         width: auto;
         height: 48px;
         margin-right:8px;
+    }
+
+    .natgeo-logo{
+        width: auto;
+        height: 60px;
+        margin-left: 16px;
     }
 
     .simoc-logo-title{
