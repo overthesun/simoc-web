@@ -83,7 +83,6 @@ using v-for to populate all links with the title and the approriate value for th
                   <tr><th>2</th><td>4.8</td><td>33.6</td><td>144</td><td>432</td><td>864</td><td>1752</td></tr>
                   <tr><th>5</th><td>12</td><td>84</td><td>360</td><td>1080</td><td>2160</td><td>4380</td></tr>
                   <tr><th>10</th><td>24</td><td>168</td><td>720</td><td>2160</td><td>4320</td><td>8760</td></tr>
-                  <tr><th>20</th><td>48</td><td>336</td><td>1440</td><td>4320</td><td>8640</td><td>17520</td></tr>
                 </table>
                 <p><i>FOOD is not required if no astronauts are selected.</i></p>
             </div>
