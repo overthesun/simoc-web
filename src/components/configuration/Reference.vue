@@ -30,7 +30,7 @@ using v-for to populate all links with the title and the approriate value for th
             <div class='reference-item-entry'>
                 <p>The Presets are a means to explore simple configurations of the SIMOC simulation, to learn how the agents interact and affect each other over time. With Preset 1 you venture to Mars with one human, one <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a>, and plenty of food rations for a 10 days mission. You’ll make it. But this is not a static system. Note how CO₂, O₂, food, and power change with time. As with all scientific studies, we encourage you to change one variable at a time. Next, modify this baseline by adding another human, or increase the stay without increasing the food rations. <i>What happens?</i></p>
                 <p>The additional Presets introduce slightly more complex systems. They may or may not succeed. <i>What will you change to enable the humans to survive the full duration? What do you notice about the interplay between the number of humans, ECLSS, food rations, and bioregeneration?</i></p>
-                <p>Learn more about the Presets at the <a class='reference-link' href="https://simoc.space/launch/presets/">SIMOC website</a>.</p>
+                <p>Learn more about the Presets at the <a class='reference-link' href="https://simoc.space">SIMOC website</a>.</p>
                 <p>As you iterate through your experiment, you can save your current configuration to the Custom Preset.</p>
             </div>
         </div>
