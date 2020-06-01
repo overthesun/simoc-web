@@ -24,7 +24,7 @@
             <div class='input-title' @click="SETACTIVEREFENTRY('Food')">
                 Food Supply <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Make certain you have <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Food')">ample food</a> for an <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 2.4kg food per day.</div>
+            <div class='input-description'>Make certain you have <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Food')">ample food</a> for an <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 1.5kg food per day.</div>
             <label><input class='input-field-number' ref='food' type="number" pattern="^\d+$" placeholder="Quantity" required
                           :min="ranges.food.min" :max="ranges.food.max" v-on:input="setInhabitants" v-model="food.amount"> kg</label>
         </label>

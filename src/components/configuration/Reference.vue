@@ -79,10 +79,10 @@ using v-for to populate all links with the title and the approriate value for th
                 <table id="food-table">
                   <tr><td colspan="2" rowspan="2"></td><th colspan="7">Mission Duration (Earth days)</th></tr>
                   <tr><th>1</th><th>7</th><th>30</th><th>90</th><th>180</th><th>365</th></tr>
-                  <tr><th rowspan="5">Inhabitants</th><th>1</th><td>2.4</td><td>16.8</td><td>72</td><td>216</td><td>432</td><td>876</td></tr>
-                  <tr><th>2</th><td>4.8</td><td>33.6</td><td>144</td><td>432</td><td>864</td><td>1752</td></tr>
-                  <tr><th>5</th><td>12</td><td>84</td><td>360</td><td>1080</td><td>2160</td><td>4380</td></tr>
-                  <tr><th>10</th><td>24</td><td>168</td><td>720</td><td>2160</td><td>4320</td><td>8760</td></tr>
+                  <tr><th rowspan="5">Inhabitants</th><th>1</th><td>1.5</td><td>10.5</td><td>45</td><td>135</td><td>270</td><td>547.5</td></tr>
+                  <tr><th>2</th><td>3</td><td>21</td><td>90</td><td>270</td><td>540</td><td>1095</td></tr>
+                  <tr><th>5</th><td>7.5</td><td>52.5</td><td>225</td><td>675</td><td>1350</td><td>2737.5</td></tr>
+                  <tr><th>10</th><td>15</td><td>105</td><td>450</td><td>1350</td><td>2700</td><td>5475</td></tr>
                 </table>
                 <p><i>FOOD is not required if no astronauts are selected.</i></p>
             </div>
