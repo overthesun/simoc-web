@@ -103,7 +103,8 @@ export default {
     .natgeo-logo{
         width: auto;
         height: 60px;
-        margin-left: 16px;
+        /* must be at least a full logo away from the rest */
+        margin-left: 48px;
     }
 
     .simoc-logo-title{
