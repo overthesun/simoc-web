@@ -1,0 +1,39 @@
+name: SIMOC Frontend CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Node Environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+          check-latest: true
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm test --if-present 
+      - name: Create Frontend Artifacts
+        run: tar -cvf frontend_dist.tar dist/
+      - name: Save Frontend Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-archive
+          path: frontend_dist.tar
+      - name: Backend Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: iurii-milovanov/simoc
+          event-type: frontend-update
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
