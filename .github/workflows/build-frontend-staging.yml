@@ -1,10 +1,10 @@
-name: SIMOC Frontend CI
+name: SIMOC Frontend CI Staging
 
 on:
   push:
-    branches: [ master ]
+    branches: [ staging ]
   pull_request:
-    branches: [ master ]
+    branches: [ staging ]
   workflow_dispatch:
 
 jobs:
@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          ref: staging
       - name: Setup Node Environment
         uses: actions/setup-node@v1
         with:
@@ -35,5 +37,5 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: overthesun/simoc
-          event-type: frontend-update
+          event-type: frontend-update-staging
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
