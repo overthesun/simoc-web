@@ -9,7 +9,7 @@ module.exports = {
 
     proxy: {
         '/*': {
-            target: 'http://localhost:8000',
+            target: 'http://nginx:8000',
             logLevel: 'debug',
         },/*
         '/socket.io/*': {
