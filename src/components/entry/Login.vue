@@ -141,9 +141,35 @@ export default {
             axios.post(route, params).then(response => {
                 const {status} = response
                 if (response.data.status == 'ERROR') {
-                    this.addWarning('Error: ' + response.data.message)
+                    const errmsg = 'Error: ' + response.data.message
+                    this.$gtag.exception({'description': errmsg})
+                    this.addWarning(errmsg)
                 }
-                else if(status === 200){
+                else if (status === 200) {
+                    if (this.activeOption === 'login') {
+                        if (!this.activeGuestLogin) {
+                            this.$gtag.event('user login', {'event_category': 'signin',
+                                                            'event_label': this.user.username})
+                        }
+                        else {
+                            this.$gtag.event('guest login', {'event_category': 'signin',
+                                                             'event_label': this.register.username})
+                        }
+                    }
+                    else {
+                        this.$gtag.event('new user signup', {'event_category': 'signup',
+                                                             'event_label': this.register.username})
+                    }
+                    /*
+                    this.$gtag.event('login', { method: 'Google' })
+                    this.$gtag.pageview({'page_title': '(debug) guest/regular entry',
+                                         'page_path': '/entry'})
+                    this.$gtag.event(<action>, {
+                        'event_category': <category>,
+                        'event_label': <label>,
+                        'value': <value>
+                    })
+                    */
                     this.$router.push('menu')
                 }
             }).catch(error => {
@@ -160,6 +186,7 @@ export default {
                         // fallback on a generic one
                         message = error.message
                     }
+                    this.$gtag.exception({'description': message})
                     if (status === 401) {
                         this.addWarning('Login Error: ' + message)
                     }

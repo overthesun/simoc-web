@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store/index.js";
+import VueGtag from "vue-gtag";
 
 Vue.config.productionTip = false;
 
@@ -13,6 +14,13 @@ library.add(faPlay,faPause,faStepBackward,faStepForward,faMinus,faPlus,faTimes,f
 
 Vue.component('fa-icon', FontAwesomeIcon)
 Vue.component('fa-layers',FontAwesomeLayers)
+
+// enable Gtag/Analytics tracking
+Vue.use(VueGtag, {
+  config: {id: 'UA-29092818-7'},
+  //enabled: process.env.NODE_ENV === 'production' ? true : false,
+}, router);
+
 
 new Vue({
   router,
