@@ -17,7 +17,8 @@ Vue.component('fa-layers',FontAwesomeLayers)
 
 // enable Gtag/Analytics tracking
 Vue.use(VueGtag, {
-  config: {id: 'UA-29092818-7'},
+  // remember to use the right code for each branch
+  config: {id: 'UA-29092818-6'},
   //enabled: process.env.NODE_ENV === 'production' ? true : false,
 }, router);
 
