@@ -15,11 +15,12 @@ library.add(faPlay,faPause,faStepBackward,faStepForward,faMinus,faPlus,faTimes,f
 Vue.component('fa-icon', FontAwesomeIcon)
 Vue.component('fa-layers',FontAwesomeLayers)
 
+console.log(process.env)
 // enable Gtag/Analytics tracking
 Vue.use(VueGtag, {
   // remember to use the right code for each branch
-  config: {id: 'UA-29092818-6'},
-  //enabled: process.env.NODE_ENV === 'production' ? true : false,
+  config: {id: 'UA-29092818-7'},
+  enabled: process.env.NODE_ENV === 'production',
 }, router);
 
 
