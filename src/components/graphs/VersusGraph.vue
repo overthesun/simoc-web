@@ -56,12 +56,11 @@ export default {
                     data.labels.push(s)
                 }
                 else {
-                    // if the step is <= 0 there are no data to add, but none/undefined
-                    // are plotted, so just increase the length to keep it equal to 24
-                    // without adding a plottable value (it creates an empty slot)
-                    data.datasets[0].data.length++
-                    data.datasets[1].data.length++
-                    data.labels.length++
+                    // for steps <= 0 use undefined as values and '' as labels
+                    // so that the plot still has 24 total items and is not stretched
+                    data.datasets[0].data.push(undefined)
+                    data.datasets[1].data.push(undefined)
+                    data.labels.push('')
                 }
             }
             this.chart.update()
@@ -76,7 +75,8 @@ export default {
         this.chart = new Chart(ctx, {
             type: 'line',
             data:{
-                labels: Array(24),
+                // fill with '' so that at the beginning the labels don't show undefined
+                labels: Array(24).fill(''),
                 datasets:[{
                         lineTension: 0,
                         data: Array(24),
