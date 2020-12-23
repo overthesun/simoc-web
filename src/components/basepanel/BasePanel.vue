@@ -73,13 +73,12 @@ export default {
     grid-template-columns: 1fr 26px;
 }
 
-select {
-    background-color: transparent;
+.panel select {
     color: #eee;
+    background-color: transparent;
     border: 1px solid #eee;
-    border-radius: 3px;
+    border-radius: 5px;
     padding: 3px;
-    width: 50%;
     margin: auto;
     /* see https://github.com/filamentgroup/select-css/blob/master/src/select-css.css */
     appearance: none;

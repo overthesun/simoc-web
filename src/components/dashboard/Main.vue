@@ -158,7 +158,6 @@ export default {
       height: 24px;
     }
     .panel-menu-options {
-        border: 1px solid #999999;
         position: absolute;
         right: 0;
         z-index: 10;
@@ -174,6 +173,19 @@ export default {
     }
     .panel-menu-options ul li button {
         width: 100%;
+        color: #eee;
+        background-color: transparent;
+        border: 1px solid #eee;
+        margin: 0;
+        padding: 3px;
+    }
+    .panel-menu-options ul li:first-child button {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .panel-menu-options ul li:last-child button {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
 
     /*.panel{
