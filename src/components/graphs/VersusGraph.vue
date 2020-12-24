@@ -16,6 +16,7 @@ export default {
     data(){
         return{
           prevStep: 0,
+          plotted_value_changed: false,
         }
     },
     props:{
@@ -25,13 +26,21 @@ export default {
     },
 
     computed:{
-        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption'])
+        ...mapGetters('dashboard', ['getIsTimerRunning','getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption'])
     },
 
     watch:{
-        //Update the chart datasets and labels when the current step buffer has changed.
+        // update the chart datasets and labels when the current step buffer has changed.
         getCurrentStepBuffer: function() {
             this.updateChart()
+        },
+        // set a flag when we switched to a different dataset
+        plotted_value: function() {
+            this.plotted_value_changed = true
+            if (!this.getIsTimerRunning) {
+                // force a redraw if the progression is stopped
+                this.updateChart()
+            }
         },
     },
 
@@ -39,21 +48,30 @@ export default {
         updateChart: function() {
             const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
-            // if the currentStep is not prevStep+1, the user moved the scrubber
-            // and we need to redraw the previous 24 steps, otherwise we add one step
-            let s = (currentStep == this.prevStep+1) ? currentStep : currentStep-23
-            for (; s <= currentStep; s++) {
+            // if the currentStep is not prevStep+1, the user moved the scrubber, or
+            // if the plotted_value_changed, we are plotting another dataset and in both cases
+            // we need to redraw the previous 24 steps, otherwise we just add one step
+            let startingStep
+            if ((currentStep != this.prevStep+1) || this.plotted_value_changed) {
+                this.plotted_value_changed = false  // reset value
+                startingStep = currentStep - 23  // replace all 24 values
+            }
+            else {
+                startingStep = currentStep  // add the latest value
+            }
+            // this will do 1 or 24 iterations (maybe refactor it to something better)
+            for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values
                 data.datasets[0].data.shift()
                 data.datasets[1].data.shift()
                 data.labels.shift()
-                if (s > 0) {
-                    let production = this.getTotalProduction(s)[this.plotted_value].value
-                    let consumption = this.getTotalConsumption(s)[this.plotted_value].value
+                if (step > 0) {
+                    let production = this.getTotalProduction(step)[this.plotted_value].value
+                    let consumption = this.getTotalConsumption(step)[this.plotted_value].value
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)
-                    data.labels.push(s)
+                    data.labels.push(step)
                 }
                 else {
                     // for steps <= 0 use undefined as values and '' as labels
@@ -71,7 +89,6 @@ export default {
 
     mounted(){
         const ctx = document.getElementById(this.id)
-        const unit = this.unit
         this.chart = new Chart(ctx, {
             type: 'line',
             data:{
@@ -100,9 +117,7 @@ export default {
                     yAxes:[{
                         ticks:{
                             beginAtZero: true,
-                            callback: function(value, index, values) {
-                                return value + ' ' + unit
-                            }
+                            callback: (value, index, values) => value + ' ' + this.unit
                         }
                     }],
                     xAxes:[{
@@ -135,6 +150,7 @@ export default {
                 circumference: 1 * Math.PI
             }
         })
+        this.updateChart()
     }
 
 }
