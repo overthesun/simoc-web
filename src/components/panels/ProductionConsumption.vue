@@ -42,17 +42,14 @@ export default {
     computed: {
         ...mapGetters('dashboard', ['getActivePanels']),
     },
-    methods: {
-        ...mapMutations('dashboard', ['SETACTIVEPANELS']),
-    },
     watch: {
         currency: function () {
-            let activePanels = this.getActivePanels
-            let thisPanel = activePanels[this.panelIndex].split(':')[0]
-            activePanels[this.panelIndex] = [thisPanel, this.currency].join(':')
-            this.SETACTIVEPANELS(activePanels)
+            // tell dashboard/Main.vue that we changed panel section,
+            // so that it can update the list of activePanels
+            this.$emit('panel-section-changed', this.panelIndex, this.currency)
         },
         getActivePanels: function () {
+            // update section when the user clicks on the reset panels button of the dashboard menu
             this.currency = this.getActivePanels[this.panelIndex].split(':')[1]
         },
     },

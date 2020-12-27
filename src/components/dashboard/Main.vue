@@ -36,7 +36,9 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 </div>
             </template>
             <template v-slot:panel-content>
-                <component :is="panelName" :canvasNumber="index" :panelIndex="index" :panelSection="panelSection"></component>
+                <component :is="panelName" :canvasNumber="index"
+                           :panelIndex="index" :panelSection="panelSection"
+                           v-on:panel-section-changed="updatePanelSection"></component>
             </template>
         </BasePanel>
     </div>
@@ -111,6 +113,12 @@ export default {
             this.activePanels.splice(replace?index:index+1, replace, panelName)
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
+        },
+        updatePanelSection: function(index, section) {
+            // update the section of the panel at index
+            let panelName = this.activePanels[index].split(':')[0]
+            this.activePanels[index] = [panelName, section].join(':')
+            this.SETACTIVEPANELS(this.activePanels)
         },
         removePanel: function(index) {
             // remove the selected panel
