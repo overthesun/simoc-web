@@ -8,7 +8,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <template>
     <div class='dashboard-view-wrapper'>
-        <BasePanel v-for="(panelName,index) in activePanels" :key="index">
+        <BasePanel v-for="([panelName, panelSection],index) in activePanels.map(p => p.split(':'))" :key="index">
             <template v-slot:panel-title><div class='panel-title'>{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-menu>
                 <div class='panel-menu'>
@@ -36,7 +36,9 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 </div>
             </template>
             <template v-slot:panel-content>
-                <component :is="panelName" :canvasNumber="index"></component>
+                <component :is="panelName" :canvasNumber="index"
+                           :panelIndex="index" :panelSection="panelSection"
+                           v-on:panel-section-changed="updatePanelSection"></component>
             </template>
         </BasePanel>
     </div>
@@ -112,6 +114,12 @@ export default {
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
         },
+        updatePanelSection: function(index, section) {
+            // update the section of the panel at index
+            let panelName = this.activePanels[index].split(':')[0]
+            this.activePanels[index] = [panelName, section].join(':')
+            this.SETACTIVEPANELS(this.activePanels)
+        },
         removePanel: function(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
@@ -158,7 +166,6 @@ export default {
       height: 24px;
     }
     .panel-menu-options {
-        border: 1px solid #999999;
         position: absolute;
         right: 0;
         z-index: 10;
@@ -174,6 +181,19 @@ export default {
     }
     .panel-menu-options ul li button {
         width: 100%;
+        color: #eee;
+        background-color: transparent;
+        border: 1px solid #eee;
+        margin: 0;
+        padding: 3px;
+    }
+    .panel-menu-options ul li:first-child button {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .panel-menu-options ul li:last-child button {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
 
     /*.panel{
