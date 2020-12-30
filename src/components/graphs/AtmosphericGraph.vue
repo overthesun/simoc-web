@@ -59,13 +59,12 @@ export default {
                     data.labels.push(s)
                 }
                 else {
-                    // if the step is <= 0 there are no data to add, but none/undefined
-                    // are plotted, so just increase the length to keep it equal to 24
-                    // without adding a plottable value (it creates an empty slot)
+                    // for steps <= 0 use undefined as values and '' as labels
+                    // so that the plot still has 24 total items and is not stretched
                     for (let k = 0; k < 6; k++) {
-                        data.datasets[k].data.length++
+                        data.datasets[k].data.push(undefined)
                     }
-                    data.labels.length++
+                    data.labels.push('')
                 }
             }
             this.chart.update()
