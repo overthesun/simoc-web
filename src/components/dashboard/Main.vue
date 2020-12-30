@@ -108,6 +108,11 @@ export default {
             this.replacePanel = replace  // 1: replace panel, 0: add new one
         },
         updatePanels: function(index, replace) {
+            // do nothing if we are replacing a panel with the same panel
+            if (this.replacePanel && this.selectedPanel == this.activePanels[index].split(':')[0]) {
+                this.closePanelMenu()
+                return
+            }
             // replace or add the selected panel
             let panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
