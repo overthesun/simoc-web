@@ -1,3 +1,4 @@
+export {default as ConfigurationMenu} from './ConfigurationMenu'
 export {default as Inhabitants} from './Inhabitants'
 export {default as Greenhouse} from './Greenhouse'
 export {default as Initial} from './Initial'

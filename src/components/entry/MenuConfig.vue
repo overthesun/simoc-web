@@ -1,4 +1,10 @@
-<!-- Component used to display the configuration menu, after the user initially logs in -->
+<!--
+Menu to select between guided and custom configuration.
+
+  THIS MENU IS CURRENTLY UNUSED.
+
+Can be reenabled in Menu.vue if needed.
+-->
 
 <template>
     <div class='entry-wrapper'>
@@ -8,17 +14,12 @@
             </template>
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form='login-form' class='btn-normal btn-disabled' @click="toExpert">EXPERT CONFIGURATION</button>
+                <button form='login-form' class='btn-normal' @click="toCustom">CUSTOM CONFIGURATION</button>
             </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
                     <button form='login-form' class='btn-warning' @click="toMainMenu">MAIN MENU</button>
                 </div>
-            </template>
-            <template v-slot:entry-footer>
-                <a class='link link-disabled'>View Account</a>
-                <a class='link link-disabled'>Privacy Policy</a>
-                <a class='link link-disabled'>Report Bug</a>
             </template>
         </BaseEntry>
 
@@ -26,7 +27,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 
@@ -35,19 +35,21 @@ export default {
         'BaseEntry':BaseEntry,
     },
     computed:{
-        ...mapGetters('wizard',['getFormLength'])
+        ...mapGetters('wizard', [])
     },
     methods:{
-        ...mapMutations('wizard',[]),
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
 
         toMainMenu:function(){
             this.$router.push("menu")
         },
         toGuided:function(){
+            this.SETACTIVECONFIGTYPE('Guided')
             this.$router.push("configuration")
         },
-        toExpert:function(){
-            //let lastIndex = this.getFormLength - 1
+        toCustom:function(){
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push("configuration")
 
         }
     }

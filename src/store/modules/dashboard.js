@@ -1,103 +1,160 @@
-//Contains the shared state for all things related to the dashboard.
+// Contains the shared state for all things related to the dashboard.
 
-//Parameters for the get_step route
+// Parameters for the get_step route
 
-//Step data - broken doewn into objects based on filter type. These can be accessed via the below getters.
-//The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
-// agentCount | totalAgentMass | totalProduction | totalConsumption | storageRatio
+// Step data: broken down into objects based on filter type. These can be accessed via the below getters.
+// The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
+// agentCount | agentGrowth | totalProduction | totalConsumption | storageRatio
 
-//stepBuffer - This actually needs to be broken down into individual pieces for each value, and refactored in the
-//called places to the approriate variable. A number of watcher functions within components reference this for updating various data points
-//such as panels and charts.
 
-//Timer ID - this is used to pause, resume, speed controls or kill the setTimeout object within. SEE stepTimer.js within js folder for
-//further details.
+// currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized, and the highest step in the buffer.
+// A number of watcher functions within components reference currentStepBuffer for updating various data points such as panels and charts.
 
-//Termination flag - Universally accessible point to check if the simulation has terminated.
+// Timer ID: this is used to pause, resume, speed controls or kill the setTimeout object within.
+// SEE stepTimer.js within js folder for further details.
 
-//ACTIONS
-//ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
-//it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
-//So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
-//different step objects
+// Termination flag: Universally accessible point to check if the simulation has terminated.
 
-//To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
+// ACTIONS
+// ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
+// it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
+// So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
+// different step objects
+
+// To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
 
 export default{
     state:{
-        parameters:{
-            "game_id":undefined,
-            "min_step_num": 1,
-            "n_steps": 10,
-            "total_agent_count":["human_agent"],
-            "total_agent_mass":[],
-            "total_production":["atmo_co2","atmo_o2","h2o_potb","enrg_kwh"],
-            "total_consumption":["atmo_o2","h2o_potb","enrg_kwh"],
-            "storage_ratios":{"air_storage_1":["atmo_co2","atmo_o2","atmo_ch4","atmo_n2","atmo_h2","atmo_h2o"]},
-            "parse_filters":[],
-            "single_agent":1,
-        },
-
+        // parameters for the get_steps route
+        parameters: {},
         agentCount:{1:{"human_agent":0}},
-        totalAgentMass:{},
+        agentGrowth:{},
+        lastAgentGrowth:{},  // store the last non-null growth
         totalProduction:{},
         totalConsumption:{},
         storageRatio:{},
-        stepBuffer:{
-            max:1,
-            current:1
-        },
-        terminated:false,
+        storageCapacities:{},
+        detailsPerAgent:{},
+        maxStepBuffer: 0,      // the number of steps in the buffer
+        currentStepBuffer: 0,  // the step the simulation is displaying
+        stepInterval: 1000,    // the time between the steps, in milliseconds
+        stopped: false,        // true if we forced termination, also set terminated
+        terminated: false,     // true if we stopped or retrieved all steps from the server
         timerID:undefined,
         getStepsTimerID:undefined,
-        forcedPause:false,
         isTimerRunning:false,
-        menuActive:false
+        menuActive:false,
+        leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
+        loadFromSimData: false,  // if true, load from imported sim data, not from the server
+        activePanels: [],
     },
     getters:{
         getMenuActive:(state) => state.menuActive,
+        getLeaveWithoutConfirmation:(state) => state.leaveWithoutConfirmation,
+        getLoadFromSimData:(state) => state.loadFromSimData,
         getStepParams:(state) => state.parameters,
-        getStepBuffer:(state) => state.stepBuffer,
+        getMaxStepBuffer:(state) => state.maxStepBuffer,
+        getCurrentStepBuffer:(state) => state.currentStepBuffer,
+        getStepInterval:(state) => state.stepInterval,
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
-        getTotalAgentMass: state => stepNumber => state.totalAgentMass[stepNumber],
+        getAgentGrowth: state => stepNumber => state.agentGrowth[stepNumber],
         getTotalProduction: state => stepNumber => state.totalProduction[stepNumber],
         getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
         getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
+        getStorageCapacities: state => stepNumber => state.storageCapacities[stepNumber],
+        getDetailsPerAgent: state => stepNumber => state.detailsPerAgent[stepNumber],
 
+        getStopped: state => state.stopped,
         getTerminated: state => state.terminated,
 
         getUpdateTimer: state => state.updateTimer,
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
-        getIsTimerRunning: state =>state.isTimerRunning,
-        getForcedPause: state => state.forcedPause, //Used for menus and such when the range bar absolute must not have input
+        getIsTimerRunning: state => state.isTimerRunning,
+        getActivePanels: state => state.activePanels,
+        // return a json obj that contains all the simulation data
+        getSimulationData: function(state) {
+            return {
+              'README': 'Format may vary, only import from the main menu.',
+              'steps': state.maxStepBuffer,
+              'parameters': state.parameters,
+              'total_consumption': state.totalConsumption,
+              'total_production': state.totalProduction,
+              'total_agent_count': state.agentCount,
+              'agent_growth': state.agentGrowth,
+              'storage_ratios': state.storageRatio,
+              'storage_capacities': state.storageCapacities,
+              'details_per_agent': state.detailsPerAgent,
+            }
+        },
     },
     mutations:{
+        // restore simulation data returned by getSimulationData
+        SETSIMULATIONDATA: function(state, simdata) {
+            state.parameters = simdata.parameters
+            state.totalConsumption = simdata.total_consumption
+            state.totalProduction = simdata.total_production
+            state.agentCount = simdata.total_agent_count
+            state.agentGrowth = simdata.agent_growth
+            state.storageRatio = simdata.storage_ratios
+            state.storageCapacities = simdata.storage_capacities
+            state.detailsPerAgent = simdata.details_per_agent
+        },
         SETPARAMETERS:function(state,value){
             state.parameters = value
         },
+        // show the dashboard menu when true, hide it otherwise
         SETMENUACTIVE:function(state,value){
             state.menuActive = value
         },
+        SETLEAVEWITHOUTCONFIRMATION:function(state,value){
+            state.leaveWithoutConfirmation = value
+        },
+        // load from uploaded sim data when true, from the server if false
+        SETLOADFROMSIMDATA:function(state,value){
+            state.loadFromSimData = value
+        },
+
 
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
         // are met for a reasonable buffer amount.
         STARTTIMER:function(state,value){
-            //if((state.stepBuffer.max >= 100 || state.terminated ) && !state.isTimerRunning){
-                console.log("Step Timer Running")
+            //if((state.maxStepBuffer >= 100 || state.terminated ) && !state.isTimerRunning){
+                //console.log("Step Timer running")
                 state.timerID.resume()
                 state.isTimerRunning = true
             //}
+        },
+        PAUSETIMER:function(state,value){
+            //console.log("Step Timer paused")
+            state.timerID.pause()
+            state.isTimerRunning = false
+        },
+        STOPTIMER:function(state,value){
+            if (state.timerID != null) {
+                //console.log("Step Timer stopped")
+                state.timerID.stop()
+            }
+            state.isTimerRunning = false
         },
         SETTIMERID:function(state,value){
             state.timerID = value
         },
         SETGETSTEPSTIMERID:function(state,value){
             state.getStepsTimerID = value
+        },
+
+        SETSTOPPED:function(state,value){
+            // this var should be set only when we interrupt the
+            // simulation before receiving all the steps
+            state.stopped = value
+            // if the sim has been stopped, it's also terminated
+            // but it could terminate cleanly without being stopped
+            state.terminated = value
         },
 
         SETTERMINATED:function(state,value){
@@ -115,35 +172,61 @@ export default{
         },
         //This is used for the starting step of get_step batches. Updated after every get_step call
         UPDATEMINSTEPNUMBER:function(state,value){
-            let {step_num:step} = value
-            state.parameters.min_step_num = Math.max(step,state.parameters.min_step_num)
+            let {step_num: step} = value
+            state.parameters.min_step_num = Math.max(step+1, state.parameters.min_step_num)
         },
         //This is used for the number of steps to grab from get_step_to, after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS:function(state,value){
             let {step_num:step} = value
-            state.parameters.n_steps = state.stepBuffer.max > 100 ? 100 : 10
+            state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // unconditionally set the maxStepBuffer
         SETBUFFERMAX:function(state,value){
-            state.stepBuffer.max = value
+            state.maxStepBuffer = value
         },
-        //This is used for the max value of the current number of steps currently in the buffer.
+        // conditionally update maxStepBuffer
         UPDATEBUFFERMAX:function(state,value){
             let {step_num:step} = value
-            state.stepBuffer.max = Math.max(step,state.stepBuffer.max)
+            state.maxStepBuffer = Math.max(step, state.maxStepBuffer)
         },
-        //The current step the simulation is displaying.
+        // unconditionally set the currentStepBuffer
         SETBUFFERCURRENT:function(state,value){
-            state.stepBuffer.current = value
+            state.currentStepBuffer = value
+        },
+        // update the currentStepBuffer, making sure it's <= maxStepBuffer
+        UPDATEBUFFERCURRENT:function(state,value){
+            state.currentStepBuffer = Math.max(1, Math.min(value, state.maxStepBuffer))
+        },
+        SETSTEPINTERVAL:function(state,value){
+            state.stepInterval = value
+            if (state.timerID != null) {
+                state.timerID.changeInterval(state.stepInterval)
+            }
         },
         SETAGENTTYPE:function(state,value){
-            let{step_num:step} = value
-            let{total_agent_count} = value
-            state.agentCount = total_agent_count
+            let {step_num: step} = value
+            let {total_agent_count} = value
+            state.agentCount[step] = total_agent_count
         },
-        SETTOTALAGENTMASS:function(state,value){
-            let{step_num:step,total_agent_mass} = value
-            state.totalAgentMass[step] = total_agent_mass
+        SETAGENTGROWTH:function(state, value) {
+            let{step_num:step, agent_growth} = value
+            // If the plant skips a step we get a null, indicating that it didn't grow.
+            // Instead of storing null, reuse the last value stored in lastAgentGrowth
+            Object.entries(agent_growth).forEach(([name, value]) => {
+                if (value === null) {
+                    if (name in state.lastAgentGrowth) {  // use last value
+                        agent_growth[name] = state.lastAgentGrowth[name]
+                    }
+                    else {  // no value available, use 0 instead
+                        agent_growth[name] = 0
+                        state.lastAgentGrowth[name] = 0
+                    }
+                }
+                else {  // save the last non-null value
+                    state.lastAgentGrowth[name] = value
+                }
+            })
+            state.agentGrowth[step] = agent_growth
         },
         SETTOTALCONSUMPTION:function(state,value){
             let{step_num:step} = value
@@ -163,6 +246,19 @@ export default{
 
             state.storageRatio[step] = storage_ratios
         },
+        SETSTORAGECAPACITIES:function(state,value){
+            let {step_num:step} = value
+            let {storage_capacities} = value
+
+            state.storageCapacities[step] = storage_capacities
+        },
+        SETDETAILSPERAGENT:function(state,value){
+            let {step_num:step} = value
+            let {details_per_agent} = value
+
+            state.detailsPerAgent[step] = details_per_agent
+        },
+
 
         //Populates the parameters object with the selected plants from the
         //configuration wizard. This should actually called and updated similar to how the
@@ -171,20 +267,57 @@ export default{
             let {plantSpecies} = value
 
             plantSpecies.forEach((item) =>{
-                state.parameters.total_agent_mass.push(item.type)
-                state.totalAgentMass[item.type] = {"value":0,"units":undefined}
+                state.parameters.agent_growth.push(item.type)
+                state.agentGrowth[item.type] = 0
             })
-        }
+        },
+        SETACTIVEPANELS: function(state, panels) {
+            state.activePanels = panels
+        },
+        SETDEFAULTPANELS: function(state) {
+            state.activePanels = ["MissionStatus", "ProductionConsumption:enrg_kwh", "StorageLevels",
+                                  "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors"]
+        },
+        INITGAME: function(state, value) {
+            // set a new game_id and reset all other values
+            state.parameters = {
+                // the game is set before reaching the dashboard and
+                // resetting, so preserve its value
+                "game_id": value,
+                "min_step_num": 0,
+                "n_steps": 10,
+                "total_agent_count": ["human_agent"],
+                "agent_growth": [],
+                "total_production": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
+                "total_consumption": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
+                "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
+                                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
+                "storage_capacities": {}, // empty obj == get all values
+                "details_per_agent": {"agent_types": [], // empty obj == get all agents
+                                      "currency_types": ["enrg_kwh", "atmo_co2"],
+                                      "directions": ["in"]},
+                "parse_filters":[],
+                "single_agent":1,
+            }
+            state.agentGrowth = {}
+            state.totalProduction = {}
+            state.totalConsumption = {}
+            state.storageRatio = {}
+            state.storageCapacities = {}
+            state.detailsPerAgent = {}
+        },
     },
     actions:{
-        parseStep({commit,dispatch},stepData){
+        parseStep({commit,dispatch},stepData) {
             console.log(stepData)
             stepData.forEach((item) => {
                 commit('SETTOTALCONSUMPTION',item)
                 commit('SETTOTALPRODUCTION',item)
                 commit('SETAGENTTYPE',item)
-                commit('SETTOTALAGENTMASS',item)
+                commit('SETAGENTGROWTH',item)
                 commit('SETSTORAGERATIOS',item)
+                commit('SETSTORAGECAPACITIES',item)
+                commit('SETDETAILSPERAGENT',item)
                 commit('UPDATEBUFFERMAX',item)
                 commit('SETNSTEPS',item)
                 commit('UPDATEMINSTEPNUMBER',item)

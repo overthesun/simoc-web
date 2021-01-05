@@ -7,15 +7,14 @@ See chart.js documentation for more details.
 -->
 
 <template>
-    <canvas :id="id" style='height: 100%; width: 100%;' height='auto' width='auto'></canvas>
+    <canvas :id="id" />
 </template>
 
 <script>
 import Chart from 'chart.js';
-import axios from 'axios'
 import "chartjs-plugin-annotation";
 import {mapState,mapGetters} from 'vuex'
-import {StringFormatter} from '../../javascript/stringFormatter'
+import {StringFormatter} from '../../javascript/utils'
 export default {
     props:{
         id:String,
@@ -35,10 +34,9 @@ export default {
             backgroundColor:["#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"]
         }
     },
-
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getStepBuffer']),
+        ...mapGetters('dashboard',['getCurrentStepBuffer']),
 
 
         /*
@@ -72,59 +70,47 @@ export default {
         //Format the plant data to be used within the chart object.
 
         greenhouseConfiguration:function(){
-            const {greenhouse,plantSpecies} = this.getConfiguration // get the plants and greehouse from the configuration
+            const {greenhouse,plantSpecies} = this.getConfiguration // get the plants and greenhouse from the configuration
             let values ={data:[this.greenhouseSize[greenhouse.type]],labels:["Free Space"]} // Set the first value of the dataset to the size of the greenhouse and add the label free space
             plantSpecies.forEach((item)=>{
                 values.data[0] = Math.max(0,values.data[0] - item.amount) //Calculates the total free space left after all the plants are added, modifies the first index initialized above.
                 values.data.push(item.amount) //Push in the amount of the plant that is present.
-                //values.labels.push(this.stringFormatter(item.type))
                 values.labels.push(StringFormatter(item.type)) //format the plant name string for display
             })
 
             return values
         },
-        //Format the plant names before displaying them.
-        stringFormatter: function(value){
-            let formatted = ""
-
-            formatted = value.replace(/_/g," ")
-            formatted = formatted.toLowerCase()
-                    .split(" ")
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
-
-            return formatted
-        }
+        updateChart: function(){
+            const {greenhouse,plantSpecies} = this.getConfiguration
+            const {data,labels} = this.greenhouseConfiguration()
+            this.chart.data.labels = labels  // labels are always visible
+            // only show the text if the greenhouse type is none
+            if (greenhouse.type === 'none') {
+                this.chart.data.datasets[0].data = []
+                var text = 'No Greenhouse Type Selected'
+            }
+            // otherwise show both the doughnut and the text
+            else {
+                this.chart.data.datasets[0].data.pop()
+                this.chart.data.datasets[0].data = data
+                var text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
+            }
+            this.chart.options.elements.centerText.text = text
+            this.chart.update()
+        },
     },
     watch:{
-        //Both watchers repeat the same functionality. This should really be moved into a method to cut down on the amount of code.
-
-        //Watches for changes within the getStepBuffer object within dashboard store.
-        getStepBuffer:{
-            handler:function(){
-                const {greenhouse,plantSpecies} = this.getConfiguration
-                const {data,labels} = this.greenhouseConfiguration()
-                this.chart.data.labels =[]
-                this.chart.data.labels = labels
-                this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data
-                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
-                this.chart.update()
-            },
-            deep:true
+        // Watches for changes in getCurrentStepBuffer within the
+        // dashboard store to update the graph in the dashboard
+        getCurrentStepBuffer: function() {
+            this.updateChart()
         },
 
-        //Watches for changes within the getConfiguration object within the wizard store.
+        // Watches for changes within the getConfiguration object within
+        // the wizard store to update the graph in the config wizard
         getConfiguration:{
-            handler:function(){
-                const {greenhouse,plantSpecies} = this.getConfiguration
-                const {data,labels} = this.greenhouseConfiguration()
-                this.chart.data.labels =[]
-                this.chart.data.labels = labels
-                this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data
-                this.chart.options.elements.centerText.text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
-                this.chart.update()
+            handler: function() {
+                this.updateChart()
             },
             deep:true
         },
@@ -144,15 +130,15 @@ export default {
                 }]
             },
             options:{
-                response:true,
-                maintainAspectRatio:false,
-                           cutoutPercentage: 70,
+                responsive: true,
+                maintainAspectRatio: false,
+                cutoutPercentage: 70,
                 elements:{
                     arc:{
                         borderWidth: 0
                     },
                     centerText:{
-                        text:"Greenhouse Doughnut Calculating",
+                        text: '',
                     }
                 },
                 legend:{
@@ -195,6 +181,7 @@ export default {
                 }
             }]
         })
+    this.updateChart()  // this will set the center text and other things
     }
 }
 

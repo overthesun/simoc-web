@@ -22,10 +22,7 @@ export function StepTimer(callback,delay){
     }
 
     this.changeInterval = function(interval){
-        window.clearTimeout(timerID)
-        remaining -= Date.now() - start
         delay = interval
-        this.resume()
     }
 
     this.stop = function(){

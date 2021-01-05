@@ -5,6 +5,7 @@
         <header class='header'>
             <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
             <span class='simoc-logo-title'>SIMOC</span>
+            <img src='../../assets/natgeo-trans.png' class='natgeo-logo'/>
         </header>
         <div class='main-options'>
             <slot name="option-items"></slot>
@@ -16,7 +17,17 @@
             <slot name='entry-button'></slot>
         </div>
         <footer class='footer'>
-            <slot name='entry-footer'></slot>
+            <a class='link' title='Go to the simoc.space homepage' target='_blank'
+               href="https://simoc.space/">
+                SIMOC
+            </a>
+            <a class='link' target='_blank' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
+                Report Bug
+            </a>
+            <a class='link' title='End User License Agreement' target='_blank'
+               href="https://simoc.space/end-user-license-agreement/">
+                EULA
+            </a>
         </footer>
     </div>
 </template>
@@ -89,7 +100,15 @@ export default {
         margin-right:8px;
     }
 
+    .natgeo-logo{
+        width: auto;
+        height: 60px;
+        /* must be at least a full logo away from the rest */
+        margin-left: 48px;
+    }
+
     .simoc-logo-title{
+        font-family: "Nasalization", "Open Sans", sans-serif;
         font-weight: 400;
         font-size: 22px;
     }
@@ -172,7 +191,7 @@ export default {
         height: 48px;
         min-height: 48px;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -195,7 +214,7 @@ export default {
         height: 48px;
         min-height:48px;
         margin-top: auto;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -224,7 +243,7 @@ export default {
         height: 24px;
         min-height:24px;
         display:flex;
-        justify-content:space-around;
+        justify-content:space-evenly;
         align-items:center;
     }
 </style>

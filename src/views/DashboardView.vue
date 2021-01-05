@@ -9,129 +9,251 @@
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import axios from 'axios'
 import {StepTimer} from '../javascript/stepTimer'
+
+import io from 'socket.io-client'
+
 export default {
-    mounted:function(){
-        this.SETGAMEID(this.getGameID)  //Set the game id for the get_step parameters
+    data(){
+        return{
+            socket: null,  // the websocket used to get the steps
+        }
+    },
+    beforeMount:function(){
+        // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
-        if(this.getTimerID != null){
-            this.getTimerID.stop()
-        }
+        this.STOPTIMER()
         // do the same with the get_steps timer
-        if(this.getGetStepsTimerID){
+        if (this.getGetStepsTimerID) {
             window.clearTimeout(this.getGetStepsTimerID)
         }
-        console.log('Starting simulation', this.getGameID)
+        // reset more variables
+        // the buffer current should be 0 so its value is updated when step 1 is received
         this.SETTIMERID(undefined)          // Set the timerID to undefined
         this.SETGETSTEPSTIMERID(undefined)  // Set the getStepsTimerID to undefined
-        this.SETBUFFERCURRENT(1)            // Reset the current buffer value
-        this.SETBUFFERMAX(1)                // Reset the max buffer value
-        this.SETMINSTEPNUMBER(1)            // Reset the starting step
-        this.SETISTIMERRUNNING(false)       // Reset the timer has been created flag
-        this.SETTERMINATED(false)           // Reset the termination conditions have been met flag
-        this.initialSetup()
+        this.SETBUFFERCURRENT(0)            // Reset the current buffer value
+        this.SETMINSTEPNUMBER(0)            // Reset the starting step
+        this.SETSTOPPED(false)              // Reset stopped and terminated flags
 
-        //This is the timer object that will be called whenever the step number is increased.
-        //It defaults to being called every second. Also this is not started until at least 100 steps have been buffered in.
-        //See below methods for where the timer is started.
-        let stepTimer = new StepTimer( () => {
-            let {max} = this.getStepBuffer  // Get the max step that has been buffered in
-            let current = Math.min(max,this.getStepBuffer.current+1) //Don't go beyond what's buffered already.
-            this.SETBUFFERCURRENT(current)  //Set the current step number
-        },1000)
+        // TODO: we switched from using a timer to request steps via HTTP to
+        // websockets, but for now all the old code is still there.
+        // Once the websockets work properly, all that code can be removed.
+        // The switch happens in this.requestStepsNum()
 
-        this.SETTIMERID(stepTimer) // The timer is set within the dashboard store
-        //This sets the get_step paramter for the totalAgentMass filter. This should actually be done
-        //in tandem with the configuration wizard plant updates.
-        this.SETPLANTSPECIESPARAM(this.getConfiguration)
+        // reset the websocket
+        this.request_sent = false  // true if we already sent a req to get_steps
+        this.tearDownWebSocket()
 
+        // if we load the simulation data, there's nothing else to do, otherwise
+        // we have to reset a few more values, init the game, and request steps
+        if (!this.getLoadFromSimData) {
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
+            // init a new game, set game id, reset all data buffers
+            this.INITGAME(this.getGameID)
+            // This sets the get_step parameter for the agentGrowth filter.
+            // TODO: this should actually be done in tandem with the configuration wizard plant updates.
+            // This must be done after INITGAME or it will be reset
+            this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
+            console.log('Starting simulation', this.getGameID)
 
-        //stepTimer.resume()
+            // Ask the user confirmation if they try to leave (by closing
+            // the tab/window, by refreshing, or by navigating elsewhere)
+            // and try to kill the game when they do.  Leaving via the
+            // back button is handled in BaseDashboard.beforeRouteLeave
+            window.addEventListener('beforeunload', this.confirmBeforeLeaving)
+            window.addEventListener('unload', this.killGameOnUnload)
+            // setup the websocket to get the requested steps
+            this.setupWebsocket()
+        }
+        // after this, the Timeline component will be mounted
+        // and it will start the timer that shows the steps
+    },
+    beforeDestroy: function() {
+        // if the sim is still running upon leaving the page, stop it;
+        // some methods in DashboardMenu.vue rely on this to stop the sim
+        this.STOPTIMER()   // stop the step timer
+        this.SETMENUACTIVE(false)  // close the menu if it was open
+        if (!this.getTerminated) {
+            this.killGame()
+        }
+        // disconnect and destroy the websocket
+        this.tearDownWebSocket()
+        // remove these if when we leave the dashboard
+        window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
+        window.removeEventListener('unload', this.killGameOnUnload)
     },
     computed:{
-        //Getterss from the vuex stores
-        ...mapGetters('dashboard',['getTimerID','getGetStepsTimerID','getIsTimerRunning','getUpdateTimer','getTerminated','getStepParams','getStepBuffer','getTotalProduction','getTotalConsumption','getAirStorageRatio']),
+        // getters from the vuex stores
+        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
+        ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getGameID']),
-        ...mapGetters('wizard',['getTotalMissionHours','getConfiguration']),
-        ...mapGetters(['getUseLocalHost']),
-
     },
     methods:{
-        //
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETUPDATETIMER','SETBUFFERCURRENT','SETISTIMERRUNNING','SETGAMEID','SETMINSTEPNUMBER','SETNSTEPS','SETBUFFERMAX','SETBUFFERCURRENT','SETTERMINATED']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
+        setupWebsocket: function() {
+            const socket = this.socket = io()
+            // console.log('socket created:', this.socket)
 
-        initialSetup: async function(){
-            const localHost = "http://localhost:8000"
-            const getStepToRoute = this.getUseLocalHost ? localHost + "/get_step_to" : "/get_step_to"
+            socket.on('connect', () => {
+                // This is triggered when the websocket is first connected but also
+                // if the websocket gets disconnected and reconnects automatically
+                const req = {data: this.getStepParams}
+                // TODO: before using websockets, we requested a batch of n_steps steps,
+                // but now this is no longer necessary since we request them all at once,
+                // so the store should be updated to match getTotalMissionHours,
+                // or getting rid of n_steps altogether
+                req['data']['n_steps'] = this.getTotalMissionHours
+                // the req includes the min_step_num -- in case of reconnection,
+                // it will requests steps starting from the last received + 1
+                this.socket.emit('get_steps', req)
+                console.log('Requesting', this.getTotalMissionHours, this.request_sent?'steps again':'steps')
+                this.request_sent = true
+            })
+            socket.on('step_data_handler', (msg) => {
+                // console.log('step_data_handler called, received:', msg)
+                this.parseStep(Object.values(msg.data))
+                // console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
+            })
+            socket.on('steps_sent', (msg) => {
+                console.log(msg.message)
+                // disconnect once we got all the steps
+                this.tearDownWebSocket()
+            })
+            socket.on('user_connected', (msg) => {
+                console.log(msg.message)
+            })
+            socket.on('disconnect', (msg) => {
+                console.log('Websocket disconnected')
+            })
+        },
 
-            const stepToParams = {step_num:this.getTotalMissionHours,game_id:this.getGameID} //Use the total number of mission hours as the number of steps to be calculated.
-            const stepParams = this.getStepParams //Retrieve the parameters to used from the dashboard store
+        tearDownWebSocket: function() {
+            if (this.socket !== null) {
+                /*
+                for (let event of ['connect', 'user_connected', 'step_data_handler', 'steps_sent']) {
+                    console.log('  Removing socket.' + event)
+                    this.socket.off(event)
+                }
+                */
+                if (this.socket.connected) {
+                    console.log('Disconnecting user')
+                    this.socket.emit('user_disconnected')
+                    this.socket.disconnect()
+                }
+                this.socket = null
+            }
+        },
+
+        requestStepsNum: async function(){
+            // tell the backend how many steps we need for this game
+
+            // use the total number of mission hours as the number of steps to be calculated
+            const stepToParams = {step_num:this.getTotalMissionHours, game_id:this.getGameID}
             try{
-                await axios.post(getStepToRoute,stepToParams) //Begin creating the step buffer on the backend using the entire length of the simulation as the base
-                this.stepBufferTimer() //If everything went retrieve the first batch of steps.
+                // begin creating the step buffer on the backend using the entire length of the simulation as the base
+                await axios.post('/get_step_to', stepToParams)
+                // TODO: the stepBufferTimer() function has been replaced by websocket and can now be removed
+                // this.stepBufferTimer() // If everything went retrieve the first batch of steps.
+                this.setupWebsocket()  // setup the websocket to get the requested steps
             }catch(error){
                 console.log(error)
             }
         },
 
-        stepBufferTimer: async function(){
-            const localHost = "http://localhost:8000"
-            const getStepsRoute = this.getUseLocalHost ? localHost +  "/get_steps" : "/get_steps"
-            const stepParams = this.getStepParams //Filter parameters stored in dashboard store
+        stepBufferTimer: async function() {
+            // replaced by websockets
+            const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
-            //If the termination conditiona hasn't been terminated yet.
-            //Keep grabbing step batches
-            if(!this.getTerminated){
-                let getStepsTimerID = setTimeout( async () =>{
-                    try{
-                        const response = await axios.post(getStepsRoute,stepParams)  // Grab the batch of steps
-                        this.updateStepBuffer(response.data.step_data)  // Call the function that will parse and reset the timer
-                    }catch(error){
-                        console.log(error)
+            if (!this.getTerminated) {
+                // if the sim is not terminated, set a timer that will
+                // retrieve and parse a batch of step
+                let getStepsTimerID = setTimeout(async () => {
+                    try {
+                        const response = await axios.post('/get_steps', stepParams)
+                        this.updateStepBuffer(response.data.step_data)
                     }
-                }, 500)
+                    catch (error) {
+                        console.log(error)
+                        this.stepBufferTimer()  // retry
+                    }
+                }, 2000)
                 this.SETGETSTEPSTIMERID(getStepsTimerID)
             }
         },
 
-        updateStepBuffer: async function(step_data){
-            //Add in termination condition check
-            await this.parseStep(Object.values(step_data)) // Call the parseStep ACTION within dashboard to parse the steps. Wait until they have all been parsed.
+        updateStepBuffer: async function(step_data) {
+            // replaced by websockets
 
-            //If the max of the buffer size is at the end, turn on the terminated condition
-            if(this.getStepBuffer.max >= parseInt(this.getTotalMissionHours)){
+            // wait until all the steps have been parsed by parseStep
+            // this also updates the min step number for the next request
+            await this.parseStep(Object.values(step_data))
+
+            // keep requesting steps until we retrieved them all, then terminate
+            if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours)) {
+                this.stepBufferTimer()
+            }
+            else {
                 this.SETTERMINATED(true)
             }
+        },
 
-            //If the buffer has at least 100 steps or if it's been terminated then start the
-            //step update timer.
+        confirmBeforeLeaving: function(event) {
+            // Use standard browser popup to ask the user before leaving
+            event.preventDefault()
+            event.returnValue = 'All unsaved data will be lost.'
+            return 'All unsaved data will be lost.'
+        },
 
-            //Termination condition is added in so that simulations less than 100 steps can still run.
-            if(this.getStepBuffer.max >= 100 || this.getTerminated){
-                if(!this.getIsTimerRunning && this.getTimerID != null){ //If the timer isn't running yet, get it started.
-                    this.STARTTIMER() //Call the mutation used within the dashboard store to start the timer.
-                }
+        killGame: async function() {
+            // See https://github.com/kstaats/simoc-web/issues/51#issuecomment-524494720
+            // for some background on this method.
+            // Stop the get_steps timer and tell the server
+            // to stop calculating steps.
+            const params = {game_id: this.getGameID}
+            try{
+                axios.post('/kill_game', params)  // kill the game
+                console.log('Simulation stopped.')
+            }catch(error){
+                console.log(error)
             }
-            if (!this.getTerminated) {
-                this.stepBufferTimer() //Rinse and repeat
+            this.SETTERMINATED(true)  // terminate the sim
+            // stop timer that sends requests to get_steps
+            if (this.getGetStepsTimerID != null) {
+                window.clearTimeout(this.getGetStepsTimerID)
+                this.SETGETSTEPSTIMERID(null)
             }
         },
+
+        killGameOnUnload: function() {
+            // use sendBeacon to reliably send a kill_game during unload
+            const params = {game_id: this.getGameID}
+            var status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
+            if (status) {
+                console.log('Simulation terminated.')
+            }
+        },
+
     },
     watch:{
-        //This method pauses the current simulation if the current step is at or beyond the
-        //amount of steps that are currently buffered.
-        getStepBuffer:{
-            handler:function(){
-                let {current,max} = this.getStepBuffer
-                if(current >= max){
-                    this.getTimerID.pause()
-                }
-            },
-            deep:true
+        // this method pauses the current simulation if the current step
+        // is at or beyond the amount of steps that are currently buffered
+        getCurrentStepBuffer: function() {
+            // check that we have values in the buffer to avoid pausing
+            // the timer when current/max are set to 0 at the beginning
+            if ((this.getMaxStepBuffer > 1) &&
+                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
+                this.PAUSETIMER()
+            }
+        },
+        getStopped: function() {
+            // if the simulation got stopped, tell the server
+            if (this.getStopped) {
+                this.killGame()
+            }
         }
     }
 }

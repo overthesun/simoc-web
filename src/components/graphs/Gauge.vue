@@ -9,7 +9,7 @@ See chart.js documentation for further explantion of below fucntionality.
 
 <template>
     <div style='position:relative'>
-        <canvas :id="id" style="height: 100%; width: 100%;" height='auto' width='auto'/>
+        <canvas :id="id" />
     </div>
 </template>
 
@@ -29,25 +29,22 @@ export default {
     },
 
     computed:{
-        ...mapGetters('dashboard',['getStepBuffer'])
-        //...mapGetters('stepData',['getStepNumber'])
+        ...mapGetters('dashboard',['getCurrentStepBuffer'])
     },
 
     watch:{
-        //Update the chart datasets and labels when the step buffer has changed.
-        //This actually causes a bug where charts are updated even when just the 'max' is
-        //updated within the object. This needs to be changed to watch just the step number only to prevent
-        //uncessary updates as seen currently in the energy versus chart.
-        getStepBuffer:{
+        // update the chart datasets and labels when the current step buffer has changed.
+        getCurrentStepBuffer:{
             handler:function(){
-                const {current} = this.getStepBuffer
+                const current = this.getCurrentStepBuffer
                 let retrieved = this.getter(current)
                 let value = retrieved[this.keyValue]
-                let remainder = this.maximum - value
+                let gauge_value = Math.min(value, this.maximum) // clip at max
+                let gauge_remainder = this.maximum - gauge_value
 
-                this.chart.data.labels = [this.label]
+                this.chart.data.labels = [this.label, 'to limit']
                 this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = [value,remainder]
+                this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#fff']
                 this.chart.options.elements.centerText.text = (value*100).toFixed(4)+"%"
                 this.chart.update()
@@ -62,7 +59,7 @@ export default {
             type: 'doughnut',
             data:{
                 centerText: "TEST",
-                labels: ['Oxygen'],
+                labels: [],
                 datasets:[{
                     backgroundColor: this.color,
                     data:[10]
@@ -78,6 +75,16 @@ export default {
                         text:"Calculating",
                     }
                 },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItems, data) {
+                            // show "label: N%" in the tooltip
+                            const label = data.labels[tooltipItems.index]
+                            const value = data.datasets[0].data[tooltipItems.index]
+                            return label + ': ' + (value*100) + "%";
+                        }
+                    }
+                },
                 legend:{
                     display: false,
                 },
@@ -86,7 +93,7 @@ export default {
                     animateRotate:false
                 },
                 defaultFontColor: '#1e1e1e',
-                response: true,
+                responsive: true,
                 maintainAspectRatio: false,
                 drawborder:false,
                 cutoutPercentage: 70,

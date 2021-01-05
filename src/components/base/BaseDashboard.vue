@@ -3,85 +3,117 @@ future dashboard views
 -->
 
 <template>
-    <div class='dashboard-wrapper'>
-        <MainMenu v-if="getMenuActive" /> <!-- Menu component for the dashboard. Uses a simple v-if statement to show the menu active or hidden.
-        <!--<section class='toolbar-wrapper'></section>-->
+    <div id='dashboard-wrapper'>
+        <!-- Show the dashboard menu component when getMenuActive is true. -->
+        <DashboardMenu v-if="getMenuActive" />
+        <TheTopBar />
         <section class='main-wrapper'>
-            <Main/>
+            <Main />
         </section>
-        <section class='footer-wrapper'>
-            <div class='menu-icon'>
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']" @click='SETMENUACTIVE(true)'/> <!-- Menu button on the tool bar. On click call the mutation method within the dashboard store -->
-            </div>
-            <Controls/> <!-- Speed controls component -->
-            <Timeline/> <!-- Timeline bar component -->
+        <section id='footer-wrapper'>
+            <PlayButton />
+            <Timeline />
+            <StepControls />
+            <SpeedControls />
         </section>
     </div>
 </template>
 
 <script>
-import {Timeline,Controls,Main,MainMenu} from '../../components/dashboard'
+import {Timeline,PlayButton,StepControls,SpeedControls,Main,DashboardMenu} from '../../components/dashboard'
+import {TheTopBar} from '../../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
+    beforeRouteLeave(to, from, next) {
+        // Triggered when leaving the dashboard to go to another page.
+        // This might happen when the user starts a new sim or logs off,
+        // but also when clicking on the browser back button.
+        // Cases where the user closes the tab or refreshes are handled
+        // in DashboardView.
+        if (this.getLeaveWithoutConfirmation) {
+            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
+            next()  // proceed without asking questions
+        }
+        else {
+            // ask for confirmation before leaving the dashboard
+            if (window.confirm('Terminate simulation and leave?  All unsaved data will be lost.')) {
+                next()  // user confirmed, proceed
+            }
+            else {
+                next(false)  // stay on page
+            }
+        }
+    },
     components:{
-        "Timeline":Timeline,
-        "Controls":Controls,
-        "Main":Main,
-        "MainMenu":MainMenu
+        "TheTopBar": TheTopBar,
+        "DashboardMenu": DashboardMenu,
+        "PlayButton": PlayButton,
+        "Timeline": Timeline,
+        "StepControls": StepControls,
+        "SpeedControls": SpeedControls,
+        "Main": Main,
     },
-    computed:{
-        ...mapGetters('dashboard',['getMenuActive'])
+    computed: {
+        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),
     },
-    methods:{
-
-        ...mapMutations('dashboard',['SETMENUACTIVE','SETTERMINATED','SETISTIMERRUNNING','SETTIMERID'])
-    }
-
+    methods: {
+        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),
+    },
 }
 </script>
 
-<style lang="scss" scoped>
-    .fa-icon{
-        font-size:44px;
-    }
+<style lang="scss">
+#dashboard-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 50px minmax(0px,1fr) 50px;
+}
 
-    .dashboard-wrapper{
-        position:relative;
-        width:100vw;
-        height:100vh;
-        min-width:100vw;
-        min-height:100vh;
+#footer-wrapper {
+    position: relative;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    box-sizing: border-box;
+    background: linear-gradient(#444, #333);
+}
 
-        display:grid;
-        grid-template-rows: minmax(0px,1fr) 128px;
-        grid-template-columns: 196px minmax(0px,1fr);
-    }
+#dashboard-play-icon span {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+}
+#dashboard-play-icon span:hover {
+    font-size: 26px;
+}
+#speed-controls,
+#step-controls,
+#footer-wrapper span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .menu-icon{
-        position: absolute;
-        width:48px;
-        height:48px;
-        top:50%;
-        transform:translateY(-50%);
-        left:16px;
-    }
+.icon-wrapper {
+    font-size: 18px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid transparent;
+}
 
-    .toolbar-wrapper{
-        background-color: #252525;
-    }
-    .main-wrapper{
-        grid-column: span 2;
-    }
+.icon-wrapper:hover {
+    font-size: 20px;
+    border: 1px solid #252525;
+}
 
-    .footer-wrapper{
-        position: relative;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction: column;
-        grid-column: span 2;
-        background-color: #1e1e1e;
-        box-sizing:border-box;
-    }
+.icon-disabled {
+    color: #999;
+}
 
 </style>

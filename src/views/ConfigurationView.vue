@@ -1,9 +1,13 @@
 <template>
     <div class='base-configuration-wrapper'>
+        <TheTopBar />
+        <!-- Show the configuration menu component when getMenuActive is true. -->
+        <ConfigurationMenu v-if="getMenuActive" />
         <router-view>
-            <!-- Wizard Jump Options -->
+            <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
-                <select class='section-select' v-on:change="setActiveForm"> <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                <select class='section-select' v-on:change="setActiveForm">
                     <option selected disabled>Jump To Section</option>
                     <option value=0 :selected="formIndex === 0">Initial</option>
                     <option value=1 :selected="formIndex === 1">Inhabitants</option>
@@ -13,21 +17,35 @@
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <component :is="activeForm" v-if="activeForm != 'Finalize'"/> <!-- show the activeForm component if it's not the finalize form, uses the name of the component stored within activeForm -->
-                <section class='form-wrapper' v-if="activeForm === 'Finalize'"> <!-- show all components below if it's the finalize form section. This prevents having to repeat and create the actual component -->
-                    <Presets/>
-                    <Initial/>
-                    <Inhabitants/>
-                    <Greenhouse/>
-                    <Energy/>
-                </section>
+                <form class='form-wrapper' ref='form' @submit.prevent="">
+                    <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
+                    <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
+                    <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
+                    <section class='form-wrapper' :class="{'validating': validating}" v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
+                        <Presets v-if="activeConfigType === 'Custom'" />
+                        <Initial ref="initial" />
+                        <Inhabitants ref="inhabitants" />
+                        <Greenhouse ref="greenhouse" />
+                        <Energy ref="energy" />
+                        <!--
+                        This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
+                        <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
+                        -->
+                    </section>
+                </form>
             </template>
             <template v-slot:wizard-configuration-footer>
-                <nav class='configuration-button-wrapper'>
-                    <!-- These use v-if instead of class binding, since they are simply either displayed or hidden. No animations present to require it. -->
+                <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
+                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Guided'"">
+                    <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
+                         No animations present to require it. -->
                     <button class='btn-previous' @click='decrementIndex' v-if="!isFirstForm">Previous Section</button>
                     <button class='btn-next' @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
-                    <button class='btn-finalize' @click="finalizeConfiguration" v-if="isFinalForm">Finalize Settings</button>
+                    <button class='btn-launch' @click="launchSimulation" v-if="isFinalForm">Launch Simulation</button>
+                </nav>
+                <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
+                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Custom'"">
+                    <button class='btn-launch' @click="launchSimulation">Launch Simulation</button>
                 </nav>
             </template>
 
@@ -48,24 +66,29 @@
 <script>
 import axios from 'axios'
 //import form components
-import {Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 export default {
     components:{
-        'Energy':Energy,
-        'Presets':Presets,
-        'Inhabitants':Inhabitants,
-        'Greenhouse':Greenhouse,
-        'Initial':Initial,
-        'Reference':Reference,
-        'GreenhouseDoughnut':GreenhouseDoughnut,
-        'Graphs':Graphs
+        'TheTopBar': TheTopBar,
+        'ConfigurationMenu': ConfigurationMenu,
+        'Presets': Presets,
+        'Initial': Initial,
+        'Inhabitants': Inhabitants,
+        'Greenhouse': Greenhouse,
+        'Energy': Energy,
+        'Reference': Reference,
+        'GreenhouseDoughnut': GreenhouseDoughnut,
+        'Graphs': Graphs,
     },
     data(){
         return{
             formIndex:0, //Current index of the form that should be used from the wizard store
             activeForm:"Initial", //Default starting form
+            forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
+            validating: false, // add a CSS class while validating to make missing required fields red
             menuActive:false, //Used with class binding to display the menu.
             stepMax:1,
             greenhouseSize:{
@@ -76,14 +99,16 @@ export default {
             },
         }
     },
-    mounted:function(){
-        this.activeForm = this.getActiveForm(this.formIndex)
+    beforeMount:function(){
+        this.RESETCONFIG()
+        this.activeForm = this.getActiveForm
+        this.activeConfigType = this.getActiveConfigType
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration','getActiveForm','getFormLength','getFormattedConfiguration']),
-        ...mapGetters('wizard',['getActiveReference','getActiveRefEntry']),
-        ...mapGetters('dashboard',['getStepParams']),
-        ...mapGetters(['getUseLocalHost']),
+        ...mapGetters('dashboard', ['getMenuActive','getStepParams']),
+        ...mapGetters('wizard', ['getConfiguration','getActiveConfigType','getActiveForm',
+                                 'getFormLength','getTotalMissionHours','getFormattedConfiguration',
+                                 'getActiveReference','getActiveRefEntry']),
 
         //Used to hide the normal button and display the active button
         isFinalForm:function() {
@@ -95,6 +120,8 @@ export default {
         },
     },
     methods:{
+        ...mapMutations('wizard',['RESETCONFIG','SETACTIVEFORMINDEX']),
+        ...mapMutations('dashboard',['SETLOADFROMSIMDATA']),
         ...mapMutations(['SETGAMEID']),
 
 
@@ -102,11 +129,11 @@ export default {
             this.menuActive = !this.menuActive
         },
 
-        //Sets the active form, using the value from the select field
+        // Sets the active form, using the value from the select field
+        // This happens automatically by changing the watched formIndex
         setActiveForm:function(event){
             let {value:index} = event.target
             this.formIndex = parseInt(index)
-            this.activeForm = this.getActiveForm(index)
         },
 
         decrementIndex:function(){
@@ -119,19 +146,38 @@ export default {
             this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
-        finalizeConfiguration:async function(){
-            const configParams = {game_config:this.getFormattedConfiguration} //Get the formatted configuration from wizard store
-            const localHost = "http://localhost:8000"
-            const path ="/new_game"
-            const configurationRoute = this.getUseLocalHost ? localHost + path : path
+        launchSimulation:async function() {
+            this.validating = true
+            const form = this.$refs.form
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return  // abort until the form is invalid
+            }
+            try {
+                // get the formatted configuration from wizard store
+                var configParams = {step_num: this.getTotalMissionHours,
+                                    game_config: this.getFormattedConfiguration}
+            }
+            catch (err_msg) {
+                alert(err_msg)
+                return  // abort if there are any errors
+            }
 
             try{
-                const response = await axios.post(configurationRoute,configParams) //Wait for the new game to be created
+                const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
                 const gameID = response.data.game_id //store the game ID from the response
                 this.SETGAMEID(gameID)
+                this.SETLOADFROMSIMDATA(false)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
-            }catch(error){
+            } catch(error){
                 console.log(error)
+                if (error.response && error.response.status == 401) {
+                    alert('Please log in again to continue.')
+                    this.$router.push("entry")
+                }
+                else {
+                    alert(error)
+                }
             }
         },
     },
@@ -139,7 +185,7 @@ export default {
         //If the active form changes update the activeForm variable with the one at the formIndex
         getActiveForm:{
             handler:function(){
-                this.activeForm = this.getActiveForm(this.formIndex)
+                this.activeForm = this.getActiveForm
             },
             deep:true
         },
@@ -147,7 +193,8 @@ export default {
         //Mostly used for when either the buttons or the select menu or used to navigate
         formIndex:{
             handler:function(){
-                this.activeForm = this.getActiveForm(this.formIndex)
+                this.SETACTIVEFORMINDEX(this.formIndex)
+                this.activeForm = this.getActiveForm
             }
         }
     }
@@ -155,18 +202,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .base-configuration-wrapper{
-        position:relative;
-        width: 1024px;
-        height: 768px;
-        max-height: 768px;
-        overflow:hidden;
-    }
+.base-configuration-wrapper{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 50px minmax(0px,1fr);
+}
 
     .form-wrapper{
-        *:not(:last-of-type){
-            margin-bottom:24px;
-        }
+        margin-bottom:24px;
     }
 
     .configuration-button-wrapper{
@@ -181,7 +228,7 @@ export default {
         min-height: 48px;
         margin-left: auto;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -203,7 +250,7 @@ export default {
         height: 48px;
         min-height: 48px;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
@@ -220,17 +267,17 @@ export default {
         }
     }
 
-    .btn-finalize{
+    .btn-launch{
         width: 196px;
         height: 48px;
         min-height: 48px;
         margin-left:auto;
         margin-bottom: 24px;
-        border-radius: 24px;
+        border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
-        background-color: #ff3100;
+        background-color: #0099ee;
         border:none;
         color: #eee;
 

@@ -1,36 +1,46 @@
 <template>
-    <form class='form-wrapper' @submit.prevent="">
+    <div>
         <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Location')">Location</div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>The destination of your off-world "Vacation"</div>
-            <select class='input-field-select' v-model="location" v-on:change="setInitial">
-                <option value="none" disabled hidden selected>Location</option>
-                <option value="mars">Mars</option>
+            <div class='input-title' @click="SETACTIVEREFENTRY('Location')">
+                Location <fa-icon :icon="['fas','info-circle']" />
+            </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class='input-description'>Your habitat is located on the equatorial region of Mars.</div>
+            <select class='input-field-select' ref="location" required v-model="location" v-on:change="setInitial">
+                <option value="none" disabled hidden>Location</option>
+                <option value="mars" selected>Mars</option>
             </select>
         </label>
         <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Duration')">Mission Duration</div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>How long your stay be with us is.</div>
+            <div class='input-title' @click="SETACTIVEREFENTRY('Duration')">
+                Mission Duration <fa-icon :icon="['fas','info-circle']" />
+            </div>
+            <div class='input-description'>Select the duration of your stay on Mars.</div>
             <div class='input-duration-wrapper'>
-                <input class='input-field-number' v-model="duration.amount" pattern="^\d+$" maxlength=8 placeholder="Length" v-on:change="setInitial">
-                <select class='input-field-select' v-model="duration.units" v-on:change="setInitial">
-                    <option value="none" hidden disabled selected>Units</option>
+                <input class='input-field-number' ref="duration" type="number" pattern="^\d+$" placeholder="Length"
+                       required :min="duration_min" :max="duration_max" v-on:input="setInitial" v-model="duration.amount">
+                <select class='input-field-select' ref="duration_unit" required
+                        v-on:change="setInitial" v-model="duration.units">
+                    <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
-                    <option value="day">Earth Days (24h)</option>
-                    <option value="year">Earth Years (8760h)</option>
+                    <option value="day" selected>Earth Days (24h)</option>
+                    <!--<option value="year">Earth Years (8760h)</option>
+                        Currently disabled since the max is 1 year-->
                 </select>
             </div>
         </label>
-    </form>
+    </div>
 </template>
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
+
 export default {
     data(){
         return{
-            location:undefined,
-            duration:undefined,
+            location: undefined,
+            duration: undefined,
+            duration_min: undefined,
+            duration_max: undefined,
         }
     },
     beforeMount:function(){
@@ -40,27 +50,51 @@ export default {
         this.duration = duration
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration']),
+        ...mapGetters('wizard', ['getConfiguration','getValidValues']),
     },
     methods:{
         ...mapMutations('wizard',['SETINITIAL']),
         ...mapMutations('wizard',['SETACTIVEREFENTRY']),
 
-
-        //Called when any of the field's values are changed, or input happens. Updates all related fields to the Initial form within the wizard store.
-        setInitial:function(){
-            const value = {'location':this.location,'duration':this.duration}
-            this.SETINITIAL(value)
+        setInitial:function() {
+            // Called when any of the form values are changed, or input happens.
+            // Updates the wizard store values with the form values.
+            const value = {'location': this.location, 'duration': this.duration}
+            this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
         }
     },
     watch:{
-        getConfiguration:{
-            handler:function(){
-                const {location,duration} = this.getConfiguration
-                this.location = location
+        'getConfiguration.location': function() {
+            // update location and report validity
+            const location = this.getConfiguration.location
+            this.location = location
+            this.$nextTick(function() {
+                this.$refs.location.reportValidity()
+            })
+        },
+        'getConfiguration.duration': {
+            handler: function() {
+                // update and validate duration
+                const duration = this.getConfiguration.duration
                 this.duration = duration
+                // validate duration units
+                const validValues = this.getValidValues
+                const duration_is_valid = validValues.duration_units.includes(duration.units)
+                if (duration_is_valid) {
+                    // set duration ranges
+                    const range = validValues.duration_ranges[duration.units]
+                    this.duration_min = range.min
+                    this.duration_max = range.max
+                }
+                else {
+                    this.$refs.duration_unit.reportValidity()
+                }
+                this.$nextTick(function() {
+                    // wait until the min/max are updated to validate
+                    this.$refs.duration.reportValidity()
+                })
             },
-            deep:true //Must be used for watching any object type values.
+            deep: true,  // should trigger when duration.amount/units change
         }
     }
 }
