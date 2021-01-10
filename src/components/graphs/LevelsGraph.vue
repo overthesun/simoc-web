@@ -1,5 +1,5 @@
 <!--
-Atmospheric Levels chart component used within the dashboard.
+Storage Levels chart component used within the dashboard.
 
 Updates values from the approriate step data getters when the getCurrentStepBuffer value changes.
 
