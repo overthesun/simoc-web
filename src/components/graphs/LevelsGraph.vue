@@ -18,8 +18,8 @@ export default {
           prevStep: 0,
           setsinfo: {
             air_storage: {
-                labels_colors: [['h2o', '#46f0f0'], ['co2', '#e6194b'], ['h2', '#ffe119'],
-                                ['ch4', '#f58231'], ['o2', '#3cb44b'], ['n2', '#4363d8']],
+                labels_colors: [['H₂O', '#46f0f0'], ['CO₂', '#e6194b'], ['H₂', '#ffe119'],
+                                ['CH₄', '#f58231'], ['O₂', '#3cb44b'], ['N₂', '#4363d8']],
                 order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2, atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
             },
           },
@@ -122,6 +122,9 @@ export default {
                 legend:{
                     display: true,
                     position: 'bottom',
+                    labels: {
+                        boxWidth: 20,
+                    }
                 },
                 elements: {
                     point:{
