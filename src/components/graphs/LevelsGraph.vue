@@ -16,14 +16,22 @@ export default {
     data() {
         return {
           prevStep: 0,
+          setsinfo: {
+            air_storage: {
+                labels_colors: [['h2o', '#46f0f0'], ['co2', '#e6194b'], ['h2', '#ffe119'],
+                                ['ch4', '#f58231'], ['o2', '#3cb44b'], ['n2', '#4363d8']],
+                order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2, atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
+            },
+          },
         }
     },
     props:{
         id: String,
+        storage_name: undefined,
     },
 
     computed:{
-        ...mapGetters('dashboard', ['getAirStorageRatio', 'getCurrentStepBuffer'])
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getCurrentStepBuffer'])
     },
 
     watch:{
@@ -47,15 +55,19 @@ export default {
                     data.datasets[k].data.shift()
                 }
                 data.labels.shift()
+                // add the new values
                 if (s > 0) {
-                    // add the new values
-                    let air_storage = this.getAirStorageRatio(s)
-                    data.datasets[0].data.push(air_storage['atmo_h2o'] * 100)
-                    data.datasets[1].data.push(air_storage['atmo_co2'] * 100)
-                    data.datasets[2].data.push(air_storage['atmo_h2'] * 100)
-                    data.datasets[3].data.push(air_storage['atmo_ch4'] * 100)
-                    data.datasets[4].data.push(air_storage['atmo_o2'] * 100)
-                    data.datasets[5].data.push(air_storage['atmo_n2'] * 100)
+                    let storage = this.getStorageCapacities(s)[this.storage_name][1]
+                    let tot_storage = Object.values(storage).reduce(
+                        (acc, elem) => acc + elem['value'], 0  // start from 0
+                    )
+                    Object.entries(storage).map(
+                        ([key, elem]) => {
+                            // find dataset index, calc ratio, and add the ratio to the dataset
+                            let index = this.setsinfo[this.storage_name].order[key]
+                            data.datasets[index].data.push(elem['value'] * 100 / tot_storage)
+                        }
+                    )
                     data.labels.push(s)
                 }
                 else {
@@ -72,21 +84,15 @@ export default {
         }
     },
 
-    mounted(){
+    mounted() {
         const ctx = document.getElementById(this.id)
+        // create and initialize chart
         this.chart = new Chart(ctx, {
             type: 'line',
-            data:{
+            data: {
                 labels: Array(24),
-                // create 6 dataset with different labels/colors
-                datasets: [
-                    ['h2o', '#46f0f0'],
-                    ['co2', '#e6194b'],
-                    ['h2', '#ffe119'],
-                    ['ch4', '#f58231'],
-                    ['o2', '#3cb44b'],
-                    ['n2', '#4363d8'],
-                ].map(([label, color]) => ({
+                // create N datasets with different labels/colors
+                datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
                     lineTension: 0,
                     data: Array(24),
                     label: label,
@@ -128,7 +134,6 @@ export default {
                 },
                 title:{
                     display: false,
-                    text: 'Atmospheric Levels',
                 },
             }
         })

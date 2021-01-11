@@ -1,6 +1,6 @@
 <template>
     <div class='panel-graph'>
-        <LevelsGraph :id="'canvas-atmosphere-' + canvasNumber" />
+        <LevelsGraph :id="'canvas-atmosphere-' + canvasNumber" storage_name="air_storage" />
     </div>
 </template>
 
