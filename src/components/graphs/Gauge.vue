@@ -58,7 +58,6 @@ export default {
         this.chart = new Chart(ctx, {
             type: 'doughnut',
             data:{
-                centerText: "TEST",
                 labels: [],
                 datasets:[{
                     backgroundColor: this.color,
@@ -90,9 +89,8 @@ export default {
                 },
                 animation:{
                     animateScale: false,
-                    animateRotate:false
+                    animateRotate: false
                 },
-                defaultFontColor: '#1e1e1e',
                 responsive: true,
                 maintainAspectRatio: false,
                 drawborder:false,
@@ -101,26 +99,26 @@ export default {
                 circumference: 1 * Math.PI
             },
             plugins:[{
-                beforeDraw: function(chart){
-                    var width = chart.chart.width;
-                    var height = chart.chart.height;
-                    var ctx = chart.chart.ctx;
+                beforeDraw: function(chart) {
+                    var width = chart.chart.width
+                    var height = chart.chart.height
+                    var ctx = chart.chart.ctx
                     ctx.restore()
 
                     // scale the font size based on the width, so that
                     // it doesn't overlap with the gauge, but max 16px
-                    var fontSize = Math.min((width/8), 16).toFixed(2);
-                    ctx.font = fontSize + "px sans-serif";
-                    ctx.textBaseline = "alphabetic";
+                    var fontSize = Math.min((width/8), 16).toFixed(2)
+                    ctx.font = fontSize + "px sans-serif"
+                    ctx.textBaseline = "alphabetic"
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
                         arcH = width/2,  // height of the arc
-                        textY = Math.min((height-arcH)/2 + arcH, height);
+                        textY = Math.min((height-arcH)/2 + arcH, height)
 
-                    ctx.fillStyle = '#eeeeee';
-                    ctx.fillText(text,textX,textY);
-                    ctx.save();
+                    ctx.fillStyle = '#eeeeee'
+                    ctx.fillText(text, textX, textY)
+                    ctx.save()
                 }
             }]
         })
