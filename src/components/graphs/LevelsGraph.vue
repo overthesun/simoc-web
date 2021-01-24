@@ -15,19 +15,25 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
     data() {
         return {
-          prevStep: 0,
-          setsinfo: {
-            air_storage: {
-                labels_colors: [['H₂O', '#46f0f0'], ['CO₂', '#e6194b'], ['H₂', '#ffe119'],
-                                ['CH₄', '#f58231'], ['O₂', '#3cb44b'], ['N₂', '#4363d8']],
-                order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2, atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
+            prevStep: 0,
+            storage_name: String,
+            storage_num: String,
+            setsinfo: {
+                // These are used to determine labels, colors, and line order in the graph.
+                // They should be updated if a new storage type or currency is added,
+                // or a generic fallback should be added.
+                air_storage: {
+                    labels_colors: [['H₂O', '#46f0f0'], ['CO₂', '#e6194b'], ['H₂', '#ffe119'],
+                                    ['CH₄', '#f58231'], ['O₂', '#3cb44b'], ['N₂', '#4363d8']],
+                    order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2,
+                            atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
+                },
             },
-          },
         }
     },
     props:{
         id: String,
-        storage_name: undefined,
+        plotted_storage: String,
     },
 
     computed:{
@@ -40,10 +46,14 @@ export default {
         getCurrentStepBuffer: function() {
             this.updateChart()
         },
+        plotted_storage: function () {
+            this.initChart()
+        }
     },
 
     methods:{
         initChart: function() {
+            [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
             // create and initialize chart
             const ctx = document.getElementById(this.id)
             this.chart = new Chart(ctx, {
@@ -115,7 +125,7 @@ export default {
                 data.labels.shift()
                 // add the new values
                 if (s > 0) {
-                    let storage = this.getStorageCapacities(s)[this.storage_name][1]
+                    let storage = this.getStorageCapacities(s)[this.storage_name][this.storage_num]
                     let tot_storage = Object.values(storage).reduce(
                         (acc, elem) => acc + elem['value'], 0  // start from 0
                     )
