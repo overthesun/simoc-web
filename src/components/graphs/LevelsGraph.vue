@@ -66,6 +66,11 @@ export default {
     methods:{
         initChart: function() {
             [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
+            if (this.chart) {
+                // when switching chart we have to destroy
+                // the old one before reusing the same canvas
+                this.chart.destroy()
+            }
             // create and initialize chart
             const ctx = document.getElementById(this.id)
             this.chart = new Chart(ctx, {
