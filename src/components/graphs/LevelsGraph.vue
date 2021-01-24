@@ -43,6 +43,64 @@ export default {
     },
 
     methods:{
+        initChart: function() {
+            // create and initialize chart
+            const ctx = document.getElementById(this.id)
+            this.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(24),
+                    // create N datasets with different labels/colors
+                    datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
+                        lineTension: 0,
+                        data: Array(24),
+                        label: label,
+                        backgroundColor: color,
+                        fill: true,
+                    })),
+                },
+                options:{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    defaultFontColor: '#1e1e1e',
+                    scales:{
+                        yAxes:[{
+                            stacked: true,
+                            ticks:{
+                                beginAtZero: true,
+                                // by default the values go up to 120% instead
+                                // of stopping at 100%, but with max: 100 it's
+                                // always stuck at 100% and it doesn't scale
+                                // when only small values are displayed
+                                callback: function(value, index, values) {
+                                    return value + '%'
+                                }
+                            }
+                        }],
+                    },
+                    legend:{
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 20,
+                        }
+                    },
+                    elements: {
+                        point:{
+                            // make the dots small, but with a big
+                            // hit ratio so it's easy to hover them
+                            radius: 1,
+                            hitRadius: 5,
+                            hoverRadius: 2,
+                        }
+                    },
+                    title:{
+                        display: false,
+                    },
+                }
+            })
+            this.updateChart()
+        },
         updateChart: function() {
             const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
@@ -85,62 +143,7 @@ export default {
     },
 
     mounted() {
-        const ctx = document.getElementById(this.id)
-        // create and initialize chart
-        this.chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array(24),
-                // create N datasets with different labels/colors
-                datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
-                    lineTension: 0,
-                    data: Array(24),
-                    label: label,
-                    backgroundColor: color,
-                    fill: true,
-                })),
-            },
-            options:{
-                responsive: true,
-                maintainAspectRatio: false,
-                defaultFontColor: '#1e1e1e',
-                scales:{
-                    yAxes:[{
-                        stacked: true,
-                        ticks:{
-                            beginAtZero: true,
-                            // by default the values go up to 120% instead
-                            // of stopping at 100%, but with max: 100 it's
-                            // always stuck at 100% and it doesn't scale
-                            // when only small values are displayed
-                            callback: function(value, index, values) {
-                                return value + '%'
-                            }
-                        }
-                    }],
-                },
-                legend:{
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 20,
-                    }
-                },
-                elements: {
-                    point:{
-                        // make the dots small, but with a big
-                        // hit ratio so it's easy to hover them
-                        radius: 1,
-                        hitRadius: 5,
-                        hoverRadius: 2,
-                    }
-                },
-                title:{
-                    display: false,
-                },
-            }
-        })
-        this.updateChart()
+        this.initChart()
     }
 }
 </script>
