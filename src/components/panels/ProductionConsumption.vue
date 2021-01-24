@@ -63,7 +63,7 @@ export default {
     display: grid;
     grid-template-rows: auto 1fr;
 }
-select {
+.panel-graph select {
     width: 50%;
 }
 .panel-graph select + div {

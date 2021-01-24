@@ -120,8 +120,8 @@ export default {
         },
     },
     methods:{
-        ...mapMutations('wizard',['RESETCONFIG','SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard',['SETLOADFROMSIMDATA']),
+        ...mapMutations('wizard', ['RESETCONFIG','SETACTIVEFORMINDEX']),
+        ...mapMutations('dashboard', ['SETLOADFROMSIMDATA', 'SETGAMECONFIG']),
         ...mapMutations(['SETGAMEID']),
 
 
@@ -165,8 +165,9 @@ export default {
 
             try{
                 const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
-                const gameID = response.data.game_id //store the game ID from the response
-                this.SETGAMEID(gameID)
+                // store the game ID and full game_config from the response
+                this.SETGAMEID(response.data.game_id)
+                this.SETGAMECONFIG(response.data.game_config)
                 this.SETLOADFROMSIMDATA(false)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
             } catch(error){

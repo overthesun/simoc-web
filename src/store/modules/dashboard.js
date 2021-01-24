@@ -74,6 +74,7 @@ export default{
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
+        getGameConfig: state => state.gameConfig,
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
         getSimulationData: function(state) {
@@ -166,6 +167,10 @@ export default{
         },
         SETGAMEID:function(state,value){
             state.parameters.game_id = value
+        },
+        // this is the full game_config returned by the backend after a /new_game
+        SETGAMECONFIG: function(state, value) {
+            state.gameConfig = value
         },
         SETMINSTEPNUMBER:function(state,value){
             state.parameters.min_step_num = value
