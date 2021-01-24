@@ -45,7 +45,7 @@ export default {
                 this.chart.data.labels = [this.label, 'to limit']
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
-                this.chart.data.datasets[0].backgroundColor = [this.color, '#fff']
+                this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
                 this.chart.options.elements.centerText.text = (value*100).toFixed(4)+"%"
                 this.chart.update()
             },
@@ -72,7 +72,7 @@ export default {
                         borderWidth: 0
                     },
                     centerText:{
-                        text:"Calculating",
+                        text:"Loading...",
                     }
                 },
                 tooltips: {
@@ -105,17 +105,20 @@ export default {
                     var width = chart.chart.width;
                     var height = chart.chart.height;
                     var ctx = chart.chart.ctx;
+                    ctx.restore()
 
-                    ctx.restore();
-                    var fontSize = (height/144).toFixed(2);
-                    ctx.font = fontSize + "em sans-serif";
-                    ctx.textBaseline = "bottom";
+                    // scale the font size based on the width, so that
+                    // it doesn't overlap with the gauge, but max 16px
+                    var fontSize = Math.min((width/8), 16).toFixed(2);
+                    ctx.font = fontSize + "px sans-serif";
+                    ctx.textBaseline = "alphabetic";
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        textY = height;
+                        arcH = width/2,  // height of the arc
+                        textY = Math.min((height-arcH)/2 + arcH, height);
 
-                    ctx.fillStyle = 'white';
+                    ctx.fillStyle = '#eeeeee';
                     ctx.fillText(text,textX,textY);
                     ctx.save();
                 }

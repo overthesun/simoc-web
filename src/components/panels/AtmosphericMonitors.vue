@@ -58,17 +58,18 @@ export default {
         grid-template-rows: repeat(2,1fr);
         grid-row-gap: 16px;
         grid-column-gap: 16px;
+        padding-bottom: 1em;
     }
 
     .gauge-wrapper{
         display:grid;
         grid-template-rows: minmax(0px,1fr) 24px;
-        grid-row-gap: 8px;
+        grid-row-gap: 0;
         text-align:center;
     }
 
     .gauge-text{
-        font-size:18px;
+        font-size: 16px;
         font-weight: 400;
     }
 
