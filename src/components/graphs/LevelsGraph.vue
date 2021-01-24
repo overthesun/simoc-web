@@ -136,9 +136,7 @@ export default {
             let s = (currentStep == this.prevStep+1) ? currentStep : currentStep-23
             for (; s <= currentStep; s++) {
                 // remove the oldest values and labels
-                for (let k = 0; k < 6; k++) {
-                    data.datasets[k].data.shift()
-                }
+                Object.values(data.datasets).forEach((dataset) => dataset.data.shift())
                 data.labels.shift()
                 // add the new values
                 if (s > 0) {
@@ -158,9 +156,7 @@ export default {
                 else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 24 total items and is not stretched
-                    for (let k = 0; k < 6; k++) {
-                        data.datasets[k].data.push(undefined)
-                    }
+                    Object.values(data.datasets).forEach((dataset) => dataset.data.push(undefined))
                     data.labels.push('')
                 }
             }
