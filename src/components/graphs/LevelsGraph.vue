@@ -28,6 +28,18 @@ export default {
                     order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2,
                             atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
                 },
+                water_storage: {
+                    labels_colors: [['Potable', '#46f0f0'], ['Treated', '#4363d8'],
+                                    ['Urine', '#ffe119'], ['Waste', '#f58231']],
+                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3,}
+                },
+                nutrient_storage: {
+                    labels_colors: [['Biomass Total', '#3cb44b'], ['Biomass Edible', '#bcf60c'],
+                                    ['Waste', '#f58231'], ['Potassium', '#46f0f0'],
+                                    ['Nitrogen', '#4363d8'], ['Phosphorus', '#f032e6']],
+                    order: {biomass_edible: 0, biomass_totl: 1, sold_wste: 2,
+                            sold_k: 3, sold_n: 4, sold_p: 5}
+                },
             },
         }
     },
