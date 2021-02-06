@@ -21,7 +21,6 @@ export default {
     props:{
         id:String,
         color:String,
-        keyValue:String,
         maximum:Number,
         label:String,
         getter:Function,
