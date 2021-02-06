@@ -46,6 +46,7 @@ export default{
         menuActive:false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
+        gameConfig: {},  // the full game_config returned by /new_game
         activePanels: [],
     },
     getters:{
