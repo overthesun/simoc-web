@@ -37,8 +37,7 @@ export default {
         getCurrentStepBuffer:{
             handler:function(){
                 const current = this.getCurrentStepBuffer
-                let retrieved = this.getter(current)
-                let value = retrieved[this.keyValue]
+                let value = this.getter(current)
                 let gauge_value = Math.min(value, this.maximum) // clip at max
                 let gauge_remainder = this.maximum - gauge_value
 
@@ -46,7 +45,7 @@ export default {
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
-                this.chart.options.elements.centerText.text = (value*100).toFixed(4)+"%"
+                this.chart.options.elements.centerText.text = value.toFixed(4)+"%"
                 this.chart.update()
             },
             deep:true
