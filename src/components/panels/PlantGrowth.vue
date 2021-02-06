@@ -24,7 +24,7 @@ export default {
     panelTitle: 'Greenhouse Plant Growth',
     computed:{
         ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio','getAgentGrowth','getCurrentStepBuffer','getAgentType']),
+        ...mapGetters('dashboard',['getAgentGrowth','getCurrentStepBuffer','getAgentType']),
     },
     methods:{
         stringFormatter: StringFormatter,

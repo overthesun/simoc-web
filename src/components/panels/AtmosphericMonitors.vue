@@ -1,28 +1,28 @@
 <template>
     <div class='panel-graph-gauge'>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas1'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_co2'" :maximum=".03" :getter="getAirStorageRatio" :label="'CO2'"/>
-            <div class='gauge-text'>CO<sub>2</sub> (0-3%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas1'+canvasNumber" color="#e6194b" :maximum="3" :getter="airStorageGetter('atmo_co2')" label="CO₂"/>
+            <div class='gauge-text'>CO₂ (0-3%)</div>
         </div>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas2'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_o2'" :maximum="1.0" :getter="getAirStorageRatio" :label="'O2'"/>
-            <div class='gauge-text'>O<sub>2</sub> (0-100%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas2'+canvasNumber" color="#3cb44b" :maximum="100" :getter="airStorageGetter('atmo_o2')" label="O₂"/>
+            <div class='gauge-text'>O₂ (0-100%)</div>
         </div>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas3'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2o'" :maximum="0.03" :getter="getAirStorageRatio" :label="'H2O Vapor'"/>
-            <div class='gauge-text'>H<sub>2</sub>O Vapor (0-3%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas3'+canvasNumber" color="#46f0f0" :maximum="3" :getter="airStorageGetter('atmo_h2o')" label="H₂O Vapor"/>
+            <div class='gauge-text'>H₂O Vapor (0-3%)</div>
         </div>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas4'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_h2'" :maximum=".03" :getter="getAirStorageRatio" :label="'H2'"/>
-            <div class='gauge-text'>H<sub>2</sub> (0-3%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas4'+canvasNumber" color="#ffe119" :maximum="3" :getter="airStorageGetter('atmo_h2')" label="H₂"/>
+            <div class='gauge-text'>H₂ (0-3%)</div>
         </div>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas5'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_n2'" :maximum="1.0" :getter="getAirStorageRatio" :label="'N2'"/>
-            <div class='gauge-text'>N<sub>2</sub> (0-100%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas5'+canvasNumber" color="#4363d8" :maximum="100" :getter="airStorageGetter('atmo_n2')" label="N₂"/>
+            <div class='gauge-text'>N₂ (0-100%)</div>
         </div>
-        <div class='gauge-wrapper' style='position:relative'>
-            <Gauge :id="'canvas6'+canvasNumber" :color="'#00aaee'" :keyValue="'atmo_ch4'" :maximum=".03" :getter="getAirStorageRatio" :label="'CH4'"/>
-            <div class='gauge-text'>CH<sub>4</sub> (0-3%)</div>
+        <div class='gauge-wrapper'>
+            <Gauge :id="'canvas6'+canvasNumber" color="#f58231" :maximum="3" :getter="airStorageGetter('atmo_ch4')" label="CH₄"/>
+            <div class='gauge-text'>CH₄ (0-3%)</div>
         </div>
     </div>
 </template>
@@ -39,15 +39,27 @@ export default {
        'Gauge':Gauge,
     },
     computed:{
-        ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAirStorageRatio']),
+        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        total_storage_capacity: function() {
+            return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
+        }
+    },
+    methods: {
+        airStorageGetter: function(currency) {
+            // TODO: handle multiple air_storages with an optional dropdown
+            const total_storage_capacity = this.total_storage_capacity
+            return (step) => {
+                const amount = this.getStorageCapacities(step)['air_storage'][1][currency].value
+                return amount / total_storage_capacity * 100
+            }
+        },
     },
 }
 </script>
 
 
 <style lang="scss" scoped>
-
     .panel-graph{
         position:relative;
     }
@@ -58,18 +70,19 @@ export default {
         grid-template-rows: repeat(2,1fr);
         grid-row-gap: 16px;
         grid-column-gap: 16px;
+        padding-bottom: 1em;
     }
 
     .gauge-wrapper{
-        display:grid;
+        display: grid;
+        position: relative;
         grid-template-rows: minmax(0px,1fr) 24px;
-        grid-row-gap: 8px;
-        text-align:center;
+        grid-row-gap: 0;
+        text-align: center;
     }
 
     .gauge-text{
-        font-size:18px;
+        font-size: 16px;
         font-weight: 400;
     }
-
 </style>
