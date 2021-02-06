@@ -44,14 +44,17 @@ export default {
     computed:{
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer','getStorageCapacities','getAirStorageRatio']),
+        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer','getStorageCapacities','getGameConfig']),
         step: function() {
             return this.getCurrentStepBuffer
         },
+        total_air_storage_capacity: function() {
+            // return the total capacity of the air storage
+            return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
+        },
         o2: function() {
             return this.attempt_read(() => {
-                const air_storage = this.getAirStorageRatio(this.step)
-                const o2_perc = air_storage['atmo_o2'] * 100
+                const o2_perc = this.get_gas_percentage('atmo_o2')
                 /*
                 Color the 02 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
@@ -70,8 +73,7 @@ export default {
         },
         co2: function() {
             return this.attempt_read(() => {
-                const air_storage = this.getAirStorageRatio(this.step)
-                const co2_perc = air_storage['atmo_co2'] * 100
+                const co2_perc = this.get_gas_percentage('atmo_co2')
                 /*
                 Color the co2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
@@ -115,6 +117,11 @@ export default {
     },
     methods:{
         stringFormatter: StringFormatter,
+        get_gas_percentage: function(currency) {
+            // calculate and return the percentage of the given gas
+            const air_storage = this.getStorageCapacities(this.step)['air_storage'][1]
+            return air_storage[currency].value / this.total_air_storage_capacity * 100
+        },
         attempt_read(func) {
             try {
                 return func()
