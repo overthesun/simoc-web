@@ -296,8 +296,9 @@ export default{
                 "agent_growth": [],
                 "total_production": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
                 "total_consumption": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
-                "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
-                                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
+                // we now calculate the ratios on the frontend
+                //"storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
+                //                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
                 "storage_capacities": {}, // empty obj == get all values
                 "details_per_agent": {"agent_types": [], // empty obj == get all agents
                                       "currency_types": ["enrg_kwh", "atmo_co2"],
