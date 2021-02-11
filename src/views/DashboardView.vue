@@ -18,6 +18,7 @@ export default {
             socket: null,  // the websocket used to get the steps
         }
     },
+
     beforeMount:function(){
         // reinitialize everything, init a new game, and request steps num before mounting
 
@@ -69,6 +70,12 @@ export default {
         // after this, the Timeline component will be mounted
         // and it will start the timer that shows the steps
     },
+
+    mounted() {
+        // add keyboard shortcuts -- see the keyListener method below
+        window.addEventListener('keydown', this.keyListener)
+    },
+
     beforeDestroy: function() {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
@@ -82,15 +89,18 @@ export default {
         // remove these if when we leave the dashboard
         window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
         window.removeEventListener('unload', this.killGameOnUnload)
+        window.removeEventListener('keydown', this.keyListener);
     },
+
     computed:{
         // getters from the vuex stores
-        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
+        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getIsTimerRunning','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
         ...mapGetters(['getGameID']),
     },
+
     methods:{
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
+        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
         //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
         ...mapActions('dashboard',['parseStep']),
 
@@ -237,7 +247,64 @@ export default {
             }
         },
 
+        keyListener: function(e) {
+            // Listen for these keypresses on the keyboard:
+            //   spacebar: play/pause
+            //   left/right arrows: ±1 step
+            //   down/up arrows: ±10 steps
+            //   pagedown/pageup arrows: ±24 steps
+            //   home/end: first/last step
+            //   +/-: increase/decrease speed*
+            //
+            // * since the logic of the speed is more complex,
+            //   this is handled in the SpeedControl component
+            //
+            // console.log('key:', e.key)
+
+            let key_matched = true
+            switch (e.key) {
+                case ' ':
+                    if (this.getIsTimerRunning) {
+                        this.PAUSETIMER()
+                    }
+                    else {
+                        this.STARTTIMER()
+                    }
+                    break
+                case 'ArrowLeft':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-1)
+                    break
+                case 'ArrowRight':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+                    break
+                case 'ArrowDown':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-10)
+                    break
+                case 'ArrowUp':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+10)
+                    break
+                case 'PageDown':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-24)
+                    break
+                case 'PageUp':
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+24)
+                    break
+                case 'Home':
+                    this.UPDATEBUFFERCURRENT(1)
+                    break
+                case 'End':
+                    this.UPDATEBUFFERCURRENT(this.getMaxStepBuffer)
+                    break
+                default:
+                    key_matched = false  // no key matched
+                    break
+            }
+            if (key_matched) {
+                e.preventDefault()
+            }
+        }
     },
+
     watch:{
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
