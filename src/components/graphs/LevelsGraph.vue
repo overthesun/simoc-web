@@ -58,12 +58,18 @@ export default {
         getCurrentStepBuffer: function() {
             this.updateChart()
         },
+        // re-init the chart when we plot something else
         plotted_storage: function () {
             this.initChart()
         }
     },
 
+    mounted() {
+        this.initChart()
+    },
+
     methods:{
+        // TODO: this code is very similar to VersusGraph.vue
         initChart: function() {
             [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
             if (this.chart) {
@@ -76,7 +82,8 @@ export default {
             this.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Array(24),
+                    // fill with '' so that at the beginning the labels don't show undefined
+                    labels: Array(24).fill(''),
                     // create N datasets with different labels/colors
                     datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
                         lineTension: 0,
@@ -131,16 +138,23 @@ export default {
         updateChart: function() {
             const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
-            // if the currentStep is not prevStep+1, the user moved the scrubber
-            // and we need to redraw the previous 24 steps, otherwise we add one step
-            let s = (currentStep == this.prevStep+1) ? currentStep : currentStep-23
-            for (; s <= currentStep; s++) {
+            // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
+            // we need to redraw the previous 24 steps, otherwise we just add one step
+            let startingStep
+            if (currentStep != this.prevStep+1) {
+                startingStep = currentStep - 23  // replace all 24 values
+            }
+            else {
+                startingStep = currentStep  // add the latest value
+            }
+            // this will do 1 or 24 iterations (maybe refactor it to something better)
+            for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values and labels
                 Object.values(data.datasets).forEach((dataset) => dataset.data.shift())
                 data.labels.shift()
                 // add the new values
-                if (s > 0) {
-                    let storage = this.getStorageCapacities(s)[this.storage_name][this.storage_num]
+                if (step > 0) {
+                    let storage = this.getStorageCapacities(step)[this.storage_name][this.storage_num]
                     let tot_storage = Object.values(storage).reduce(
                         (acc, elem) => acc + elem['value'], 0  // start from 0
                     )
@@ -151,7 +165,7 @@ export default {
                             data.datasets[index].data.push((elem['value'] * 100 / tot_storage).toFixed(4))
                         }
                     )
-                    data.labels.push(s)
+                    data.labels.push(step)
                 }
                 else {
                     // for steps <= 0 use undefined as values and '' as labels
@@ -164,10 +178,6 @@ export default {
             this.prevStep = currentStep
         }
     },
-
-    mounted() {
-        this.initChart()
-    }
 }
 </script>
 
