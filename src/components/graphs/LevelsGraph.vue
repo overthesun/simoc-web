@@ -148,7 +148,7 @@ export default {
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
                             let index = this.setsinfo[this.storage_name].order[key]
-                            data.datasets[index].data.push(elem['value'] * 100 / tot_storage)
+                            data.datasets[index].data.push((elem['value'] * 100 / tot_storage).toFixed(4))
                         }
                     )
                     data.labels.push(s)
