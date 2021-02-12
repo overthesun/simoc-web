@@ -27,6 +27,24 @@ export default {
         this.speedIndex = 2
         this.changeSpeed(0)
     },
+    mounted() {
+        // Handle keyboard shortcuts for +/-
+        // The rest of the shortcuts are in DashboardView
+        this.keyListener = function(e) {
+            if (e.key === '+') {
+                this.changeSpeed(+1)
+                e.preventDefault()
+            }
+            else if (e.key === '-') {
+                this.changeSpeed(-1)
+                e.preventDefault()
+            }
+        }
+        window.addEventListener('keydown', this.keyListener.bind(this))
+    },
+    beforeDestroy: function() {
+        window.removeEventListener('keydown', this.keyListener);
+    },
     methods:{
         ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
         changeSpeed: function(offset) {
