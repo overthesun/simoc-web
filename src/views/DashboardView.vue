@@ -277,16 +277,16 @@ export default {
                 case 'ArrowRight':
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
                     break
-                case 'ArrowDown':
+                case 'ArrowUp':
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-10)
                     break
-                case 'ArrowUp':
+                case 'ArrowDown':
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+10)
                     break
-                case 'PageDown':
+                case 'PageUp':
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-24)
                     break
-                case 'PageUp':
+                case 'PageDown':
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+24)
                     break
                 case 'Home':
