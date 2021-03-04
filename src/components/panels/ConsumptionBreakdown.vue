@@ -72,6 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 #currency-select {
+    width: 50%;
     margin-bottom: 1em;
 }
 </style>

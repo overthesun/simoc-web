@@ -111,5 +111,8 @@ export default {
 
 
 <style lang="scss" scoped>
-
+#mission-info-select {
+    width: 50%;
+    margin-bottom: 1em;
+}
 </style>
