@@ -1,6 +1,12 @@
 <template>
     <section class="panel-dl-wrapper">
-        <dl>
+        <select v-model="info_section" required id="mission-info-select">
+            <option value="mission-status" selected>Mission Status</option>
+            <option value="mission-config">Mission Configuration</option>
+            <option value="celestial-body">Celestial Body Info</option>
+        </select>
+
+        <dl v-if="info_section == 'mission-status'">
             <dt>Mission ID:</dt>
                 <dd>{{getGameID}}</dd>
             <dt>Location:</dt>
@@ -13,10 +19,10 @@
                 <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
             <dt>Inhabitants:</dt>
                 <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
-        <!-- TODO: restore this when we get the value from the backend
+            <!-- TODO: restore this when we get the value from the backend
             <dt>Food:</dt>
                 <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
-        <!-- TODO: make the next two dynamic? -->
+            <!-- TODO: make the next two dynamic? -->
             <dt>Surface Temp.:</dt>
                 <dd>210 K | -63 °C | -81 °F</dd>
             <dt>Solar Gain:</dt>
@@ -32,6 +38,11 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Mission Status',
+    data() {
+        return {
+            info_section: 'mission-status',
+        }
+    },
     computed:{
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
