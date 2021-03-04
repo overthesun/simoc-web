@@ -22,11 +22,6 @@
             <!-- TODO: restore this when we get the value from the backend
             <dt>Food:</dt>
                 <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
-            <!-- TODO: make the next two dynamic? -->
-            <dt>Surface Temp.:</dt>
-                <dd>210 K | -63 °C | -81 °F</dd>
-            <dt>Solar Gain:</dt>
-                <dd>500 W/m²</dd>
         </dl>
 
         <dl v-if="info_section == 'mission-config'">
