@@ -281,7 +281,7 @@ export default{
             state.activePanels = panels
         },
         SETDEFAULTPANELS: function(state) {
-            state.activePanels = ["MissionStatus", "ProductionConsumption:enrg_kwh", "StorageLevels",
+            state.activePanels = ["MissionInfo", "ProductionConsumption:enrg_kwh", "StorageLevels",
                                   "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors"]
         },
         INITGAME: function(state, value) {
