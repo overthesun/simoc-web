@@ -37,7 +37,7 @@
             <dt>Inhabitants:</dt>
                 <dd>{{getConfiguration.humans.amount}}</dd>
             <dt>Food:</dt>
-                <dd>{{getConfiguration.food.amount}}</dd>
+                <dd>{{getConfiguration.food.amount}} {{getConfiguration.food.units}}</dd>
             <dt>Crew Quarters:</dt>
                 <dd>{{stringFormatter(getConfiguration.crewQuarters.type).split(' ').pop()}}</dd>
             <dt>Greenhouse:</dt>

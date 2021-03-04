@@ -11,7 +11,7 @@ function getDefaultConfig() {
         location: "mars",
         duration: {type:"none", amount:null, units:"day"},
         humans: {type:"human_agent", amount:null, units:""},
-        food: {type:"food_storage", amount:null, units:""},
+        food: {type:"food_storage", amount:null, units:"kg"},
         eclss: {type:"eclss", amount:null, units:""},
         powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
         powerStorage: {type:"power_storage", amount:null, units:""},
