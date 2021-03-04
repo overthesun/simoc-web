@@ -28,6 +28,22 @@
             <dt>Solar Gain:</dt>
                 <dd>500 W/m²</dd>
         </dl>
+
+        <dl v-if="info_section == 'celestial-body'">
+            <dt>Celestial Body:</dt>
+                <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dt>Day length:</dt>
+                <dd>24h 37m 23s</dd>
+            <dt>Surface Temperature:</dt>
+                <dd>210 K | -63 °C | -81 °F</dd>
+            <dt>Solar Gain:</dt>
+                <dd>500 W/m²</dd>
+            <dt>Atmospheric Pressure:</dt>
+                <dd>0.636 kPa</dd>
+            <dt>Gravity:</dt>
+                <dd>3.71 m/s²</dd>
+        </dl>
+
     </section>
 </template>
 
