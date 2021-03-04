@@ -40,7 +40,7 @@
             <dt>Solar PV Array:</dt>
                 <dd>{{getConfiguration.powerGeneration.amount}}</dd>
             <dt>Batteries:</dt>
-                <dd>{{getConfiguration.powerStorage.amount}}</dd>
+                <dd>{{getConfiguration.powerStorage.amount}} {{getConfiguration.powerStorage.units}}</dd>
             <dt>ECLSS:</dt>
                 <dd>{{getConfiguration.eclss.amount}}</dd>
         </dl>

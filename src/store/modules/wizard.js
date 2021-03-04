@@ -14,7 +14,7 @@ function getDefaultConfig() {
         food: {type:"food_storage", amount:null, units:"kg"},
         eclss: {type:"eclss", amount:null, units:""},
         powerGeneration: {type:"solar_pv_array_mars", amount:null, units:""},
-        powerStorage: {type:"power_storage", amount:null, units:""},
+        powerStorage: {type:"power_storage", amount:null, units:"kWh"},
         crewQuarters: {type:"none", amount:0, units:""},
         greenhouse: {type:"none", amount:0, units:""},
         plantSpecies: [{type:"", amount:""}],
