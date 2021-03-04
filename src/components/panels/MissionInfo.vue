@@ -69,7 +69,7 @@ import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
-    panelTitle: 'Mission Status',
+    panelTitle: 'Mission Information',
     data() {
         return {
             info_section: 'mission-status',
