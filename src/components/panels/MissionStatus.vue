@@ -2,7 +2,7 @@
     <section class="panel-dl-wrapper">
         <select v-model="info_section" required id="mission-info-select">
             <option value="mission-status" selected>Mission Status</option>
-            <option value="mission-config">Mission Configuration</option>
+            <option value="mission-config">Initial Configuration</option>
             <option value="celestial-body">Celestial Body Info</option>
         </select>
 
