@@ -1,5 +1,5 @@
 <template>
-    <div class='base-configuration-wrapper'>
+    <div class='base-configuration-wrapper' :class="{'waiting': awaiting_response}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
@@ -297,4 +297,13 @@ export default {
             outline:none;
         }
     }
+
+</style>
+
+<style lang="scss">
+/* this must be unscoped in order to work
+   with the labels of the subcomponents */
+.waiting, .waiting label, .waiting .btn-launch:hover {
+    cursor: wait;
+}
 </style>
