@@ -1,5 +1,5 @@
 <template>
-    <div class='base-configuration-wrapper'>
+    <div class='base-configuration-wrapper' :class="{'waiting': awaiting_response}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
@@ -89,6 +89,7 @@ export default {
             activeForm:"Initial", //Default starting form
             forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             validating: false, // add a CSS class while validating to make missing required fields red
+            awaiting_response: false, // true while waiting for a response after clicking on "Launch Simulation"
             menuActive:false, //Used with class binding to display the menu.
             stepMax:1,
             greenhouseSize:{
@@ -147,6 +148,9 @@ export default {
         },
 
         launchSimulation:async function() {
+            if (this.awaiting_response) {
+                return  // wait for a response before sending a new request
+            }
             this.validating = true
             const form = this.$refs.form
             if (!form.checkValidity()) {
@@ -163,14 +167,17 @@ export default {
                 return  // abort if there are any errors
             }
 
-            try{
+            try {
+                this.awaiting_response = true
                 const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
                 this.SETGAMECONFIG(response.data.game_config)
                 this.SETLOADFROMSIMDATA(false)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
-            } catch(error){
+                this.awaiting_response = false
+            } catch(error) {
+                this.awaiting_response = false
                 console.log(error)
                 if (error.response && error.response.status == 401) {
                     alert('Please log in again to continue.')
@@ -290,4 +297,13 @@ export default {
             outline:none;
         }
     }
+
+</style>
+
+<style lang="scss">
+/* this must be unscoped in order to work
+   with the labels of the subcomponents */
+.waiting, .waiting label, .waiting .btn-launch:hover {
+    cursor: wait;
+}
 </style>
