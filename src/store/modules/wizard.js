@@ -8,6 +8,8 @@ function getDefaultConfig() {
     // return the default configuration,
     // and ensures that a new object is returned
     return {
+        name: "Default config",
+        filename: "",
         location: "mars",
         duration: {type:"none", amount:null, units:"day"},
         humans: {type:"human_agent", amount:null, units:""},

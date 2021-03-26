@@ -19,7 +19,7 @@ Future version should also automatically switch the selected preset to 'custom' 
                 <div class='presets-dropdown'>
                     <select class='input-field-select' v-model="selected" v-on:change="updateConfig(selected)">
                         <option :value=EMPTY hidden disabled selected>Preset</option>
-                        <option :value=name v-for="(preset, name) in presets" :key=name>{{presets_names[name]}}</option>
+                        <option :value=name v-for="(preset, name) in presets" :key=name>{{preset.name}}</option>
                         <option :value=CUSTOM>[Custom]</option>
                     </select>
                 </div>
@@ -47,16 +47,10 @@ export default {
             none: EMPTY,  // initial empty preset
             custom: CUSTOM,  // custom preset, loaded from localstorage
             dont_set_custom: false,  // when true, avoids setting the custom preset
-            // the names of the presets, used for the dropdown
-            presets_names: {
-                one_human: '1 Human',
-                one_human_radish: '1 Human + Radish',
-                four_humans: '4 Humans',
-                four_humans_garden: '4 Humans + Garden',
-            },
             // the available default presets
             presets: {
                 one_human: {
+                    name: '1 Human',
                     location: 'mars',
                     duration: {type:'none', amount:10, units:'day'},
                     humans: {type:'human_agent', amount:1, units:''},
@@ -69,6 +63,7 @@ export default {
                     plantSpecies: [{type:'', amount:''}]
                 },
                 one_human_radish: {
+                    name: '1 Human + Radish',
                     location: 'mars',
                     duration: {type:'none', amount:30, units:'day'},
                     humans: {type:'human_agent', amount:1, units:''},
@@ -81,6 +76,7 @@ export default {
                     plantSpecies: [{type:'radish', amount:40}],
                 },
                 four_humans: {
+                    name: '4 Humans',
                     location:'mars',
                     duration: {type:'none', amount:10, units:'day'},
                     humans: {type:'human_agent', amount:4, units:''},
@@ -93,6 +89,7 @@ export default {
                     plantSpecies: [{type:'', amount:''}]
                 },
                 four_humans_garden: {
+                    name: '4 Humans + Garden',
                     location: 'mars',
                     duration: {type:'none', amount:100, units:'day'},
                     humans: {type:'human_agent', amount:4, units:''},
@@ -114,6 +111,7 @@ export default {
                 // these are disabled for now
                 /*
                 wheat: {
+                    name: '2 Humans + Wheat (no ECLSS)',
                     location: 'mars',
                     duration: {type:'none', amount:100, units:'day'},
                     humans: {type:'human_agent', amount:2, units:''},
@@ -126,6 +124,7 @@ export default {
                     plantSpecies: [{type:'wheat', amount:100}],
                 },
                 humansonly: {
+                    name: '2 Humans',
                     location: 'mars',
                     duration: {type:'none', amount:30, units:'day'},
                     humans: {type:'human_agent', amount:2, units:''},
@@ -138,6 +137,7 @@ export default {
                     plantSpecies: [{type:'',  amount:''}],
                 },
                 hybridthree: {
+                    name: '2 Humans + Wheat (no ECLSS, more food)',
                     location: 'mars',
                     duration: {type:'none', amount:90, units:'day'},
                     humans: {type:'human_agent', amount:2, units:''},
