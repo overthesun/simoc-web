@@ -26,7 +26,8 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
     },
     methods: {
-        ...mapMutations('wizard', ['SETRESETCONFIG','SETCONFIGURATION']),
+        ...mapMutations('wizard', ['SETRESETCONFIG']),
+        ...mapActions('wizard', ['SETCONFIGURATION']),
         logout: async function() {
             if (!confirm('Do you want to log out?')) {
                 return;

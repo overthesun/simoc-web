@@ -19,7 +19,7 @@ Future version should also automatically switch the selected preset to 'custom' 
                 <div class='presets-dropdown'>
                     <select class='input-field-select' v-model="selected" v-on:change="updateConfig(selected)">
                         <option :value=EMPTY hidden disabled selected>Preset</option>
-                        <option :value=name v-for="(preset, name) in presets" :key=name>{{preset.name}}</option>
+                        <option :value=name v-for="(preset, name) in getPresets" :key=name>{{preset.name}}</option>
                         <option :value=CUSTOM>[Custom]</option>
                     </select>
                 </div>
@@ -33,7 +33,7 @@ Future version should also automatically switch the selected preset to 'custom' 
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 // global constants used to mark the empty and custom presets
 const EMPTY = 'empty'
 const CUSTOM = 'custom'
@@ -47,117 +47,14 @@ export default {
             none: EMPTY,  // initial empty preset
             custom: CUSTOM,  // custom preset, loaded from localstorage
             dont_set_custom: false,  // when true, avoids setting the custom preset
-            // the available default presets
-            presets: {
-                one_human: {
-                    name: '1 Human',
-                    location: 'mars',
-                    duration: {type:'none', amount:10, units:'day'},
-                    humans: {type:'human_agent', amount:1, units:''},
-                    food: {type:'food_storage', amount:100, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount: 1, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:30, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'none', amount:0, units:''},
-                    plantSpecies: [{type:'', amount:''}]
-                },
-                one_human_radish: {
-                    name: '1 Human + Radish',
-                    location: 'mars',
-                    duration: {type:'none', amount:30, units:'day'},
-                    humans: {type:'human_agent', amount:1, units:''},
-                    food: {type:'food_storage', amount:100, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:70, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
-                    plantSpecies: [{type:'radish', amount:40}],
-                },
-                four_humans: {
-                    name: '4 Humans',
-                    location:'mars',
-                    duration: {type:'none', amount:10, units:'day'},
-                    humans: {type:'human_agent', amount:4, units:''},
-                    food: {type:'food_storage', amount:100, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:30, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'none', amount:0, units:''},
-                    plantSpecies: [{type:'', amount:''}]
-                },
-                four_humans_garden: {
-                    name: '4 Humans + Garden',
-                    location: 'mars',
-                    duration: {type:'none', amount:100, units:'day'},
-                    humans: {type:'human_agent', amount:4, units:''},
-                    food: {type:'food_storage', amount:1200, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_medium', amount:1, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:400, units:''},
-                    powerStorage: {type:'power_storage', amount:2000, units:'kWh'},
-                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
-                    plantSpecies: [
-                        {type:'wheat', amount:20},
-                        {type:'cabbage', amount:30},
-                        {type:'strawberry', amount:10},
-                        {type:'radish', amount:50},
-                        {type:'red_beet', amount:50},
-                        {type:'onion', amount:50},
-                    ],
-                },
-                // these are disabled for now
-                /*
-                wheat: {
-                    name: '2 Humans + Wheat (no ECLSS)',
-                    location: 'mars',
-                    duration: {type:'none', amount:100, units:'day'},
-                    humans: {type:'human_agent', amount:2, units:''},
-                    food: {type:'food_storage', amount:300, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
-                    eclss: {type:'eclss', amount:0, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:380, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
-                    plantSpecies: [{type:'wheat', amount:100}],
-                },
-                humansonly: {
-                    name: '2 Humans',
-                    location: 'mars',
-                    duration: {type:'none', amount:30, units:'day'},
-                    humans: {type:'human_agent', amount:2, units:''},
-                    food: {type:'food_storage', amount:10000, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount:0, units:''},
-                    eclss: {type:'eclss', amount:1, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:2, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'none', amount:0, units:''},
-                    plantSpecies: [{type:'',  amount:''}],
-                },
-                hybridthree: {
-                    name: '2 Humans + Wheat (no ECLSS, more food)',
-                    location: 'mars',
-                    duration: {type:'none', amount:90, units:'day'},
-                    humans: {type:'human_agent', amount:2, units:''},
-                    food: {type:'food_storage', amount:10000, units:'kg'},
-                    crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
-                    eclss: {type:'eclss', amount:0, units:''},
-                    powerGeneration: {type:'solar_pv_array_mars', amount:20, units:''},
-                    powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
-                    greenhouse: {type:'greenhouse_small', amount:1, units:''},
-                    plantSpecies: [{type:'wheat', amount:100}],
-                },*/
-            },
         }
     },
     computed:{
-        ...mapGetters('wizard', ['getConfiguration','getResetConfig']),
+        ...mapGetters('wizard', ['getConfiguration','getResetConfig','getPresets']),
     },
     methods:{
-        ...mapMutations('wizard', ['SETCONFIGURATION','SETACTIVEREFENTRY',
-                                   'SETRESETCONFIG','RESETCONFIG']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY','SETRESETCONFIG','RESETCONFIG']),
+        ...mapActions('wizard',['SETCONFIGURATION','SETPRESET']),
 
         updateConfig: function (name) {
             // don't set [custom] if the user picks a preset
@@ -166,7 +63,7 @@ export default {
                 this.loadFromLocalStorage()
             }
             else {
-                this.SETCONFIGURATION(this.presets[name])
+                this.SETPRESET(name)
             }
         },
         saveToLocalStorage: function () {
