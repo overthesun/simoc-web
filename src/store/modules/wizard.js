@@ -9,7 +9,7 @@ function get_default_config() {
     // and ensures that a new object is returned
     return {
         name: "Default config",
-        filename: "",
+        simdata_file: "",
         location: "mars",
         duration: {type:"none", amount:null, units:"day"},
         humans: {type:"human_agent", amount:null, units:""},
@@ -27,6 +27,7 @@ function get_presets() {
     return {
         one_human: {
             name: '1 Human',
+            simdata_file: 'simoc-simdata-1-human-preset.json',
             location: 'mars',
             duration: {type:'none', amount:10, units:'day'},
             humans: {type:'human_agent', amount:1, units:''},
@@ -40,6 +41,7 @@ function get_presets() {
         },
         one_human_radish: {
             name: '1 Human + Radish',
+            simdata_file: 'simoc-simdata-1-human-radish-preset.json',
             location: 'mars',
             duration: {type:'none', amount:30, units:'day'},
             humans: {type:'human_agent', amount:1, units:''},
@@ -53,6 +55,7 @@ function get_presets() {
         },
         four_humans: {
             name: '4 Humans',
+            simdata_file: 'simoc-simdata-4-human-preset.json',
             location:'mars',
             duration: {type:'none', amount:10, units:'day'},
             humans: {type:'human_agent', amount:4, units:''},
@@ -66,6 +69,7 @@ function get_presets() {
         },
         four_humans_garden: {
             name: '4 Humans + Garden',
+            simdata_file: 'simoc-simdata-4-human-garden-preset.json',
             location: 'mars',
             duration: {type:'none', amount:100, units:'day'},
             humans: {type:'human_agent', amount:4, units:''},
@@ -88,6 +92,7 @@ function get_presets() {
         /*
         wheat: {
             name: '2 Humans + Wheat (no ECLSS)',
+            simdata_file: "",
             location: 'mars',
             duration: {type:'none', amount:100, units:'day'},
             humans: {type:'human_agent', amount:2, units:''},
@@ -101,6 +106,7 @@ function get_presets() {
         },
         humansonly: {
             name: '2 Humans',
+            simdata_file: "",
             location: 'mars',
             duration: {type:'none', amount:30, units:'day'},
             humans: {type:'human_agent', amount:2, units:''},
@@ -114,6 +120,7 @@ function get_presets() {
         },
         hybridthree: {
             name: '2 Humans + Wheat (no ECLSS, more food)',
+            simdata_file: "",
             location: 'mars',
             duration: {type:'none', amount:90, units:'day'},
             humans: {type:'human_agent', amount:2, units:''},
