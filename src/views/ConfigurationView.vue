@@ -22,7 +22,7 @@
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
                     <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
                     <section class='form-wrapper' :class="{'validating': validating}" v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
-                        <Presets v-if="activeConfigType === 'Custom'" />
+                        <Presets ref="presets" v-if="activeConfigType === 'Custom'" />
                         <Initial ref="initial" />
                         <Inhabitants ref="inhabitants" />
                         <Greenhouse ref="greenhouse" />
@@ -109,7 +109,8 @@ export default {
         ...mapGetters('dashboard', ['getMenuActive','getStepParams']),
         ...mapGetters('wizard', ['getConfiguration','getActiveConfigType','getActiveForm',
                                  'getFormLength','getTotalMissionHours','getFormattedConfiguration',
-                                 'getActiveReference','getActiveRefEntry']),
+                                 'getActiveReference','getActiveRefEntry','getPresets',
+                                 'getSimdataLocation']),
 
         //Used to hide the normal button and display the active button
         isFinalForm:function() {
@@ -147,6 +148,31 @@ export default {
             this.formIndex = Math.min(max,(this.formIndex+1))
         },
 
+        handleAxiosError:function(error) {
+            console.log(error)
+            if (error.response && error.response.status == 401) {
+                alert('Please log in again to continue.')
+                this.$router.push("entry")
+            }
+            else {
+                alert(error)
+            }
+        },
+
+        downloadPresetData:async function(preset) {
+            const data_location = this.getSimdataLocation + preset.simdata_file
+            console.log(data_location)
+            try {
+                this.awaiting_response = true
+                const response = await axios.get(data_location)
+                return JSON.parse(response.data)
+                this.awaiting_response = false
+            } catch(error) {
+                this.awaiting_response = false
+                this.handleAxiosError(error)
+            }
+        },
+
         launchSimulation:async function() {
             if (this.awaiting_response) {
                 return  // wait for a response before sending a new request
@@ -156,6 +182,22 @@ export default {
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return  // abort until the form is invalid
+            }
+            const presets = this.getPresets
+            const preset_name = this.$refs.presets.$refs.preset_dropdown.value
+            if (preset_name in presets) {
+                const simdata = await this.downloadPresetData(presets[preset_name])
+                if (simdata) {
+                    try {
+                        this.SETCONFIGURATION(simdata.configuration)
+                        this.SETSIMULATIONDATA(simdata)
+                        this.SETBUFFERMAX(simdata.steps)
+                        this.SETLOADFROMSIMDATA(true)
+                        this.$router.push('dashboard')
+                    } catch (error) {
+                        console.error(error)  // report full error in the console
+                    }
+                }
             }
             try {
                 // get the formatted configuration from wizard store
@@ -178,14 +220,7 @@ export default {
                 this.awaiting_response = false
             } catch(error) {
                 this.awaiting_response = false
-                console.log(error)
-                if (error.response && error.response.status == 401) {
-                    alert('Please log in again to continue.')
-                    this.$router.push("entry")
-                }
-                else {
-                    alert(error)
-                }
+                this.handleAxiosError(error)
             }
         },
     },

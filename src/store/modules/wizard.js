@@ -154,6 +154,8 @@ export default{
         resetConfig: false,
         // default presets
         presets: get_presets(),
+        // the base url for the cached simdata
+        simdataLocation: 'https://simoc.space/download/simdata/',
         // valid values and ranges for the form inputs
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
@@ -190,6 +192,7 @@ export default{
         getFormLength: state => state.formOrder.length,
         getValidValues: state => state.validValues,
         getPresets: state => state.presets,
+        getSimdataLocation: state => state.simdataLocation,
 
         //This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
