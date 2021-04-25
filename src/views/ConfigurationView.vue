@@ -69,7 +69,7 @@ import axios from 'axios'
 import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
     components:{
         'TheTopBar': TheTopBar,
@@ -123,8 +123,10 @@ export default {
     },
     methods:{
         ...mapMutations('wizard', ['RESETCONFIG','SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETLOADFROMSIMDATA', 'SETGAMECONFIG']),
+        ...mapMutations('dashboard', ['SETLOADFROMSIMDATA','SETGAMECONFIG','SETSIMULATIONDATA',
+                                      'SETLOADFROMSIMDATA','SETBUFFERMAX']),
         ...mapMutations(['SETGAMEID']),
+        ...mapActions('wizard', ['SETCONFIGURATION']),
 
 
         toggleMenu:function(){
@@ -149,7 +151,7 @@ export default {
         },
 
         handleAxiosError:function(error) {
-            console.log(error)
+            console.error(error)
             if (error.response && error.response.status == 401) {
                 alert('Please log in again to continue.')
                 this.$router.push("entry")
@@ -159,17 +161,17 @@ export default {
             }
         },
 
-        downloadPresetData:async function(preset) {
-            const data_location = this.getSimdataLocation + preset.simdata_file
-            console.log(data_location)
+        importPresetData:function(preset) {
+            // import cached simulation data for the preset
             try {
-                this.awaiting_response = true
-                const response = await axios.get(data_location)
-                return JSON.parse(response.data)
-                this.awaiting_response = false
+                console.log('* Loading cached simdata...')
+                const fname = preset.simdata_file.split('.')[0]
+                const data = require('../assets/simdata/' + fname + '.json')
+                return data
             } catch(error) {
-                this.awaiting_response = false
-                this.handleAxiosError(error)
+                console.log('* Loading cached simdata failed, falling back on regular request')
+                console.error(error)
+                return null
             }
         },
 
@@ -177,16 +179,28 @@ export default {
             if (this.awaiting_response) {
                 return  // wait for a response before sending a new request
             }
+            // check if the form is valid
             this.validating = true
             const form = this.$refs.form
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return  // abort until the form is invalid
             }
+            // change the mouse cursor to the "loading" icon
+            this.awaiting_response = true
+            // This is a workaround to return control to the main loop
+            // so that Vue can see that the value of awaiting_response
+            // changed and update the mouse cursor to the "loading" icon.
+            // 10ms seem to be enough to give time to Vue to see the change
+            // but it's not 100% reliable.  I couldn't find a way to make
+            // it work reliably with await this.$nextTick()
+            await new Promise(r => setTimeout(r, 10))  // await for 10ms
+
+            // load cached simdata if the user selects a preset
             const presets = this.getPresets
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const simdata = await this.downloadPresetData(presets[preset_name])
+                const simdata = this.importPresetData(presets[preset_name])
                 if (simdata) {
                     try {
                         this.SETCONFIGURATION(simdata.configuration)
@@ -194,11 +208,16 @@ export default {
                         this.SETBUFFERMAX(simdata.steps)
                         this.SETLOADFROMSIMDATA(true)
                         this.$router.push('dashboard')
+                        return  // nothing else to do if this worked
                     } catch (error) {
-                        console.error(error)  // report full error in the console
+                        console.error(error)  // report full error in the console and continue
+                    } finally {
+                        this.awaiting_response = false
                     }
                 }
             }
+
+            // ask the server to calculate the simdata for custom (non-preset) configs
             try {
                 // get the formatted configuration from wizard store
                 var configParams = {step_num: this.getTotalMissionHours,
@@ -208,7 +227,6 @@ export default {
                 alert(err_msg)
                 return  // abort if there are any errors
             }
-
             try {
                 this.awaiting_response = true
                 const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
@@ -217,10 +235,10 @@ export default {
                 this.SETGAMECONFIG(response.data.game_config)
                 this.SETLOADFROMSIMDATA(false)
                 this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
-                this.awaiting_response = false
             } catch(error) {
-                this.awaiting_response = false
                 this.handleAxiosError(error)
+            } finally {
+                this.awaiting_response = false
             }
         },
     },
