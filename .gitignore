@@ -1,6 +1,8 @@
 .DS_Store
+*.diff
 node_modules
 /dist
+src/assets/simdata/
 
 # local env files
 .env.local
