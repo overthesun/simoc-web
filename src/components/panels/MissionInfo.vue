@@ -7,8 +7,8 @@
         </select>
 
         <dl v-if="info_section == 'mission-status'">
-            <dt>Mission ID:</dt>
-                <dd>{{getGameID}}</dd>
+            <dt v-if="getGameID">Mission ID:</dt>
+                <dd v-if="getGameID">{{getGameID}}</dd>
             <dt>Location:</dt>
                 <dd>{{stringFormatter(getConfiguration.location)}}</dd>
             <dt>Duration:</dt>
