@@ -223,12 +223,15 @@ export default {
             // for some background on this method.
             // Stop the get_steps timer and tell the server
             // to stop calculating steps.
-            const params = {game_id: this.getGameID}
-            try{
-                axios.post('/kill_game', params)  // kill the game
-                console.log('Simulation stopped.')
-            }catch(error){
-                console.log(error)
+            if (!this.getLoadFromSimData) {
+                // tell the server to kill the game, unless we loaded simdata
+                const params = {game_id: this.getGameID}
+                try {
+                    axios.post('/kill_game', params)  // kill the game
+                    console.log('Simulation stopped.')
+                } catch(error) {
+                    console.log(error)
+                }
             }
             this.SETTERMINATED(true)  // terminate the sim
             // stop timer that sends requests to get_steps

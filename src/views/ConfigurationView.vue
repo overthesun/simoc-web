@@ -123,7 +123,7 @@ export default {
     },
     methods:{
         ...mapMutations('wizard', ['RESETCONFIG','SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETLOADFROMSIMDATA','SETGAMECONFIG','SETSIMULATIONDATA',
+        ...mapMutations('dashboard', ['SETGAMECONFIG','SETSIMULATIONDATA',
                                       'SETLOADFROMSIMDATA','SETBUFFERMAX']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
