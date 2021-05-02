@@ -81,6 +81,7 @@ export default{
         getSimulationData: function(state) {
             return {
               'README': 'Format may vary, only import from the main menu.',
+              'game_config': state.gameConfig,
               'steps': state.maxStepBuffer,
               'parameters': state.parameters,
               'total_consumption': state.totalConsumption,
@@ -96,6 +97,7 @@ export default{
     mutations:{
         // restore simulation data returned by getSimulationData
         SETSIMULATIONDATA: function(state, simdata) {
+            state.gameConfig = simdata.game_config
             state.parameters = simdata.parameters
             state.totalConsumption = simdata.total_consumption
             state.totalProduction = simdata.total_production

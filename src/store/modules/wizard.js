@@ -4,10 +4,12 @@
 //Currently selected reference entry - this is used to set which entry should be active within the encylopedia. Mostly
 //used for clicking the form section headers to activate the approriate.
 
-function getDefaultConfig() {
+function get_default_config() {
     // return the default configuration,
     // and ensures that a new object is returned
     return {
+        name: "Default config",
+        simdata_file: "",
         location: "mars",
         duration: {type:"none", amount:null, units:"day"},
         humans: {type:"human_agent", amount:null, units:""},
@@ -20,6 +22,119 @@ function getDefaultConfig() {
         plantSpecies: [{type:"", amount:""}],
     }
 }
+
+function get_presets() {
+    return {
+        one_human: {
+            name: '1 Human',
+            simdata_file: 'simoc-simdata-1-human-preset.json',
+            location: 'mars',
+            duration: {type:'none', amount:10, units:'day'},
+            humans: {type:'human_agent', amount:1, units:''},
+            food: {type:'food_storage', amount:100, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount: 1, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:30, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'none', amount:0, units:''},
+            plantSpecies: [{type:'', amount:''}]
+        },
+        one_human_radish: {
+            name: '1 Human + Radish',
+            simdata_file: 'simoc-simdata-1-human-radish-preset.json',
+            location: 'mars',
+            duration: {type:'none', amount:30, units:'day'},
+            humans: {type:'human_agent', amount:1, units:''},
+            food: {type:'food_storage', amount:100, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:70, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'greenhouse_small', amount:1, units:''},
+            plantSpecies: [{type:'radish', amount:40}],
+        },
+        four_humans: {
+            name: '4 Humans',
+            simdata_file: 'simoc-simdata-4-human-preset.json',
+            location:'mars',
+            duration: {type:'none', amount:10, units:'day'},
+            humans: {type:'human_agent', amount:4, units:''},
+            food: {type:'food_storage', amount:100, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:30, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'none', amount:0, units:''},
+            plantSpecies: [{type:'', amount:''}]
+        },
+        four_humans_garden: {
+            name: '4 Humans + Garden',
+            simdata_file: 'simoc-simdata-4-human-garden-preset.json',
+            location: 'mars',
+            duration: {type:'none', amount:100, units:'day'},
+            humans: {type:'human_agent', amount:4, units:''},
+            food: {type:'food_storage', amount:1200, units:'kg'},
+            crewQuarters: {type:'crew_habitat_medium', amount:1, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:400, units:''},
+            powerStorage: {type:'power_storage', amount:2000, units:'kWh'},
+            greenhouse: {type:'greenhouse_small', amount:1, units:''},
+            plantSpecies: [
+                {type:'wheat', amount:20},
+                {type:'cabbage', amount:30},
+                {type:'strawberry', amount:10},
+                {type:'radish', amount:50},
+                {type:'red_beet', amount:50},
+                {type:'onion', amount:50},
+            ],
+        },
+        // these are disabled for now
+        /*
+        wheat: {
+            name: '2 Humans + Wheat (no ECLSS)',
+            simdata_file: "",
+            location: 'mars',
+            duration: {type:'none', amount:100, units:'day'},
+            humans: {type:'human_agent', amount:2, units:''},
+            food: {type:'food_storage', amount:300, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
+            eclss: {type:'eclss', amount:0, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:380, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'greenhouse_small', amount:1, units:''},
+            plantSpecies: [{type:'wheat', amount:100}],
+        },
+        humansonly: {
+            name: '2 Humans',
+            simdata_file: "",
+            location: 'mars',
+            duration: {type:'none', amount:30, units:'day'},
+            humans: {type:'human_agent', amount:2, units:''},
+            food: {type:'food_storage', amount:10000, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount:0, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:2, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'none', amount:0, units:''},
+            plantSpecies: [{type:'',  amount:''}],
+        },
+        hybridthree: {
+            name: '2 Humans + Wheat (no ECLSS, more food)',
+            simdata_file: "",
+            location: 'mars',
+            duration: {type:'none', amount:90, units:'day'},
+            humans: {type:'human_agent', amount:2, units:''},
+            food: {type:'food_storage', amount:10000, units:'kg'},
+            crewQuarters: {type:'crew_habitat_small', amount:1, units:''},
+            eclss: {type:'eclss', amount:0, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:20, units:''},
+            powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
+            greenhouse: {type:'greenhouse_small', amount:1, units:''},
+            plantSpecies: [{type:'wheat', amount:100}],
+        },*/
+    }
+}
+
 
 export default{
     state:{
@@ -37,6 +152,10 @@ export default{
         activeRefEntry: 'Welcome',
         // true if the preset dropdown and the config form should be reset
         resetConfig: false,
+        // default presets
+        presets: get_presets(),
+        // the base url for the cached simdata
+        simdataLocation: 'https://simoc.space/download/simdata/',
         // valid values and ranges for the form inputs
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
@@ -72,7 +191,8 @@ export default{
         getResetConfig: state => state.resetConfig,
         getFormLength: state => state.formOrder.length,
         getValidValues: state => state.validValues,
-
+        getPresets: state => state.presets,
+        getSimdataLocation: state => state.simdataLocation,
 
         //This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
@@ -129,12 +249,13 @@ export default{
         }
     },
     mutations:{
-        SETCONFIGURATION: function(state, value) {
+        // this method is accessed through the SETCONFIGURATION/SETPRESET actions
+        set_config: function(state, value) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             value = JSON.parse(JSON.stringify(value))
-            let newconfig = getDefaultConfig()
+            let newconfig = get_default_config()
             let valid_keys = []
             let invalid_keys = []
             Object.keys(value).forEach((key, i) => {
@@ -216,10 +337,27 @@ export default{
             state.resetConfig = value
         },
         RESETCONFIG: function(state) {
-            state.configuration = getDefaultConfig()
+            state.configuration = get_default_config()
             state.activeFormIndex = 0
             state.activeReference = 'Reference'
             state.activeRefEntry = 'Welcome'
         }
+    },
+    actions: {
+        // TODO: not sure if this is the best way to handle this.
+        // Mutations can't call each others so a SETPRESET mutation
+        // can't call a SETCONFIGURATION mutation.  I could have
+        // created a SETCONFIGURATION mutation and a SETPRESET action
+        // but I wanted to keep them together, so I created 2 actions
+        // and a mutation instead.
+        //
+        // set the configuration directly
+        SETCONFIGURATION: function(context, config) {
+            context.commit('set_config', config)
+        },
+        // set the configuration from one of the default presets
+        SETPRESET: function(context, name) {
+            context.commit('set_config', context.state.presets[name])
+        },
     }
 }

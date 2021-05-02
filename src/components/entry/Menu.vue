@@ -31,8 +31,9 @@ export default {
         'BaseEntry':BaseEntry,
     },
     methods:{
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE','SETCONFIGURATION']),
         ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
+        ...mapActions('wizard',['SETCONFIGURATION']),
         //Sends the user to the configuration menu screen. See router.js
         toConfiguration:function(){
             // menuconfig is currently skipped, we default on Custom config
