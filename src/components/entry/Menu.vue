@@ -10,6 +10,7 @@
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button form='login-form' class='btn-normal' @click="toAce">ACE EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
@@ -41,6 +42,11 @@ export default {
 
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
+        },
+        //Sends the user to the ACE Configuration Editor
+        toAce:function(){
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push("ace")
         },
         // TODO: the next 3 methods are duplicated in the config menu
         uploadSimData: function() {

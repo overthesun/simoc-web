@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import {EntryView,ConfigurationView,DashboardView} from './views'
+import {EntryView,ConfigurationView,DashboardView,AceView} from './views'
 import {EntryWelcome,EntryLogin,EntryMenu,EntryMenuConfig} from './components/entry'
 import {BaseConfiguration,BaseDashboard} from './components/base'
 //import {Login,Welcome,MainMenu} from './components/entry'
@@ -39,6 +39,18 @@ export default new Router({
           component:EntryMenuConfig
         },
       ]
+    },
+    {
+      path:"/ace",
+      name:"ace",
+      component:AceView,
+
+      // children:[
+      //   {
+      //     path:'/ace',
+      //     component:BaseConfiguration
+      //   },
+      // ]
     },
     {
       path:"/configuration",
