@@ -38,6 +38,7 @@ export default {
     .ace-wrapper{
         height: 100vh;
         width: 100vw;
+        overflow-y: scroll;
         display: flex;
         flex-direction: column;
         align-content: flex-start;
@@ -45,7 +46,7 @@ export default {
     }
 
     .ace-main{
-        padding: 20px;
+        padding: 20px 60px;
     }
 
     .ace-header{
