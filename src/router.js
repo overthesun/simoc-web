@@ -45,12 +45,6 @@ export default new Router({
       name:"ace",
       component:AceView,
 
-      // children:[
-      //   {
-      //     path:'/ace',
-      //     component:BaseConfiguration
-      //   },
-      // ]
     },
     {
       path:"/configuration",
