@@ -50,7 +50,6 @@ export default {
 
     .ace-header{
         width: 100%;
-        border: 1px solid #eee
     }
 
     .ace-body{
@@ -67,6 +66,32 @@ export default {
     .ace-display{
         width: 100%;
         border: 1px solid #eee;
+    }
+
+</style>
+
+<style lang="scss">
+    .btn-normal{
+        margin: 2px 4px;
+        border-radius: 8px;
+        padding: 4px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #0099ee;
+        border:none;
+        color: #eee;
+
+        &:hover{
+            cursor: pointer;
+        }
+
+        &:focus{
+            outline:none;
+        }
+    }
+
+    .btn-warning{
+        background-color: red;
     }
 
 </style>
