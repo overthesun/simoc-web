@@ -22,7 +22,9 @@
                 />
             </div>
             <div class="ace-display">
-                <AceDisplay />
+                <AceDisplay 
+                    v-bind:agentData="agentData"
+                />
             </div>
         </div>
         </div>
@@ -59,6 +61,13 @@ export default {
                 return ""
             } else {
                 return Object.keys(this.startingData[this.activeSection])
+            }
+        },
+        agentData: function() {
+            if (!this.activeAgent) {
+                return ""
+            } else {
+                return this.startingData[this.activeSection][this.activeAgent]
             }
         }
     }
