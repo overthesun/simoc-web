@@ -7,7 +7,7 @@
             <AceHeader />
         </div>
         <div class='ace-section-nav'>
-            <AceSectionNav 
+            <AceSectionNav
                 v-bind:sections="sections" 
                 v-bind:activeSection="activeSection"
                 v-on:setActiveSection="activeSection = $event"
@@ -15,15 +15,18 @@
         </div>
         <div class='ace-body'>
             <div class="ace-agent-nav">
-                <AceAgentNav 
+                <AceAgentNav
                     v-bind:agents="agents" 
                     v-bind:activeAgent="activeAgent"
                     v-on:setActiveAgent="activeAgent = $event"
                 />
             </div>
             <div class="ace-display">
-                <AceDisplay 
+                <AceDisplay
+                    v-bind:activeSection="activeSection"
+                    v-bind:activeAgent="activeAgent"
                     v-bind:agentData="agentData"
+                    v-on:agentData="modifyWorking($event)"
                 />
             </div>
         </div>
@@ -33,27 +36,50 @@
 
 <script>
 import {AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
-import agent_desc from "../../agent_desc.json"
+import agentDesc from "../../agent_desc.json"
 
 export default {
     components: {
         'AceAgentNav': AceAgentNav,
         'AceDisplay': AceDisplay,
         'AceHeader': AceHeader,
-        'AceSectionNav': AceSectionNav
+        'AceSectionNav': AceSectionNav,
     },
     data() {
         return{
+            // Maintain a working copy of the data and an unedited version for reset
             startingData: {},
+            workingData: {},
+
+            // Data to be passed as props
             sections: [],
-            activeSection: "",
-            activeAgent: "",
-        }
+            activeSection: null,
+            activeAgent: null,
+            agentData: null,
+        };
     },
     created() {
-        this.startingData = agent_desc
-        this.sections = Object.keys(agent_desc)
+        // Load default data
+        this.startingData = agentDesc
+        this.workingData = agentDesc  
+        this.sections = Object.keys(agentDesc)
         this.activeSection = this.sections[0]
+    },
+    watch: {
+        // Reset editor (to empty) when changing sections
+        activeSection: function(newSection, oldSection) {
+            this.activeAgent = null
+        },
+
+        // Load data to editor when agent is selected
+        activeAgent: function(newAgent, oldAgent) {
+            this.activeAgent = newAgent
+            if (!newAgent) {
+                this.agentData = null
+            } else {
+                this.agentData = this.workingData[this.activeSection][newAgent].data
+            }
+        }
     },
     computed: {
         agents: function() {
@@ -63,15 +89,16 @@ export default {
                 return Object.keys(this.startingData[this.activeSection])
             }
         },
-        agentData: function() {
-            if (!this.activeAgent) {
-                return ""
-            } else {
-                return this.startingData[this.activeSection][this.activeAgent]
+    },
+    methods: {
+        // Update the working copy of the data
+        modifyWorking: function(modified) {
+            if (modified.section && modified.agent) {
+                this.workingData[modified.section][modified.agent].data = modified.data
             }
         }
-    }
-}
+    },
+};
 </script>
 
 <style lang="scss" scoped>
