@@ -7,11 +7,11 @@
             <AceHeader />
         </div>
         <div class='ace-section-nav'>
-            <AceSectionNav />
+            <AceSectionNav v-bind:sections="sections" />
         </div>
         <div class='ace-body'>
             <div class="ace-agent-nav">
-                <AceAgentNav />
+                <AceAgentNav v-bind:agents="agents" />
             </div>
             <div class="ace-display">
                 <AceDisplay />
@@ -30,7 +30,54 @@ export default {
         'AceDisplay': AceDisplay,
         'AceHeader': AceHeader,
         'AceSectionNav': AceSectionNav
-    }
+    },
+    data() {
+        return{
+            sections: [
+                'global',
+                'currencies',
+                'inhabitants',
+                'eclss',
+                'plants',
+                'structure',
+                'power',
+                'communication',
+                'storage'
+            ],
+            agents: [
+                'Rice',
+                'Wheat',
+                'Cabbage',
+                'Chard',
+                'Celery',
+                'Lettuce',
+                'Spinach',
+                'Dry Bean',
+                'Peanut',
+                'Soybean',
+                'Strawberry',
+                'Tomato',
+                'Green Onion',
+                'Onion',
+                'Pea',
+                'Pepper',
+                'Snap Bean',
+                'Radish',
+                'Red Beet',
+                'Carrot',
+                'Sweet Potato',
+                'White Potato'
+            ]
+        }
+    },
+    // created: function() {
+    //     fetch('../../agent_desc.json')
+    //         .then(result => result.json())
+    //         .then(data => {
+    //             this.sections = Object.keys(data)
+    //             console.log(data)
+    //         })
+    // }
 }
 </script>
 

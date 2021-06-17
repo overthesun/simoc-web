@@ -1,26 +1,29 @@
 <template>
     <div class="menu">
         <div v-for="section in sections" v-bind:key="section">
-            <div class='section option-item'>{{ section }}</div>
+            <div 
+                class='section option-item' 
+                @click='handleClick(section)'
+                :class="{ 'option-item-active' : section === activeSection }"
+            >{{ section.toUpperCase() }}</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    props: [
+        'sections'
+    ],
     data() {
         return {
-            sections: [
-                'GLOBAL',
-                'CURRENCIES',
-                'INHABITANTS',
-                'ECLSS',
-                'PLANTS',
-                'STRUCTURE',
-                'POWER',
-                'COMMUNICATION',
-                'STORAGE'
-            ]
+            activeSection: "global"
+        }
+    },
+    methods: {
+        handleClick: function(section) {
+            this.activeSection = section
+            console.log(section)
         }
     }
 }
@@ -32,6 +35,7 @@ export default {
         display: flex;
         flex-flow: row wrap;
         width: 100%;
+        margin-bottom: 10px;
     }
 
     .section {
