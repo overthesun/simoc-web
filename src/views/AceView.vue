@@ -7,11 +7,19 @@
             <AceHeader />
         </div>
         <div class='ace-section-nav'>
-            <AceSectionNav v-bind:sections="sections" />
+            <AceSectionNav 
+                v-bind:sections="sections" 
+                v-bind:activeSection="activeSection"
+                v-on:setActiveSection="activeSection = $event"
+            />
         </div>
         <div class='ace-body'>
             <div class="ace-agent-nav">
-                <AceAgentNav v-bind:agents="agents" />
+                <AceAgentNav 
+                    v-bind:agents="agents" 
+                    v-bind:activeAgent="activeAgent"
+                    v-on:setActiveAgent="activeAgent = $event"
+                />
             </div>
             <div class="ace-display">
                 <AceDisplay />
@@ -23,6 +31,7 @@
 
 <script>
 import {AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
+import agent_desc from "../../agent_desc.json"
 
 export default {
     components: {
@@ -33,51 +42,26 @@ export default {
     },
     data() {
         return{
-            sections: [
-                'global',
-                'currencies',
-                'inhabitants',
-                'eclss',
-                'plants',
-                'structure',
-                'power',
-                'communication',
-                'storage'
-            ],
-            agents: [
-                'Rice',
-                'Wheat',
-                'Cabbage',
-                'Chard',
-                'Celery',
-                'Lettuce',
-                'Spinach',
-                'Dry Bean',
-                'Peanut',
-                'Soybean',
-                'Strawberry',
-                'Tomato',
-                'Green Onion',
-                'Onion',
-                'Pea',
-                'Pepper',
-                'Snap Bean',
-                'Radish',
-                'Red Beet',
-                'Carrot',
-                'Sweet Potato',
-                'White Potato'
-            ]
+            startingData: {},
+            sections: [],
+            activeSection: "",
+            activeAgent: "",
         }
     },
-    // created: function() {
-    //     fetch('../../agent_desc.json')
-    //         .then(result => result.json())
-    //         .then(data => {
-    //             this.sections = Object.keys(data)
-    //             console.log(data)
-    //         })
-    // }
+    created() {
+        this.startingData = agent_desc
+        this.sections = Object.keys(agent_desc)
+        this.activeSection = this.sections[0]
+    },
+    computed: {
+        agents: function() {
+            if (!this.activeSection) {
+                return ""
+            } else {
+                return Object.keys(this.startingData[this.activeSection])
+            }
+        }
+    }
 }
 </script>
 

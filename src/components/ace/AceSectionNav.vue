@@ -3,7 +3,7 @@
         <div v-for="section in sections" v-bind:key="section">
             <div 
                 class='section option-item' 
-                @click='handleClick(section)'
+                @click="$emit('setActiveSection', section)"
                 :class="{ 'option-item-active' : section === activeSection }"
             >{{ section.toUpperCase() }}</div>
         </div>
@@ -13,19 +13,9 @@
 <script>
 export default {
     props: [
-        'sections'
+        'sections',
+        'activeSection'
     ],
-    data() {
-        return {
-            activeSection: "global"
-        }
-    },
-    methods: {
-        handleClick: function(section) {
-            this.activeSection = section
-            console.log(section)
-        }
-    }
 }
 </script>
 

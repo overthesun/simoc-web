@@ -3,7 +3,7 @@
         <div v-for='agent in agents' :key='agent'>
             <div 
                 class='btn-agent' 
-                @click="handleClick(agent)"
+                @click="$emit('setActiveAgent', agent)"
                 :class="{ 'btn-agent-active' : agent === activeAgent}"
             >{{ agent }}</div>
         </div>
@@ -13,19 +13,9 @@
 <script>
 export default {
     props: [
-        'agents'
+        'agents',
+        'activeAgent'
     ],
-    data() {
-        return {
-            activeAgent: ''
-        }
-    },
-    methods: {
-        handleClick: function(agent) {
-            this.activeAgent = agent
-            console.log(this.activeAgent)
-        }
-    }
 }
 </script>
 
