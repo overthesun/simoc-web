@@ -50,9 +50,6 @@ export default {
             return text.split("_").join(" ").toUpperCase()
         }
     },
-    created() {
-        library.add(faChevronLeft, faChevronRight)
-    }
 }
 </script>
 
