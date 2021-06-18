@@ -1,6 +1,11 @@
 <template>
-    <div class='columns' :class="{ 'hidden' : activeAgent === null }">
-        <div class='column col-md-12' id='editor_holder'></div>
+    <div>
+        <div class="empty-msg" :class="{ 'empty-msg-hidden' : (activeAgent) }">
+            Select an agent to get started.
+        </div>
+        <div class='editor' :class="{ 'hidden' : activeAgent === null }">
+            <div id='editor_holder'></div>
+        </div>
     </div>
 </template>
 
@@ -24,11 +29,14 @@ export default {
     async mounted() {
         this.editor = new JSONEditor(document.getElementById('editor_holder'),{
             schema: agent_schema,
+            theme: 'html',
+            disable_properties: true,
             required_by_default: false,
             remove_empty_properties: true,
             show_opt_in: true,
             startval: {}
         });    
+
     },
     watch: {
         agentData: function(newData, oldData) {
@@ -57,7 +65,7 @@ export default {
             // Load editor
             this.editor.setValue(newData ? newData : {})
         }
-    }
+    },
 }
 </script>
 
@@ -65,6 +73,63 @@ export default {
 
     .hidden {
         display: none;
+    }
+
+    .empty-msg {
+        width: 100%;
+        size: 14px;
+        text-align: center;
+
+        &-hidden{
+            display: none;
+        }
+    }
+
+</style>
+
+<style lang="scss">
+
+    .je-header {
+        margin: 0;
+    }
+
+    // move content to the right of tab selector
+    .content {
+        margin-left: 120px;
+    }
+
+    // make rows horizontal
+    .row {
+        margin: 0;
+        padding: 0;
+    }
+
+    .je-tab {
+        color: black;
+        font-weight: 400;
+        background-color: #eee;
+    }
+
+    .form-control {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .je-form-input-label + input{
+        position: absolute;
+        left: 200px;
+    }
+
+    .je-form-input-label + select{
+        position: absolute;
+        left: 200px;
+    }
+
+    .json-editor-btc-collapse { background-color: transparent }
+
+    .json-editor-btn-subtract { display: none; }
+
+    .json-editor-btntype-deleteall { display: none;
     }
 
 </style>
