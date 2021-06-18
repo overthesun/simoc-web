@@ -1,7 +1,7 @@
 <template>
     <div class="section-nav-wrapper">
         <span title='Scroll Left'>
-            <fa-icon icon="arrow-left" @click="scroll('left')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : leftEnd === true }"/>
+            <fa-icon :icon="['fas','chevron-left']" @click="scroll('left')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : leftEnd === true }"/>
         </span>
         <div class="section-nav-menu" v-on:scroll.passive="checkEdges">
             <div v-for="section in sections" v-bind:key="section" >
@@ -13,7 +13,7 @@
             </div>
         </div>
         <span title='Scroll Right'>
-            <fa-icon icon="arrow-right" @click="scroll('right')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : rightEnd === true }"/>
+            <fa-icon :icon="['fas','chevron-right']" @click="scroll('right')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : rightEnd === true }"/>
         </span>
     </div>
 </template>
@@ -50,6 +50,9 @@ export default {
             return text.split("_").join(" ").toUpperCase()
         }
     },
+    created() {
+        library.add(faChevronLeft, faChevronRight)
+    }
 }
 </script>
 
@@ -61,6 +64,7 @@ export default {
 
         &:hover{
             cursor:pointer;
+            background-color: rgba(238, 238, 238, 0.2);
         }
 
         &-hidden{
@@ -98,6 +102,7 @@ export default {
 
         &:hover{
             cursor:pointer;
+            background-color: rgba(238, 238, 238, 0.2);
         }
 
         &:after{
