@@ -2,6 +2,10 @@
 
 <template>
     <div class='ace-wrapper'>
+        <TheTopBar />
+        <!-- Show the ACE menu component when getMenuActive is true. -->
+        <AceMenu v-if="getMenuActive" />
+
         <div class='ace-main'>
         <div class='ace-header'>
             <AceHeader />
@@ -35,11 +39,15 @@
 </template>
 
 <script>
-import {AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
-import agentDesc from "../../agent_desc.json"
+import {TheTopBar} from '../components/bars'
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {AceMenu,AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
+import agentDesc from '../../agent_desc.json'
 
 export default {
     components: {
+        'TheTopBar': TheTopBar,
+        'AceMenu': AceMenu,
         'AceAgentNav': AceAgentNav,
         'AceDisplay': AceDisplay,
         'AceHeader': AceHeader,
@@ -82,6 +90,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('dashboard', ['getMenuActive']),
+
+        // Return agents based on selected section
         agents: function() {
             if (!this.activeSection) {
                 return ""
