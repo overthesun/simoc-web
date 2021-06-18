@@ -148,6 +148,7 @@ export default {
 
         //Added for ACE
         height: auto;
+        padding-bottom: 16px;
 
        &:after{
             position:absolute;
@@ -157,7 +158,7 @@ export default {
             border-bottom:2px solid #999;
             left:0;
             top:100%;
-            margin-top:16px;
+            // margin-top:16px;
         }
     }
 

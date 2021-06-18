@@ -1,40 +1,99 @@
 <template>
-    <div class="menu">
-        <div v-for="section in sections" v-bind:key="section">
-            <div 
-                class='section option-item' 
-                @click="$emit('setActiveSection', section)"
-                :class="{ 'option-item-active' : section === activeSection }"
-            >{{ section.toUpperCase() }}</div>
+    <div class="section-nav-wrapper">
+        <span title='Scroll Left'>
+            <fa-icon icon="arrow-left" @click="scroll('left')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : leftEnd === true }"/>
+        </span>
+        <div class="section-nav-menu" v-on:scroll.passive="checkEdges">
+            <div v-for="section in sections" v-bind:key="section" >
+                <div 
+                    class='option-item' 
+                    @click="$emit('setActiveSection', section)"
+                    :class="{ 'option-item-active' : section === activeSection }"
+                >{{ formatSection(section) }}</div>
+            </div>
         </div>
+        <span title='Scroll Right'>
+            <fa-icon icon="arrow-right" @click="scroll('right')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : rightEnd === true }"/>
+        </span>
     </div>
 </template>
 
 <script>
+
 export default {
     props: [
         'sections',
         'activeSection'
     ],
+    data() {
+        return {
+            leftEnd: true,
+            rightEnd: false,
+        }
+    },
+    methods: {
+        scroll: function(dir) {
+            let menu = document.querySelector('.section-nav-menu')
+            switch (dir) {
+                case 'left': menu.scrollLeft -= 60; break;
+                case 'right': menu.scrollLeft += 60; break;
+                case 'default': break;
+            }
+            this.checkEdges()
+        },
+        checkEdges: function(e) {
+            let menu = document.querySelector('.section-nav-menu')
+            this.leftEnd = (menu.scrollLeft === 0) ? true : false
+            this.rightEnd = (menu.scrollLeft + menu.offsetWidth === menu.scrollWidth) ? true : false
+        },
+        formatSection: function(text) {
+            return text.split("_").join(" ").toUpperCase()
+        }
+    },
 }
 </script>
 
 <style lang="scss" scoped>
 
-    .menu {
-        display: flex;
-        flex-flow: row wrap;
-        width: 100%;
-        margin-bottom: 10px;
+    .scrollArrow {
+        font-size: 18px;
+        padding: 12px 8px;
+
+        &:hover{
+            cursor:pointer;
+        }
+
+        &-hidden{
+            display: none
+        }
     }
 
-    .section {
-        padding: 10px 30px;
-        font-size: 20px;
+    // Hidden scroll: https://stackoverflow.com/questions/25067224/horizontally-scrollable-without-scrollbar
+    .section-nav-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .section-nav-menu {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        height: 90px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
     }
 
     // Copied from BaseConfiguration.vue
     .option-item {
+        // padding: 10px 30px;
+        // font-size: 20px;
+        padding: 8px 20px;
+        font-size: 18px;
         position:relative;
 
         &:hover{
