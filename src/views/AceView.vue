@@ -9,6 +9,8 @@
         <div class='ace-main'>
             <header>ADVANCED CONFIGURATION EDITOR</header> 
 
+            <hr class="rule">
+
             <AceSectionNav
                 v-bind:sections="sections" 
                 v-bind:activeSection="activeSection"
@@ -20,6 +22,8 @@
                 v-bind:activeAgent="activeAgent"
                 v-on:setActiveAgent="activeAgent = $event"
             />
+
+            <hr class="rule">
 
             <AceDisplay
                 v-bind:activeSection="activeSection"
@@ -148,18 +152,12 @@ export default {
 
         //Added for ACE
         height: auto;
-        padding-bottom: 16px;
 
-       &:after{
-            position:absolute;
-            content:"";
-            display:block;
-            width:100%;
-            border-bottom:2px solid #999;
-            left:0;
-            top:100%;
-            // margin-top:16px;
-        }
+    }
+
+    .rule {
+        margin-top: 8px;
+        color: #999
     }
 
     .ace-body{
