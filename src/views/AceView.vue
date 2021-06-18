@@ -7,33 +7,26 @@
         <AceMenu v-if="getMenuActive" />
 
         <div class='ace-main'>
-        <div class='ace-header'>
-            <AceHeader />
-        </div>
-        <div class='ace-section-nav'>
+            <header>ADVANCED CONFIGURATION EDITOR</header> 
+
             <AceSectionNav
                 v-bind:sections="sections" 
                 v-bind:activeSection="activeSection"
                 v-on:setActiveSection="activeSection = $event"
             />
-        </div>
-        <div class='ace-body'>
-            <div class="ace-agent-nav">
-                <AceAgentNav
-                    v-bind:agents="agents" 
-                    v-bind:activeAgent="activeAgent"
-                    v-on:setActiveAgent="activeAgent = $event"
-                />
-            </div>
-            <div class="ace-display">
-                <AceDisplay
-                    v-bind:activeSection="activeSection"
-                    v-bind:activeAgent="activeAgent"
-                    v-bind:agentData="agentData"
-                    v-on:agentData="modifyWorking($event)"
-                />
-            </div>
-        </div>
+
+            <AceAgentNav
+                v-bind:agents="agents" 
+                v-bind:activeAgent="activeAgent"
+                v-on:setActiveAgent="activeAgent = $event"
+            />
+
+            <AceDisplay
+                v-bind:activeSection="activeSection"
+                v-bind:activeAgent="activeAgent"
+                v-bind:agentData="agentData"
+                v-on:agentData="modifyWorking($event)"
+            />
         </div>
     </div>
 </template>
@@ -113,6 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
     .ace-wrapper{
         height: 100vh;
         width: 100vw;
@@ -124,11 +118,47 @@ export default {
     }
 
     .ace-main{
-        padding: 20px 60px;
+        // Copied '.configuration-wrapper' from BaseConfiguration.vue
+        position: relative;
+        height: 80vh;
+        width: 80vw;
+        max-width: 1200px;
+        margin: auto;
+        // display: grid;
+        // grid-template-columns: 50% 50%;
+        // grid-template-rows: minmax(0,1fr);
+        box-sizing: border-box;
+        background-color: #1e1e1eaa;
+        border: 1px solid #666;
+        border-radius: 5px;
+
+        // Added for ACE
+        padding:16px;
     }
 
-    .ace-header{
-        width: 100%;
+    // Copied from BaseConfiguration.vue
+    header {
+        font-family: "Nasalization", "Open Sans", sans-serif;
+        font-weight: 200;
+        font-size: 22px;
+        display:flex;
+        justify-content:flex-start;
+        align-items:center;
+        position:relative;
+
+        //Added for ACE
+        height: auto;
+
+       &:after{
+            position:absolute;
+            content:"";
+            display:block;
+            width:100%;
+            border-bottom:2px solid #999;
+            left:0;
+            top:100%;
+            margin-top:16px;
+        }
     }
 
     .ace-body{
