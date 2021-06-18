@@ -114,7 +114,6 @@ export default {
     .ace-wrapper{
         height: 100vh;
         width: 100vw;
-        overflow-y: scroll;
         display: flex;
         flex-direction: column;
         align-content: flex-start;
@@ -124,10 +123,11 @@ export default {
     .ace-main{
         // Copied '.configuration-wrapper' from BaseConfiguration.vue
         position: relative;
-        height: 80vh;
+        height: 100%;
         width: 80vw;
         max-width: 1200px;
         margin: auto;
+        margin-top: 20px;
         // display: grid;
         // grid-template-columns: 50% 50%;
         // grid-template-rows: minmax(0,1fr);
