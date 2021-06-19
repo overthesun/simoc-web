@@ -112,12 +112,12 @@ export default {
 <style lang="scss" scoped>
 
     .ace-wrapper{
-        height: 100vh;
+        min-height: 100vh;
         width: 100vw;
         display: flex;
         flex-direction: column;
         align-content: flex-start;
-        justify-content: start;
+        justify-content: flex-start;
     }
 
     .ace-main{
