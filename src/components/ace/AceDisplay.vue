@@ -4,7 +4,8 @@
             Select an agent to get started.
         </div>
         <div class='editor' :class="{ 'hidden' : activeAgent === null }">
-            <div id='editor_holder'></div>
+            <div id='agentEditor' :class="{ 'hidden' : customAgent }"></div>
+            <div id='customEditor' :class="{ 'hidden' : !customAgent }"></div>
         </div>
     </div>
 </template>
@@ -17,18 +18,19 @@ export default {
     props: [
         'activeSection',
         'activeAgent',
-        'agentData'
+        'agentData',
+        'customFields'
     ],
     data() {
         return {
             workingSection: null,
             workingAgent: null,
-            editor: {}
+            agentEditor: {},
         }
     },
     async mounted() {
-        this.editor = new JSONEditor(document.getElementById('editor_holder'),{
-            schema: agent_schema,
+        this.agentEditor = new JSONEditor(document.getElementById('agentEditor'),{
+            schema: agent_schema.agent,
             theme: 'html',
             disable_properties: true,
             required_by_default: false,
@@ -36,14 +38,47 @@ export default {
             show_opt_in: true,
             startval: {}
         });    
-
+        this.customEditor = new JSONEditor(document.getElementById('customEditor'),{
+            schema: agent_schema.custom,
+            theme: 'html',
+            disable_properties: true,
+            remove_empty_properties: true,
+            disable_collapse: true,
+            disable_edit_json: true,
+            array_controls_top: true,
+            form_name_root: "",
+            startval: {}
+        });
+    },
+    computed: {
+        customAgent: function() {return this.isCustom(this.activeAgent)}
+    },
+    methods: {
+        isCustom: function(agent) {
+            return (this.customFields.includes(agent))
+        }
     },
     watch: {
         agentData: function(newData, oldData) {
+            var editorData = null
 
             // Return modified data
+            if (this.isCustom(this.workingAgent)) {
+                editorData = this.customEditor.getValue()
+            } else {
+                let parsedData = this.agentEditor.getValue()
+                
+                // Agent data needs to be reformatted to display properly
+                editorData = {
+                    data: {
+                        input: parsedData.input,
+                        output: parsedData.output,
+                        cahracteristics: parsedData.characteristics
+                    },
+                    description: parsedData.description
+                }
+            }
             if (oldData) {
-                let editorData = this.editor.getValue()
                 if (JSON.stringify(editorData) !== JSON.stringify(oldData)) {
                     this.$emit("agentData", {
                         section: this.workingSection, 
@@ -53,7 +88,7 @@ export default {
                 };
             }
 
-            // Record working section
+            // Update working
             if (newData) {
                 this.workingSection = this.activeSection
                 this.workingAgent = this.activeAgent
@@ -62,8 +97,25 @@ export default {
                 this.workingAgent = null
             }
 
-            // Load editor
-            this.editor.setValue(newData ? newData : {})
+            // Load the correct editor
+            if (this.isCustom(this.activeAgent)) {
+                this.customEditor.setValue(newData ? newData : {})
+                this.agentEditor.setValue({})
+            } else {
+                this.customEditor.setValue({})
+                if (newData) {
+                    let parsedData = {
+                        name: this.workingAgent,
+                        description: newData.description,
+                        input: newData.data.input,
+                        output: newData.data.output,
+                        characteristics: newData.data.characteristics
+                    }
+                    this.agentEditor.setValue(parsedData)
+                } else {
+                    this.agentEditor.setValue({})
+                }
+            }
         }
     },
 }
@@ -98,12 +150,6 @@ export default {
         margin-left: 120px;
     }
 
-    // make rows horizontal
-    .row {
-        margin: 0;
-        padding: 0;
-    }
-
     .je-tab {
         color: black;
         font-weight: 400;
@@ -129,7 +175,6 @@ export default {
 
     .json-editor-btn-subtract { display: none; }
 
-    .json-editor-btntype-deleteall { display: none;
-    }
+    .json-editor-btntype-deleteall { display: none;}
 
 </style>

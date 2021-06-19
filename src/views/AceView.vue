@@ -29,7 +29,9 @@
                 v-bind:activeSection="activeSection"
                 v-bind:activeAgent="activeAgent"
                 v-bind:agentData="agentData"
-                v-on:agentData="modifyWorking($event)"
+                v-bind:customFields="customFields"
+                v-bind:currencies="currencies"
+                v-on:agentData="updateWorkingData($event)"
             />
         </div>
     </div>
@@ -61,14 +63,12 @@ export default {
             activeSection: null,
             activeAgent: null,
             agentData: null,
+            customFields: [],
+            currencies: []
         };
     },
     created() {
-        // Load default data
-        this.startingData = agentDesc
-        this.workingData = agentDesc  
-        this.sections = Object.keys(agentDesc)
-        this.activeSection = this.sections[0]
+        this.importData(agentDesc)
     },
     watch: {
         // Reset editor (to empty) when changing sections
@@ -82,7 +82,7 @@ export default {
             if (!newAgent) {
                 this.agentData = null
             } else {
-                this.agentData = this.workingData[this.activeSection][newAgent].data
+                this.agentData = this.workingData[this.activeSection][newAgent]
             }
         }
     },
@@ -99,10 +99,48 @@ export default {
         },
     },
     methods: {
+        importData: function(rawData) {
+            
+            // Simulation variables converted to arrays for better json-editor layout
+            let sv = rawData.simulation_variables
+            Object.keys(sv).forEach(field => {
+                this.customFields.push(field)
+                let asArray = []
+                Object.keys(sv[field]).forEach(key => {
+                    asArray.push({type: key, value: sv[field][key]})
+                })
+                rawData.simulation_variables[field] = asArray
+
+                // Keep separate list of currencies for agent flow selector
+                if (field === 'currencies_of_exchange') {
+                    this.currencies = sv[field]
+                }
+            })
+
+            // Load default data
+            this.startingData = rawData
+            this.workingData = rawData  
+            this.sections = Object.keys(rawData)
+            this.activeSection = this.sections[0]
+        },
+
         // Update the working copy of the data
-        modifyWorking: function(modified) {
+        updateWorkingData: function(modified) {
             if (modified.section && modified.agent) {
-                this.workingData[modified.section][modified.agent].data = modified.data
+
+                // Update currencies list
+                if (modified.agent === 'currencies_of_exchange') {
+                    this.currencies = modified.data
+                } 
+
+                // Update custom fields
+                if (this.customFields.includes(modified.agent)) {
+                    this.workingData[modified.section][modified.agent] = modified.data
+
+                // Update normal field
+                } else {
+                    this.workingData[modified.section][modified.agent] = modified.data
+                }
             }
         }
     },
