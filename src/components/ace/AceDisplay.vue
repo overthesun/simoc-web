@@ -64,11 +64,13 @@ export default {
 
             // Return modified data
             if (this.isCustom(this.workingAgent)) {
-                editorData = this.customEditor.getValue()
+                let asObject = {}
+                this.customEditor.getValue().forEach(item => {
+                    asObject[item.type] = item.value
+                })
+                editorData = asObject
             } else {
                 let parsedData = this.agentEditor.getValue()
-                
-                // Agent data needs to be reformatted to display properly
                 editorData = {
                     data: {
                         input: parsedData.input,
@@ -99,8 +101,16 @@ export default {
 
             // Load the correct editor
             if (this.isCustom(this.activeAgent)) {
-                this.customEditor.setValue(newData ? newData : {})
                 this.agentEditor.setValue({})
+                if (newData) {
+                    var asArray = []
+                    Object.keys(newData).forEach(key => {
+                        asArray.push({type: key, value: newData[key]})
+                    })
+                    this.customEditor.setValue(asArray)
+                } else {
+                    this.customEditor.setValue({})
+                }
             } else {
                 this.customEditor.setValue({})
                 if (newData) {

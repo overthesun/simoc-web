@@ -8,7 +8,6 @@
 
         <div class='ace-main'>
             <header>ADVANCED CONFIGURATION EDITOR</header> 
-
             <hr class="rule">
 
             <AceSectionNav
@@ -41,7 +40,7 @@
 import {TheTopBar} from '../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {AceMenu,AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
-import agentDesc from '../../agent_desc.json'
+import defaultAgentDesc from '../../agent_desc.json'
 
 export default {
     components: {
@@ -68,7 +67,8 @@ export default {
         };
     },
     created() {
-        this.importData(agentDesc)
+        this.startingData = defaultAgentDesc
+        this.loadData(defaultAgentDesc)
     },
     watch: {
         // Reset editor (to empty) when changing sections
@@ -94,26 +94,26 @@ export default {
             if (!this.activeSection) {
                 return ""
             } else {
-                return Object.keys(this.startingData[this.activeSection])
+                return Object.keys(this.workingData[this.activeSection])
             }
         },
     },
     methods: {
-        importData: function(rawData) {
+        resetData: function() {
+            this.loadData(this.startingData)
+        },
+        loadData: function(rawData) {
+            console.log(rawData)
+            this.activeAgent = null
+            this.agentData = null
+            this.customFields = []
+            this.currencies = []
             
-            // Simulation variables converted to arrays for better json-editor layout
-            let sv = rawData.simulation_variables
-            Object.keys(sv).forEach(field => {
+            // Simulation variables use a different editor
+            Object.keys(rawData.simulation_variables).forEach(field => {
                 this.customFields.push(field)
-                let asArray = []
-                Object.keys(sv[field]).forEach(key => {
-                    asArray.push({type: key, value: sv[field][key]})
-                })
-                rawData.simulation_variables[field] = asArray
-
-                // Keep separate list of currencies for agent flow selector
                 if (field === 'currencies_of_exchange') {
-                    this.currencies = sv[field]
+                    this.currencies = Object.keys(rawData.simulation_variables[field])
                 }
             })
 
@@ -128,13 +128,13 @@ export default {
         updateWorkingData: function(modified) {
             if (modified.section && modified.agent) {
 
-                // Update currencies list
-                if (modified.agent === 'currencies_of_exchange') {
-                    this.currencies = modified.data
-                } 
-
                 // Update custom fields
                 if (this.customFields.includes(modified.agent)) {
+
+                    // Update currencies
+                if (modified.agent === 'currencies_of_exchange') {
+                        this.currencies = Object.keys(modified.data)
+                } 
                     this.workingData[modified.section][modified.agent] = modified.data
 
                 // Update normal field
