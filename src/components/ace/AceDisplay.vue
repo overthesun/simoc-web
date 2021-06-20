@@ -13,12 +13,10 @@
 <script>
 import agent_schema from "../../../agent_schema.json"
 import { JSONEditor } from '@json-editor/json-editor'
+import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
     props: [
-        'activeSection',
-        'activeAgent',
-        'agentData',
         'customFields'
     ],
     data() {
@@ -51,9 +49,16 @@ export default {
         });
     },
     computed: {
+        ...mapGetters('ace', {
+            agentData: 'getActiveAgentData',
+            activeSection: 'getActiveSection',
+            activeAgent: 'getActiveAgent'
+        }),
         customAgent: function() {return this.isCustom(this.activeAgent)}
     },
     methods: {
+        ...mapMutations('ace', ['UPDATEAGENT']),
+
         isCustom: function(agent) {
             return (this.customFields.includes(agent))
         }

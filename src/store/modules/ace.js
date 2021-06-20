@@ -4,7 +4,7 @@ function get_template_agent_desc() {
     // return the basic structure agent_desc,
     // used to validate user-uploaded agent_desc files
     return {
-        siulation_variables: {
+        simulation_variables: {
             currencies_of_exchange: {},
             global_variables: {},
         },
@@ -16,7 +16,7 @@ function get_template_agent_desc() {
         fabrication: {},
         power_generation: {},
         mobility: {},
-        comunication: {},
+        communication: {},
         storage: {}
     }
 }
@@ -104,7 +104,7 @@ export default{
             state.activeAgentDesc = value
         },
         SETCURRENCIES: function(state, value) {
-            state.activeCurrencies = currencies
+            state.activeCurrencies = value
         },
         SETACTIVESECTION: function(state, value) {
             state.activeSection = value

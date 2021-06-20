@@ -10,24 +10,12 @@
             <header>ADVANCED CONFIGURATION EDITOR</header> 
             <hr class="rule">
 
-            <AceSectionNav
-                v-bind:sections="sections" 
-                v-bind:activeSection="activeSection"
-                v-on:setActiveSection="activeSection = $event"
-            />
-
-            <AceAgentNav
-                v-bind:agents="agents" 
-                v-bind:activeAgent="activeAgent"
-                v-on:setActiveAgent="activeAgent = $event"
-            />
+            <AceSectionNav />
+            <AceAgentNav />
 
             <hr class="rule">
 
             <AceDisplay
-                v-bind:activeSection="activeSection"
-                v-bind:activeAgent="activeAgent"
-                v-bind:agentData="agentData"
                 v-bind:customFields="customFields"
                 v-bind:currencies="currencies"
                 v-on:agentData="updateWorkingData($event)"
@@ -67,27 +55,14 @@ export default {
         };
     },
     created() {
+        this.SETAGENTDESC(defaultAgentDesc)
+
         this.startingData = defaultAgentDesc
         this.loadData(defaultAgentDesc)
     },
-    watch: {
-        // Reset editor (to empty) when changing sections
-        activeSection: function(newSection, oldSection) {
-            this.activeAgent = null
-        },
-
-        // Load data to editor when agent is selected
-        activeAgent: function(newAgent, oldAgent) {
-            this.activeAgent = newAgent
-            if (!newAgent) {
-                this.agentData = null
-            } else {
-                this.agentData = this.workingData[this.activeSection][newAgent]
-            }
-        }
-    },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),
+        ...mapGetters('ace', ['getActiveSection']),
 
         // Return agents based on selected section
         agents: function() {
@@ -99,6 +74,8 @@ export default {
         },
     },
     methods: {
+        ...mapActions('ace', ['SETAGENTDESC']),
+
         resetData: function() {
             this.loadData(this.startingData)
         },

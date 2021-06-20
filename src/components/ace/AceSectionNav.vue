@@ -4,11 +4,11 @@
             <fa-icon :icon="['fas','chevron-left']" @click="scroll('left')" class="scrollArrow" :class="{ 'scrollArrow-hidden' : leftEnd === true }"/>
         </span>
         <div class="section-nav-menu" v-on:scroll.passive="checkEdges">
-            <div v-for="section in sections" v-bind:key="section" >
+            <div v-for="section in getSections" v-bind:key="section" >
                 <div 
                     class='option-item' 
-                    @click="$emit('setActiveSection', section)"
-                    :class="{ 'option-item-active' : section === activeSection }"
+                    @click="handleChangeSection(section)"
+                    :class="{ 'option-item-active' : section === getActiveSection }"
                 >{{ formatSection(section) }}</div>
             </div>
         </div>
@@ -19,12 +19,12 @@
 </template>
 
 <script>
+import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
-    props: [
-        'sections',
-        'activeSection'
-    ],
+    computed: {
+        ...mapGetters('ace',['getSections','getActiveSection']),
+    },
     data() {
         return {
             leftEnd: true,
@@ -32,6 +32,15 @@ export default {
         }
     },
     methods: {
+        ...mapMutations('ace',['SETACTIVESECTION']),
+
+        handleChangeSection: function(section) {
+            // TODO: validate Editor, alert if non-valid changes
+
+            this.SETACTIVESECTION(section)
+        },
+
+        // Control the scroll buttons
         scroll: function(dir) {
             let menu = document.querySelector('.section-nav-menu')
             switch (dir) {
@@ -41,11 +50,15 @@ export default {
             }
             this.checkEdges()
         },
+
+        // Remove scroll buttons when at edge of frame
         checkEdges: function(e) {
             let menu = document.querySelector('.section-nav-menu')
             this.leftEnd = (menu.scrollLeft === 0) ? true : false
             this.rightEnd = (menu.scrollLeft + menu.offsetWidth === menu.scrollWidth) ? true : false
         },
+
+        // Make it pretty
         formatSection: function(text) {
             return text.split("_").join(" ").toUpperCase()
         }
