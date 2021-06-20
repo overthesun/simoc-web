@@ -9,13 +9,11 @@
         <div class='ace-main'>
             <header>ADVANCED CONFIGURATION EDITOR</header> 
             <hr class="rule">
-
             <AceSectionNav />
             <AceAgentNav />
-
             <hr class="rule">
 
-            <AceDisplay
+            <AceEditor
                 v-bind:customFields="customFields"
                 v-bind:currencies="currencies"
                 v-on:agentData="updateWorkingData($event)"
@@ -27,7 +25,7 @@
 <script>
 import {TheTopBar} from '../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {AceMenu,AceAgentNav,AceDisplay,AceHeader,AceSectionNav} from '../components/ace'
+import {AceMenu,AceAgentNav,AceEditor,AceHeader,AceSectionNav} from '../components/ace'
 import defaultAgentDesc from '../../agent_desc.json'
 
 export default {
@@ -35,7 +33,7 @@ export default {
         'TheTopBar': TheTopBar,
         'AceMenu': AceMenu,
         'AceAgentNav': AceAgentNav,
-        'AceDisplay': AceDisplay,
+        'AceEditor': AceEditor,
         'AceHeader': AceHeader,
         'AceSectionNav': AceSectionNav,
     },
@@ -74,7 +72,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions('ace', ['SETAGENTDESC']),
+        ...mapMutations('ace', ['SETAGENTDESC']),
 
         resetData: function() {
             this.loadData(this.startingData)
@@ -170,51 +168,25 @@ export default {
 
     }
 
-    .rule {
-        margin-top: 8px;
-        color: #999
-    }
+    // .rule {
+    //     margin-top: 8px;
+    //     color: #999
+    // }
 
-    .ace-body{
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-    }
+    // .ace-body{
+    //     display: flex;
+    //     flex-direction: row;
+    //     justify-content: flex-start;
+    // }
 
-    .ace-agent-nav{
-        width: 200px;
-        border: 1px solid #eee
-    }
+    // .ace-agent-nav{
+    //     width: 200px;
+    //     border: 1px solid #eee
+    // }
 
-    .ace-display{
-        width: 100%;
-        border: 1px solid #eee;
-    }
-
-</style>
-
-<style lang="scss">
-    .btn-normal{
-        margin: 2px 4px;
-        border-radius: 8px;
-        padding: 4px 16px;
-        font-size: 14px;
-        font-weight: 600;
-        background-color: #0099ee;
-        border:none;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
-    .btn-warning{
-        background-color: red;
-    }
+    // .ace-display{
+    //     width: 100%;
+    //     border: 1px solid #eee;
+    // }
 
 </style>
