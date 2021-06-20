@@ -39,8 +39,6 @@ export default{
         resetAgentDesc: {},
         // Stores the working (edited) agent_desc object
         activeAgentDesc: {},
-        // Stores a list of currencies, used to validate agent input/output
-        activeCurrencies: [],
         // Stores a list of sections in activeAgentDesc
         activeSection: null,
         // Stores the currently selected agent
@@ -51,10 +49,21 @@ export default{
     getters:{
         getResetAgentDesc: state => state.resetAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
-        getCurrencies: state => state.activeCurrencies,
         getActiveSection: state => state.activeSection,
         getActiveAgent: state => state.activeAgent,
         getEditorValid: state => state.editorValid,
+
+        // Returns the list of currencies; used for input/output validation
+        getCurrencies: function(state) {
+            if (!state.activeAgentDesc) {
+                return []
+            } else if (!Object.keys(state.activeAgentDesc.simulation_variables).includes('currencies_of_exchange')) {
+                console.log("Missing currencies of exchange field in agent_desc")
+                return []
+            } else {
+                return Object.keys(state.activeAgentDesc.simulation_variables.currencies_of_exchange)
+            }
+        },
 
         // Returns a list of sections to populate section navigation
         getSections: function(state) {
@@ -96,54 +105,7 @@ export default{
         }
     },
     mutations:{
-        // Used by actions/SETAGENTDESC and actions/RESETAGENTDESC
-        set_reset_agent_desc: function(state, value) {
-            state.resetAgentDesc = value
-        },
-        set_active_agent_desc: function(state, value) {
-            state.activeAgentDesc = value
-        },
-        SETCURRENCIES: function(state, value) {
-            state.activeCurrencies = value
-        },
-        SETACTIVESECTION: function(state, value) {
-            state.activeSection = value
-        },
-        SETACTIVEAGENT: function(state, value) {
-            state.activeAgent = value
-        },
-        SETEDITORVALID: function(state, value) {
-            state.editorValid = value
-        },
-        UPDATEAGENT: function(state, value) {
-            const {section, agent, data} = value
-            state.activeAgentDesc[section][agent] = data
-        },
-        ADDAGENT: function(state, value) {
-            var newAgent = get_template_agent()
-            const {section, agent} = value
-            state.activeAgentDesc[section][agent] = newAgent
-            state.activeAgent = agent
-        },
-        REMOVEAGENT: function(state, value) {
-            const {section, agent} = value
-            delete state.activeAgentDesc[section][agent]
-            state.activeAgent = null
-        }
-    },
-    actions: {
-        // Method adapated from store/modules/wizard.js. 
-        //
-        // Note copied from original:
-        // 
-        // "TODO: not sure if this is the best way to handle this.
-        // Mutations can't call each others so a SETPRESET mutation
-        // can't call a SETCONFIGURATION mutation.  I could have
-        // created a SETCONFIGURATION mutation and a SETPRESET action
-        // but I wanted to keep them together, so I created 2 actions
-        // and a mutation instead."
-
-        SETAGENTDESC: function(context, value) {
+        SETAGENTDESC: function(state, value) {
             // Used to load new agent_desc.json file
             // 'value' is an agent_desc.json parsed into a JS object
 
@@ -171,15 +133,35 @@ export default{
             }
             
             // Update state and set starting values
-            context.commit('set_reset_agent_desc', newAgentDesc)
-            context.commit('set_active_agent_desc', newAgentDesc)
-
-            var newCurrencies = Object.keys(newAgentDesc.simulation_variables.currencies_of_exchange)
-            context.commit('SETCURRENCIES', newCurrencies)
-
-            var newSections = Object.keys(newAgentDesc)
-            context.commit('SETACTIVESECTION', newSections[0])
-            context.commit('SETACTIVEAGENT', null)
+            state.resetAgentDesc = newAgentDesc
+            state.activeAgentDesc = newAgentDesc
+            state.activeSection = Object.keys(newAgentDesc)[0]
+            state.activeAgent = null
         },
+        SETACTIVESECTION: function(state, value) {
+            state.activeSection = value
+            state.activeAgent = null
+        },
+        SETACTIVEAGENT: function(state, value) {
+            state.activeAgent = value
+        },
+        SETEDITORVALID: function(state, value) {
+            state.editorValid = value
+        },
+        UPDATEAGENT: function(state, value) {
+            const {section, agent, data} = value
+            state.activeAgentDesc[section][agent] = data
+        },
+        ADDAGENT: function(state, value) {
+            var newAgent = get_template_agent()
+            const {section, agent} = value
+            state.activeAgentDesc[section][agent] = newAgent
+            state.activeAgent = agent
+        },
+        REMOVEAGENT: function(state, value) {
+            const {section, agent} = value
+            delete state.activeAgentDesc[section][agent]
+            state.activeAgent = null
+        }
     }
 }

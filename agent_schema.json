@@ -28,7 +28,8 @@
                 "type": "string",
                 "title": "Currency",
                 "options": { "infoText": "Select a currency. Add new currencies on under Simulation Variabes / Currencies." },
-                "required": true
+                "required": true,
+                "enum": []
             },
             "value": {
                 "type": "number",
