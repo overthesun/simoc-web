@@ -45,13 +45,16 @@ export default{
         activeSection: null,
         // Stores the currently selected agent
         activeAgent: null,
+        // Stores validation status of the current editor
+        editorValid: true,
     },
     getters:{
         getResetAgentDesc: state => state.resetAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
         getCurrencies: state => state.activeCurrencies,
         getActiveSection: state => state.activeSection,
-        getActiveAgent: state => state.ActiveAgent,
+        getActiveAgent: state => state.activeAgent,
+        getEditorValid: state => state.editorValid,
 
         // Returns a list of sections to populate section navigation
         getSections: function(state) {
@@ -108,6 +111,9 @@ export default{
         },
         SETACTIVEAGENT: function(state, value) {
             state.activeAgent = value
+        },
+        SETEDITORVALID: function(state, value) {
+            state.editorValid = value
         },
         UPDATEAGENT: function(state, value) {
             const {section, agent, data} = value
