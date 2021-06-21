@@ -18,14 +18,20 @@ import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
     computed: {
-        ...mapGetters('ace', ['getAgents', 'getActiveAgent'])
+        ...mapGetters('ace', ['getAgents', 'getActiveAgent', 'getEditorValid'])
     },
     methods: {
         ...mapMutations('ace', ['SETACTIVEAGENT']),
 
         handleChangeAgent: function(agent) {
-            // TODO: validate Editor, alert if non-valid changes
-            this.SETACTIVEAGENT(agent)
+            let valid = this.getEditorValid
+            if (!valid) {
+                if (confirm("The current agent configuration is invalid. Abandon changes?")) {
+                    this.SETACTIVEAGENT(agent)
+                }
+            } else {
+                this.SETACTIVEAGENT(agent)
+            }
         },
 
         formatAgent: function(text) {
