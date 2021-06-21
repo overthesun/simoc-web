@@ -34,7 +34,6 @@ export default {
         'AceMenu': AceMenu,
         'AceAgentNav': AceAgentNav,
         'AceEditor': AceEditor,
-        'AceHeader': AceHeader,
         'AceSectionNav': AceSectionNav,
     },
     data() {
