@@ -15,11 +15,27 @@ import agent_schema from "../../../agent_schema.json"
 import { JSONEditor } from '@json-editor/json-editor'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 
+// The json-editor validation function is used to set a 
+// flag in the vuex store. The navigation components use
+// this flag to alert the user if they are changing screens
+// with unsaved data.
+//
+// Because some fields are required, setting the editor to
+// empty would result in a validation error. For thsi reason 
+// we use the following placeholders to set 'empty' editor.
+const editorNames = ['agentEditor', 'customEditor']
+const editorPlaceholder = (editorName) => {
+    switch (editorName) {
+        case 'agentEditor': return {name: 'empty'}
+        case 'customEditor': return []
+        default: return {}
+    }
+}
+const placeholderValues = editorNames.map(e => JSON.stringify(editorPlaceholder(e)))
+
 export default {
     data() {
         return {
-            agentEditor: {},
-            customEditor: {},
             // These fields don't use the agent schema
             customFields: ['global_variables', 'currencies_of_exchange'],
         }
@@ -39,18 +55,17 @@ export default {
         ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID']),
 
         loadEditor: function(editorName, schema) {
-            var editor = this[editorName]
             var options = {
                 schema: schema,
                 theme: 'html',
                 disable_properties: true,
                 remove_empty_properties: true,
-                startval: {}
             }
             if (editorName === 'agentEditor') {
                 options = {...options, 
                     required_by_default: false,
-                    show_opt_in: true
+                    show_opt_in: true,
+                    startval: editorPlaceholder('agentEditor')
                 }
             } else if (editorName === 'customEditor') {
                 options = {...options,
@@ -58,50 +73,48 @@ export default {
                     disable_edit_json: true,
                     array_controls_top: true,
                     form_name_root: "",
+                    startval: editorPlaceholder('customEditor')
                 }
             }
-            editor = new JSONEditor(document.getElementById(editorName), options)
-            editor.on('change', () => {
-                let errors = editor.validate()
-                if (errors.length) {
-                    // set invalid flag for navigation
-                    this.SETEDITORVALID(false)
-
-                    // TODO
-                    // Editor is set to empty {} when switching screens, which
-                    // fires an error.
-                    // 
-                    // errors.forEach(error => {
-                    //     console.log(error)
-                    // })
-                } else {
-                    // remove flag
+            this[editorName] = new JSONEditor(document.getElementById(editorName), options)
+            this[editorName].on('change', () => {
+                let value = this[editorName].getValue()
+                let errors = this[editorName].validate()
+                // If it's empty, set to valid
+                if (placeholderValues.includes(JSON.stringify(value))) {
                     this.SETEDITORVALID(true)
-
-                    // update state
+                // If there's an error, set to invalid
+                } else if (errors.length) {
+                    this.SETEDITORVALID(false)
+                    errors.forEach(error => {
+                        console.log(error)
+                    })
+                // Otherwise, update state and set to valid
+                } else {                    
                     let payload = {
                         section: this.activeSection,
                         agent: this.activeAgent,
-                        data: this.unparseAgentData(editor.getValue())
+                        data: this.unparseAgentData(value, editorName)
                     }
                     this.UPDATEAGENT(payload)
+                    this.SETEDITORVALID(true)
                 }
             })
         },
 
         // Reshape data from agent_desc to fit schema
         parseAgentData: function(data) {
-            if (Object.keys(data).length === 0) {
+            if (placeholderValues.includes(data)) {
                 return {}
             } else if (this.customAgent) {
-                // Convert to array
+                // Convert currencies and global variables to array
                 var asArray = []
                 Object.keys(data).forEach(key => {
                     asArray.push({type: key, value: data[key]})
                 })
                 return asArray
             } else {
-                // Three sets of fields moved to the same level
+                // Move three sets of fields to the same level
                 return {
                     name: this.activeAgent,
                     description: (Object.keys(data).includes('description')) ? data.description : "",
@@ -112,12 +125,13 @@ export default {
             }
         },
 
-        // Reshape editor data to fit agent_desc
+        // Reshape editor data back to fit agent_desc
         unparseAgentData: function(data) {
-            if (Object.keys(data).length === 0) {
+            if (placeholderValues.includes(data)) {
                 return {}
             } else if (this.customAgent) {
                 var asObject = {}
+                console.log(data)
                 data.forEach(({type, value}) => {
                     asObject[type] = value
                 })
@@ -143,12 +157,21 @@ export default {
     watch: {
         // Reload editor when activeAgent changes
         activeAgent: function(newAgent, oldAgent) {
-            let newData = (newAgent) ? this.parseAgentData(this.agentData) : {}
             let active = (this.customAgent) ? 'customEditor' : 'agentEditor'
             let inactive = (this.customAgent) ? 'agentEditor' : 'customEditor'
+            let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
             this[active].setValue(newData)
-            this[inactive].setValue({})
+            this[inactive].setValue(editorPlaceholder(inactive))
         },
+
+        // TODO
+        // Update agentEditor schema dynamically to match the currencies list.
+        //
+        // // Update currencies in schema when new currencies added
+        // currencies: function(newCurrencies, oldCurrencies) {
+        //     agent_schema.agent.definitions.type.enum = newCurrencies
+        //     this.loadEditor('agentEditor', agent_schema.agent)
+        // }
     },
 }
 </script>

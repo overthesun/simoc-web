@@ -35,9 +35,14 @@ export default {
         ...mapMutations('ace',['SETACTIVESECTION']),
 
         handleChangeSection: function(section) {
-            // TODO: validate Editor, alert if non-valid changes
-
-            this.SETACTIVESECTION(section)
+            let valid = this.getEditorValid
+            if (!valid) {
+                if (confirm("The current agent configuration is invalid. Abandon changes?")) {
+                    this.SETACTIVEAGENT(agent)
+                }
+            } else {
+                this.SETACTIVEAGENT(agent)
+            }
         },
 
         // Control the scroll buttons
