@@ -160,6 +160,20 @@ export default {
     mounted() {
         // currencies injected into schema
         agent_schema.agent.definitions.type.enum = this.currencies
+        JSONEditor.defaults.custom_validators.push((schema, value, path) => {
+            const errors = [];
+            if (path==="root.name") {
+                if (!/^[a-z0-9_]+$/i.test(value)) {
+                // Errors must be an object with `path`, `property`, and `message`
+                errors.push({
+                    path: path,
+                    property: 'format',
+                    message: 'Agent names must be alphanumeric and/or "_"'
+                });
+                }
+            }
+            return errors;
+        });
         this.loadEditor('agentEditor', agent_schema.agent)
         this.loadEditor('customEditor', agent_schema.custom)
     },
