@@ -52,10 +52,10 @@ export default {
         };
     },
     created() {
-        this.SETAGENTDESC(defaultAgentDesc)
-
-        this.startingData = defaultAgentDesc
-        this.loadData(defaultAgentDesc)
+        this.SETAGENTDESC({
+            agent_desc: defaultAgentDesc,
+            def: true
+        })
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),

@@ -8,6 +8,7 @@
             <button  @click="uploadConfig">Upload Configuration</button>
             <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
             <button @click="resetConfig">Reset Configuration</button>
+            <button @click="resetDefault">Reset Default</button>
             <button class='btn-logout' @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -16,15 +17,18 @@
 <script>
 import axios from 'axios'
 import { BaseMenu } from '../base'
+import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
     components: {
         "BaseMenu": BaseMenu
     },
-    props: [
-       'workingData'
-    ],
+    computed: {
+        ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc', 'getActiveAgentDesc'])
+    },
     methods: {
+        ...mapMutations('ace', ['SETAGENTDESC']),
+
         logout: async function() {
             if (!confirm('Do you want to log out?')) {
                 return;
@@ -36,8 +40,9 @@ export default {
             }
             this.$router.push("entry")
         },
+
         downloadConfig: function() {
-            const config = this.workingData
+            const config = this.getActiveAgentDesc
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(config)
             const blob = new Blob([data], {type: 'application/json'})
@@ -60,17 +65,32 @@ export default {
         readConfig: function(e) {
             try {
                 const json_config = JSON.parse(e.target.result)
-                this.$emit("uploadConfig", json_config)
+                this.SETAGENTDESC({
+                    agent_desc: json_config,
+                    def: false
+                })
             } catch (error) {
                 alert('An error occurred while reading the file: ' + error)
                 return
             }
         },
         resetConfig: function() {
-            if (!confirm('Reset the current configuration?')) {
+            if (confirm('Reset the current configuration?')) {
+                this.SETAGENTDESC({
+                    agent_desc: this.getResetAgentDesc,
+                    def: false
+                })
                 return
             }
-            this.$emit("resetConfig")
+        },
+        resetDefault: function() {
+            if (confirm('Reset the current configuration to the SIMOC default?')) {
+                this.SETAGENTDESC({
+                    agent_desc: this.getDefaultAgentDesc,
+                    def: false
+                })
+                return
+            }
         },
     }
 }

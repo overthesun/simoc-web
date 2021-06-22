@@ -37,6 +37,8 @@ function get_template_agent() {
 
 export default{
     state:{
+        // The default setup; retrieved by AceView and set on pageload
+        defaultAgentDesc: {},
         // Stores an unmodified copy of current agent_desc object for reset
         resetAgentDesc: {},
         // Stores the working (edited) agent_desc object
@@ -51,6 +53,7 @@ export default{
         editorValid: true,
     },
     getters:{
+        getDefaultAgentDesc: state => state.defaultAgentDesc,
         getResetAgentDesc: state => state.resetAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
         getActiveSection: state => state.activeSection,
@@ -103,13 +106,14 @@ export default{
 
             // Validate against template_agent_desc
             // (adapted from store/modules/wizard.js)
-            value = JSON.parse(JSON.stringify(value))
+            const {agent_desc, def} = value
+            let inputAgentDesc = JSON.parse(JSON.stringify(agent_desc))
             let newAgentDesc = get_template_agent_desc()
             let valid_keys = []
             let invalid_keys = []
-            Object.keys(value).forEach((key, i) => {
+            Object.keys(agent_desc).forEach((key, i) => {
                 if (newAgentDesc.hasOwnProperty(key)) {
-                    newAgentDesc[key] = value[key]
+                    newAgentDesc[key] = inputAgentDesc[key]
                     valid_keys.push(key)
                 }
                 else {
@@ -125,6 +129,7 @@ export default{
             }
             
             // Update state and set starting values
+            if (def) {state.defaultAgentDesc = newAgentDesc}
             state.resetAgentDesc = newAgentDesc
             state.activeAgentDesc = newAgentDesc
             state.activeSection = Object.keys(newAgentDesc)[0]
