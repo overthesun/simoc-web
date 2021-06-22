@@ -52,7 +52,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID']),
+        ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID', 'UPDATEAGENTNAME']),
 
         loadEditor: function(editorName, schema) {
             var options = {
@@ -90,13 +90,22 @@ export default {
                         console.log(error)
                     })
                 // Otherwise, update state and set to valid
-                } else {                    
-                    let payload = {
+                } else {
+                    console.log(value.name)
+                    // Update name
+                    if (editorName !== 'customEditor' && value.name !== this.activeAgent) {
+                        this.UPDATEAGENTNAME({
+                            section: this.activeSection,
+                            oldName: this.activeAgent,
+                            newName: value.name
+                        })
+                    }
+                    // Update data
+                    this.UPDATEAGENT({
                         section: this.activeSection,
                         agent: this.activeAgent,
                         data: this.unparseAgentData(value, editorName)
-                    }
-                    this.UPDATEAGENT(payload)
+                    })
                     this.SETEDITORVALID(true)
                 }
             })
@@ -157,8 +166,9 @@ export default {
     watch: {
         // Reload editor when activeAgent changes
         activeAgent: function(newAgent, oldAgent) {
-            let active = (this.customAgent) ? 'customEditor' : 'agentEditor'
-            let inactive = (this.customAgent) ? 'agentEditor' : 'customEditor'
+            let custom = this.customFields.includes(newAgent)
+            let active = (custom) ? 'customEditor' : 'agentEditor'
+            let inactive = (custom) ? 'agentEditor' : 'customEditor'
             let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
             this[active].setValue(newData)
             this[inactive].setValue(editorPlaceholder(inactive))

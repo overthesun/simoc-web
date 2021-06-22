@@ -41,6 +41,8 @@ export default{
         activeAgentDesc: {},
         // Stores a list of sections in activeAgentDesc
         activeSection: null,
+        // Stores a list of agents in activeSection
+        activeAgents: [],
         // Stores the currently selected agent
         activeAgent: null,
         // Stores validation status of the current editor
@@ -50,6 +52,7 @@ export default{
         getResetAgentDesc: state => state.resetAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
         getActiveSection: state => state.activeSection,
+        getActiveAgents: state => state.activeAgents,
         getActiveAgent: state => state.activeAgent,
         getEditorValid: state => state.editorValid,
 
@@ -74,19 +77,6 @@ export default{
                 sections = Object.keys(state.activeAgentDesc)
             }
             return sections
-        },
-
-        // Returns a list of agents to populate agent navigation
-        getAgents: function(state) {
-            var agents = []
-            if (!state.activeAgentDesc) {
-                console.log("Cannot return agents: missing agent_desc file")
-            } else if (!state.activeSection) {
-                console.log("Cannot return agent data: no section selected")
-            } else {
-                agents = Object.keys(state.activeAgentDesc[state.activeSection])
-            }
-            return agents
         },
 
         // Returns the agent object to populate agent editor 
@@ -136,10 +126,12 @@ export default{
             state.resetAgentDesc = newAgentDesc
             state.activeAgentDesc = newAgentDesc
             state.activeSection = Object.keys(newAgentDesc)[0]
+            state.activeAgents = Object.keys(state.activeAgentDesc[state.activeSection])
             state.activeAgent = null
         },
         SETACTIVESECTION: function(state, value) {
             state.activeSection = value
+            state.activeAgents = Object.keys(state.activeAgentDesc[value])
             state.activeAgent = null
         },
         SETACTIVEAGENT: function(state, value) {
@@ -152,16 +144,53 @@ export default{
             const {section, agent, data} = value
             state.activeAgentDesc[section][agent] = data
         },
+        UPDATEAGENTNAME: function(state, value) {
+            const {section, oldName, newName} = value
+            var sectionAgents = Object.keys(state.activeAgentDesc[section])
+            if (!sectionAgents.includes(oldName)) {
+                console.log("Agent not found.")
+                return false
+            } else if (sectionAgents.includes(newName)) {
+                console.log("Agent name already in use.")
+                return false
+            } else {
+                var data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
+                delete state.activeAgentDesc[section][oldName]
+                state.activeAgentDesc[section][newName] = data
+                state.activeAgents = Object.keys(state.activeAgentDesc[section])
+                state.activeAgent = newName
+            }
+        },
         ADDAGENT: function(state, value) {
-            var newAgent = get_template_agent()
-            const {section, agent} = value
-            state.activeAgentDesc[section][agent] = newAgent
+            // Create placeholder name
+            var newAgentNumber = 0
+            Object.keys(section.activeAgentDesc[section]).forEach(name => {
+                var words = name.split("_")
+                if(words[0] === "new" && words[1] === "agent") {
+                    var currentAgentNumber = parseInt(words[2])
+                    newAgentNumber = Math.max(newAgentNumber, currentAgentNumber)
+                }
+            })
+            // Add new agent with placeholder name & empty template
+            var section = value
+            var agent = ["new", "agent", newAgentNumber + 1].join("_")
+            var data = get_template_agent()
+            state.activeAgentDesc[section][agent] = data
+            state.activeAgents = Object.keys(state.activeAgentDesc[section])
             state.activeAgent = agent
+            return true
         },
         REMOVEAGENT: function(state, value) {
             const {section, agent} = value
-            delete state.activeAgentDesc[section][agent]
-            state.activeAgent = null
+            if (!Object.keys(state.activeAgentDesc[section]).includes(agent)) {
+                console.log("Agent not found.")
+                return false
+            } else {
+                delete state.activeAgentDesc[section][agent]
+                state.activeAgents = Object.keys(state.activeAgentDesc[section])
+                state.activeAgent = null
+                return true
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class='agent-nav'>
-        <div v-for='agent in getAgents' :key='agent'>
+        <div v-for='agent in getActiveAgents' :key='agent'>
             <button 
                 class='btn-agent' 
                 @click="handleChangeAgent(agent)"
@@ -18,10 +18,10 @@ import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
     computed: {
-        ...mapGetters('ace', ['getAgents', 'getActiveAgent', 'getEditorValid'])
+        ...mapGetters('ace', ['getActiveAgents', 'getAgents', 'getActiveAgent', 'getEditorValid'])
     },
     methods: {
-        ...mapMutations('ace', ['SETACTIVEAGENT']),
+        ...mapMutations('ace', ['SETACTIVEAGENT', 'ADDAGENT', 'REMOVEAGENT']),
 
         handleChangeAgent: function(agent) {
             let valid = this.getEditorValid
@@ -32,6 +32,14 @@ export default {
             } else {
                 this.SETACTIVEAGENT(agent)
             }
+        },
+
+        handleAddAgent: function(agent) {
+            console.log("Add agent")
+        },
+
+        handleRemoveAgent: function(agent) {
+            console.log("Remove agent")
         },
 
         formatAgent: function(text) {
