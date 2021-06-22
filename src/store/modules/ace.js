@@ -1,5 +1,7 @@
 //Contains the shared state for ACE agent editor.
 
+import Vue from 'vue'
+
 function get_template_agent_desc() {
     // return the basic structure agent_desc,
     // used to validate user-uploaded agent_desc files
@@ -164,7 +166,7 @@ export default{
         ADDAGENT: function(state, value) {
             // Create placeholder name
             var newAgentNumber = 0
-            Object.keys(section.activeAgentDesc[section]).forEach(name => {
+            Object.keys(state.activeAgentDesc[value]).forEach(name => {
                 var words = name.split("_")
                 if(words[0] === "new" && words[1] === "agent") {
                     var currentAgentNumber = parseInt(words[2])
@@ -182,11 +184,12 @@ export default{
         },
         REMOVEAGENT: function(state, value) {
             const {section, agent} = value
+            console.log(section, agent)
             if (!Object.keys(state.activeAgentDesc[section]).includes(agent)) {
                 console.log("Agent not found.")
                 return false
             } else {
-                delete state.activeAgentDesc[section][agent]
+                Vue.delete(state.activeAgentDesc[section], agent)
                 state.activeAgents = Object.keys(state.activeAgentDesc[section])
                 state.activeAgent = null
                 return true
