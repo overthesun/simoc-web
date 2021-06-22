@@ -13,11 +13,7 @@
             <AceAgentNav />
             <hr class="rule">
 
-            <AceEditor
-                v-bind:customFields="customFields"
-                v-bind:currencies="currencies"
-                v-on:agentData="updateWorkingData($event)"
-            />
+            <AceEditor />
         </div>
     </div>
 </template>
@@ -36,21 +32,6 @@ export default {
         'AceEditor': AceEditor,
         'AceSectionNav': AceSectionNav,
     },
-    data() {
-        return{
-            // Maintain a working copy of the data and an unedited version for reset
-            startingData: {},
-            workingData: {},
-
-            // Data to be passed as props
-            sections: [],
-            activeSection: null,
-            activeAgent: null,
-            agentData: null,
-            customFields: [],
-            currencies: []
-        };
-    },
     created() {
         this.SETAGENTDESC({
             agent_desc: defaultAgentDesc,
@@ -59,64 +40,9 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),
-        ...mapGetters('ace', ['getActiveSection']),
-
-        // Return agents based on selected section
-        agents: function() {
-            if (!this.activeSection) {
-                return ""
-            } else {
-                return Object.keys(this.workingData[this.activeSection])
-            }
-        },
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
-
-        resetData: function() {
-            this.loadData(this.startingData)
-        },
-        loadData: function(rawData) {
-            console.log(rawData)
-            this.activeAgent = null
-            this.agentData = null
-            this.customFields = []
-            this.currencies = []
-            
-            // Simulation variables use a different editor
-            Object.keys(rawData.simulation_variables).forEach(field => {
-                this.customFields.push(field)
-                if (field === 'currencies_of_exchange') {
-                    this.currencies = Object.keys(rawData.simulation_variables[field])
-                }
-            })
-
-            // Load default data
-            this.startingData = rawData
-            this.workingData = rawData  
-            this.sections = Object.keys(rawData)
-            this.activeSection = this.sections[0]
-        },
-
-        // Update the working copy of the data
-        updateWorkingData: function(modified) {
-            if (modified.section && modified.agent) {
-
-                // Update custom fields
-                if (this.customFields.includes(modified.agent)) {
-
-                    // Update currencies
-                if (modified.agent === 'currencies_of_exchange') {
-                        this.currencies = Object.keys(modified.data)
-                } 
-                    this.workingData[modified.section][modified.agent] = modified.data
-
-                // Update normal field
-                } else {
-                    this.workingData[modified.section][modified.agent] = modified.data
-                }
-            }
-        }
     },
 };
 </script>
