@@ -6,14 +6,16 @@
         <!-- Show the ACE menu component when getMenuActive is true. -->
         <AceMenu v-if="getMenuActive" />
 
-        <div class='ace-main'>
-            <header>ADVANCED CONFIGURATION EDITOR</header> 
-            <hr class="rule">
-            <AceSectionNav />
-            <AceAgentNav />
-            <hr class="rule">
+        <div class='ace-container'>
+            <div class='ace-main'>
+                <header>ADVANCED CONFIGURATION EDITOR</header> 
+                <hr class="rule">
+                <AceSectionNav />
+                <AceAgentNav />
+                <hr class="rule">
 
-            <AceEditor />
+                <AceEditor />
+            </div>
         </div>
     </div>
 </template>
@@ -32,7 +34,7 @@ export default {
         'AceEditor': AceEditor,
         'AceSectionNav': AceSectionNav,
     },
-    created() {
+    async created() {
         this.SETAGENTDESC({
             agent_desc: defaultAgentDesc,
             def: true
@@ -50,7 +52,7 @@ export default {
 <style lang="scss" scoped>
 
     .ace-wrapper{
-        min-height: 100vh;
+        height: 100vh;
         width: 100vw;
         display: flex;
         flex-direction: column;
@@ -58,10 +60,15 @@ export default {
         justify-content: flex-start;
     }
 
+    .ace-container{
+        height: 100%;
+        overflow: auto;
+    }
+
     .ace-main{
         // Copied '.configuration-wrapper' from BaseConfiguration.vue
         position: relative;
-        height: 100%;
+        // height: 100%;
         width: 80vw;
         max-width: 1200px;
         margin: auto;

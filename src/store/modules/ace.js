@@ -39,8 +39,6 @@ export default{
     state:{
         // The default setup; retrieved by AceView and set on pageload
         defaultAgentDesc: {},
-        // Stores an unmodified copy of current agent_desc object for reset
-        resetAgentDesc: {},
         // Stores the working (edited) agent_desc object
         activeAgentDesc: {},
         // Stores a list of sections in activeAgentDesc
@@ -54,7 +52,6 @@ export default{
     },
     getters:{
         getDefaultAgentDesc: state => state.defaultAgentDesc,
-        getResetAgentDesc: state => state.resetAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
         getActiveSection: state => state.activeSection,
         getActiveAgents: state => state.activeAgents,
@@ -129,12 +126,15 @@ export default{
             }
             
             // Update state and set starting values
-            if (def) {state.defaultAgentDesc = newAgentDesc}
-            state.resetAgentDesc = newAgentDesc
             state.activeAgentDesc = newAgentDesc
             state.activeSection = Object.keys(newAgentDesc)[0]
             state.activeAgents = Object.keys(state.activeAgentDesc[state.activeSection])
             state.activeAgent = null
+
+            // If defualt, set default agent_desc
+            if (def) {
+                state.defaultAgentDesc = JSON.parse(JSON.stringify(newAgentDesc))
+            }
         },
         SETACTIVESECTION: function(state, value) {
             state.activeSection = value

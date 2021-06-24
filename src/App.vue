@@ -52,7 +52,7 @@ export default {
 
    .app{
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     min-width: 600px;
     //position: relative;
 
