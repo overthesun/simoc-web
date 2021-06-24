@@ -4,11 +4,10 @@
             Ace Menu
         </template>
         <template v-slot:menu-buttons>
-            <button @click="downloadConfig">Download Configuration</button>
+            <DownloadConfig :valid="getEditorValid" :config="getActiveAgentDesc" fileName="agent_desc.json" />
             <button  @click="uploadConfig">Upload Configuration</button>
             <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
             <button @click="resetConfig">Reset Configuration</button>
-            <button @click="resetDefault">Reset Default</button>
             <button class='btn-logout' @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -17,14 +16,16 @@
 <script>
 import axios from 'axios'
 import { BaseMenu } from '../base'
+import { DownloadConfig } from '../menu'
 import {mapState,mapGetters,mapMutations} from 'vuex'
 
 export default {
     components: {
-        "BaseMenu": BaseMenu
+        "BaseMenu": BaseMenu,
+        "DownloadConfig": DownloadConfig
     },
     computed: {
-        ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc', 'getActiveAgentDesc'])
+        ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc', 'getActiveAgentDesc', 'getEditorValid'])
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
@@ -75,15 +76,6 @@ export default {
             }
         },
         resetConfig: function() {
-            if (confirm('Reset the current configuration?')) {
-                this.SETAGENTDESC({
-                    agent_desc: this.getResetAgentDesc,
-                    def: false
-                })
-                return
-            }
-        },
-        resetDefault: function() {
             if (confirm('Reset the current configuration to the SIMOC default?')) {
                 this.SETAGENTDESC({
                     agent_desc: this.getDefaultAgentDesc,

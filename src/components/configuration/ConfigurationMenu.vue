@@ -4,7 +4,7 @@
             Configuration Menu
         </template>
         <template v-slot:menu-buttons>
-            <button @click="downloadConfig">Download Configuration</button>
+            <DownloadConfig :valid="formValid" :config="getConfiguration" fileName="simoc-config.json" />
             <button  @click="uploadConfig">Upload Configuration</button>
             <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
             <button @click="resetConfig">Reset Configuration</button>
@@ -17,13 +17,25 @@
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BaseMenu} from '../../components/base'
+import {DownloadConfig} from '../../components/menu'
 
 export default {
     components: {
        'BaseMenu': BaseMenu,
+       'DownloadConfig': DownloadConfig
     },
     computed:{
         ...mapGetters('wizard', ['getConfiguration']),
+
+        formValid: function() {
+            const form = this.$parent.$refs.form
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return  false
+            } else {
+                return true
+            }
+        }
     },
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
@@ -38,22 +50,6 @@ export default {
                 console.log(error)
             }
             this.$router.push("entry")
-        },
-        downloadConfig: function() {
-            const form = this.$parent.$refs.form
-            if (!form.checkValidity()) {
-                form.reportValidity()
-                return  // abort if the form is invalid
-            }
-            const config = this.getConfiguration
-            // https://stackoverflow.com/a/48612128
-            const data = JSON.stringify(config)
-            const blob = new Blob([data], {type: 'application/json'})
-            const a = document.createElement('a')
-            a.download = "simoc-config.json"
-            a.href = window.URL.createObjectURL(blob)
-            a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-            a.click()
         },
         uploadConfig: function() {
             this.$refs.configInputFile.click()
