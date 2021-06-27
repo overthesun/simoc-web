@@ -161,13 +161,19 @@ export default {
             }
         },
 
-        importPresetData:function(preset) {
+        importPresetData:async function(preset) {
             // import cached simulation data for the preset
             try {
                 console.log('* Loading cached simdata...')
                 const fname = preset.simdata_file.split('.')[0]
-                const data = require('../assets/simdata/' + fname + '.json')
-                return data
+                // Two important things happen here:
+                // 1) the import should happen asynchronously
+                // 2) webpack shouldn't bundle the simdata with the rest
+                // Using this form of await import(stringliteral + var + stringliteral)
+                // should ensure that webpack/babel recognize that these modules are
+                // imported dynamically and lazily and that they shoultn't be bundled
+                const simdata = await import('../assets/simdata/' + fname + '.json')
+                return simdata.default  // get the actual data out of the module object
             } catch(error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
                 console.error(error)
@@ -200,7 +206,7 @@ export default {
             const presets = this.getPresets
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const simdata = this.importPresetData(presets[preset_name])
+                const simdata = await this.importPresetData(presets[preset_name])
                 if (simdata) {
                     try {
                         this.SETCONFIGURATION(simdata.configuration)
