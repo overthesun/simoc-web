@@ -5,10 +5,9 @@
         </template>
         <template v-slot:menu-buttons>
             <DownloadConfig :valid="formValid" :config="getConfiguration" fileName="simoc-config.json" />
-            <button  @click="uploadConfig">Upload Configuration</button>
-            <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
+            <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
-            <button class='btn-logout' @click="logout">Log Out</button>
+            <Logout />
         </template>
     </BaseMenu>
 </template>
@@ -17,12 +16,15 @@
 import axios from 'axios'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {BaseMenu} from '../../components/base'
-import {DownloadConfig} from '../../components/menu'
+import {DownloadConfig,UploadConfig,Logout} from '../../components/menu'
 
 export default {
     components: {
-       'BaseMenu': BaseMenu,
-       'DownloadConfig': DownloadConfig
+        'BaseMenu': BaseMenu,
+        'DownloadConfig': DownloadConfig,
+        'UploadConfig': UploadConfig,
+        'Logout': Logout
+
     },
     computed:{
         ...mapGetters('wizard', ['getConfiguration']),
@@ -40,35 +42,8 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        logout: async function() {
-            if (!confirm('Do you want to log out?')) {
-                return;
-            }
-            try {
-                axios.get('/logout')
-            } catch(error) {
-                console.log(error)
-            }
-            this.$router.push("entry")
-        },
-        uploadConfig: function() {
-            this.$refs.configInputFile.click()
-        },
-        handleConfig: function(e) {
-            const files = e.target.files
-            const config = files[0]
-            const reader = new FileReader()
-            reader.onload = ((file) => this.readConfig)(config)
-            reader.readAsText(config)
-        },
-        readConfig: function(e) {
-            try {
-                const json_config = JSON.parse(e.target.result)
-                this.SETCONFIGURATION(json_config)
-            } catch (error) {
-                alert('An error occurred while reading the file: ' + error)
-                return
-            }
+        handleUpload: function(json_config) {
+            this.SETCONFIGURATION(json_config)
         },
         resetConfig: function() {
             if (!confirm('Reset the current configuration?')) {
