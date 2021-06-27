@@ -14,7 +14,7 @@ export default {
         handleClick: function() {
             // abort if parent declares invalid
             if (!this.valid) {
-                console.log("Current form invalid")
+                alert("Current form invalid")
                 return
             }
 
