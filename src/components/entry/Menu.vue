@@ -10,7 +10,7 @@
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button form='login-form' class='btn-normal' @click="toAce">ACE EDITOR</button>
+                <button form='login-form' class='btn-normal' @click="toAce">AGENT EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>

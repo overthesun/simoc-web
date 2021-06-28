@@ -7,7 +7,7 @@
         <AceMenu v-if="getMenuActive" />
 
         <div class='ace-container'>
-            <header>ADVANCED CONFIGURATION EDITOR</header> 
+            <header>AGENT EDITOR</header> 
             <hr class='rule'>
             <div class='ace-main'>
                 <div class='nav-container'>
