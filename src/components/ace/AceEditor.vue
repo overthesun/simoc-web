@@ -14,6 +14,7 @@
 import agent_schema from "../../../agent_schema.json"
 import { JSONEditor } from '@json-editor/json-editor'
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {formatEditor} from './formatEditor'
 
 // The json-editor validation function is used to set a 
 // flag in the vuex store. The navigation components use
@@ -108,6 +109,7 @@ export default {
                     })
                     this.SETEDITORVALID(true)
                 }
+                formatEditor(editorName)
             })
         },
 
@@ -250,10 +252,9 @@ export default {
         left: 200px;
     }
 
-    .json-editor-btc-collapse { background-color: transparent }
-
-    .json-editor-btn-subtract { display: none; }
-
-    .json-editor-btntype-deleteall { display: none;}
+    .errmsg {
+        position: absolute;
+        left: 400px;
+    }
 
 </style>

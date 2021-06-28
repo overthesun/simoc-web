@@ -7,12 +7,16 @@
         >{{ formatLabel(section) }}</div>
             <div class="menu" :class="{'menu-open': isOpen[section]}" >
                 <div v-for="agent in Object.keys(agentDesc[section])" v-bind:key="section+agent" class="agent-wrapper">
-                    <div 
-                        class="agent"
-                        @click="handleAgent(section, agent)"
-                        :class="{'agent-active': agent === activeAgent}"
-                    >{{ formatLabel(agent) }}</div>
+                    <div class="agent" @click="handleAgent(section, agent)" :class="{'agent-active': agent === activeAgent}">
+                        <span class="agent-label">{{ formatLabel(agent) }}</span>
+                        <fa-layers class="fa-1x agent-icon-remove" @click="handleRemoveAgent(section, agent)" >
+                            <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
+                        </fa-layers>
+                    </div>
                 </div>
+                <fa-layers class="fa-1x agent-icon-add" @click="handleAddAgent(section) ">
+                    <fa-icon :icon="['fas','plus-circle']" />
+                </fa-layers>
             </div>
         </div>
     </div>
@@ -31,7 +35,8 @@ export default {
         ...mapGetters('ace',{
             agentDesc: 'getActiveAgentDesc',
             sections: 'getSections',
-            activeAgent: 'getActiveAgent'
+            activeAgent: 'getActiveAgent',
+            editorValid: 'getEditorValid'
         }),
     },
     mounted() {
@@ -40,15 +45,30 @@ export default {
         })
     },
     methods: {
-        ...mapMutations('ace',['SETACTIVEAGENT', 'SETACTIVESECTION']),
+        ...mapMutations('ace',['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
 
         toggle: function(section) {
             this.$set(this.isOpen, section, !this.isOpen[section])
         }, 
 
         handleAgent: function(section, agent) {
+            if (!this.editorValid) {
+                if (!confirm("The current agent configuration is invalid. Abandon changes?")) {
+                    return
+                }
+            }
             this.SETACTIVESECTION(section)
             this.SETACTIVEAGENT(agent)
+        },
+
+        handleAddAgent: function(section) {
+            this.ADDAGENT(section)
+        },
+
+        handleRemoveAgent: function(section, agent) {
+            if (confirm("Are you sure you want to remove this agent?")) {
+                this.REMOVEAGENT({section: section, agent: agent})
+            }
         },
 
         formatLabel: function(text) {
@@ -62,9 +82,13 @@ export default {
 
 <style lang="scss" scoped>
 
+    .hidden {
+        display: none;
+    }
+
     .ace-nav-wrapper {
         position: relative;
-        width: 200px;
+        width: inherit;
         overflow-y: auto;
         height: auto;
     }
@@ -101,7 +125,11 @@ export default {
         color: #eee;
         font-size: 12pt;
         font-weight: 200;
-        padding-left: 20px;
+        padding: 5px 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         
         &:hover{
             cursor:pointer;
@@ -111,6 +139,31 @@ export default {
         &-active{
             font-weight: 400px;
             background-color: rgba(238, 238, 238, 0.4);
+        }
+    }
+
+    .agent-label {
+        width: 150px;
+    }
+
+    .agent-icon-add {
+        color: rgba(238, 238, 238, 0.6);
+        font-size: 1.5em; 
+        margin: 5px 20px;
+        
+        &:hover{
+            color: #eee;
+            cursor: pointer;
+        }
+    }
+
+    .agent-icon-remove {
+        color: rgba(238, 238, 238, 0.6);
+        font-size: 1.5em;
+
+        &:hover{
+            color: #eee;
+            cursor: pointer;
         }
     }
 
