@@ -27,7 +27,6 @@
             "type": {
                 "type": "string",
                 "title": "Currency",
-                "options": { "infoText": "Select a currency. Add new currencies on under Simulation Variabes / Currencies." },
                 "required": true,
                 "enum": []
             },
@@ -171,7 +170,7 @@
             },
             "input": {
                 "title": "Inputs",
-                "options": { "collapsed": true },
+                "options": { "collapsed": true, "disable_array_reorder": true },
                 "type": "array",
                 "format": "tabs",
                 "uniqueItems": false,
@@ -179,6 +178,7 @@
                 "type": "object",
                 "format": "grid",
                 "title": "Input",
+                "options": { "disable_collapse": true, "disable_edit_json": true },
                 "headerTemplate": "{{self.type}}",
                 "properties": {
                     "type": {"$ref": "#/definitions/type"},
@@ -197,12 +197,13 @@
                 "title": "Outputs",
                 "type": "array",
                 "format": "tabs",
-                "options": { "collapsed": true },
+                "options": { "collapsed": true, "disable_array_reorder": true },
                 "uniqueItems": false,
                 "items": {
                     "type": "object",
                     "format": "grid",
                     "title": "Output",
+                    "options": { "disable_collapse": true, "disable_edit_json": true },
                     "headerTemplate": "{{self.type}}",
                     "properties": {
                         "type": {"$ref": "#/definitions/type"},
@@ -219,11 +220,12 @@
                 "title": "Characteristics",
                 "type": "array",
                 "format": "tabs",
-                "options": { "collapsed": true },
+                "options": { "collapsed": true, "disable_array_reorder": true },
                 "uniqueItems": false,
                 "items": {
                     "type": "object",
                     "title": "Characteristic",
+                    "options": { "disable_collapse": true, "disable_edit_json": true },
                     "format": "grid",
                     "headerTemplate": "{{self.type}}",
                     "properties": {
