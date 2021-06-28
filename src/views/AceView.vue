@@ -7,23 +7,25 @@
         <AceMenu v-if="getMenuActive" />
 
         <div class='ace-container'>
+            <header>ADVANCED CONFIGURATION EDITOR</header> 
+            <hr class='rule'>
             <div class='ace-main'>
-                <header>ADVANCED CONFIGURATION EDITOR</header> 
-                <hr class="rule">
-                <AceSectionNav />
-                <AceAgentNav />
-                <hr class="rule">
-
-                <AceEditor />
+                <div class='nav-container'>
+                    <AceNavigation />
+                </div>
+                <div class='editor-container'>
+                    <AceEditor />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import {TheTopBar} from '../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {AceMenu,AceAgentNav,AceEditor,AceHeader,AceSectionNav} from '../components/ace'
+import {AceMenu,AceAgentNav,AceEditor,AceHeader,AceSectionNav,AceNavigation} from '../components/ace'
 import defaultAgentDesc from '../../agent_desc.json'
 
 export default {
@@ -33,6 +35,7 @@ export default {
         'AceAgentNav': AceAgentNav,
         'AceEditor': AceEditor,
         'AceSectionNav': AceSectionNav,
+        'AceNavigation': AceNavigation,
     },
     async created() {
         this.SETAGENTDESC({
@@ -61,28 +64,19 @@ export default {
     }
 
     .ace-container{
-        height: 100%;
-        overflow: auto;
-    }
-
-    .ace-main{
-        // Copied '.configuration-wrapper' from BaseConfiguration.vue
         position: relative;
-        // height: 100%;
+        height: 80vh;
         width: 80vw;
         max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
         margin: auto;
-        margin-top: 20px;
-        // display: grid;
-        // grid-template-columns: 50% 50%;
-        // grid-template-rows: minmax(0,1fr);
+        padding: 16px;
         box-sizing: border-box;
         background-color: #1e1e1eaa;
         border: 1px solid #666;
         border-radius: 5px;
-
-        // Added for ACE
-        padding:16px;
     }
 
     // Copied from BaseConfiguration.vue
@@ -94,31 +88,37 @@ export default {
         justify-content:flex-start;
         align-items:center;
         position:relative;
-
-        //Added for ACE
-        height: auto;
-
+        box-sizing: border-box;
     }
 
-    // .rule {
-    //     margin-top: 8px;
-    //     color: #999
-    // }
+    .rule {
+        margin-top: 8px;
+        width: 100%;
+        color: #999;
+    }
 
-    // .ace-body{
-    //     display: flex;
-    //     flex-direction: row;
-    //     justify-content: flex-start;
-    // }
+    .ace-main {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        overflow:hidden;
+        overflow-y:auto;
+    }
 
-    // .ace-agent-nav{
-    //     width: 200px;
-    //     border: 1px solid #eee
-    // }
+    .nav-container {
+        width: 200px;
+        min-height:0;
+        height:100%;
+        overflow:hidden;
+        overflow-y:auto;
+    }
 
-    // .ace-display{
-    //     width: 100%;
-    //     border: 1px solid #eee;
-    // }
+    .editor-container {
+        margin-left: 16px; 
+        flex-grow: 1;
+        height:100%;
+        overflow:hidden;
+        overflow-y:auto;
+    }
 
 </style>
