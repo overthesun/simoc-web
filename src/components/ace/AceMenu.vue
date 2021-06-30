@@ -7,16 +7,15 @@
             <DownloadConfig :valid="getEditorValid" :config="getActiveAgentDesc" fileName="agent_desc.json" />
             <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
-            <Logout name="logout"/>
+            <Logout name="logout" />
         </template>
     </BaseMenu>
 </template>
 
 <script>
-import axios from 'axios'
-import { BaseMenu } from '../base'
-import { DownloadConfig,UploadConfig,Logout } from '../menu'
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {BaseMenu} from '../base'
+import {DownloadConfig,UploadConfig,Logout} from '../menu'
 
 export default {
     components: {
@@ -34,16 +33,15 @@ export default {
         handleUpload: function(file) {
             this.SETAGENTDESC({
                 agent_desc: file,
-                def: false
+                isDefault: false
             })
         },
         resetConfig: function() {
             if (confirm('Reset the current configuration to the SIMOC default?')) {
                 this.SETAGENTDESC({
                     agent_desc: this.getDefaultAgentDesc,
-                    def: false
+                    isDefault: false
                 })
-                return
             }
         },
     }
@@ -51,17 +49,5 @@ export default {
 </script>
 
 <style lang="scss">
-#configInputFile {
-    display: none;
-}
-.reference-link{
-    text-decoration: none;
-    color: lightgreen;
-    font-weight: 600;
-
-    &:visited{
-        color: lightgreen;
-    }
-}
 
 </style>

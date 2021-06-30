@@ -1,19 +1,19 @@
 <template>
     <div>
-        <div class="empty-msg" :class="{ 'empty-msg-hidden' : (activeAgent) }">
+        <div class="empty-msg" :class="{ 'hidden' : (activeAgent) }">
             Select an agent to get started.
         </div>
-        <div class='editor' :class="{ 'hidden' : activeAgent === null }">
-            <div id='agentEditor' :class="{ 'hidden' : customAgent }"></div>
-            <div id='customEditor' :class="{ 'hidden' : !customAgent }"></div>
+        <div class='editor' :class="{'hidden': activeAgent === null }">
+            <div id='agentEditor' :class="{'hidden': isCustomAgent}"></div>
+            <div id='customEditor' :class="{'hidden': !isCustomAgent}"></div>
         </div>
     </div>
 </template>
 
 <script>
-import agent_schema from "../../../agent_schema.json"
-import { JSONEditor } from '@json-editor/json-editor'
+import {JSONEditor} from '@json-editor/json-editor'
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import agent_schema from "../../../agent_schema.json"
 import {formatEditor} from './formatEditor'
 
 // The json-editor validation function is used to set a 
@@ -22,14 +22,17 @@ import {formatEditor} from './formatEditor'
 // with unsaved data.
 //
 // Because some fields are required, setting the editor to
-// empty would result in a validation error. For thsi reason 
+// empty would result in a validation error. For this reason 
 // we use the following placeholders to set 'empty' editor.
 const editorNames = ['agentEditor', 'customEditor']
 const editorPlaceholder = (editorName) => {
     switch (editorName) {
-        case 'agentEditor': return {name: 'empty'}
-        case 'customEditor': return []
-        default: return {}
+        case 'agentEditor': 
+            return {name: 'empty'}
+        case 'customEditor': 
+            return []
+        default: 
+            return {}
     }
 }
 const placeholderValues = editorNames.map(e => JSON.stringify(editorPlaceholder(e)))
@@ -48,7 +51,7 @@ export default {
             activeAgent: 'getActiveAgent',
             agentData: 'getActiveAgentData'
         }),
-        customAgent: function() {
+        isCustomAgent: function() {
             return this.customFields.includes(this.activeAgent)
         }
     },
@@ -56,20 +59,22 @@ export default {
         ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID', 'UPDATEAGENTNAME']),
 
         loadEditor: function(editorName, schema) {
-            var options = {
+            let options = {
                 schema: schema,
                 theme: 'html',
                 disable_properties: true,
                 remove_empty_properties: true,
             }
             if (editorName === 'agentEditor') {
-                options = {...options, 
+                options = {
+                    ...options, 
                     required_by_default: false,
                     show_opt_in: true,
                     startval: editorPlaceholder('agentEditor')
                 }
             } else if (editorName === 'customEditor') {
-                options = {...options,
+                options = {
+                    ...options,
                     disable_collapse: true,
                     disable_edit_json: true,
                     array_controls_top: true,
@@ -87,13 +92,10 @@ export default {
                 // If there's an error, set to invalid
                 } else if (errors.length) {
                     this.SETEDITORVALID(false)
-                    errors.forEach(error => {
-                        console.log(error)
-                    })
                 // Otherwise, update state and set to valid
                 } else {
-                    console.log(value.name)
-                    // Update name
+                    this.SETEDITORVALID(true)
+                    // Name value is one level up in the heirarchy, so update store
                     if (editorName !== 'customEditor' && value.name !== this.activeAgent) {
                         this.UPDATEAGENTNAME({
                             section: this.activeSection,
@@ -107,8 +109,8 @@ export default {
                         agent: this.activeAgent,
                         data: this.unparseAgentData(value, editorName)
                     })
-                    this.SETEDITORVALID(true)
                 }
+                // Re-apply formatting as editor layout changes
                 formatEditor(editorName)
             })
         },
@@ -117,21 +119,22 @@ export default {
         parseAgentData: function(data) {
             if (placeholderValues.includes(data)) {
                 return {}
-            } else if (this.customAgent) {
+            } else if (this.isCustomAgent) {
                 // Convert currencies and global variables to array
-                var asArray = []
+                let asArray = []
                 Object.keys(data).forEach(key => {
                     asArray.push({type: key, value: data[key]})
                 })
                 return asArray
             } else {
                 // Move three sets of fields to the same level
+                let fields = Object.keys(data.data)
                 return {
                     name: this.activeAgent,
-                    description: (Object.keys(data).includes('description')) ? data.description : "",
-                    input: data.data.input,
-                    output: data.data.output,
-                    characteristics: data.data.characteristics
+                    description: Object.keys(data).includes('description') ? data.description : "",
+                    input: fields.includes('input') ? data.data.input : {},
+                    output: fields.includes('output') ? data.data.output : {},
+                    characteristics: fields.includes('characteristics') ? data.data.characteristics : {},
                 }
             }
         },
@@ -140,9 +143,8 @@ export default {
         unparseAgentData: function(data) {
             if (placeholderValues.includes(data)) {
                 return {}
-            } else if (this.customAgent) {
-                var asObject = {}
-                console.log(data)
+            } else if (this.isCustomAgent) {
+                let asObject = {}
                 data.forEach(({type, value}) => {
                     asObject[type] = value
                 })
@@ -160,21 +162,24 @@ export default {
         }
     },
     mounted() {
-        // currencies injected into schema
+        // Add 'currencies_of_exchange' list to schema
+        // TODO: Update schema as list of currencies changes. JSON-editor 
+        // doesn't have a built-in function to update schema.
         agent_schema.agent.definitions.type.enum = this.currencies
+
+        // Validate new currency names
         JSONEditor.defaults.custom_validators.push((schema, value, path) => {
-            const errors = [];
-            if (path==="root.name") {
-                if (!/^[a-z0-9_]+$/i.test(value)) {
-                // Errors must be an object with `path`, `property`, and `message`
-                errors.push({
-                    path: path,
-                    property: 'format',
-                    message: 'Agent names must be alphanumeric and/or "_"'
-                });
+            const errors = []
+            if (path === "root.name") {
+                if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                    errors.push({
+                        path: path,
+                        property: 'format',
+                        message: 'Agent names must be alphanumeric and/or "_"'
+                    })
                 }
             }
-            return errors;
+            return errors
         });
         this.loadEditor('agentEditor', agent_schema.agent)
         this.loadEditor('customEditor', agent_schema.custom)
@@ -184,77 +189,96 @@ export default {
         activeAgent: function(newAgent, oldAgent) {
             let custom = this.customFields.includes(newAgent)
             let active = (custom) ? 'customEditor' : 'agentEditor'
-            let inactive = (custom) ? 'agentEditor' : 'customEditor'
             let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
             this[active].setValue(newData)
+            let inactive = (custom) ? 'agentEditor' : 'customEditor'
             this[inactive].setValue(editorPlaceholder(inactive))
         },
-
-        // TODO
-        // Update agentEditor schema dynamically to match the currencies list.
-        //
-        // // Update currencies in schema when new currencies added
-        // currencies: function(newCurrencies, oldCurrencies) {
-        //     agent_schema.agent.definitions.type.enum = newCurrencies
-        //     this.loadEditor('agentEditor', agent_schema.agent)
-        // }
     },
 }
 </script>
 
 <style lang="scss" scoped>
-
     .hidden {
         display: none;
     }
-
-    .empty-msg {
-        width: 100%;
-        size: 14px;
-        text-align: center;
-
-        &-hidden{
-            display: none;
-        }
-    }
-
 </style>
 
 <style lang="scss">
-    // For the json-editor
+// Note:
+// Fields are updated dynamically by editor.
+// CSS wouldn't normally be applied after each update.
+// The added 'editor-xx' class (added by formatEditor())
+// and 3-level selector ensures they are updated with 
+// each editor change.
+div div .je-indented-panel.editor-panel {
+    margin: 0;
+    padding-left: 0;
+    border: 0;
+}
 
-    .je-header {
-        margin: 0;
+div div .je-tabholder.editor-tabholder {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: -28px;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+div div .je-tab.editor-tab {
+    color: black;
+    border-radius: 5px 5px 0 0;
+    padding: 5px;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1em;
+    border: 1px solid #eee;
+    background-color: rgba(238, 238, 238, 0.6);
+}
+
+div div .content.editor-content {
+    margin-top: 40px;
+    padding: 16px;
+    border: 1px solid #eee
+}
+
+div div button.editor-button {
+    padding: 3px 8px;
+    color: #eee;
+    background-color: transparent;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(238, 238, 238, 0.2);
     }
+}
 
-    .content {
-        margin-left: 120px;
-    }
+div div .je-form-input-label.editor-field, div h3 .editor-field {
+    font-size: 1em;
+    font-weight: 200;
+    margin: 0;
+}
 
-    .je-tab {
-        color: black;
-        font-weight: 400;
-        background-color: #eee;
-    }
+.je-header {
+    margin: 0;
+}
 
-    .form-control {
-        display: flex;
-        flex-direction: row;
-    }
+.form-control {
+    display: flex;
+    flex-direction: row;
+}
 
-    .je-form-input-label + input{
-        position: absolute;
-        left: 200px;
-    }
+.je-form-input-label + input, .je-form-input-label + select {
+    position: absolute;
+    left: 200px;
+}
 
-    .je-form-input-label + select{
-        position: absolute;
-        left: 200px;
-    }
-
-    .errmsg {
-        position: absolute;
-        left: 400px;
-    }
-
+.errmsg {
+    position: absolute;
+    left: 400px;
+}
 </style>

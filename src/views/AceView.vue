@@ -22,9 +22,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {TheTopBar} from '../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {TheTopBar} from '../components/bars'
 import {AceMenu,AceEditor,AceNavigation} from '../components/ace'
 import defaultAgentDesc from '../../agent_desc.json'
 
@@ -38,7 +37,7 @@ export default {
     async created() {
         this.SETAGENTDESC({
             agent_desc: defaultAgentDesc,
-            def: true
+            isDefault: true
         })
     },
     computed: {
@@ -51,72 +50,69 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ace-wrapper {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    justify-content: flex-start;
+}
 
-    .ace-wrapper{
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        flex-direction: column;
-        align-content: flex-start;
-        justify-content: flex-start;
-    }
+.ace-container {
+    position: relative;
+    height: 80vh;
+    width: 80vw;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: auto;
+    padding: 16px;
+    box-sizing: border-box;
+    background-color: #1e1e1eaa;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
 
-    .ace-container{
-        position: relative;
-        height: 80vh;
-        width: 80vw;
-        max-width: 1200px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        margin: auto;
-        padding: 16px;
-        box-sizing: border-box;
-        background-color: #1e1e1eaa;
-        border: 1px solid #666;
-        border-radius: 5px;
-    }
+header {
+    font-family: "Nasalization", "Open Sans", sans-serif;
+    font-weight: 200;
+    font-size: 22px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+}
 
-    // Copied from BaseConfiguration.vue
-    header {
-        font-family: "Nasalization", "Open Sans", sans-serif;
-        font-weight: 200;
-        font-size: 22px;
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
-        position:relative;
-        box-sizing: border-box;
-    }
+.rule {
+    margin-top: 8px;
+    width: 100%;
+    color: #999;
+}
 
-    .rule {
-        margin-top: 8px;
-        width: 100%;
-        color: #999;
-    }
+.ace-main {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+}
 
-    .ace-main {
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-        overflow:hidden;
-        overflow-y:auto;
-    }
+.nav-container {
+    width: 200px;
+    min-height: 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
-    .nav-container {
-        width: 200px;
-        min-height:0;
-        height:100%;
-        overflow:hidden;
-        overflow-y:auto;
-    }
-
-    .editor-container {
-        margin-left: 16px; 
-        flex-grow: 1;
-        height:100%;
-        overflow:hidden;
-        overflow-y:auto;
-    }
-
+.editor-container {
+    margin-left: 16px; 
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+    overflow-y :auto;
+}
 </style>

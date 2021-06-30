@@ -63,7 +63,7 @@ export default{
             if (!state.activeAgentDesc) {
                 return []
             } else if (!Object.keys(state.activeAgentDesc.simulation_variables).includes('currencies_of_exchange')) {
-                console.log("Missing currencies of exchange field in agent_desc")
+                console.log("Missing 'currencies_of_exchange' field in agent_desc")
                 return []
             } else {
                 return Object.keys(state.activeAgentDesc.simulation_variables.currencies_of_exchange)
@@ -72,7 +72,7 @@ export default{
 
         // Returns a list of sections to populate section navigation
         getSections: function(state) {
-            var sections = []
+            let sections = []
             if (!state.activeAgentDesc) {
                 console.log("Cannot return sections: missing agent_desc file")
             } else {
@@ -83,7 +83,7 @@ export default{
 
         // Returns the agent object to populate agent editor 
         getActiveAgentData: function(state) {
-            var agentData = {}
+            let agentData = {}
             if (!state.activeAgentDesc) {
                 console.log("Cannot return agent data: missing agent_desc file")
             } else if (!state.activeSection) {
@@ -103,7 +103,7 @@ export default{
 
             // Validate against template_agent_desc
             // (adapted from store/modules/wizard.js)
-            const {agent_desc, def} = value
+            let {agent_desc, isDefault} = value
             let inputAgentDesc = JSON.parse(JSON.stringify(agent_desc))
             let newAgentDesc = get_template_agent_desc()
             let valid_keys = []
@@ -132,7 +132,7 @@ export default{
             state.activeAgent = null
 
             // If defualt, set default agent_desc
-            if (def) {
+            if (isDefault) {
                 state.defaultAgentDesc = JSON.parse(JSON.stringify(newAgentDesc))
             }
         },
@@ -148,12 +148,12 @@ export default{
             state.editorValid = value
         },
         UPDATEAGENT: function(state, value) {
-            const {section, agent, data} = value
+            let {section, agent, data} = value
             state.activeAgentDesc[section][agent] = data
         },
         UPDATEAGENTNAME: function(state, value) {
-            const {section, oldName, newName} = value
-            var sectionAgents = Object.keys(state.activeAgentDesc[section])
+            let {section, oldName, newName} = value
+            let sectionAgents = Object.keys(state.activeAgentDesc[section])
             if (!sectionAgents.includes(oldName)) {
                 console.log("Agent not found.")
                 return false
@@ -161,7 +161,7 @@ export default{
                 console.log("Agent name already in use.")
                 return false
             } else {
-                var data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
+                let data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
                 delete state.activeAgentDesc[section][oldName]
                 state.activeAgentDesc[section][newName] = data
                 state.activeAgents = Object.keys(state.activeAgentDesc[section])
@@ -170,28 +170,28 @@ export default{
         },
         ADDAGENT: function(state, value) {
             // Create placeholder name
-            var newAgentNumber = 0
+            let newAgentNumber = 0
             Object.keys(state.activeAgentDesc[value]).forEach(name => {
                 var words = name.split("_")
                 if(words[0] === "new" && words[1] === "agent") {
-                    var currentAgentNumber = parseInt(words[2])
+                    let currentAgentNumber = parseInt(words[2])
                     newAgentNumber = Math.max(newAgentNumber, currentAgentNumber)
                 }
             })
             // Add new agent with placeholder name & empty template
-            var section = value
-            var agent = ["new", "agent", newAgentNumber + 1].join("_")
-            var data = get_template_agent()
+            let section = value
+            let agent = ["new", "agent", newAgentNumber + 1].join("_")
+            let data = get_template_agent()
             state.activeAgentDesc[section][agent] = data
             state.activeAgents = Object.keys(state.activeAgentDesc[section])
             state.activeAgent = agent
             return true
         },
         REMOVEAGENT: function(state, value) {
-            const {section, agent} = value
+            let {section, agent} = value
             console.log(section, agent)
             if (!Object.keys(state.activeAgentDesc[section]).includes(agent)) {
-                console.log("Agent not found.")
+                console.log(`Cannot remove ${agent}: agent not found.`)
                 return false
             } else {
                 Vue.delete(state.activeAgentDesc[section], agent)

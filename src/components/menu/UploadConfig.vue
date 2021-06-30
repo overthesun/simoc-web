@@ -15,22 +15,23 @@ export default {
         uploadConfig: function() {
             this.$refs.configInputFile.click()
         },
+        // ref: (both functions) https://blog.shovonhasan.com/using-promises-with-filereader/
         readUploadedFileAsText: function(inputFile) {
-            const temporaryFileReader = new FileReader();
+            const temporaryFileReader = new FileReader()
 
             return new Promise((resolve, reject) => {
                 temporaryFileReader.onerror = () => {
                     temporaryFileReader.abort();
-                    reject(new DOMException("Problem parsing input file."));
+                    reject(new DOMException("Problem parsing input file."))
                 };
                 temporaryFileReader.onload = () => {
-                    resolve(temporaryFileReader.result);
+                    resolve(temporaryFileReader.result)
                 };
-                temporaryFileReader.readAsText(inputFile);
+                temporaryFileReader.readAsText(inputFile)
             })
         },
         handleUpload: async function(event) {
-            const file = event.target.files[0];
+            const file = event.target.files[0]
             try {
                 await this.readUploadedFileAsText(file).then(data => {
                     let parsed = JSON.parse(data)
@@ -45,5 +46,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+#configInputFile {
+    display: none;
+}
 </style>
