@@ -25,16 +25,14 @@
 import axios from 'axios'
 import {TheTopBar} from '../components/bars'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {AceMenu,AceAgentNav,AceEditor,AceHeader,AceSectionNav,AceNavigation} from '../components/ace'
+import {AceMenu,AceEditor,AceNavigation} from '../components/ace'
 import defaultAgentDesc from '../../agent_desc.json'
 
 export default {
     components: {
         'TheTopBar': TheTopBar,
         'AceMenu': AceMenu,
-        'AceAgentNav': AceAgentNav,
         'AceEditor': AceEditor,
-        'AceSectionNav': AceSectionNav,
         'AceNavigation': AceNavigation,
     },
     async created() {
