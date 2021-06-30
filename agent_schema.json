@@ -38,7 +38,7 @@
             "flow_rate": {
                 "type": "object",
                 "title": "Flow Rate",
-                "options": { "disable_edit_json": true, "disable_collapse": true },
+                "options": {"disable_edit_json": true, "disable_collapse": true},
                 "required": true,
                 "properties": {
                     "unit": {"$ref": "#/definitions/units", "required": true},
@@ -59,25 +59,24 @@
             "requires": {
                 "type": "array",
                 "title": "Requires",
-                "options": { "collapsed": true },
+                "options": {"collapsed": true},
                 "required": false,
                 "items": {
                     "type": "string"
                 }
             },
-
             "growth": {
                 "type": "object",
                 "title": "Growth Function",
                 "format": "grid",
                 "required": false,
-                "options": { "disable_edit_json": true, "collapsed": true },
+                "options": {"disable_edit_json": true, "collapsed": true},
                 "properties": {
                     "lifetime": {
                         "type": "object",
                         "title": "Lifetime",
                         "required": false,
-                        "options": { "disable_edit_json": true },
+                        "options": {"disable_edit_json": true},
                         "properties": {
                             "type": {"$ref": "#/definitions/growth_function_lifetime"}
                         }
@@ -86,7 +85,7 @@
                         "type": "object",
                         "title": "Daily",
                         "required": false,
-                        "options": { "disable_edit_json": true },
+                        "options": {"disable_edit_json": true},
                         "properties": {
                             "type": {"$ref": "#/definitions/growth_function_daily"},
                             "min_threshold": {
@@ -110,49 +109,49 @@
                 }
             },
             "deprive": {
-                "type" : "object",
-                "title" : "Deprive",
+                "type": "object",
+                "title": "Deprive",
                 "format": "grid",
-                "options": { "disable_edit_json": true, "collapsed": true },
-                "required" : false,
-                "properties" : {
-                    "value" : {
-                        "type" : "number",
-                        "title" : "Value"
+                "options": {"disable_edit_json": true, "collapsed": true},
+                "required": false,
+                "properties": {
+                    "value": {
+                        "type": "number",
+                        "title": "Value"
                     },
-                    "unit" : {"$ref": "#/definitions/time"}
+                    "unit": {"$ref": "#/definitions/time"}
                 }
             },
             "criteria": {
-                "type" : "object",
-                "title" : "Criteria",
+                "type": "object",
+                "title": "Criteria",
                 "format": "grid",
-                "options": { "disable_edit_json": true, "collapsed": true },
-                "required" : false,
-                "properties" : {
-                "name" : {
-                    "type" : "string",
-                    "title" : "Name",
-                    "required": true
-                },
-                "limit" : {
-                    "type" : "string",
-                    "title" : "Limit",
-                    "required": true,
-                    "enum" : [
-                    ">", "<"
-                    ]
-                },
-                "value" : {
-                    "type" : "number",
-                    "title" : "Value",
-                    "required": true
-                },
-                "buffer" : {
-                    "type" : "number",
-                    "title" : "Buffer",
-                    "required": false
-                }	
+                "options": {"disable_edit_json": true, "collapsed": true},
+                "required": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "required": true
+                    },
+                    "limit": {
+                        "type": "string",
+                        "title": "Limit",
+                        "required": true,
+                        "enum": [
+                        ">", "<"
+                        ]
+                    },
+                    "value": {
+                        "type": "number",
+                        "title": "Value",
+                        "required": true
+                    },
+                    "buffer": {
+                        "type": "number",
+                        "title": "Buffer",
+                        "required": false
+                    }	
                 }
             }
         },
@@ -160,50 +159,50 @@
             "name": {
                 "title": "Name",
                 "type": "string",
-                "options": { "disable_edit_json": true, "disable_collapse": true },
+                "options": {"disable_edit_json": true, "disable_collapse": true},
                 "required": true
             },
             "description": {
                 "title": "Description",
                 "type": "string",
-                "options": { "disable_edit_json": true, "disable_collapse": true }
+                "options": {"disable_edit_json": true, "disable_collapse": true}
             },
             "input": {
                 "title": "Inputs",
-                "options": { "collapsed": true, "disable_array_reorder": true },
+                "options": {"collapsed": true, "disable_array_reorder": true},
                 "type": "array",
                 "format": "tabs",
                 "uniqueItems": false,
                 "items": {
-                "type": "object",
-                "format": "grid",
-                "title": "Input",
-                "options": { "disable_collapse": true, "disable_edit_json": true },
-                "headerTemplate": "{{self.type}}",
-                "properties": {
-                    "type": {"$ref": "#/definitions/type"},
-                    "value": {"$ref": "#/definitions/value"},
-                    "flow_rate": {"$ref": "#/definitions/flow_rate"},
-                    "required": {"$ref": "#/definitions/required"},
-                    "weighted": {"$ref": "#/definitions/weighted"},
-                    "requires": {"$ref": "#/definitions/requires"},
-                    "growth": {"$ref": "#/definitions/growth"},
-                    "deprive": {"$ref": "#/definitions/deprive"},
-                    "criteria": {"$ref": "#/definitions/criteria"}
-                }
+                    "type": "object",
+                    "format": "grid",
+                    "title": "Input",
+                    "options": {"disable_collapse": true, "disable_edit_json": true},
+                    "headerTemplate": "{{self.type}}",
+                    "properties": {
+                        "type": {"$ref": "#/definitions/type"},
+                        "value": {"$ref": "#/definitions/value"},
+                        "flow_rate": {"$ref": "#/definitions/flow_rate"},
+                        "required": {"$ref": "#/definitions/required"},
+                        "weighted": {"$ref": "#/definitions/weighted"},
+                        "requires": {"$ref": "#/definitions/requires"},
+                        "growth": {"$ref": "#/definitions/growth"},
+                        "deprive": {"$ref": "#/definitions/deprive"},
+                        "criteria": {"$ref": "#/definitions/criteria"}
+                    }
                 }
             },
             "output": {
                 "title": "Outputs",
                 "type": "array",
                 "format": "tabs",
-                "options": { "collapsed": true, "disable_array_reorder": true },
+                "options": {"collapsed": true, "disable_array_reorder": true},
                 "uniqueItems": false,
                 "items": {
                     "type": "object",
                     "format": "grid",
                     "title": "Output",
-                    "options": { "disable_collapse": true, "disable_edit_json": true },
+                    "options": {"disable_collapse": true, "disable_edit_json": true},
                     "headerTemplate": "{{self.type}}",
                     "properties": {
                         "type": {"$ref": "#/definitions/type"},
@@ -220,12 +219,12 @@
                 "title": "Characteristics",
                 "type": "array",
                 "format": "tabs",
-                "options": { "collapsed": true, "disable_array_reorder": true },
+                "options": {"collapsed": true, "disable_array_reorder": true},
                 "uniqueItems": false,
                 "items": {
                     "type": "object",
                     "title": "Characteristic",
-                    "options": { "disable_collapse": true, "disable_edit_json": true },
+                    "options": {"disable_collapse": true, "disable_edit_json": true},
                     "format": "grid",
                     "headerTemplate": "{{self.type}}",
                     "properties": {
