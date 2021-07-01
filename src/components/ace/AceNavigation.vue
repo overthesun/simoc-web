@@ -66,7 +66,6 @@ export default {
 
         handleAddAgent: function(section) {
             this.ADDAGENT(section)
-            this.SETACTIVESECTION(section)
         },
 
         handleRemoveAgent: function(section, agent) {

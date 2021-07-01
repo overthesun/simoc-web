@@ -44,7 +44,7 @@ export default{
         // Stores a list of sections in activeAgentDesc
         activeSection: null,
         // Stores a list of agents in activeSection
-        activeAgents: [],
+        // activeAgents: [],
         // Stores the currently selected agent
         activeAgent: null,
         // Stores validation status of the current editor
@@ -54,7 +54,7 @@ export default{
         getDefaultAgentDesc: state => state.defaultAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
         getActiveSection: state => state.activeSection,
-        getActiveAgents: state => state.activeAgents,
+        // getActiveAgents: state => state.activeAgents,
         getActiveAgent: state => state.activeAgent,
         getEditorValid: state => state.editorValid,
 
@@ -127,8 +127,8 @@ export default{
             
             // Update state and set starting values
             state.activeAgentDesc = newAgentDesc
-            state.activeSection = Object.keys(newAgentDesc)[0]
-            state.activeAgents = Object.keys(state.activeAgentDesc[state.activeSection])
+            // state.activeSection = Object.keys(newAgentDesc)[0]
+            // state.activeAgents = Object.keys(state.activeAgentDesc[state.activeSection])
             state.activeAgent = null
 
             // If defualt, set default agent_desc
@@ -138,8 +138,8 @@ export default{
         },
         SETACTIVESECTION: function(state, value) {
             state.activeSection = value
-            state.activeAgents = Object.keys(state.activeAgentDesc[value])
-            state.activeAgent = null
+            // state.activeAgents = Object.keys(state.activeAgentDesc[value])
+            // state.activeAgent = null
         },
         SETACTIVEAGENT: function(state, value) {
             state.activeAgent = value
@@ -164,7 +164,7 @@ export default{
                 let data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
                 delete state.activeAgentDesc[section][oldName]
                 state.activeAgentDesc[section][newName] = data
-                state.activeAgents = Object.keys(state.activeAgentDesc[section])
+                // state.activeAgents = Object.keys(state.activeAgentDesc[section])
                 state.activeAgent = newName
             }
         },
@@ -183,19 +183,20 @@ export default{
             let agent = ["new", "agent", newAgentNumber + 1].join("_")
             let data = get_template_agent()
             state.activeAgentDesc[section][agent] = data
-            state.activeAgents = Object.keys(state.activeAgentDesc[section])
+            // state.activeAgents = Object.keys(state.activeAgentDesc[section])
+            state.activeSection = section
             state.activeAgent = agent
             return true
         },
         REMOVEAGENT: function(state, value) {
             let {section, agent} = value
-            console.log(section, agent)
             if (!Object.keys(state.activeAgentDesc[section]).includes(agent)) {
                 console.log(`Cannot remove ${agent}: agent not found.`)
                 return false
             } else {
                 Vue.delete(state.activeAgentDesc[section], agent)
-                state.activeAgents = Object.keys(state.activeAgentDesc[section])
+                // state.activeAgents = Object.keys(state.activeAgentDesc[section])
+                state.activeSection = null
                 state.activeAgent = null
                 return true
             }

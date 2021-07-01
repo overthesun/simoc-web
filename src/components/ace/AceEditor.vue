@@ -56,7 +56,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID', 'UPDATEAGENTNAME']),
+        ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID', 'UPDATEAGENTNAME', 'SETACTIVEAGENT']),
 
         loadEditor: function(editorName, schema) {
             let options = {
@@ -187,10 +187,18 @@ export default {
     watch: {
         // Reload editor when activeAgent changes
         activeAgent: function(newAgent, oldAgent) {
+            if (!this.agentData) {
+                // After deleting an agent, activeAgent is set to null
+                // and then (somehow?) set back to the deleted agent. 
+                // This section compensates for that.
+                this.SETACTIVEAGENT(null)
+                return
+            }
             let custom = this.customFields.includes(newAgent)
             let active = (custom) ? 'customEditor' : 'agentEditor'
             let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
             this[active].setValue(newData)
+            
             let inactive = (custom) ? 'agentEditor' : 'customEditor'
             this[inactive].setValue(editorPlaceholder(inactive))
         },
