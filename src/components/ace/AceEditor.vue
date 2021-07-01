@@ -6,7 +6,7 @@
         <div class="empty-msg" :class="{'hidden': (activeAgent || !isBuilt)}">
             Select an agent to get started.
         </div>
-        <div class='editor' :class="{'hidden': activeAgent === null }">
+        <div class='editor' :class="{'hidden': activeAgent === null}">
             <div id='agentEditor' :class="{'hidden': isCustomAgent}"></div>
             <div id='customEditor' :class="{'hidden': !isCustomAgent}"></div>
         </div>
@@ -42,10 +42,10 @@ const placeholderValues = editorNames.map(e => JSON.stringify(editorPlaceholder(
 export default {
     data() {
         return {
-            // These fields don't use the agent schema
-            customFields: ['global_variables', 'currencies_of_exchange'],
             // Editor is built once when watcher gets a valid agentSchema
-            isBuilt: false
+            isBuilt: false,
+            // These fields don't use the agent schema
+            customFields: ['global_variables', 'currencies_of_exchange']
         }
     },
     computed: {
@@ -166,28 +166,9 @@ export default {
             }
         }
     },
-    watch: {
-        // Reload editor when activeAgent changes
-        activeAgent: function(newAgent, oldAgent) {
-            if (!this.agentData) {
-                // After deleting an agent, activeAgent is set to null
-                // and then (somehow?) set back to the deleted agent. 
-                // This section compensates for that.
-                this.SETACTIVEAGENT(null)
-                return
-            }
-            if (!this.isBuilt) {
-                // Ignore agents before editor is built
-                return
-            }
-            let custom = this.customFields.includes(newAgent)
-            let active = (custom) ? 'customEditor' : 'agentEditor'
-            let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
-            this[active].setValue(newData)
-            
-            let inactive = (custom) ? 'agentEditor' : 'customEditor'
-            this[inactive].setValue(editorPlaceholder(inactive))
-        },
+    watch: {        
+        // Load editors once, if and when a valid agentSchema appears in the store.
+        // ('agent_schema' and 'agent_desc' loaded async by parent component, AceView.vue)
         agentSchema: function(newSchema, oldSchema) {
             // Only build once
             if (this.isBuilt) {
@@ -220,19 +201,40 @@ export default {
                 this.loadEditor('agentEditor', agent_schema.agent)
                 this.loadEditor('customEditor', agent_schema.custom)
             }
+        },
+
+        // Reload editor when activeAgent changes
+        activeAgent: function(newAgent, oldAgent) {
+            if (!this.agentData) {
+                // After deleting an agent, activeAgent is set to null
+                // and then (somehow?) set back to the deleted agent. 
+                // This section compensates for that.
+                this.SETACTIVEAGENT(null)
+                return
+            }
+            // Ignore agents before editor is built
+            if (!this.isBuilt) {
+                return
+            }
+            let custom = this.customFields.includes(newAgent)
+            let active = (custom) ? 'customEditor' : 'agentEditor'
+            let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
+            this[active].setValue(newData)
+            
+            let inactive = (custom) ? 'agentEditor' : 'customEditor'
+            this[inactive].setValue(editorPlaceholder(inactive))
         }
-    },
+    }
 }
 </script>
 
 <style lang="scss" scoped>
-    .hidden {
-        display: none;
-    }
+.hidden {
+    display: none;
+}
 </style>
 
 <style lang="scss">
-// Note:
 // Fields are updated dynamically by editor.
 // CSS wouldn't normally be applied after each update.
 // The added 'editor-xx' class (added by formatEditor())
