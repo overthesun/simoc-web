@@ -41,10 +41,10 @@ export default{
         defaultAgentDesc: {},
         // Stores the working (edited) agent_desc object
         activeAgentDesc: {},
+        // Stores the schema for displaying agents in json-editor
+        agentSchema: {},
         // Stores a list of sections in activeAgentDesc
         activeSection: null,
-        // Stores a list of agents in activeSection
-        // activeAgents: [],
         // Stores the currently selected agent
         activeAgent: null,
         // Stores validation status of the current editor
@@ -53,6 +53,7 @@ export default{
     getters:{
         getDefaultAgentDesc: state => state.defaultAgentDesc,
         getActiveAgentDesc: state => state.activeAgentDesc,
+        getAgentSchema: state => state.agentSchema,
         getActiveSection: state => state.activeSection,
         // getActiveAgents: state => state.activeAgents,
         getActiveAgent: state => state.activeAgent,
@@ -135,6 +136,9 @@ export default{
             if (isDefault) {
                 state.defaultAgentDesc = JSON.parse(JSON.stringify(newAgentDesc))
             }
+        },
+        SETAGENTSCHEMA: function(state, value) {
+            state.agentSchema = value
         },
         SETACTIVESECTION: function(state, value) {
             state.activeSection = value

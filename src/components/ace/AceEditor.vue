@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div class="empty-msg" :class="{ 'hidden' : (activeAgent) }">
+        <div class="empty=msg" :class="{'hidden': (isBuilt)}">
+            Loading editor schema...
+        </div>
+        <div class="empty-msg" :class="{'hidden': (activeAgent || !isBuilt)}">
             Select an agent to get started.
         </div>
         <div class='editor' :class="{'hidden': activeAgent === null }">
@@ -13,7 +16,6 @@
 <script>
 import {JSONEditor} from '@json-editor/json-editor'
 import {mapState,mapGetters,mapMutations} from 'vuex'
-import agent_schema from "../../../agent_schema.json"
 import {formatEditor} from './formatEditor'
 
 // The json-editor validation function is used to set a 
@@ -42,10 +44,13 @@ export default {
         return {
             // These fields don't use the agent schema
             customFields: ['global_variables', 'currencies_of_exchange'],
+            // Editor is built once when watcher gets a valid agentSchema
+            isBuilt: false
         }
     },
     computed: {
         ...mapGetters('ace', {
+            agentSchema: 'getAgentSchema',
             currencies: 'getCurrencies',
             activeSection: 'getActiveSection',
             activeAgent: 'getActiveAgent',
@@ -161,29 +166,6 @@ export default {
             }
         }
     },
-    mounted() {
-        // Add 'currencies_of_exchange' list to schema
-        // TODO: Update schema as list of currencies changes. JSON-editor 
-        // doesn't have a built-in function to update schema.
-        agent_schema.agent.definitions.type.enum = this.currencies
-
-        // Validate new currency names
-        JSONEditor.defaults.custom_validators.push((schema, value, path) => {
-            const errors = []
-            if (path === "root.name") {
-                if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-                    errors.push({
-                        path: path,
-                        property: 'format',
-                        message: 'Agent names must be alphanumeric and/or "_"'
-                    })
-                }
-            }
-            return errors
-        });
-        this.loadEditor('agentEditor', agent_schema.agent)
-        this.loadEditor('customEditor', agent_schema.custom)
-    },
     watch: {
         // Reload editor when activeAgent changes
         activeAgent: function(newAgent, oldAgent) {
@@ -194,6 +176,10 @@ export default {
                 this.SETACTIVEAGENT(null)
                 return
             }
+            if (!this.isBuilt) {
+                // Ignore agents before editor is built
+                return
+            }
             let custom = this.customFields.includes(newAgent)
             let active = (custom) ? 'customEditor' : 'agentEditor'
             let newData = (newAgent) ? this.parseAgentData(this.agentData) : editorPlaceholder(active)
@@ -202,6 +188,39 @@ export default {
             let inactive = (custom) ? 'agentEditor' : 'customEditor'
             this[inactive].setValue(editorPlaceholder(inactive))
         },
+        agentSchema: function(newSchema, oldSchema) {
+            // Only build once
+            if (this.isBuilt) {
+                return
+            }
+            let asString = JSON.stringify(newSchema)
+            if (asString !== '{}') {
+                this.isBuilt = true
+                let agent_schema = JSON.parse(asString)
+
+                // Add 'currencies_of_exchange' list to schema
+                // TODO: Update schema as list of currencies changes. JSON-editor 
+                // doesn't have a built-in function to update schema.
+                agent_schema.agent.definitions.type.enum = this.currencies
+        
+                // Validate new currency names
+                JSONEditor.defaults.custom_validators.push((schema, value, path) => {
+                    const errors = []
+                    if (path === "root.name") {
+                        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                            errors.push({
+                                path: path,
+                                property: 'format',
+                                message: 'Agent names must be alphanumeric and/or "_"'
+                            })
+                        }
+                    }
+                    return errors
+                });
+                this.loadEditor('agentEditor', agent_schema.agent)
+                this.loadEditor('customEditor', agent_schema.custom)
+            }
+        }
     },
 }
 </script>

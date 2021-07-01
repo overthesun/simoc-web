@@ -22,10 +22,10 @@
 </template>
 
 <script>
+import axios from 'axios'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 import {TheTopBar} from '../components/bars'
 import {AceMenu,AceEditor,AceNavigation} from '../components/ace'
-import defaultAgentDesc from '../../agent_desc.json'
 
 export default {
     components: {
@@ -35,16 +35,26 @@ export default {
         'AceNavigation': AceNavigation,
     },
     async created() {
-        this.SETAGENTDESC({
-            agent_desc: defaultAgentDesc,
-            isDefault: true
-        })
+        axios.defaults.withCredentials = true
+        const params = {agent_desc:'default'}
+        axios.get('/get_agent_desc', {params: params})
+            .then(response => {
+                if(response.status === 200) {
+                    this.SETAGENTDESC({
+                        agent_desc: response.data.agent_desc,
+                        isDefault: true
+                    })
+                    this.SETAGENTSCHEMA(response.data.agent_schema)
+                }
+            }).catch(error => {
+                console.log(error)
+            })
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),
     },
     methods: {
-        ...mapMutations('ace', ['SETAGENTDESC']),
+        ...mapMutations('ace', ['SETAGENTDESC', 'SETAGENTSCHEMA']),
     },
 };
 </script>
