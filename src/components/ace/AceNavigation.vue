@@ -8,14 +8,26 @@
             >{{ formatLabel(section) }}</div>
             <div class="menu" :class="{'menu-open': isOpen[section]}" >
                 <div v-for="agent in Object.keys(agentDesc[section])" :key="section+agent" class="agent-wrapper">
-                    <div class="agent" @click="handleAgent(section, agent)" :class="{'agent-active': agent === activeAgent}">
-                        <fa-layers class="fa-1x agent-icon-remove" @click="handleRemoveAgent(section, agent)" >
+                    <div 
+                        class="agent" 
+                        @click="handleAgent(section, agent)" 
+                        :class="{'agent-active': agent === activeAgent}"
+                    >
+                        <fa-layers 
+                            class="fa-1x agent-icon-remove" 
+                            @click="handleRemoveAgent(section, agent)" 
+                            :class="{'hidden': section === 'simulation_variables'}"
+                        >
                             <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                         </fa-layers>
                         <span class="agent-label">{{ formatLabel(agent) }}</span>
                     </div>
                 </div>
-                <fa-layers class="fa-1x agent-icon-add" @click="handleAddAgent(section) ">
+                <fa-layers 
+                    class="fa-1x agent-icon-add" 
+                    @click="handleAddAgent(section)"
+                    :class="{'hidden': section === 'simulation_variables'}"
+                >
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
             </div>
