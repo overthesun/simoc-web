@@ -10,7 +10,7 @@
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button form='login-form' class='btn-normal' @click="toAce">AGENT EDITOR</button>
+                <button form='login-form' class='btn-normal' @click="toAce" :class="{'hidden': !showAgentEditor}">AGENT EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
@@ -28,6 +28,11 @@ import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
+    data() {
+        return {
+            showAgentEditor: false
+        }
+    },
     components:{
         'BaseEntry':BaseEntry,
     },
@@ -83,8 +88,29 @@ export default {
                 console.log(error)
             }
             this.$router.push("entry")
+        },
+        // Adapted from '../views/DashboardView.vue'
+        keyListener: function(e) {
+            let key_matched = true
+            switch (e.key) {
+                case 'a':
+                    this.showAgentEditor = true
+                    break
+                default:
+                    key_matched = false  // no key matched
+                    break
+            }
+            if (key_matched) {
+                e.preventDefault()
+            }
         }
-    }
+    },
+    mounted() {
+        window.addEventListener('keydown', this.keyListener)        
+    },
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.keyListener);
+    },
 }
 </script>
 
@@ -92,6 +118,11 @@ export default {
 #simDataInputFile {
     display: none;
 }
+
+.hidden {
+    display: none;
+}
+
     .entry-wrapper{
         height:100%;
         width:100%;
