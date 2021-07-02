@@ -103,7 +103,7 @@ export default{
 
             // Validate against template_agent_desc
             // (adapted from store/modules/wizard.js)
-            let {agent_desc, isDefault} = value
+            const {agent_desc, isDefault} = value
             let inputAgentDesc = JSON.parse(JSON.stringify(agent_desc))
             let newAgentDesc = get_template_agent_desc()
             let valid_keys = []
@@ -129,7 +129,7 @@ export default{
             state.activeAgentDesc = newAgentDesc
             state.activeAgent = null
 
-            // If defualt, set default agent_desc
+            // If default, set default agent_desc
             if (isDefault) {
                 state.defaultAgentDesc = JSON.parse(JSON.stringify(newAgentDesc))
             }
@@ -147,11 +147,11 @@ export default{
             state.editorValid = value
         },
         UPDATEAGENT: function(state, value) {
-            let {section, agent, data} = value
+            const {section, agent, data} = value
             state.activeAgentDesc[section][agent] = data
         },
         UPDATEAGENTNAME: function(state, value) {
-            let {section, oldName, newName} = value
+            const {section, oldName, newName} = value
             let sectionAgents = Object.keys(state.activeAgentDesc[section])
             if (!sectionAgents.includes(oldName)) {
                 console.log("Agent not found.")
@@ -186,7 +186,7 @@ export default{
             return true
         },
         REMOVEAGENT: function(state, value) {
-            let {section, agent} = value
+            const {section, agent} = value
             if (!Object.keys(state.activeAgentDesc[section]).includes(agent)) {
                 console.log(`Cannot remove ${agent}: agent not found.`)
                 return false

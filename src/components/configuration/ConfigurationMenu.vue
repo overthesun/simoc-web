@@ -4,7 +4,11 @@
             Configuration Menu
         </template>
         <template v-slot:menu-buttons>
-            <DownloadConfig :valid="formValid" :config="getConfiguration" fileName="simoc-config.json" />
+            <DownloadConfig 
+                :isValid="isValid" 
+                :config="getConfiguration" 
+                fileName="simoc-config.json" 
+                :alertUserOnInvalid="false" />
             <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
             <Logout />
@@ -29,11 +33,11 @@ export default {
     computed:{
         ...mapGetters('wizard', ['getConfiguration']),
 
-        formValid: function() {
+        isValid: function() {
             const form = this.$parent.$refs.form
             if (!form.checkValidity()) {
                 form.reportValidity()
-                return  false
+                return false
             } else {
                 return true
             }

@@ -40,20 +40,20 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard',['SETCONFIGURATION']),
-        //Sends the user to the configuration menu screen. See router.js
-        toConfiguration:function(){
+        // Send the user to the configuration menu screen. See router.js
+        toConfiguration: function() {
             // menuconfig is currently skipped, we default on Custom config
             //this.$router.push('menuconfig')
 
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
         },
-        //Sends the user to the ACE Configuration Editor
-        toAce:function(){
+        // Send the user to the ACE Configuration Editor
+        toAce: function() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("ace")
         },
-        // TODO: the next 3 methods are duplicated in the config menu
+        // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData: function() {
             this.$refs.simDataInputFile.click()
         },
@@ -79,9 +79,8 @@ export default {
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
-        //Logout method called when the user hits the logout button
-        //Sends the user back to the entry screen regardless if the server has successfully logged them out
-        logout: async function(){
+        // TODO: Duplicated code; replace with /menu/Logout.vue
+        logout: async function() {
             try{
                 axios.get('/logout')
             }catch(error){

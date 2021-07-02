@@ -38,6 +38,7 @@ export default {
                     this.handleFile(parsed)
                 })
             } catch (e) {
+                alert('An error occurred while reading the file.')
                 console.warn(e.message)
             }
         }

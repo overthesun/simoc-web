@@ -4,30 +4,28 @@
             <div 
                 class='section' 
                 :class="{'section-active': section === activeSection}" 
-                @click="toggle(section)"
-            >{{ formatLabel(section) }}</div>
+                @click="toggle(section)">
+                {{ stringFormatter(section) }}
+            </div>
             <div class="menu" :class="{'menu-open': isOpen[section]}" >
                 <div v-for="agent in Object.keys(agentDesc[section])" :key="section+agent" class="agent-wrapper">
                     <div 
                         class="agent" 
                         @click="handleAgent(section, agent)" 
-                        :class="{'agent-active': agent === activeAgent}"
-                    >
+                        :class="{'agent-active': agent === activeAgent}">
                         <fa-layers 
                             class="fa-1x agent-icon-remove" 
                             @click="handleRemoveAgent(section, agent)" 
-                            :class="{'hidden': section === 'simulation_variables'}"
-                        >
+                            :class="{'hidden': section === 'simulation_variables'}">
                             <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                         </fa-layers>
-                        <span class="agent-label">{{ formatLabel(agent) }}</span>
+                        <span class="agent-label">{{ stringFormatter(agent) }}</span>
                     </div>
                 </div>
                 <fa-layers 
                     class="fa-1x agent-icon-add" 
                     @click="handleAddAgent(section)"
-                    :class="{'hidden': section === 'simulation_variables'}"
-                >
+                    :class="{'hidden': section === 'simulation_variables'}">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
             </div>
@@ -37,6 +35,7 @@
 
 <script>
 import {mapState,mapGetters,mapMutations} from 'vuex'
+import {StringFormatter} from '../../javascript/utils'
 
 export default {
     data() {
@@ -60,6 +59,8 @@ export default {
     },
     methods: {
         ...mapMutations('ace',['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
+
+        stringFormatter: StringFormatter,
 
         toggle: function(section) {
             this.$set(this.isOpen, section, !this.isOpen[section])
@@ -85,12 +86,6 @@ export default {
                 this.REMOVEAGENT({section: section, agent: agent})
             }
         },
-
-        formatLabel: function(text) {
-            let words = text.split("_")
-            let capitalized = words.map(w => w.charAt(0).toUpperCase() + w.slice(1))
-            return capitalized.join(" ")
-        }
     }
 }
 </script>

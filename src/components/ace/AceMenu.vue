@@ -4,7 +4,11 @@
             Ace Menu
         </template>
         <template v-slot:menu-buttons>
-            <DownloadConfig :valid="getEditorValid" :config="getActiveAgentDesc" fileName="agent_desc.json" />
+            <DownloadConfig 
+                :isValid="getEditorValid" 
+                :config="getActiveAgentDesc" 
+                fileName="agent_desc.json" 
+                :alertUserOnInvalid="true" />
             <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
             <Logout name="logout" />

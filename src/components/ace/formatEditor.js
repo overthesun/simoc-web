@@ -12,7 +12,6 @@ const formatEditor = (editorName) => {
     var tabs = document.getElementsByClassName('je-tab')
     tabs.forEach(tab => tab.classList.add('editor-tab'))
 
-    // M
     var contents = document.getElementsByClassName('content')
     contents.forEach(content => content.classList.add('editor-content'))
 

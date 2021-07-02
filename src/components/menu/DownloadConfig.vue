@@ -6,23 +6,26 @@
 
 export default {
     props: [
-        'valid',
+        'isValid',
         'config',
-        'fileName'
+        'fileName',
+        'alertUserOnInvalid'
     ],
     methods: {
         handleClick: function() {
             // abort if parent declares invalid
-            if (!this.valid) {
-                alert("Current form invalid")
+            if (!this.isValid) {
+                if (this.alertUserOnInvalid) {
+                    alert("Current form invalid")
+                }
                 return
             }
 
             // check/add .json extension
-            let nameExt = this.fileName.split('.')
-            var cleanName = (nameExt.length < 2 || nameExt[nameExt.length - 1] !== 'json') 
-                ? this.fileName + '.json' 
-                : this.fileName
+            let cleanName = this.fileName
+            if (cleanName.slice(-5) !== '.json') {
+                cleanName += '.json'
+            }
 
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(this.config)

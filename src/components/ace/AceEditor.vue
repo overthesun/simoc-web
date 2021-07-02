@@ -100,7 +100,7 @@ export default {
                 // Otherwise, update state and set to valid
                 } else {
                     this.SETEDITORVALID(true)
-                    // Name value is one level up in the heirarchy, so update store
+                    // Name value is one level up in the hierarchy, so update store
                     if (editorName !== 'customEditor' && value.name !== this.activeAgent) {
                         this.UPDATEAGENTNAME({
                             section: this.activeSection,
@@ -171,36 +171,33 @@ export default {
         // ('agent_schema' and 'agent_desc' loaded async by parent component, AceView.vue)
         agentSchema: function(newSchema, oldSchema) {
             // Only build once
-            if (this.isBuilt) {
+            if (this.isBuilt || Object.keys(newSchema).length === 0) {
                 return
             }
-            let asString = JSON.stringify(newSchema)
-            if (asString !== '{}') {
-                this.isBuilt = true
-                let agent_schema = JSON.parse(asString)
+            this.isBuilt = true
+            let agent_schema = JSON.parse(JSON.stringify(newSchema))
 
-                // Add 'currencies_of_exchange' list to schema
-                // TODO: Update schema as list of currencies changes. JSON-editor 
-                // doesn't have a built-in function to update schema.
-                agent_schema.agent.definitions.type.enum = this.currencies
-        
-                // Validate new currency names
-                JSONEditor.defaults.custom_validators.push((schema, value, path) => {
-                    const errors = []
-                    if (path === "root.name") {
-                        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-                            errors.push({
-                                path: path,
-                                property: 'format',
-                                message: 'Agent names must be alphanumeric and/or "_"'
-                            })
-                        }
+            // Add 'currencies_of_exchange' list to schema
+            // TODO: Update schema as list of currencies changes. JSON-editor 
+            // doesn't have a built-in function to update schema.
+            agent_schema.agent.definitions.type.enum = this.currencies
+    
+            // Validate new currency names
+            JSONEditor.defaults.custom_validators.push((schema, value, path) => {
+                const errors = []
+                if (path === "root.name") {
+                    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                        errors.push({
+                            path: path,
+                            property: 'format',
+                            message: 'Agent names must be alphanumeric and/or "_"'
+                        })
                     }
-                    return errors
-                });
-                this.loadEditor('agentEditor', agent_schema.agent)
-                this.loadEditor('customEditor', agent_schema.custom)
-            }
+                }
+                return errors
+            });
+            this.loadEditor('agentEditor', agent_schema.agent)
+            this.loadEditor('customEditor', agent_schema.custom)
         },
 
         // Reload editor when activeAgent changes
