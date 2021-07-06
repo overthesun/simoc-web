@@ -17,6 +17,7 @@
     "core-js": "^2.6.5",
     "json-loader": "^0.5.7",
     "socket.io-client": "^3.0.4",
+    "three": "^0.130.1",
     "vue": "^2.6.10",
     "vue-gtag": "^1.8.0",
     "vue-router": "^3.0.3",
