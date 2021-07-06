@@ -1,39 +1,21 @@
-import {
-    BoxBufferGeometry,
-    Color,
-    Mesh,
-    MeshBasicMaterial,
-    PerspectiveCamera,
-    Scene,
-    WebGLRenderer,
-} from 'three';
+import { createCamera } from './components/camera.js'
+import { createCube } from './components/cube.js'
+import { createScene } from './components/scene.js'
+
+import { createRenderer } from './systems/renderer.js'
+import { Resizer } from './systems/Resizer.js'
 
 class World {
     constructor(container) {
-        this.scene = new Scene();
-        this.scene.background = new Color('skyblue');
+        this.camera = createCamera()
+        this.scene = createScene()
+        this.renderer = createRenderer()
+        container.append(this.renderer.domElement)
+        this.resizer = new Resizer(container, this.camera, this.renderer)
 
-        // Create a camera
-        const fov = 35; // AKA Field of View
-        const aspect = container.offsetWidth / container.offsetHeight;
-        const near = 0.1; // the near clipping plane
-        const far = 100; // the far clipping plane
-        this.camera = new PerspectiveCamera(fov, aspect, near, far);
-        this.camera.position.set(0, 0, 10); // every object is initially created at ( 0, 0, 0 )
-
-        // create a cube
-        const geometry = new BoxBufferGeometry(2, 2, 2);
-        const material = new MeshBasicMaterial();
-        this.cube = new Mesh(geometry, material);
-        this.scene.add(this.cube);
-
-        // create the renderer
-        this.renderer = new WebGLRenderer();
-        this.renderer.setSize(container.offsetWidth, container.offsetHeight);
-        this.renderer.setPixelRatio(container.offsetWidth / container.offsetHeight);
-        container.append(this.renderer.domElement);
-        this.renderer.render(this.scene, this.camera);
-
+        this.cube = createCube()
+        this.scene.add(this.cube)
+        
         this.render = this.render.bind(this)
     }
     
