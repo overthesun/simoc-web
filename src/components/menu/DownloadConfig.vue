@@ -1,16 +1,26 @@
 <template>
-    <button @click="handleClick">Download Configuration</button>
+    <button @click="handleClick">{{ buttonText }}</button>
 </template>
 
 <script>
 
 export default {
-    props: [
-        'isValid',
-        'config',
-        'fileName',
-        'alertUserOnInvalid'
-    ],
+    props: {
+        isValid: Boolean,
+        config: null,
+        fileName: {
+            type: String,
+            default: 'simoc_download.json'
+        },
+        alertUserOnInvalid: {
+            type: Boolean,
+            default: false,
+        },
+        buttonText: {
+            type: String,
+            default: 'Download Configuration'
+        }
+    },
     methods: {
         handleClick: function() {
             // abort if parent declares invalid

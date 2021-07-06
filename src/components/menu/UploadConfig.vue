@@ -1,6 +1,6 @@
 <template>
     <button  @click="uploadConfig">
-        Upload Configuration
+        {{ buttonText }}
         <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleUpload" />
     </button>
 </template>
@@ -8,9 +8,15 @@
 <script>
 
 export default {
-    props: [
-        'handleFile'
-    ],
+    props: {
+        handleFile: {
+            type: Object,
+        },
+        buttonText: {
+            type: String,
+            default: 'Upload Configuration'
+        }
+    },
     methods: {
         uploadConfig: function() {
             this.$refs.configInputFile.click()

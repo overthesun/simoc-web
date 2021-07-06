@@ -1,16 +1,17 @@
 <template>
     <BaseMenu>
         <template v-slot:menu-title>
-            Ace Menu
+            Agent Editor Menu
         </template>
         <template v-slot:menu-buttons>
             <DownloadConfig 
                 :isValid="getEditorValid" 
                 :config="getActiveAgentDesc" 
                 fileName="agent_desc.json" 
-                :alertUserOnInvalid="true" />
-            <UploadConfig :handleFile="handleUpload" />
-            <button @click="resetConfig">Reset Configuration</button>
+                :alertUserOnInvalid="true" 
+                buttonText='Download Agent File' />
+            <UploadConfig :handleFile="handleUpload" buttonText='Upload Agent File'/>
+            <button @click="resetConfig">Reset Agent File</button>
             <Logout name="logout" />
         </template>
     </BaseMenu>
