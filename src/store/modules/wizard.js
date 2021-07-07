@@ -88,6 +88,25 @@ function get_presets() {
                 {type:'onion', amount:50},
             ],
         },
+        sam_analog: {
+            name: 'SAM: 1 Human + Garden',
+            simdata_file: '',
+            location: 'mars',
+            duration: {type:'none', amount:90, units:'day'},
+            humans: {type:'human_agent', amount:1, units:''},
+            food: {type:'food_storage', amount:300, units:'kg'},
+            crewQuarters: {type:'crew_habitat_sam', amount:1, units:''},
+            eclss: {type:'eclss', amount:1, units:''},
+            powerGeneration: {type:'solar_pv_array_mars', amount:400, units:''},
+            powerStorage: {type:'power_storage', amount:2000, units:'kWh'},
+            greenhouse: {type:'greenhouse_sam', amount:1, units:''},
+            plantSpecies: [
+                {type:'rice', amount:10},
+                {type:'cabbage', amount:10},
+                {type:'tomato', amount:5},
+                {type:'sweet_potato', amount:10},
+            ],
+        },
         // these are disabled for now
         /*
         wheat: {
@@ -171,9 +190,11 @@ export default{
             food: {min: 0, max: 8760},
             eclss: {min: 0, max: 10},
             crew_quarters_types: ['none', 'crew_habitat_small',
-                                  'crew_habitat_medium', 'crew_habitat_large'],
+                                  'crew_habitat_medium', 'crew_habitat_large', 
+                                  'crew_habitat_sam'],
             greenhouse_types: ['none', 'greenhouse_small',
-                               'greenhouse_medium', 'greenhouse_large'],
+                               'greenhouse_medium', 'greenhouse_large', 
+                               'greenhouse_sam'],
             // TODO: the list of plants is downloaded and should be cached
             // the valid range for plants is calculated dinamically
             generator_types: ['none', 'solar_pv_array_mars'],

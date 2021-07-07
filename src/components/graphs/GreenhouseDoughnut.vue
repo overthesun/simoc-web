@@ -27,7 +27,8 @@ export default {
                 'none':0,
                 'greenhouse_small':490,
                 'greenhouse_medium':2454,
-                'greenhouse_large':5610
+                'greenhouse_large':5610,
+                'greenhouse_sam': 367,
             },
 
             //Enough colors to cover all the plant types. Used to specify the color for each section of the pie chart.
