@@ -10,6 +10,7 @@
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button form='login-form' class='btn-normal' @click="toAce" :class="{'hidden': !showAgentEditor}">AGENT EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
@@ -27,6 +28,11 @@ import axios from 'axios'
 import {BaseEntry} from '../../components/base'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 export default {
+    data() {
+        return {
+            showAgentEditor: false
+        }
+    },
     components:{
         'BaseEntry':BaseEntry,
     },
@@ -34,15 +40,20 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard',['SETCONFIGURATION']),
-        //Sends the user to the configuration menu screen. See router.js
-        toConfiguration:function(){
+        // Send the user to the configuration menu screen. See router.js
+        toConfiguration: function() {
             // menuconfig is currently skipped, we default on Custom config
             //this.$router.push('menuconfig')
 
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
         },
-        // TODO: the next 3 methods are duplicated in the config menu
+        // Send the user to the ACE Configuration Editor
+        toAce: function() {
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push("ace")
+        },
+        // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData: function() {
             this.$refs.simDataInputFile.click()
         },
@@ -68,17 +79,37 @@ export default {
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
-        //Logout method called when the user hits the logout button
-        //Sends the user back to the entry screen regardless if the server has successfully logged them out
-        logout: async function(){
+        // TODO: Duplicated code; replace with /menu/Logout.vue
+        logout: async function() {
             try{
                 axios.get('/logout')
             }catch(error){
                 console.log(error)
             }
             this.$router.push("entry")
+        },
+        // Adapted from '../views/DashboardView.vue'
+        keyListener: function(e) {
+            let key_matched = true
+            switch (e.key) {
+                case 'a':
+                    this.showAgentEditor = true
+                    break
+                default:
+                    key_matched = false  // no key matched
+                    break
+            }
+            if (key_matched) {
+                e.preventDefault()
+            }
         }
-    }
+    },
+    mounted() {
+        window.addEventListener('keydown', this.keyListener)        
+    },
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.keyListener);
+    },
 }
 </script>
 
@@ -86,6 +117,11 @@ export default {
 #simDataInputFile {
     display: none;
 }
+
+.hidden {
+    display: none;
+}
+
     .entry-wrapper{
         height:100%;
         width:100%;
