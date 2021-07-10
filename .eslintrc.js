@@ -1,117 +1,127 @@
-// Defines the linting rules. 
-// *Must restart server to update auto-linter*
+// Defines the linting rules.
 //
-// Base ESLint Rules: 
-// https://eslint.org/docs/rules/ 
+// Run with `npm run lint -- --no-fix`.
+// `npm run lint` fixes by default,
+// `npm run serve` and `npm run build`
+// run the linter but don't auto-fix.
+//
+// Base ESLint Rules:
+// https://eslint.org/docs/rules/
 
 module.exports = {
-  root: true,
-  env: {
-    node: true
-  },
-  extends: [
-    'plugin:vue/essential', // Rules list: https://eslint.vuejs.org/rules/
-    '@vue/airbnb', // Rules list: https://github.com/airbnb/javascript
-  ],
-  parserOptions: {
-    parser: 'babel-eslint'
-  },
-  ignorePatterns: ["package-lock.json"],
-  rules: {
-    // SPACING
-    'comma-spacing': 'error', // A space is required after ','
-    indent: 'error', // Correct indentation
-    'max-len': ['warn', {'code': 100}], // Lines must be shorter than 100 characters
-    'no-trailing-spaces': 'error',
-    'space-before-function-paren': 'error', // Missing space before function parentheses
-    'key-spacing': ['error', { 'beforeColon': false, 'afterColon': true }], // Missing space before value for key 'components'
-    'space-before-blocks': 'error', // Missing space before opening brace
-    'keyword-spacing': ['error', { 'before': true, 'after': true }], // Expected space(s) after "catch"
-    'no-multi-spaces': 'error', // Multiple spaces found before '// abort if th...'
-    'spaced-comment': ['error', 'always'], // Expected exception block, space or tab after '//' in comment
-    
-    'object-curly-spacing': 'off', // Space between opening/closing curly bracket and content
-    
+    root: true,
+    env: {
+        browser: true,
+        node: true,
+    },
+    extends: [
+        'plugin:vue/recommended',  // rules list: https://eslint.vuejs.org/rules/
+        '@vue/airbnb',  // rules list: https://github.com/airbnb/javascript
+    ],
+    parser: 'vue-eslint-parser',
+    parserOptions: {
+        parser: 'babel-eslint',
+        sourceType: 'module',
+    },
+    plugins: [
+        'vue',
+    ],
+    rules: {
+        // SPACING
+        'comma-spacing': 'error',
+        'indent': ['error', 4,
+                   {ArrayExpression: 'first',
+                    ObjectExpression: 'first',
+                    ImportDeclaration: 'first'}],
+        'max-len': ['warn', {code: 100}],
+        'no-trailing-spaces': 'error',
+        'space-before-function-paren': 'error',
+        'key-spacing': ['error', {beforeColon: false, afterColon: true}],
+        'space-before-blocks': 'error',
+        'keyword-spacing': ['error', {before: true, after: true}],
+        'no-multi-spaces': ['error', {ignoreEOLComments: true}],
+        'spaced-comment': ['error', 'always'],
+        'object-curly-spacing': ['error', 'never',
+                                 {arraysInObjects: false, objectsInObjects: false}],
+        'array-bracket-spacing': 'error',
+        'computed-property-spacing': 'error',
 
-    // VARIABLE & FUNCTION DECLARATION
-    camelcase: 'warn', // Variables names to be camel case
-    'vars-on-top': 'error', // All 'var' declarations must be at the top of the function scope
-    'block-scoped-var': 'error', // The block-scoped-var rule generates warnings when variables are used outside of the block in which they were defined.
-    'no-var': 'error', // Unexpected var, use let or const instead
-    'no-multi-assign': 'error',
-    'no-undef': 'error', // 'Chart' is not defined
-    'no-redeclare': 'error', // totalHours is already defined
-    'no-shadow': 'error', // 'value' is already declared in the upper scope
+        // VARIABLE & FUNCTION DECLARATION
+        'camelcase': 'off',
+        'vars-on-top': 'error',
+        'block-scoped-var': 'error',
+        'no-var': 'error',
+        'no-multi-assign': 'error',
+        'no-undef': 'error',
+        'no-redeclare': 'error',
+        'no-shadow': 'error',
+        'prefer-const': 'warn',
+        'prefer-template': 'warn',
+        'prefer-destructuring': 'warn',
+        'dot-notation': 'error',
+        'no-param-reassign': 'warn',
+        'no-unused-vars': ['error', {args: 'after-used'}],
+        'object-shorthand': 'warn',
+        'func-names': 'warn',
 
-    'prefer-const': 'off', // If a variable is never reassigned, using the const declaration is better.
-    'prefer-template': 'off', // Unexpected string concatenation
-    'prefer-destructuring': 'off', // prefer-destructuring
-    'dot-notation': 'off', // ["air_storage"] is better written in dot notation
-    'no-param-reassign': 'off', // state.xx only assigned once
-    'no-unused-vars': 'off', // All declared variables/imports must be used
-    'object-shorthand': 'off', // This rule enforces the use of the shorthand syntax.
-    'func-names': 'off', // This rule can enforce or disallow the use of named function expressions.
-    
 
-    // OPERATORS
-    eqeqeq: 'error', // Triple-equal for comparison
-    'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }], // Unary operator '++' used
-    'no-mixed-operators': 'error', // Unexpected mix of '%' and '*'; Enclosing complex expressions by parentheses clarifies the developer's intention, which makes the code more readable.
-    'space-infix-ops': 'error', // Operator '+' must be spaced
-    
-    'operator-linebreak': 'off', // '+' should be placed at the beginning of the line
-    
+        // OPERATORS
+        'eqeqeq': 'error',
+        'no-plusplus': ['error', {allowForLoopAfterthoughts: true}],
+        'no-mixed-operators': 'error',
+        'space-infix-ops': 'error',
+        'operator-linebreak': 'off',
 
-    // SYNTAX
-    'comma-dangle': ['error', 'always-multiline'], // Comma after final list item
-    semi: 'never', // Semicolons
-    'brace-style': ['error', '1tbs'], // Closing curly brace does not appear on the same line as the subsequent block
-    'object-curly-newline': ['error', { // Expected a line break before this closing brace
-      'ObjectExpression': 'always',
-      'ObjectPattern': { 'multiline': true },
-      'ImportDeclaration': 'never',
-      'ExportDeclaration': 'never',
-    }], 
-    'quotes': ['error', 'single', { 'allowTemplateLiterals': true }], // quotes
-    'arrow-parens': 'warn', // Expected parentheses around arrow function argument having a body with curly braces
-    'quote-props': ['error', 'as-needed'], // Unnecessarily quoted property 'greenhouse_large' found
-    
 
-    // USE SPECIFIC OF FUNCTIONS
-    'array-callback-return': ['error', {'checkForEach': false}], // Expected to return a value in arrow function
-    'no-lonely-if': 'error', // Unexpected if as the only statement in an else block
-    'no-else-return': 'error', // Unnecessary 'else' after 'return'
-    'no-console': 'warn', // Prohibit console.log
-    'no-prototype-builtins': 'error', // Do not call Object.prototype methods directly
-    'no-restricted-globals': 'error', // Unexpected use of 'confirm'
-    
-    radix: 'off', // parseInt() must explicitly define base 10, base 16, etc
-    'consistent-return': 'off', // require `return` statements to either always or never specify values
-    'no-alert': 'off', // Unexpected alert
-    'no-throw-literal': 'off', // It is considered good practice to only throw the Error object itself or an object using the Error object as base objects for user-defined exceptions.
-    'no-array-constructor': 'off', // Use of the Array constructor to construct a new array is generally discouraged in favor of array literal notation because of the single-argument pitfall and because the Array global may be redefined.
-    'no-restricted-syntax': 'off', // Don’t use iterators. Prefer JavaScript’s higher-order functions instead of loops like for-in or for-of.
-    
+        // SYNTAX
+        'comma-dangle': ['error', 'always-multiline'],
+        'semi': ['error', 'never'],
+        'brace-style': ['error', '1tbs'],
+        'object-curly-newline': ['error', {// Expected a line break before this closing brace
+            ObjectExpression: {consistent: true},
+            ObjectPattern: {consistent: true},
+            ImportDeclaration: 'never',
+            ExportDeclaration: 'never',
+        }],
+        'quotes': ['error', 'single', {avoidEscape: true, allowTemplateLiterals: true}],
+        'quote-props': ['error', 'consistent-as-needed'],
+        'arrow-parens': ['warn', 'as-needed'],
 
-    // VUE-SPECIFIC RULES
-    'vue/no-unused-vars': 'error', // index is defined but never used
-    'vue/require-v-for-key': 'error', // Elements in iteration expect to have 'v-bind:key' directives
-    'vue/no-parsing-error': 'error', // Parsing error: unexpected-character-in-attribute-name
-    'vue/no-side-effects-in-computed-properties': 'warn', // Unexpected side effect in "co2" computed property
-    'vue/require-prop-type-constructor': 'warn', // The "canvasNumber" property should be a constructor
-    'vue/no-use-v-if-with-v-for': 'warn', // The 'stor_group' variable inside 'v-for' directive should be replaced with a computed property that returns filtered array instead. You should not mix 'v-for' with 'v-if'
-    
-    'vue/comment-directive': 'off', // clear
-    
-    
-    // IMPORT
-    'import/newline-after-import': 'error', // Expected 1 empty line after import statement not followed by another import
-    'import/order': 'error', // `vuex` import should occur before import of `../components/configuration`
-    'import/extensions': 'error', // Filetype extensions on imports
-    'import/no-dynamic-require': 'warn', // Calls to require() should use string literals
-    'import/no-extraneous-dependencies': 'warn', // 'lodash' should be listed in the project's dependencies
-    
-    'import/prefer-default-export': 'off', // Prefer default export
-    'global-require': 'off', // Unexpected require() (rule is deprecated)
-  },
-};
+
+        // USE SPECIFIC OF FUNCTIONS
+        'array-callback-return': 'error',
+        'no-lonely-if': 'error',
+        'no-else-return': 'error',
+        'no-console': 'warn',
+        'no-alert': 'warn',
+        'no-prototype-builtins': 'error',
+        'no-restricted-globals': 'error',
+        'radix': 'error',
+        'consistent-return': 'error',
+        'no-throw-literal': 'error',
+        'no-array-constructor': 'error',
+        'no-restricted-syntax': 'error',
+
+
+        // VUE-SPECIFIC RULES
+        'vue/no-unused-vars': 'error',
+        'vue/require-v-for-key': 'error',
+        'vue/no-parsing-error': 'error',
+        'vue/no-side-effects-in-computed-properties': 'warn',
+        'vue/require-prop-type-constructor': 'warn',
+        'vue/no-use-v-if-with-v-for': 'warn',
+
+        'vue/comment-directive': 'off',
+
+
+        // IMPORT
+        'import/newline-after-import': 'error',
+        'import/order': 'error',
+        'import/extensions': 'error',
+        'import/no-dynamic-require': 'warn',
+        'import/no-extraneous-dependencies': 'warn',
+
+        'import/prefer-default-export': 'off',
+        'global-require': 'off',
+    },
+}
