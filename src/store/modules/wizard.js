@@ -101,10 +101,10 @@ function get_presets() {
             powerStorage: {type:'power_storage', amount:1000, units:'kWh'},
             greenhouse: {type:'greenhouse_sam', amount:1, units:''},
             plantSpecies: [
-                {type:'rice', amount:3},
-                {type:'cabbage', amount:15},
-                {type:'tomato', amount:10},
-                {type:'sweet_potato', amount:2},
+                {type:'rice', amount:2},
+                {type:'cabbage', amount:8},
+                {type:'tomato', amount:8},
+                {type:'sweet_potato', amount:5},
             ],
         },
         // these are disabled for now
