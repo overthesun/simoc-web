@@ -9,7 +9,7 @@ ref: https://discoverthreejs.com/book/introduction/threejs-with-frameworks/
 
 <script>
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import World from '../three/World'
+import World from '../../threejs/World'
 
 export default {
     panelTitle: '3D View',
@@ -29,8 +29,7 @@ export default {
 
 <style lang="scss" scoped>
 #scene-container {
-    width: 100%;
-    height: 100%;
-    background-color: red;
+    max-width: 100%;
+    max-height: 100%;
 }
 </style>

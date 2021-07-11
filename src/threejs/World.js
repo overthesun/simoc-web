@@ -18,13 +18,17 @@ class World {
         this.scene = createScene()
         this.renderer = createRenderer()
         container.append(this.renderer.domElement)
-        this.resizer = new Resizer(container, this.camera, this.renderer)
-
-        this.controls = createControls(this.camera, this.renderer.domElement)
 
         this.cube = createCube()
         this.light = createLights()
         this.scene.add(this.cube, this.light)
+
+        this.resizer = new Resizer(container, this.camera, this.renderer)
+        this.resizer.onResize = () => {
+            this.render()
+        }
+
+        this.controls = createControls(this.camera, this.renderer.domElement)
         
         // this.loader = new OBJLoader()
         // this.loader.load(
