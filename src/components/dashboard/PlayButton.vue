@@ -12,23 +12,23 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    data(){
-        return{
+    data() {
+        return {
 
         }
     },
-    computed:{
-        ...mapGetters('dashboard',['getIsTimerRunning'])
+    computed: {
+        ...mapGetters('dashboard', ['getIsTimerRunning'])
     },
-    methods:{
+    methods: {
         ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer:function(){
+        pauseTimer: function() {
             // pause the timer when the user clicks on the pause button
             this.PAUSETIMER()
         },
-        resumeTimer:function(){
+        resumeTimer: function() {
             // start/resume the timer when the user clicks on the play button
             this.STARTTIMER()
         },

@@ -5,16 +5,16 @@ import modules from './modules'
 Vue.use(Vuex)
 export default new Vuex.Store({
     modules,
-    state:{
-        gameID:""
+    state: {
+        gameID: ""
     },
     mutations: {
-        SETGAMEID:function(state,value) {
+        SETGAMEID: function(state, value) {
             state.gameID = value
         }
     },
     actions: {},
-    getters:{
+    getters: {
         getGameID: state => state.gameID,
     }
 })

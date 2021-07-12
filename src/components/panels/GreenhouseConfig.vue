@@ -5,16 +5,16 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {GreenhouseDoughnut} from '../../components/graphs'
 
 export default {
     panelTitle: 'Greenhouse Configuration',
-    props:{
-        canvasNumber:0,
+    props: {
+        canvasNumber: 0,
     },
-    components:{
-       'GreenhouseDoughnut':GreenhouseDoughnut,
+    components: {
+        'GreenhouseDoughnut': GreenhouseDoughnut,
     },
 }
 </script>

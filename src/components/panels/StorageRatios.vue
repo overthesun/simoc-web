@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 import {LevelsGraph} from '../../components/graphs'
 
@@ -38,24 +38,24 @@ export default {
         panelSection: undefined,
     },
     components: {
-       'LevelsGraph': LevelsGraph,
+        'LevelsGraph': LevelsGraph,
     },
-    computed:{
+    computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         getStorages: function() {
             return this.getGameConfig['storages']
         },
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
     },
     watch: {
-        storage: function () {
+        storage: function() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, this.storage)
         },
-        getActivePanels: function () {
+        getActivePanels: function() {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.storage = this.getActivePanels[this.panelIndex].split(':')[1]
         },

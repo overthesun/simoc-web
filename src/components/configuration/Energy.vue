@@ -35,22 +35,22 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
-    data(){
-        return{
-            generator:undefined,
-            storage:undefined,
+    data() {
+        return {
+            generator: undefined,
+            storage: undefined,
         }
     },
-    beforeMount:function(){
-        const {powerGeneration,powerStorage} = this.getConfiguration
+    beforeMount: function() {
+        const {powerGeneration, powerStorage} = this.getConfiguration
         this.generator = powerGeneration
         this.storage = powerStorage
     },
-    computed:{
-        ...mapGetters('wizard',['getConfiguration', 'getValidValues']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
         generatorValues() {
             return this.getValidValues.generator
         },
@@ -58,23 +58,23 @@ export default {
             return this.getValidValues.storage
         },
     },
-    methods:{
+    methods: {
         ...mapMutations('wizard', ['SETENERGY']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY','SETACTIVEREFERENCE']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
 
-        //This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
-        //It is called from all fields on change, and updates with all selected values from this form.
-        setEnergy:function() {
+        // This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
+        // It is called from all fields on change, and updates with all selected values from this form.
+        setEnergy: function() {
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
         }
     },
-    watch:{
+    watch: {
         // Update power generator/storage (this is necessary to update the form values
         // when e.g. a config file is uploaded and the values in the store change)
         // and show error popups if the fields are invalid while the user is typing
         'getConfiguration.powerGeneration': {
-            handler:  function() {
+            handler: function() {
                 const powerGeneration = this.getConfiguration.powerGeneration
                 this.generator = powerGeneration
                 this.$nextTick(function() {
@@ -87,7 +87,7 @@ export default {
             deep: true // should trigger when powerGeneration.amount/type change
         },
         'getConfiguration.powerStorage': {
-            handler:  function() {
+            handler: function() {
                 const powerStorage = this.getConfiguration.powerStorage
                 this.storage = powerStorage
                 this.$nextTick(function() {

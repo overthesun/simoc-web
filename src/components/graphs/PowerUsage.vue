@@ -8,7 +8,7 @@
 import axios from 'axios'
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
         id: String,
@@ -27,41 +27,41 @@ export default {
                 greenhouse: [null, 0],
             },
             // these two arrays should match the items in this.energy
-            labels: ['Solar array', /*'Batteries',*/ 'Plants', 'ECLSS', 'Crew quarters', 'Greenhouse'],
-            colors: ['#0000ff', /*'#0000ee',*/ '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
+            labels: ['Solar array', /* 'Batteries',*/ 'Plants', 'ECLSS', 'Crew quarters', 'Greenhouse'],
+            colors: ['#0000ff', /* '#0000ee',*/ '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
         }
     },
 
-    computed:{
-        ...mapGetters('wizard',['getConfiguration']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration']),
 
-        crewQuarters: function(){
+        crewQuarters: function() {
             return this.getConfiguration.crewQuarters
         },
-        eclss: function(){
+        eclss: function() {
             return this.getConfiguration.eclss
         },
-        powerGenerator: function(){
+        powerGenerator: function() {
             return this.getConfiguration.powerGeneration
         },
-        powerStorage: function(){
+        powerStorage: function() {
             return this.getConfiguration.powerStorage
         },
-        greenhouse: function(){
+        greenhouse: function() {
             return this.getConfiguration.greenhouse
         },
-        plantSpecies: function(){
+        plantSpecies: function() {
             return this.getConfiguration.plantSpecies
         }
     },
 
-    watch:{
-        plantSpecies:{
+    watch: {
+        plantSpecies: {
             handler: function() {
                 this.energy.plantSpecies[1] = 0
-                this.plantSpecies.forEach((element)=>{
-                    if(element.type != null && element.amount > 0){
-                        this.retrievePower(element.type,element.amount,(response)=>{
+                this.plantSpecies.forEach((element) => {
+                    if (element.type != null && element.amount > 0) {
+                        this.retrievePower(element.type, element.amount, (response) => {
                             let {energy_input} = response
                             this.energy.plantSpecies[1] += energy_input
                             this.updateChart()
@@ -70,23 +70,23 @@ export default {
                 })
             },
             immediate: true,
-            deep:true
+            deep: true
         },
 
-        eclss:{
-            handler:function() {
-                this.retrievePower(this.eclss.type,this.eclss.amount,(response)=>{
+        eclss: {
+            handler: function() {
+                this.retrievePower(this.eclss.type, this.eclss.amount, (response) => {
                     let {energy_input} = response
                     this.energy.eclss[1] = energy_input
                     this.updateChart()
                 })
             },
             immediate: true,
-            deep:true
+            deep: true
         },
-        crewQuarters:{
+        crewQuarters: {
             handler: function() {
-                this.retrievePower(this.crewQuarters.type,1,(response)=>{
+                this.retrievePower(this.crewQuarters.type, 1, (response) => {
                     let {energy_input} = response
                     this.energy.crewQuarters[1] = energy_input
                     this.updateChart()
@@ -94,57 +94,57 @@ export default {
 
             },
             immediate: true,
-            deep:true
+            deep: true
         },
-        greenhouse:{
-            handler:function() {
-                this.retrievePower(this.greenhouse.type,1,(response)=>{
+        greenhouse: {
+            handler: function() {
+                this.retrievePower(this.greenhouse.type, 1, (response) => {
                     let {energy_input} = response
                     this.energy.greenhouse[1] = energy_input
                     this.updateChart()
                 })
             },
             immediate: true,
-            deep:true
+            deep: true
         },
-        powerGenerator:{
-            handler:function() {
-                this.retrievePower(this.powerGenerator.type, this.powerGenerator.amount, (response)=>{
+        powerGenerator: {
+            handler: function() {
+                this.retrievePower(this.powerGenerator.type, this.powerGenerator.amount, (response) => {
                     let {energy_output} = response
                     this.energy.powerGenerator[0] = energy_output
                     this.updateChart()
                 })
             },
             immediate: true,
-            deep:true
+            deep: true
         },
-        powerStorage:{
-            handler:function() {
-                this.retrievePower(this.powerStorage.type,this.powerStorage.amount,(response)=>{
+        powerStorage: {
+            handler: function() {
+                this.retrievePower(this.powerStorage.type, this.powerStorage.amount, (response) => {
                     let {energy_capacity} = response
                     // TODO: handle batteries
-                    //this.energy.powerStorage = energy_capacity
-                    //this.updateChart()
+                    // this.energy.powerStorage = energy_capacity
+                    // this.updateChart()
                 })
             },
             immediate: true,
-            deep:true
+            deep: true
         },
     },
 
-    methods:{
+    methods: {
         // TODO request all data as a single json, do math client-side
-        retrievePower: function(agent,amount=1,callback){
+        retrievePower: function(agent, amount=1, callback) {
             axios.defaults.withCredentials = true
-            const params = {agent_name:agent,quantity:amount}
+            const params = {agent_name: agent, quantity: amount}
             return axios.get('/get_energy', {params: params})
-                .then(response =>{
-                    if(response.status === 200){
-                        callback(response.data)
-                    }
-                }).catch(error => {
-                    console.log(error)
-                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            callback(response.data)
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
         },
         updateChart: function() {
             // Instead of accepting a dataset for each row (i.e. one for
@@ -194,8 +194,8 @@ export default {
                 scales: {
                     xAxes: [{
                         stacked: true,
-                        ticks:{
-                            beginAtZero:true,
+                        ticks: {
+                            beginAtZero: true,
                             fontColor: "#eeeeee",
                             callback: function(value, index, values) {
                                 return value + ' kWh'
@@ -205,9 +205,9 @@ export default {
                             color: "#666666"
                         },
                     }],
-                    yAxes:[{
+                    yAxes: [{
                         stacked: true,
-                        ticks:{
+                        ticks: {
                             fontColor: "#eeeeee",
                         },
                         gridLines: {

@@ -11,7 +11,7 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     data() {
         return {
@@ -31,7 +31,7 @@ export default {
                 water_storage: {
                     labels_colors: [['Potable', '#46f0f0'], ['Treated', '#4363d8'],
                                     ['Urine', '#ffe119'], ['Waste', '#f58231']],
-                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3,}
+                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3}
                 },
                 nutrient_storage: {
                     labels_colors: [['Biomass Total', '#3cb44b'], ['Biomass Edible', '#bcf60c'],
@@ -43,23 +43,23 @@ export default {
             },
         }
     },
-    props:{
+    props: {
         id: String,
         plotted_storage: String,
     },
 
-    computed:{
+    computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getCurrentStepBuffer'])
     },
 
-    watch:{
+    watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
         getCurrentStepBuffer: function() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_storage: function () {
+        plotted_storage: function() {
             this.initChart()
         }
     },
@@ -68,7 +68,7 @@ export default {
         this.initChart()
     },
 
-    methods:{
+    methods: {
         // TODO: this code is very similar to VersusGraph.vue
         initChart: function() {
             [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
@@ -93,14 +93,14 @@ export default {
                         fill: true,
                     })),
                 },
-                options:{
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     defaultFontColor: '#1e1e1e',
-                    scales:{
-                        yAxes:[{
+                    scales: {
+                        yAxes: [{
                             stacked: true,
-                            ticks:{
+                            ticks: {
                                 beginAtZero: true,
                                 // by default the values go up to 120% instead
                                 // of stopping at 100%, but with max: 100 it's
@@ -112,7 +112,7 @@ export default {
                             }
                         }],
                     },
-                    legend:{
+                    legend: {
                         display: true,
                         position: 'bottom',
                         labels: {
@@ -120,7 +120,7 @@ export default {
                         }
                     },
                     elements: {
-                        point:{
+                        point: {
                             // make the dots small, but with a big
                             // hit ratio so it's easy to hover them
                             radius: 1,
@@ -128,7 +128,7 @@ export default {
                             hoverRadius: 2,
                         }
                     },
-                    title:{
+                    title: {
                         display: false,
                     },
                 }
@@ -143,8 +143,7 @@ export default {
             let startingStep
             if (currentStep != this.prevStep+1) {
                 startingStep = currentStep - 23  // replace all 24 values
-            }
-            else {
+            } else {
                 startingStep = currentStep  // add the latest value
             }
             // this will do 1 or 24 iterations (maybe refactor it to something better)
@@ -166,8 +165,7 @@ export default {
                         }
                     )
                     data.labels.push(step)
-                }
-                else {
+                } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 24 total items and is not stretched
                     Object.values(data.datasets).forEach((dataset) => dataset.data.push(undefined))

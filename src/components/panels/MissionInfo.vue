@@ -65,7 +65,7 @@
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -75,30 +75,29 @@ export default {
             info_section: 'mission-status',
         }
     },
-    computed:{
+    computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer']),
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
         humanCount: function() {
             let agents = this.getAgentType(this.getCurrentStepBuffer)
             if (agents !== undefined && agents['human_agent'] !== undefined) {
                 return agents['human_agent']
-            }
-            else {
+            } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
             }
         },
-        calcDays: function (totalHours) {
+        calcDays: function(totalHours) {
             var totalHours = Math.max(totalHours, 0)
             let days = Math.floor(totalHours/24)
             let hours = totalHours%24
             return days + 'd ' + hours + 'h 0m'
         },
-        calcSols: function (totalHours) {
+        calcSols: function(totalHours) {
             var totalHours = Math.max(totalHours, 0)
             let days = Math.floor(totalHours/24.629444)
             let hours = totalHours%24.629444

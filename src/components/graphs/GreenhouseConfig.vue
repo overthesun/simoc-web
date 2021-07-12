@@ -7,7 +7,7 @@
 <script>
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
         id: String,
@@ -27,7 +27,7 @@ export default {
         }
     },
 
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
 
         plantSpecies: function() {
@@ -38,20 +38,20 @@ export default {
         },
     },
 
-    watch:{
+    watch: {
         // update graph when the plants or greenhouse change
         plantSpecies: {
-            handler: function () {
+            handler: function() {
                 this.updateChart()
             },
             deep: true,
         },
-        greenhouseSize: function () {
+        greenhouseSize: function() {
             this.updateChart()
         },
     },
 
-    methods:{
+    methods: {
         updateChart: function() {
             // Instead of accepting a dataset for each row (i.e. one for
             // production and one for consumption), ChartJS wants several
@@ -109,8 +109,8 @@ export default {
                 scales: {
                     xAxes: [{
                         stacked: true,
-                        ticks:{
-                            beginAtZero:true,
+                        ticks: {
+                            beginAtZero: true,
                             fontColor: "#eeeeee",
                             callback: function(value, index, values) {
                                 return value + ' m³'
@@ -120,9 +120,9 @@ export default {
                             color: "#666666"
                         },
                     }],
-                    yAxes:[{
+                    yAxes: [{
                         stacked: true,
-                        ticks:{
+                        ticks: {
                             fontColor: "#eeeeee",
                         },
                         gridLines: {

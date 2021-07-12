@@ -45,7 +45,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BasePanel} from '../../components/basepanel'
 import panels from '../../components/panels'  // import all panels
 
@@ -66,19 +66,18 @@ export default {
         const savedPanels = localStorage.getItem('panels-layout')
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
-        }
-        else {
+        } else {
             this.SETDEFAULTPANELS()
         }
     },
-    components:{
+    components: {
         'BasePanel': BasePanel,
         ...panels,  // add all panels as components
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getActivePanels']),
-        sortedPanels: function () {
+        sortedPanels: function() {
             // return a sorted array of [[title, name], [..., ...], ...]
             let sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
@@ -87,7 +86,7 @@ export default {
             return sorted.sort()
         },
     },
-    methods:{
+    methods: {
         ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
 
         openPanelMenu: function(index) {
@@ -133,7 +132,7 @@ export default {
         },
     },
     watch: {
-        getActivePanels: function () {
+        getActivePanels: function() {
             this.activePanels = this.getActivePanels
         },
     },

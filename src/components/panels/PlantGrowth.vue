@@ -17,23 +17,22 @@
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
-    computed:{
-        ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAgentGrowth','getCurrentStepBuffer','getAgentType']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
         getAgentGrowthPerc: function(index) {
             let agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
             if (agentGrowth === undefined) {
                 return '[loading data...]'
-            }
-            else {
+            } else {
                 let perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
                 return perc.toFixed(4) + "%"
             }

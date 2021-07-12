@@ -28,17 +28,17 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {Gauge} from '../../components/graphs'
 export default {
     panelTitle: 'Atmospheric Monitors',
-    props:{
-        canvasNumber:0,
+    props: {
+        canvasNumber: 0,
     },
-    components:{
-       'Gauge':Gauge,
+    components: {
+        'Gauge': Gauge,
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         total_storage_capacity: function() {

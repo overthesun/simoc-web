@@ -40,36 +40,36 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
-    data(){
-        return{
-            humans:undefined,
-            food:undefined,
-            crewQuarters:undefined,
-            eclss:undefined,
+    data() {
+        return {
+            humans: undefined,
+            food: undefined,
+            crewQuarters: undefined,
+            eclss: undefined,
         }
     },
-    beforeMount:function(){
+    beforeMount: function() {
         // Get the values from the configuration that is initially set
-        const {humans,food,crewQuarters,eclss} = this.getConfiguration
+        const {humans, food, crewQuarters, eclss} = this.getConfiguration
         this.humans = humans
         this.food = food
         this.crewQuarters = crewQuarters
         this.eclss = eclss
     },
-    computed:{
-        ...mapGetters('wizard', ['getConfiguration','getValidValues']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
         ranges() {
             return this.getValidValues  // return the valid ranges for humans/food/eclss
         },
     },
-    methods:{
-        ...mapMutations('wizard',['SETINHABITANTS']),
-        ...mapMutations('wizard',['SETACTIVEREFENTRY']),
+    methods: {
+        ...mapMutations('wizard', ['SETINHABITANTS']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
 
-        setInhabitants:function(){
+        setInhabitants: function() {
             // Sets all related values for the inhabitants form into the wizard store.
             const value = {'humans': this.humans, 'food': this.food,
                            'crewQuarters': this.crewQuarters, 'eclss': this.eclss}
@@ -82,19 +82,18 @@ export default {
             })
         },
     },
-    watch:{
+    watch: {
         // When the values in the store are changed, update the form and validate it.
         // The validation doesn't happen in setInhabitants because this is also triggered
         // when a config file is uploaded
-        'getConfiguration.crewQuarters':{
-            handler:function(){
+        'getConfiguration.crewQuarters': {
+            handler: function() {
                 const crewQuarters = this.getConfiguration.crewQuarters
                 // TODO: maybe the amount should be a hidden field
                 if (crewQuarters.type === "none") {
                     this.humans.amount = 0  // can't have humans without crew quarters
                     crewQuarters.amount = 0
-                }
-                else {
+                } else {
                     crewQuarters.amount = 1
                     this.$refs.humans.setCustomValidity('')  // remove custom error
                 }
@@ -103,7 +102,7 @@ export default {
                 this.crewQuarters = crewQuarters
                 this.$refs.crew_quarters_type.reportValidity()
             },
-            deep:true //Must be used if the watched value is an object.
+            deep: true // Must be used if the watched value is an object.
         },
         'getConfiguration.humans.amount': function() {
             const humans = this.getConfiguration.humans
@@ -111,7 +110,7 @@ export default {
             // if we have humans, check that the crew quarter is selected before checking the ranges
             const humans_are_invalid = (humans.amount > 0 && (this.crewQuarters.type === "none" ||
                                                               !this.$refs.crew_quarters_type.checkValidity()))
-            this.$refs.humans.setCustomValidity(humans_are_invalid?'Please select a crew quarters type.':'')
+            this.$refs.humans.setCustomValidity(humans_are_invalid ? 'Please select a crew quarters type.' : '')
             this.validateRef('humans')
         },
         'getConfiguration.food.amount': function() {

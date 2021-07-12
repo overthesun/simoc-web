@@ -52,11 +52,11 @@
 <script>
 import {BaseEntry} from '../../components/base'
 export default {
-    components:{
-        'BaseEntry':BaseEntry,
+    components: {
+        'BaseEntry': BaseEntry,
     },
-    methods:{
-        toLogin:function(){
+    methods: {
+        toLogin: function() {
             this.$router.push('entry')
         }
     }

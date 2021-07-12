@@ -28,26 +28,26 @@ Can be reenabled in Menu.vue if needed.
 
 <script>
 import {BaseEntry} from '../../components/base'
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
-    components:{
-        'BaseEntry':BaseEntry,
+    components: {
+        'BaseEntry': BaseEntry,
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', [])
     },
-    methods:{
+    methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
 
-        toMainMenu:function(){
+        toMainMenu: function() {
             this.$router.push("menu")
         },
-        toGuided:function(){
+        toGuided: function() {
             this.SETACTIVECONFIGTYPE('Guided')
             this.$router.push("configuration")
         },
-        toCustom:function(){
+        toCustom: function() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
 

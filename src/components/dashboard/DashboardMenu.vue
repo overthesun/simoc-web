@@ -21,23 +21,23 @@ use some of these features.
 
 <script>
 import axios from 'axios'
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 import {BaseMenu} from '../../components/base'
 export default {
-    data(){
-        return{
+    data() {
+        return {
             timerWasRunning: null,  // the status of timer before opening the menu
         }
     },
     components: {
-       'BaseMenu': BaseMenu,
+        'BaseMenu': BaseMenu,
     },
     mounted: function() {
         // save the status of the timer and pause it when the menu is opened
         this.timerWasRunning = this.getIsTimerRunning
         this.PAUSETIMER()
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
         ...mapGetters(['getGameID']),
@@ -48,10 +48,10 @@ export default {
             this.STARTTIMER()
         }
     },
-    methods:{
+    methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapMutations('dashboard', ['SETMENUACTIVE','SETSTOPPED','STARTTIMER','PAUSETIMER',
-                                      'SETDEFAULTPANELS','SETLEAVEWITHOUTCONFIRMATION']),
+        ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
+                                      'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
 
         // Stop Simulation button, this stops the timers and the simulation
         stopSimulation: async function() {
@@ -84,14 +84,14 @@ export default {
             this.SETDEFAULTPANELS()
         },
         // Logout button route
-        logout: async function(){
+        logout: async function() {
             if (!confirm('Stop the current simulation and log out?')) {
                 return;
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
-            try{
+            try {
                 axios.get('/logout')
-            }catch(error){
+            } catch (error) {
                 console.log(error)
             }
             // the user already confirmed, don't ask twice
@@ -101,13 +101,13 @@ export default {
         },
 
         // New Simulation button
-        toConfiguration: function(){
+        toConfiguration: function() {
             if (!confirm('Stop the current simulation and configure a new one?')) {
                 return;
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
             // menuconfig is currently skipped, we default on Custom config
-            //this.$router.push("menuconfig")
+            // this.$router.push("menuconfig")
             this.SETACTIVECONFIGTYPE('Custom')
 
             // the user already confirmed, don't ask twice

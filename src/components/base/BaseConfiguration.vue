@@ -47,19 +47,19 @@ menu button being present on other unrelated configurations.
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 export default {
-    computed:{
-        ...mapGetters('wizard',['getActiveConfigType','getActiveReference']),
+    computed: {
+        ...mapGetters('wizard', ['getActiveConfigType', 'getActiveReference']),
 
         // used to flag which section link is active within the reference navigation
         // uses class-binding to activate the class and underline the title
-        activeOption:function(){
+        activeOption: function() {
             return this.getActiveReference
         }
     },
-    methods:{
-        ...mapMutations('wizard',['SETACTIVEREFERENCE']),
+    methods: {
+        ...mapMutations('wizard', ['SETACTIVEREFERENCE']),
     }
 }
 </script>

@@ -184,13 +184,13 @@ using v-for to populate all links with the title and the approriate value for th
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    computed:{
-        ...mapGetters('wizard',['getActiveRefEntry'])
+    computed: {
+        ...mapGetters('wizard', ['getActiveRefEntry'])
     },
-    methods:{
-        ...mapMutations('wizard',['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE'])
+    methods: {
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE'])
     }
 }
 </script>

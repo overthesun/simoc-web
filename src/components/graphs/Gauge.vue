@@ -16,25 +16,25 @@ See chart.js documentation for further explantion of below fucntionality.
 <script>
 import Chart from 'chart.js';
 import "chartjs-plugin-annotation";
-import {mapState,mapGetters} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 export default {
-    props:{
-        id:String,
-        color:String,
-        maximum:Number,
-        label:String,
-        getter:Function,
-        stepDataKey:String
+    props: {
+        id: String,
+        color: String,
+        maximum: Number,
+        label: String,
+        getter: Function,
+        stepDataKey: String
     },
 
-    computed:{
-        ...mapGetters('dashboard',['getCurrentStepBuffer'])
+    computed: {
+        ...mapGetters('dashboard', ['getCurrentStepBuffer'])
     },
 
-    watch:{
+    watch: {
         // update the chart datasets and labels when the current step buffer has changed.
-        getCurrentStepBuffer:{
-            handler:function(){
+        getCurrentStepBuffer: {
+            handler: function() {
                 const current = this.getCurrentStepBuffer
                 let value = this.getter(current)
                 let gauge_value = Math.min(value, this.maximum) // clip at max
@@ -44,32 +44,32 @@ export default {
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
-                this.chart.options.elements.centerText.text = value.toFixed(4)+"%"
+                this.chart.options.elements.centerText.text = value.toFixed(4) + "%"
                 this.chart.update()
             },
-            deep:true
+            deep: true
         }
     },
 
-    mounted(){
+    mounted() {
         const ctx = document.getElementById(this.id)
         this.chart = new Chart(ctx, {
             type: 'doughnut',
-            data:{
+            data: {
                 labels: [],
-                datasets:[{
+                datasets: [{
                     backgroundColor: this.color,
-                    data:[10]
+                    data: [10]
                 }]
             },
             rotation: Math.PI * -.5,
-            options:{
-                elements:{
-                    arc:{
+            options: {
+                elements: {
+                    arc: {
                         borderWidth: 0
                     },
-                    centerText:{
-                        text:"Loading...",
+                    centerText: {
+                        text: "Loading...",
                     }
                 },
                 tooltips: {
@@ -82,21 +82,21 @@ export default {
                         }
                     }
                 },
-                legend:{
+                legend: {
                     display: false,
                 },
-                animation:{
+                animation: {
                     animateScale: false,
                     animateRotate: false
                 },
                 responsive: true,
                 maintainAspectRatio: false,
-                drawborder:false,
+                drawborder: false,
                 cutoutPercentage: 70,
                 rotation: Math.PI,
                 circumference: 1 * Math.PI
             },
-            plugins:[{
+            plugins: [{
                 beforeDraw: function(chart) {
                     var width = chart.chart.width
                     var height = chart.chart.height

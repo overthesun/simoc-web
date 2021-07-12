@@ -32,38 +32,38 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
-    data(){
-        return{
+    data() {
+        return {
             location: undefined,
             duration: undefined,
             duration_min: undefined,
             duration_max: undefined,
         }
     },
-    beforeMount:function(){
-        //Get the values from the configuration that is initially set
-        const {duration,location} = this.getConfiguration
+    beforeMount: function() {
+        // Get the values from the configuration that is initially set
+        const {duration, location} = this.getConfiguration
         this.location = location
         this.duration = duration
     },
-    computed:{
-        ...mapGetters('wizard', ['getConfiguration','getValidValues']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
     },
-    methods:{
-        ...mapMutations('wizard',['SETINITIAL']),
-        ...mapMutations('wizard',['SETACTIVEREFENTRY']),
+    methods: {
+        ...mapMutations('wizard', ['SETINITIAL']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
 
-        setInitial:function() {
+        setInitial: function() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
             const value = {'location': this.location, 'duration': this.duration}
             this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
         }
     },
-    watch:{
+    watch: {
         'getConfiguration.location': function() {
             // update location and report validity
             const location = this.getConfiguration.location
@@ -85,8 +85,7 @@ export default {
                     const range = validValues.duration_ranges[duration.units]
                     this.duration_min = range.min
                     this.duration_max = range.max
-                }
-                else {
+                } else {
                     this.$refs.duration_unit.reportValidity()
                 }
                 this.$nextTick(function() {

@@ -20,7 +20,7 @@
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -39,8 +39,8 @@ export default {
             },
         }
     },
-    computed:{
-        ...mapGetters('dashboard', ['getCurrentStepBuffer','getDetailsPerAgent']),
+    computed: {
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getDetailsPerAgent']),
         selected_consumption: function() {
             try {
                 if (this.selected_currency === null) {
@@ -48,8 +48,7 @@ export default {
                 }
                 const value = this.consumptions[this.selected_currency]
                 return value
-            }
-            catch (err) {
+            } catch (err) {
                 return null
             }
         },
@@ -57,9 +56,9 @@ export default {
             return this.getDetailsPerAgent(this.getCurrentStepBuffer).in
         },
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
-        fix_unit: function (unit) {
+        fix_unit: function(unit) {
             // TODO: this is currently unused.  The server either sends the
             // unit or nothing if the value is 0, and if it's kWh we need to
             // use kW, so use hardcoded units for now

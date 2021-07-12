@@ -65,13 +65,13 @@
 
 <script>
 import axios from 'axios'
-//import form components
-import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+// import form components
+import {ConfigurationMenu, Inhabitants, Greenhouse, Initial, Energy, Reference, Graphs, Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    components:{
+    components: {
         'TheTopBar': TheTopBar,
         'ConfigurationMenu': ConfigurationMenu,
         'Presets': Presets,
@@ -83,99 +83,98 @@ export default {
         'GreenhouseDoughnut': GreenhouseDoughnut,
         'Graphs': Graphs,
     },
-    data(){
-        return{
-            formIndex:0, //Current index of the form that should be used from the wizard store
-            activeForm:"Initial", //Default starting form
+    data() {
+        return {
+            formIndex: 0, // Current index of the form that should be used from the wizard store
+            activeForm: "Initial", // Default starting form
             forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             validating: false, // add a CSS class while validating to make missing required fields red
             awaiting_response: false, // true while waiting for a response after clicking on "Launch Simulation"
-            menuActive:false, //Used with class binding to display the menu.
-            stepMax:1,
-            greenhouseSize:{
-                'none':0,
-                'greenhouse_small':490,
-                'greenhouse_medium':2454,
-                'greenhouse_large':5610
+            menuActive: false, // Used with class binding to display the menu.
+            stepMax: 1,
+            greenhouseSize: {
+                'none': 0,
+                'greenhouse_small': 490,
+                'greenhouse_medium': 2454,
+                'greenhouse_large': 5610
             },
         }
     },
-    beforeMount:function(){
+    beforeMount: function() {
         this.RESETCONFIG()
         this.activeForm = this.getActiveForm
         this.activeConfigType = this.getActiveConfigType
     },
-    computed:{
-        ...mapGetters('dashboard', ['getMenuActive','getStepParams']),
-        ...mapGetters('wizard', ['getConfiguration','getActiveConfigType','getActiveForm',
-                                 'getFormLength','getTotalMissionHours','getFormattedConfiguration',
-                                 'getActiveReference','getActiveRefEntry','getPresets',
+    computed: {
+        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
+        ...mapGetters('wizard', ['getConfiguration', 'getActiveConfigType', 'getActiveForm',
+                                 'getFormLength', 'getTotalMissionHours', 'getFormattedConfiguration',
+                                 'getActiveReference', 'getActiveRefEntry', 'getPresets',
                                  'getSimdataLocation']),
 
-        //Used to hide the normal button and display the active button
-        isFinalForm:function() {
+        // Used to hide the normal button and display the active button
+        isFinalForm: function() {
             return (this.getFormLength-1) === this.formIndex
         },
-        //Hides the prvevious button if the active form is the first one.
-        isFirstForm:function() {
+        // Hides the prvevious button if the active form is the first one.
+        isFirstForm: function() {
             return this.formIndex === 0
         },
     },
-    methods:{
-        ...mapMutations('wizard', ['RESETCONFIG','SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMECONFIG','SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA','SETBUFFERMAX']),
+    methods: {
+        ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
+        ...mapMutations('dashboard', ['SETGAMECONFIG', 'SETSIMULATIONDATA',
+                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
 
 
-        toggleMenu:function(){
+        toggleMenu: function() {
             this.menuActive = !this.menuActive
         },
 
         // Sets the active form, using the value from the select field
         // This happens automatically by changing the watched formIndex
-        setActiveForm:function(event){
-            let {value:index} = event.target
+        setActiveForm: function(event) {
+            let {value: index} = event.target
             this.formIndex = parseInt(index)
         },
 
-        decrementIndex:function(){
-            let index = Math.max(0,(this.formIndex-1))
+        decrementIndex: function() {
+            let index = Math.max(0, (this.formIndex-1))
             this.formIndex = index
         },
 
-        incrementIndex:function(){
+        incrementIndex: function() {
             let max = this.getFormLength-1
-            this.formIndex = Math.min(max,(this.formIndex+1))
+            this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
-        handleAxiosError:function(error) {
+        handleAxiosError: function(error) {
             console.error(error)
             if (error.response && error.response.status == 401) {
                 alert('Please log in again to continue.')
                 this.$router.push("entry")
-            }
-            else {
+            } else {
                 alert(error)
             }
         },
 
-        importPresetData:function(preset) {
+        importPresetData: function(preset) {
             // import cached simulation data for the preset
             try {
                 console.log('* Loading cached simdata...')
                 const fname = preset.simdata_file.split('.')[0]
                 const data = require('../assets/simdata/' + fname + '.json')
                 return data
-            } catch(error) {
+            } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
                 console.error(error)
                 return null
             }
         },
 
-        launchSimulation:async function() {
+        launchSimulation: async function() {
             if (this.awaiting_response) {
                 return  // wait for a response before sending a new request
             }
@@ -222,38 +221,37 @@ export default {
                 // get the formatted configuration from wizard store
                 var configParams = {step_num: this.getTotalMissionHours,
                                     game_config: this.getFormattedConfiguration}
-            }
-            catch (err_msg) {
+            } catch (err_msg) {
                 alert(err_msg)
                 return  // abort if there are any errors
             }
             try {
                 this.awaiting_response = true
-                const response = await axios.post('/new_game', configParams) //Wait for the new game to be created
+                const response = await axios.post('/new_game', configParams) // Wait for the new game to be created
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
                 this.SETGAMECONFIG(response.data.game_config)
                 this.SETLOADFROMSIMDATA(false)
-                this.$router.push('dashboard') //If all is well then move the user to the dashboard screen
-            } catch(error) {
+                this.$router.push('dashboard') // If all is well then move the user to the dashboard screen
+            } catch (error) {
                 this.handleAxiosError(error)
             } finally {
                 this.awaiting_response = false
             }
         },
     },
-    watch:{
-        //If the active form changes update the activeForm variable with the one at the formIndex
-        getActiveForm:{
-            handler:function(){
+    watch: {
+        // If the active form changes update the activeForm variable with the one at the formIndex
+        getActiveForm: {
+            handler: function() {
                 this.activeForm = this.getActiveForm
             },
-            deep:true
+            deep: true
         },
-        //If the form index changes update the active form with the one at the formIndex
-        //Mostly used for when either the buttons or the select menu or used to navigate
-        formIndex:{
-            handler:function(){
+        // If the form index changes update the active form with the one at the formIndex
+        // Mostly used for when either the buttons or the select menu or used to navigate
+        formIndex: {
+            handler: function() {
                 this.SETACTIVEFORMINDEX(this.formIndex)
                 this.activeForm = this.getActiveForm
             }

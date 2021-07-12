@@ -20,9 +20,9 @@ future dashboard views
 </template>
 
 <script>
-import {Timeline,PlayButton,StepControls,SpeedControls,Main,DashboardMenu} from '../../components/dashboard'
+import {Timeline, PlayButton, StepControls, SpeedControls, Main, DashboardMenu} from '../../components/dashboard'
 import {TheTopBar} from '../../components/bars'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
@@ -33,18 +33,16 @@ export default {
         if (this.getLeaveWithoutConfirmation) {
             this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
             next()  // proceed without asking questions
-        }
-        else {
+        } else {
             // ask for confirmation before leaving the dashboard
             if (window.confirm('Terminate simulation and leave?  All unsaved data will be lost.')) {
                 next()  // user confirmed, proceed
-            }
-            else {
+            } else {
                 next(false)  // stay on page
             }
         }
     },
-    components:{
+    components: {
         "TheTopBar": TheTopBar,
         "DashboardMenu": DashboardMenu,
         "PlayButton": PlayButton,

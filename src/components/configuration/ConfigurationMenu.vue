@@ -15,14 +15,14 @@
 
 <script>
 import axios from 'axios'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../../components/base'
 
 export default {
     components: {
-       'BaseMenu': BaseMenu,
+        'BaseMenu': BaseMenu,
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
     },
     methods: {
@@ -34,7 +34,7 @@ export default {
             }
             try {
                 axios.get('/logout')
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
             }
             this.$router.push("entry")

@@ -33,7 +33,7 @@ Future version should also automatically switch the selected preset to 'custom' 
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 // global constants used to mark the empty and custom presets
 const EMPTY = 'empty'
 const CUSTOM = 'custom'
@@ -49,38 +49,36 @@ export default {
             dont_set_custom: false,  // when true, avoids setting the custom preset
         }
     },
-    computed:{
-        ...mapGetters('wizard', ['getConfiguration','getResetConfig','getPresets']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration', 'getResetConfig', 'getPresets']),
     },
-    methods:{
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY','SETRESETCONFIG','RESETCONFIG']),
-        ...mapActions('wizard',['SETCONFIGURATION','SETPRESET']),
+    methods: {
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
+        ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
 
-        updateConfig: function (name) {
+        updateConfig: function(name) {
             // don't set [custom] if the user picks a preset
             this.dont_set_custom = true
             if (name === CUSTOM) {
                 this.loadFromLocalStorage()
-            }
-            else {
+            } else {
                 this.SETPRESET(name)
             }
         },
-        saveToLocalStorage: function () {
+        saveToLocalStorage: function() {
             // save custom preset to local storage
             if (confirm('Save the current configuration as a custom preset?')) {
                 try {
                     const config = JSON.stringify(this.getConfiguration)
                     localStorage.setItem('custom-config', config)
-                }
-                catch (error) {
+                } catch (error) {
                     alert('An error occurred while saving the configuration: ' + error)
                     return
                 }
                 alert('Custom preset saved.')
             }
         },
-        loadFromLocalStorage: function (ask_confirm) {
+        loadFromLocalStorage: function(ask_confirm) {
             // this is called either when the user selects "[Custom]" or
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
@@ -90,8 +88,7 @@ export default {
             const config = localStorage.getItem('custom-config')
             if (config) {
                 this.SETCONFIGURATION(JSON.parse(config))
-            }
-            else {
+            } else {
                 alert('No Custom preset found. Use the Save button to save one.')
             }
         },

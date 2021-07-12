@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    data(){
+    data() {
         return {
             speeds: [0.25, 0.5, 1, 2, 4, 8],  // available speeds
             speedIndex: null,
@@ -34,8 +34,7 @@ export default {
             if (e.key === '+') {
                 this.changeSpeed(+1)
                 e.preventDefault()
-            }
-            else if (e.key === '-') {
+            } else if (e.key === '-') {
                 this.changeSpeed(-1)
                 e.preventDefault()
             }
@@ -45,7 +44,7 @@ export default {
     beforeDestroy: function() {
         window.removeEventListener('keydown', this.keyListener);
     },
-    methods:{
+    methods: {
         ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
         changeSpeed: function(offset) {
             // Change the speed of the step timer.

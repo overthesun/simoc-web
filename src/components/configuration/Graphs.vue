@@ -18,12 +18,12 @@ similar functionality to that of the reference wiki. Table of contents to select
 import {GreenhouseConfig, PowerUsage} from '../../components/graphs'
 import {mapGetters} from 'vuex'
 export default {
-    components:{
+    components: {
         'GreenhouseConfig': GreenhouseConfig,
         'PowerUsage': PowerUsage,
     },
-    computed:{
-        //...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
+    computed: {
+        // ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
     },
 }
 </script>

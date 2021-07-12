@@ -6,20 +6,20 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
 import {StepTimer} from '../javascript/stepTimer'
 
 import io from 'socket.io-client'
 
 export default {
-    data(){
-        return{
+    data() {
+        return {
             socket: null,  // the websocket used to get the steps
         }
     },
 
-    beforeMount:function(){
+    beforeMount: function() {
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
@@ -92,17 +92,17 @@ export default {
         window.removeEventListener('keydown', this.keyListener);
     },
 
-    computed:{
+    computed: {
         // getters from the vuex stores
-        ...mapGetters('dashboard', ['getGetStepsTimerID','getStopped','getTerminated','getIsTimerRunning','getStepParams','getCurrentStepBuffer','getMaxStepBuffer','getLoadFromSimData']),
-        ...mapGetters('wizard', ['getTotalMissionHours','getConfiguration']),
+        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated', 'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer', 'getMaxStepBuffer', 'getLoadFromSimData']),
+        ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
 
-    methods:{
-        ...mapMutations('dashboard',['SETPLANTSPECIESPARAM','STARTTIMER','PAUSETIMER','STOPTIMER','SETTIMERID','SETGETSTEPSTIMERID','SETBUFFERCURRENT','UPDATEBUFFERCURRENT','SETBUFFERMAX','SETMINSTEPNUMBER','SETSTOPPED','SETTERMINATED','INITGAME','SETMENUACTIVE']),
-        //Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
-        ...mapActions('dashboard',['parseStep']),
+    methods: {
+        ...mapMutations('dashboard', ['SETPLANTSPECIESPARAM', 'STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'SETTIMERID', 'SETGETSTEPSTIMERID', 'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX', 'SETMINSTEPNUMBER', 'SETSTOPPED', 'SETTERMINATED', 'INITGAME', 'SETMENUACTIVE']),
+        // Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
+        ...mapActions('dashboard', ['parseStep']),
 
         setupWebsocket: function() {
             const socket = this.socket = io()
@@ -158,18 +158,18 @@ export default {
             }
         },
 
-        requestStepsNum: async function(){
+        requestStepsNum: async function() {
             // tell the backend how many steps we need for this game
 
             // use the total number of mission hours as the number of steps to be calculated
-            const stepToParams = {step_num:this.getTotalMissionHours, game_id:this.getGameID}
-            try{
+            const stepToParams = {step_num: this.getTotalMissionHours, game_id: this.getGameID}
+            try {
                 // begin creating the step buffer on the backend using the entire length of the simulation as the base
                 await axios.post('/get_step_to', stepToParams)
                 // TODO: the stepBufferTimer() function has been replaced by websocket and can now be removed
                 // this.stepBufferTimer() // If everything went retrieve the first batch of steps.
                 this.setupWebsocket()  // setup the websocket to get the requested steps
-            }catch(error){
+            } catch (error) {
                 console.log(error)
             }
         },
@@ -181,12 +181,11 @@ export default {
             if (!this.getTerminated) {
                 // if the sim is not terminated, set a timer that will
                 // retrieve and parse a batch of step
-                let getStepsTimerID = setTimeout(async () => {
+                let getStepsTimerID = setTimeout(async() => {
                     try {
                         const response = await axios.post('/get_steps', stepParams)
                         this.updateStepBuffer(response.data.step_data)
-                    }
-                    catch (error) {
+                    } catch (error) {
                         console.log(error)
                         this.stepBufferTimer()  // retry
                     }
@@ -205,8 +204,7 @@ export default {
             // keep requesting steps until we retrieved them all, then terminate
             if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours)) {
                 this.stepBufferTimer()
-            }
-            else {
+            } else {
                 this.SETTERMINATED(true)
             }
         },
@@ -229,7 +227,7 @@ export default {
                 try {
                     axios.post('/kill_game', params)  // kill the game
                     console.log('Simulation stopped.')
-                } catch(error) {
+                } catch (error) {
                     console.log(error)
                 }
             }
@@ -269,8 +267,7 @@ export default {
                 case ' ':
                     if (this.getIsTimerRunning) {
                         this.PAUSETIMER()
-                    }
-                    else {
+                    } else {
                         this.STARTTIMER()
                     }
                     break
@@ -308,7 +305,7 @@ export default {
         }
     },
 
-    watch:{
+    watch: {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
         getCurrentStepBuffer: function() {

@@ -25,19 +25,19 @@
 <script>
 import axios from 'axios'
 import {BaseEntry} from '../../components/base'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    components:{
-        'BaseEntry':BaseEntry,
+    components: {
+        'BaseEntry': BaseEntry,
     },
-    methods:{
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
+    methods: {
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard',['SETCONFIGURATION']),
-        //Sends the user to the configuration menu screen. See router.js
-        toConfiguration:function(){
+        ...mapActions('wizard', ['SETCONFIGURATION']),
+        // Sends the user to the configuration menu screen. See router.js
+        toConfiguration: function() {
             // menuconfig is currently skipped, we default on Custom config
-            //this.$router.push('menuconfig')
+            // this.$router.push('menuconfig')
 
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
@@ -68,12 +68,12 @@ export default {
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
-        //Logout method called when the user hits the logout button
-        //Sends the user back to the entry screen regardless if the server has successfully logged them out
-        logout: async function(){
-            try{
+        // Logout method called when the user hits the logout button
+        // Sends the user back to the entry screen regardless if the server has successfully logged them out
+        logout: async function() {
+            try {
                 axios.get('/logout')
-            }catch(error){
+            } catch (error) {
                 console.log(error)
             }
             this.$router.push("entry")

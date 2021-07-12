@@ -17,24 +17,24 @@
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer','getStorageCapacities']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities']),
     },
     methods: {
         stringFormatter: StringFormatter,
-        storage: function (step) {
+        storage: function(step) {
             let storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
             delete storage['nutrient_storage'][1]['biomass_edible']
             return storage
         },
-        label2name: function (label) {
+        label2name: function(label) {
             return {
                 'atmo_o2': 'Oxygen (O₂)',
                 'atmo_co2': 'Carbon dioxide (CO₂)',

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {VersusGraph} from '../../components/graphs'
 
 export default {
@@ -39,18 +39,18 @@ export default {
         panelSection: undefined,
     },
     components: {
-       'VersusGraph': VersusGraph,
+        'VersusGraph': VersusGraph,
     },
     computed: {
         ...mapGetters('dashboard', ['getActivePanels']),
     },
     watch: {
-        currency: function () {
+        currency: function() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, this.currency)
         },
-        getActivePanels: function () {
+        getActivePanels: function() {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.currency = this.getActivePanels[this.panelIndex].split(':')[1]
         },

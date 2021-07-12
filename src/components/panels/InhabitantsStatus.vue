@@ -27,7 +27,7 @@
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -41,10 +41,10 @@ export default {
             o2_style: {color: '#eee'},
         }
     },
-    computed:{
+    computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer','getStorageCapacities','getGameConfig']),
+        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer', 'getStorageCapacities', 'getGameConfig']),
         step: function() {
             return this.getCurrentStepBuffer
         },
@@ -108,14 +108,13 @@ export default {
             let agents = this.getAgentType(this.getCurrentStepBuffer)
             if (agents !== undefined && agents['human_agent'] !== undefined) {
                 return agents['human_agent']
-            }
-            else {
+            } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
             }
         },
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
         get_gas_percentage: function(currency) {
             // calculate and return the percentage of the given gas
@@ -125,8 +124,7 @@ export default {
         attempt_read(func) {
             try {
                 return func()
-            }
-            catch (error) {
+            } catch (error) {
                 return '[loading data...]'
             }
         },

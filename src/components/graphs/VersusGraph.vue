@@ -11,24 +11,24 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    data(){
-        return{
-          prevStep: 0,
+    data() {
+        return {
+            prevStep: 0,
         }
     },
-    props:{
+    props: {
         id: String,
         plotted_value: String,
         unit: String,
     },
 
-    computed:{
-        ...mapGetters('dashboard', ['getIsTimerRunning','getCurrentStepBuffer','getMaxStepBuffer','getTotalProduction','getTotalConsumption'])
+    computed: {
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer', 'getTotalProduction', 'getTotalConsumption'])
     },
 
-    watch:{
+    watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
         getCurrentStepBuffer: function() {
@@ -44,7 +44,7 @@ export default {
         this.initChart()
     },
 
-    methods:{
+    methods: {
         // TODO: this code is very similar to LevelsGraph.vue
         initChart: function() {
             if (this.chart) {
@@ -55,15 +55,16 @@ export default {
             const ctx = document.getElementById(this.id)
             this.chart = new Chart(ctx, {
                 type: 'line',
-                data:{
+                data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(24).fill(''),
-                    datasets:[{
+                    datasets: [
+                        {
                             lineTension: 0,
                             data: Array(24),
                             label: 'Produced',
                             borderColor: "rgba(0,0,255,1)",
-                            fill:false,
+                            fill: false,
                             pointStyle: "line",
                         },
                         {
@@ -76,39 +77,39 @@ export default {
                         }
                     ]
                 },
-                options:{
-                    scales:{
-                        yAxes:[{
-                            ticks:{
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
                                 beginAtZero: true,
                                 callback: (value, index, values) => value + ' ' + this.unit
                             }
                         }],
-                        xAxes:[{
-                            ticks:{
-                                beginAtZero:true,
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true,
                             }
                         }]
                     },
-                    legend:{
+                    legend: {
                         display: true,
                         position: 'bottom',
                         // https://stackoverflow.com/a/50450646
-                        labels: { usePointStyle: true },
+                        labels: {usePointStyle: true},
                     },
-                    animation:{
+                    animation: {
                         animateScale: false,
                         animateRotate: false,
                     },
-                    title:{
-                        display:false,
-                        text:'(Energy) Consumption Vs Production'
+                    title: {
+                        display: false,
+                        text: '(Energy) Consumption Vs Production'
                     },
 
                     defaultFontColor: '#1e1e1e',
                     responsive: true,
                     maintainAspectRatio: false,
-                    drawborder:false,
+                    drawborder: false,
                     cutoutPercentage: 70,
                     rotation: Math.PI,
                     circumference: 1 * Math.PI
@@ -124,8 +125,7 @@ export default {
             let startingStep
             if (currentStep != this.prevStep+1) {
                 startingStep = currentStep - 23  // replace all 24 values
-            }
-            else {
+            } else {
                 startingStep = currentStep  // add the latest value
             }
             // this will do 1 or 24 iterations (maybe refactor it to something better)
@@ -141,8 +141,7 @@ export default {
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)
                     data.labels.push(step)
-                }
-                else {
+                } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 24 total items and is not stretched
                     data.datasets[0].data.push(undefined)

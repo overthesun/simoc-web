@@ -30,21 +30,30 @@ module.exports = {
         // SPACING
         'comma-spacing': 'error',
         'indent': ['error', 4,
-                   {ArrayExpression: 'first',
+                   {SwitchCase: 1,
+                    MemberExpression: 2,
+                    ArrayExpression: 'first',
                     ObjectExpression: 'first',
-                    ImportDeclaration: 'first'}],
-        'max-len': ['warn', {code: 100}],
+                    ImportDeclaration: 'first',
+                    FunctionDeclaration: {parameters: 'first'},
+                    FunctionExpression: {parameters: 'first'},
+                    CallExpression: {arguments: 'first'},}],
         'no-trailing-spaces': 'error',
-        'space-before-function-paren': 'error',
+        'space-in-parens': ['error', 'never'],
+        'space-before-function-paren': ['error', 'never'],
         'key-spacing': ['error', {beforeColon: false, afterColon: true}],
         'space-before-blocks': 'error',
         'keyword-spacing': ['error', {before: true, after: true}],
+        'arrow-spacing': ['error', {before: true, after: true}],
         'no-multi-spaces': ['error', {ignoreEOLComments: true}],
         'spaced-comment': ['error', 'always'],
         'object-curly-spacing': ['error', 'never',
                                  {arraysInObjects: false, objectsInObjects: false}],
         'array-bracket-spacing': 'error',
         'computed-property-spacing': 'error',
+
+        // STYLISTIC ISSUES
+        'max-len': ['warn', {code: 100}],
 
         // VARIABLE & FUNCTION DECLARATION
         'camelcase': 'off',
@@ -69,15 +78,16 @@ module.exports = {
         'eqeqeq': 'error',
         'no-plusplus': ['error', {allowForLoopAfterthoughts: true}],
         'no-mixed-operators': 'error',
-        'space-infix-ops': 'error',
+        'space-infix-ops': 'off',  // annonying for e.g. 3*5 + 2*3
+        'space-unary-ops': 'error',
         'operator-linebreak': 'off',
 
 
         // SYNTAX
         'comma-dangle': ['error', 'always-multiline'],
         'semi': ['error', 'never'],
-        'brace-style': ['error', '1tbs'],
-        'object-curly-newline': ['error', {// Expected a line break before this closing brace
+        'brace-style': ['error', '1tbs', {allowSingleLine: true}],
+        'object-curly-newline': ['error', {
             ObjectExpression: {consistent: true},
             ObjectPattern: {consistent: true},
             ImportDeclaration: 'never',

@@ -56,39 +56,39 @@
 <script>
 import axios from 'axios'
 import {BaseEntry} from '../../components/base'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
-    components:{
-        'BaseEntry':BaseEntry,
+    components: {
+        'BaseEntry': BaseEntry,
     },
 
-    data(){
+    data() {
 
-        //Initialize all the values that will be used for v-model
-        return{
+        // Initialize all the values that will be used for v-model
+        return {
             activeOption: 'login', // Which 'option' should be active
             activeGuestLogin: false, // true: guest login, false: regular login with user/pass form
             activeWarning: false, // Used to show or hide the warning panel
             activeWarnings: [], // The current active warnings. This should really be a 'set' so that it only contains unique warnings. Currently will display duplicates.
 
-            user:{
-                username:"",
-                password:"",
+            user: {
+                username: "",
+                password: "",
             },
 
-            register:{
-                username:"",
-                password:"",
-                confirmPassword:""
+            register: {
+                username: "",
+                password: "",
+                confirmPassword: ""
             },
         }
     },
     computed: {
         guestLoginLinkText: function() {
-            return this.activeGuestLogin?'Return to SIGN IN.':'Sign in as a Guest.'
+            return this.activeGuestLogin ? 'Return to SIGN IN.' : 'Sign in as a Guest.'
         },
     },
-    methods:{
+    methods: {
 
         // On registration make sure the username + password meet the criteria before attempting to register.
         // Warnings cannot be active before attempting login.
@@ -118,7 +118,7 @@ export default {
             }
         },
 
-        //Login the user if the criteria is met.
+        // Login the user if the criteria is met.
         loginUser: async function() {
             this.dismissWarning()
             const loginCorrect = await this.verifyLogin()
@@ -128,15 +128,15 @@ export default {
             }
 
             if (loginCorrect) {
-               const params = this.user
-               await this.entryHandler(params, '/login')  // Attempt the route
+                const params = this.user
+                await this.entryHandler(params, '/login')  // Attempt the route
             }
         },
 
-        //Connection handler for the login / registeration. Takes in the parameters to be used, and the route to be called.
-        //This method should be converted over to the try/catch block as seen elsewhere. Simply to reduce the callback hell.
-        //It would also need to be made async in that case.
-        entryHandler:function(params,route){
+        // Connection handler for the login / registeration. Takes in the parameters to be used, and the route to be called.
+        // This method should be converted over to the try/catch block as seen elsewhere. Simply to reduce the callback hell.
+        // It would also need to be made async in that case.
+        entryHandler: function(params, route) {
             axios.defaults.withCredentials = true;
             axios.post(route, params).then(response => {
                 const {status} = response
@@ -144,19 +144,16 @@ export default {
                     const errmsg = 'Error: ' + response.data.message
                     this.$gtag.exception({'description': errmsg})
                     this.addWarning(errmsg)
-                }
-                else if (status === 200) {
+                } else if (status === 200) {
                     if (this.activeOption === 'login') {
                         if (!this.activeGuestLogin) {
                             this.$gtag.event('user login', {'event_category': 'signin',
                                                             'event_label': this.user.username})
-                        }
-                        else {
+                        } else {
                             this.$gtag.event('guest login', {'event_category': 'signin',
                                                              'event_label': this.register.username})
                         }
-                    }
-                    else {
+                    } else {
                         this.$gtag.event('new user signup', {'event_category': 'signup',
                                                              'event_label': this.register.username})
                     }
@@ -176,8 +173,7 @@ export default {
                 if (!error.response) {
                     // we didn't get a response from the server
                     this.addWarning('Error: No response from the server')
-                }
-                else {
+                } else {
                     // we got a response back from the server
                     const {status} = error.response
                     let {message} = error.response.data
@@ -189,20 +185,18 @@ export default {
                     this.$gtag.exception({'description': message})
                     if (status === 401) {
                         this.addWarning('Login Error: ' + message)
-                    }
-                    else if (status === 409) {
+                    } else if (status === 409) {
                         this.addWarning('Registration Error: ' + message)
-                    }
-                    else {
+                    } else {
                         this.addWarning('Error: ' + message)
                     }
                 }
             })
         },
 
-        //Make sure that the password and username are at least not empty before proceeding.
+        // Make sure that the password and username are at least not empty before proceeding.
         verifyLogin: function() {
-            const {username,password} = this.user
+            const {username, password} = this.user
             return username.length > 0 && password.length > 0
         },
 
@@ -217,8 +211,8 @@ export default {
             return passRegex.test(password)
         },
 
-        //Verifies that both the password field and confirm field match and neither is empty
-        //Returns the solved boolean value
+        // Verifies that both the password field and confirm field match and neither is empty
+        // Returns the solved boolean value
         verifyPasswordMatch: function() {
             const {password, confirmPassword} = this.register
             return password === confirmPassword
@@ -230,16 +224,16 @@ export default {
             this.activeWarning = true
         },
 
-        //Called when the user closes the warning message popup.
-        //Clears all warning entries.
+        // Called when the user closes the warning message popup.
+        // Clears all warning entries.
         dismissWarning: function() {
             this.activeWarnings = []
             this.activeWarning = false
         },
 
-        //Used to activate which section the user is under Sign In or Sign Up
-        //Called from the above options sections within the HTMl, passes in the
-        //name value of the section that should have the active class.
+        // Used to activate which section the user is under Sign In or Sign Up
+        // Called from the above options sections within the HTMl, passes in the
+        // name value of the section that should have the active class.
         activateOption: function(sectionName) {
             this.dismissWarning()
             this.activeOption = sectionName

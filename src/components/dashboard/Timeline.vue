@@ -14,11 +14,11 @@ A condition needs to be added in if the timer is paused by some other means than
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StepTimer} from '../../javascript/stepTimer'
 export default {
-    data(){
-        return{
+    data() {
+        return {
             currentPercentage: 1,
             bufferPercentage: 1,
             currentStep: 1,
@@ -27,30 +27,30 @@ export default {
         }
     },
 
-    mounted:function() {
+    mounted: function() {
         // start the timer when the component is mounted, the actual
         // visualization will start only when the buffer has enough data
         this.startTimer()
     },
 
-    computed:{
-        ...mapGetters('dashboard',['getCurrentStepBuffer','getMaxStepBuffer','getTimerID','getIsTimerRunning','getStepInterval']),
-        ...mapGetters('wizard',['getTotalMissionHours'])
+    computed: {
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID', 'getIsTimerRunning', 'getStepInterval']),
+        ...mapGetters('wizard', ['getTotalMissionHours'])
 
     },
-    methods:{
-        ...mapMutations('dashboard',['SETTIMERID','STARTTIMER','PAUSETIMER','STOPTIMER','UPDATEBUFFERCURRENT']),
+    methods: {
+        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'UPDATEBUFFERCURRENT']),
 
         startTimer: function() {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
-            let stepTimer = new StepTimer( () => {
+            let stepTimer = new StepTimer(() => {
                 // increment the step only if we have enough buffered steps
                 // TODO check the number of steps requests so we can still
                 // run simulations with a number of steps <= the limit
                 if (this.getMaxStepBuffer >= 30) {
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
                 }
             }, this.getStepInterval)
             this.SETTIMERID(stepTimer)
@@ -60,7 +60,7 @@ export default {
 
         // called when the user starts dragging the timeline slider to
         // prevent updates while the user is interacting with the slider
-        pauseBuffer:function(){
+        pauseBuffer: function() {
             // update the graphs in real-time while the user drags
             this.UPDATEBUFFERCURRENT(this.currentStep)
             if (this.userIsDragging) {
@@ -76,7 +76,7 @@ export default {
         },
 
         // called when the user selects a new step on the timeline slider
-        updateBuffer:function(){
+        updateBuffer: function() {
             this.userIsDragging = false  // the user released the slider
             this.UPDATEBUFFERCURRENT(this.currentStep)
             // when the timer is paused and the slider moved beyond the max

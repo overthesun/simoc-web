@@ -9,49 +9,49 @@
 <script>
 
 export default {
-    data(){
-        return{
-            value:1,
-            stepMax:40
+    data() {
+        return {
+            value: 1,
+            stepMax: 40
         }
     },
-    computed:{
+    computed: {
     },
-    methods:{
-        updateStep:function(){
-            this.clock = setTimeout(()=>{
-                this.value = parseInt(this.value) +  1
+    methods: {
+        updateStep: function() {
+            this.clock = setTimeout(() => {
+                this.value = parseInt(this.value) + 1
 
-                if(this.value >= this.stepMax){
+                if (this.value >= this.stepMax) {
                     window.clearInterval(this.clock)
                     this.updateBuffer()
-                }else{
+                } else {
                     this.updateStep()
                 }
-            },100)
+            }, 100)
         },
-        killClock:function(){
+        killClock: function() {
             window.clearInterval(this.clock)
         },
-        updateBuffer:function(){
-            let bufferClock = setTimeout(()=>{
-                if(this.value < this.stepMax)
+        updateBuffer: function() {
+            let bufferClock = setTimeout(() => {
+                if (this.value < this.stepMax)
                     this.updateStep()
                 else
                     this.updateBuffer()
-            },100)
+            }, 100)
 
 
         }
     },
-    mounted(){
+    mounted() {
         this.updateStep()
-        setTimeout(()=>{
-        this.stepMax = 75
-        },3000)
-        setTimeout(()=>{
-                this.stepMax = 100
-        },6000)
+        setTimeout(() => {
+            this.stepMax = 75
+        }, 3000)
+        setTimeout(() => {
+            this.stepMax = 100
+        }, 6000)
     }
 }
 </script>
