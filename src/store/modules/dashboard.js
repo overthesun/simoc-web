@@ -192,7 +192,6 @@ export default {
         // This is used for the number of steps to grab from get_step_to,
         // after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS(state, value) {
-            const {step_num: step} = value
             state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
         // unconditionally set the maxStepBuffer
@@ -227,8 +226,8 @@ export default {
             const {step_num: step, agent_growth} = value
             // If the plant skips a step we get a null, indicating that it didn't grow.
             // Instead of storing null, reuse the last value stored in lastAgentGrowth
-            Object.entries(agent_growth).forEach(([name, value]) => {
-                if (value === null) {
+            Object.entries(agent_growth).forEach(([name, val]) => {
+                if (val === null) {
                     if (name in state.lastAgentGrowth) {  // use last value
                         agent_growth[name] = state.lastAgentGrowth[name]
                     } else {  // no value available, use 0 instead
@@ -236,7 +235,7 @@ export default {
                         state.lastAgentGrowth[name] = 0
                     }
                 } else {  // save the last non-null value
-                    state.lastAgentGrowth[name] = value
+                    state.lastAgentGrowth[name] = val
                 }
             })
             state.agentGrowth[step] = agent_growth

@@ -130,7 +130,7 @@ export default {
                     this.powerStorage.type,
                     this.powerStorage.amount,
                     (response) => {
-                        const {energy_capacity} = response
+                        // const {energy_capacity} = response
                         // TODO: handle batteries
                         // this.energy.powerStorage = energy_capacity
                         // this.updateChart()
@@ -180,8 +180,8 @@ export default {
 
     mounted() {
         // TODO this is mostly duplicated with GreenhouseConfiguration.vue: remove duplication
-        const ctx = document.getElementById(this.id)
-        this.chart = new Chart(ctx, {
+        const canvas = document.getElementById(this.id)
+        this.chart = new Chart(canvas, {
             type: 'horizontalBar',
             data: {
                 labels: ['Prod.', 'Cons.'],

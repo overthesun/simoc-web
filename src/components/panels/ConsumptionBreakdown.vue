@@ -4,7 +4,7 @@
         <template v-else>
         <p v-if="selected_consumption === null">[Missing data]</p>
         <select v-else v-model="selected_currency" required id="currency-select">
-            <option  v-for="(data, name, index) in consumptions" :value="name" :key="name">
+            <option  v-for="(data, name) in consumptions" :value="name" :key="name">
                 {{currencies[name]}}
             </option>
         </select>

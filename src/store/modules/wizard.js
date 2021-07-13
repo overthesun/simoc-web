@@ -227,7 +227,7 @@ export default {
                 power_storage: {enrg_kwh: parseInt(config.powerStorage.amount)},
                 nutrient_storage: {sold_n: 100, sold_p: 100, sold_k: 100},
                 single_agent: 1,
-                plants: new Array(),
+                plants: [],
             }
             if ((state.configuration.greenhouse.type == 'none') &&
                 (state.configuration.crewQuarters.type == 'none')) {

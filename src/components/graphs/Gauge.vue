@@ -52,8 +52,8 @@ export default {
     },
 
     mounted() {
-        const ctx = document.getElementById(this.id)
-        this.chart = new Chart(ctx, {
+        const canvas = document.getElementById(this.id)
+        this.chart = new Chart(canvas, {
             type: 'doughnut',
             data: {
                 labels: [],
@@ -107,10 +107,10 @@ export default {
                     ctx.font = fontSize + 'px sans-serif'
                     ctx.textBaseline = 'alphabetic'
 
-                    const {text} = chart.chart.options.elements.centerText,
-                        textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        arcH = width/2,  // height of the arc
-                        textY = Math.min((height-arcH)/2 + arcH, height)
+                    const {text} = chart.chart.options.elements.centerText
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2)
+                    const arcH = width/2  // height of the arc
+                    const textY = Math.min((height-arcH)/2 + arcH, height)
 
                     ctx.fillStyle = '#eeeeee'
                     ctx.fillText(text, textX, textY)

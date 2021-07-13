@@ -224,10 +224,12 @@ export default {
             }
 
             // ask the server to calculate the simdata for custom (non-preset) configs
+            let configParams
             try {
                 // get the formatted configuration from wizard store
-                const configParams = {step_num: this.getTotalMissionHours,
-                                      game_config: this.getFormattedConfiguration}
+                // the store will also validate it and throw errors if it's invalid
+                configParams = {step_num: this.getTotalMissionHours,
+                                game_config: this.getFormattedConfiguration}
             } catch (err_msg) {
                 alert(err_msg)
                 return  // abort if there are any errors

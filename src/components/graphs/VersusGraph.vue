@@ -11,6 +11,7 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
+import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     data() {
@@ -53,8 +54,8 @@ export default {
                 // the old one before reusing the same canvas
                 this.chart.destroy()
             }
-            const ctx = document.getElementById(this.id)
-            this.chart = new Chart(ctx, {
+            const canvas = document.getElementById(this.id)
+            this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined

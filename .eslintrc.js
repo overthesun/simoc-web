@@ -13,6 +13,7 @@ module.exports = {
     env: {
         browser: true,
         node: true,
+        es6: true,
     },
     extends: [
         'plugin:vue/recommended',  // rules list: https://eslint.vuejs.org/rules/
@@ -59,6 +60,7 @@ module.exports = {
         // VARIABLE & FUNCTION DECLARATION
         'camelcase': 'off',
         'vars-on-top': 'error',
+        'one-var': ['error', 'never'],
         'block-scoped-var': 'error',
         'no-var': 'error',
         'no-multi-assign': 'error',
@@ -69,8 +71,15 @@ module.exports = {
         'prefer-template': 'warn',
         'prefer-destructuring': ['warn', {object: true, array: false}],
         'dot-notation': 'error',
-        'no-param-reassign': 'warn',
-        'no-unused-vars': ['error', {args: 'after-used'}],
+        'no-param-reassign': ['error', {
+            props: true,
+            // ignore this for vuex store states, and for JS events
+            ignorePropertyModificationsFor: ['state', 'event'],
+        }],
+        'no-unused-vars': ['error', {
+            args: 'none',
+            varsIgnorePattern: 'mapState|mapGetters|mapMutations|mapActions',
+        }],
         'object-shorthand': ['error', 'methods', {avoidQuotes: true}],
         'func-names': 'warn',
 

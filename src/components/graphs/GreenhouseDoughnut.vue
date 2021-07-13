@@ -94,18 +94,19 @@ export default {
             return values
         },
         updateChart() {
-            const {greenhouse, plantSpecies} = this.getConfiguration
+            const {greenhouse} = this.getConfiguration
             const {data, labels} = this.greenhouseConfiguration()
             this.chart.data.labels = labels  // labels are always visible
+            let text
             if (greenhouse.type === 'none') {
                 // only show the text if the greenhouse type is none
                 this.chart.data.datasets[0].data = []
-                const text = 'No Greenhouse Type Selected'
+                text = 'No Greenhouse Type Selected'
             } else {
                 // otherwise show both the doughnut and the text
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = data
-                const text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
+                text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
             }
             this.chart.options.elements.centerText.text = text
             this.chart.update()
@@ -131,8 +132,8 @@ export default {
 
     },
     mounted() {
-        const ctx = document.getElementById(this.id)
-        this.chart = new Chart(ctx, {
+        const canvas = document.getElementById(this.id)
+        this.chart = new Chart(canvas, {
             type: 'doughnut',
             data: {
                 labels: ['Free Space'],
@@ -181,9 +182,9 @@ export default {
                     ctx.font = fontSize + 'em sans-serif'
                     ctx.textBaseline = 'bottom'
 
-                    const {text} = chart.chart.options.elements.centerText,
-                        textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        textY = height / 2
+                    const {text} = chart.chart.options.elements.centerText
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2)
+                    const textY = height / 2
 
                     ctx.fillStyle = 'white'
                     ctx.fillText(text, textX, textY)

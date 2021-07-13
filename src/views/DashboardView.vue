@@ -8,7 +8,6 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
-import {StepTimer} from '../javascript/stepTimer'
 
 import io from 'socket.io-client'
 
@@ -112,7 +111,8 @@ export default {
         ...mapActions('dashboard', ['parseStep']),
 
         setupWebsocket() {
-            const socket = this.socket = io()
+            const socket = io()
+            this.socket = socket
             // console.log('socket created:', this.socket)
 
             socket.on('connect', () => {

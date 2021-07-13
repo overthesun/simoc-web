@@ -85,8 +85,8 @@ export default {
 
     mounted() {
         // TODO this is mostly duplicated with PowerUsage.vue: remove duplication
-        const ctx = document.getElementById(this.id)
-        this.chart = new Chart(ctx, {
+        const canvas = document.getElementById(this.id)
+        this.chart = new Chart(canvas, {
             type: 'horizontalBar',
             data: {
                 labels: ['Total', 'Used'],

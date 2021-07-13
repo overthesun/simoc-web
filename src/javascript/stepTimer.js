@@ -1,7 +1,11 @@
 // See related stack overflow answer for details
 // Site: https://stackoverflow.com/questions/24724852/pause-and-resume-setinterval/24725066 //
 export function StepTimer(callback, delay) {
-    let timerID, start, remaining = delay, newdelay = delay, stopped = null
+    let timerID
+    let start
+    let remaining = delay
+    let newdelay = delay
+    let stopped = null
 
     this.pause = function() {
         window.clearTimeout(timerID)
