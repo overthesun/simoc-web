@@ -41,9 +41,22 @@ export default new Router({
             ],
         },
         {
-            path: '/configuration',
-            name: 'configuration',
-            component: ConfigurationView,
+          path:'menuconfig',
+          name:'menuconfig',
+          component:EntryMenuConfig
+        },
+      ]
+    },
+    {
+      path:"/ace",
+      name:"ace",
+      component:AceView,
+
+    },
+    {
+      path:"/configuration",
+      name:"configuration",
+      component:ConfigurationView,
 
             children: [
                 {

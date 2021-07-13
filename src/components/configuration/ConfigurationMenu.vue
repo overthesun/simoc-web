@@ -4,12 +4,14 @@
             Configuration Menu
         </template>
         <template v-slot:menu-buttons>
-            <button @click="downloadConfig">Download Configuration</button>
-            <button  @click="uploadConfig">Upload Configuration</button>
-            <input type="file" accept="application/json" id="configInputFile"
-                   ref="configInputFile" @change="handleConfig" />
+            <DownloadConfig
+                :isValid="isValid"
+                :config="getConfiguration"
+                fileName="simoc-config.json"
+                :alertUserOnInvalid="false" />
+            <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
-            <button class="btn-logout" @click="logout">Log Out</button>
+            <Logout />
         </template>
     </BaseMenu>
 </template>
@@ -18,62 +20,33 @@
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
+import {DownloadConfig,UploadConfig,Logout} from '../menu'
 
 export default {
     components: {
         BaseMenu,
+        DownloadConfig,
+        UploadConfig,
+        Logout,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
+
+        isValid: function() {
+            const form = this.$parent.$refs.form
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return false
+            } else {
+                return true
+            }
+        }
     },
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        async logout() {
-            if (!confirm('Do you want to log out?')) {
-                return
-            }
-            try {
-                axios.get('/logout')
-            } catch (error) {
-                console.log(error)
-            }
-            this.$router.push('entry')
-        },
-        downloadConfig() {
-            const {form} = this.$parent.$refs
-            if (!form.checkValidity()) {
-                form.reportValidity()
-                return  // abort if the form is invalid
-            }
-            const config = this.getConfiguration
-            // https://stackoverflow.com/a/48612128
-            const data = JSON.stringify(config)
-            const blob = new Blob([data], {type: 'application/json'})
-            const a = document.createElement('a')
-            a.download = 'simoc-config.json'
-            a.href = window.URL.createObjectURL(blob)
-            a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
-            a.click()
-        },
-        uploadConfig() {
-            this.$refs.configInputFile.click()
-        },
-        handleConfig(e) {
-            const {files} = e.target
-            const config = files[0]
-            const reader = new FileReader()
-            reader.onload = ((file) => this.readConfig)(config)
-            reader.readAsText(config)
-        },
-        readConfig(e) {
-            try {
-                const json_config = JSON.parse(e.target.result)
-                this.SETCONFIGURATION(json_config)
-            } catch (error) {
-                alert('An error occurred while reading the file: ' + error)
-                return
-            }
+        handleUpload: function(json_config) {
+            this.SETCONFIGURATION(json_config)
         },
         resetConfig() {
             if (!confirm('Reset the current configuration?')) {
