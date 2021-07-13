@@ -20,10 +20,11 @@ future dashboard views
 </template>
 
 <script>
-import {Timeline, PlayButton, StepControls,
-        SpeedControls, Main, DashboardMenu} from '../../components/dashboard'
-import {TheTopBar} from '../../components/bars'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {Timeline, PlayButton, StepControls,
+        SpeedControls, Main, DashboardMenu} from '../dashboard'
+import {TheTopBar} from '../bars'
+
 export default {
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.

@@ -8,6 +8,7 @@
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+
 export default {
     props: {
         id: String,

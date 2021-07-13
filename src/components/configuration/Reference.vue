@@ -185,6 +185,7 @@ using v-for to populate all links with the title and the approriate value for th
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
     computed: {
         ...mapGetters('wizard', ['getActiveRefEntry']),

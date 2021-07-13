@@ -25,8 +25,9 @@
 
 <script>
 import axios from 'axios'
-import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {BaseEntry} from '../base'
+
 export default {
     components: {
         BaseEntry,

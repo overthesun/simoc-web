@@ -69,11 +69,12 @@
 <script>
 import axios from 'axios'
 // import form components
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {ConfigurationMenu, Inhabitants, Greenhouse,
         Initial, Energy, Reference, Graphs, Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
     components: {
         TheTopBar,
@@ -172,6 +173,7 @@ export default {
             try {
                 console.log('* Loading cached simdata...')
                 const fname = preset.simdata_file.split('.')[0]
+                // eslint-disable-next-line import/no-dynamic-require
                 const data = require('../assets/simdata/' + fname + '.json')
                 return data
             } catch (error) {

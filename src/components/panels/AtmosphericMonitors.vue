@@ -35,7 +35,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Gauge} from '../../components/graphs'
+import {Gauge} from '../graphs'
+
 export default {
     panelTitle: 'Atmospheric Monitors',
     props: {

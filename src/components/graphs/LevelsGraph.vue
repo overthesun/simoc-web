@@ -13,6 +13,7 @@ See chart.js documentation for further details on the related mounted functions.
 <script>
 import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
     data() {
         return {

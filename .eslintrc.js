@@ -152,10 +152,12 @@ module.exports = {
 
         // IMPORT
         'import/newline-after-import': 'error',
+        'import/first': 'error',
         'import/order': 'error',
-        'import/extensions': 'error',
+        'import/extensions': ['error', 'never'],
         'import/no-dynamic-require': 'warn',
-        'import/no-extraneous-dependencies': 'warn',
+        'import/no-extraneous-dependencies': 'error',
+        'import/no-useless-path-segments': 'error',
 
         'import/prefer-default-export': 'off',
         'global-require': 'off',

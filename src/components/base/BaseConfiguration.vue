@@ -57,6 +57,7 @@ menu button being present on other unrelated configurations.
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+
 export default {
     computed: {
         ...mapGetters('wizard', ['getActiveConfigType', 'getActiveReference']),

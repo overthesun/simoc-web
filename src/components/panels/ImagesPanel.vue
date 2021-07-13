@@ -6,6 +6,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
     panelTitle: 'Habitat View',
     data() {

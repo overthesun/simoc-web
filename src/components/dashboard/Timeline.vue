@@ -18,6 +18,7 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StepTimer} from '../../javascript/stepTimer'
+
 export default {
     data() {
         return {

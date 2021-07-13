@@ -10,6 +10,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+
 export default {
     data() {
         return {

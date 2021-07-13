@@ -19,6 +19,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+
 export default {
     methods: {
         // TODO this should be moved out of the dashboard store

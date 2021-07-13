@@ -27,8 +27,8 @@ Can be reenabled in Menu.vue if needed.
 </template>
 
 <script>
-import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations} from 'vuex'
+import {BaseEntry} from '../base'
 
 export default {
     components: {

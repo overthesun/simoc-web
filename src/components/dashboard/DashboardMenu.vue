@@ -22,7 +22,8 @@ use some of these features.
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations} from 'vuex'
-import {BaseMenu} from '../../components/base'
+import {BaseMenu} from '../base'
+
 export default {
     data() {
         return {

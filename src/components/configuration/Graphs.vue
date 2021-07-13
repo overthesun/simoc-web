@@ -20,8 +20,9 @@ This component would have a similar functionality to that of the reference wiki.
 </template>
 
 <script>
-import {GreenhouseConfig, PowerUsage} from '../../components/graphs'
 import {mapGetters} from 'vuex'
+import {GreenhouseConfig, PowerUsage} from '../graphs'
+
 export default {
     components: {
         GreenhouseConfig,
