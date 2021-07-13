@@ -14,7 +14,7 @@ requireModule.keys().forEach(fileName => {
 
     modules[moduleName] = {
         namespaced: true,
-        ...requireModule(fileName).default
+        ...requireModule(fileName).default,
     }
 })
 

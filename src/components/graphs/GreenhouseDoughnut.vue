@@ -13,8 +13,8 @@ See chart.js documentation for more details.
 </template>
 
 <script>
-import Chart from 'chart.js';
-import "chartjs-plugin-annotation";
+import Chart from 'chart.js'
+import "chartjs-plugin-annotation"
 import {mapState, mapGetters} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 export default {
@@ -29,7 +29,7 @@ export default {
                 'none': 0,
                 'greenhouse_small': 490,
                 'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
+                'greenhouse_large': 5610,
             },
 
             // Enough colors to cover all the plant types.
@@ -39,7 +39,7 @@ export default {
                 "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8",
                 "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff",
                 "#000000",
-            ]
+            ],
         }
     },
     computed: {
@@ -124,7 +124,7 @@ export default {
             handler: function() {
                 this.updateChart()
             },
-            deep: true
+            deep: true,
         },
     },
     update() {
@@ -139,7 +139,7 @@ export default {
                 datasets: [{
                     backgroundColor: this.backgroundColor,
                     data: [0],
-                }]
+                }],
             },
             options: {
                 responsive: true,
@@ -147,11 +147,11 @@ export default {
                 cutoutPercentage: 70,
                 elements: {
                     arc: {
-                        borderWidth: 0
+                        borderWidth: 0,
                     },
                     centerText: {
                         text: '',
-                    }
+                    },
                 },
                 legend: {
                     onClick: null,
@@ -164,7 +164,7 @@ export default {
                         fontSize: 14,
                         boxWidth: 4,
                         usePointStyle: true,
-                    }
+                    },
                 },
                 animation: {
                     animateScale: false,
@@ -174,27 +174,27 @@ export default {
             },
             plugins: [{
                 beforeDraw: function(chart) {
-                    var width = chart.chart.width;
-                    var height = chart.chart.height;
-                    var ctx = chart.chart.ctx;
+                    var width = chart.chart.width
+                    var height = chart.chart.height
+                    var ctx = chart.chart.ctx
 
-                    ctx.restore();
-                    var fontSize = (height/300).toFixed(2);
-                    ctx.font = fontSize + "em sans-serif";
-                    ctx.textBaseline = "bottom";
+                    ctx.restore()
+                    var fontSize = (height/300).toFixed(2)
+                    ctx.font = fontSize + "em sans-serif"
+                    ctx.textBaseline = "bottom"
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        textY = height / 2;
+                        textY = height / 2
 
-                    ctx.fillStyle = 'white';
-                    ctx.fillText(text, textX, textY);
-                    ctx.save();
-                }
-            }]
+                    ctx.fillStyle = 'white'
+                    ctx.fillText(text, textX, textY)
+                    ctx.save()
+                },
+            }],
         })
         this.updateChart()  // this will set the center text and other things
-    }
+    },
 }
 
 </script>

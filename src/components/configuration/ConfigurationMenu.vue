@@ -31,7 +31,7 @@ export default {
         ...mapActions('wizard', ['SETCONFIGURATION']),
         logout: async function() {
             if (!confirm('Do you want to log out?')) {
-                return;
+                return
             }
             try {
                 axios.get('/logout')
@@ -81,7 +81,7 @@ export default {
             }
             this.SETRESETCONFIG(true)
         },
-    }
+    },
 }
 </script>
 

@@ -62,7 +62,7 @@ export default {
             // Updates the wizard store values with the form values.
             const value = {'location': this.location, 'duration': this.duration}
             this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
-        }
+        },
     },
     watch: {
         'getConfiguration.location': function() {
@@ -95,8 +95,8 @@ export default {
                 })
             },
             deep: true,  // should trigger when duration.amount/units change
-        }
-    }
+        },
+    },
 }
 </script>
 

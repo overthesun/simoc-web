@@ -210,7 +210,7 @@ export default {
                 'none': 0,
                 'greenhouse_small': 490,
                 'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
+                'greenhouse_large': 5610,
             }[this.greenhouse.type]
             // make sure that the amount doesn't overflow the greenhouse_size:
             // calculate the available space by subtracting the amount of the
@@ -273,8 +273,8 @@ export default {
                 this.updateAndValidate()
             },
             deep: true,
-        }
-    }
+        },
+    },
 }
 </script>
 

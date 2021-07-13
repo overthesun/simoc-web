@@ -20,7 +20,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning'])
+        ...mapGetters('dashboard', ['getIsTimerRunning']),
     },
     methods: {
         ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
@@ -32,7 +32,7 @@ export default {
             // start/resume the timer when the user clicks on the play button
             this.STARTTIMER()
         },
-    }
+    },
 }
 </script>
 

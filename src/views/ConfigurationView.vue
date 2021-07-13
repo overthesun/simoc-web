@@ -102,7 +102,7 @@ export default {
                 'none': 0,
                 'greenhouse_small': 490,
                 'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
+                'greenhouse_large': 5610,
             },
         }
     },
@@ -255,7 +255,7 @@ export default {
             handler: function() {
                 this.activeForm = this.getActiveForm
             },
-            deep: true
+            deep: true,
         },
         // If the form index changes update the active form with the one at the formIndex
         // Mostly used for when either the buttons or the select menu or used to navigate
@@ -263,9 +263,9 @@ export default {
             handler: function() {
                 this.SETACTIVEFORMINDEX(this.formIndex)
                 this.activeForm = this.getActiveForm
-            }
-        }
-    }
+            },
+        },
+    },
 }
 </script>
 

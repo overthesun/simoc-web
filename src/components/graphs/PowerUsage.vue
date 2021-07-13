@@ -6,8 +6,8 @@
 
 <script>
 import axios from 'axios'
-import Chart from 'chart.js';
-import "chartjs-plugin-annotation";
+import Chart from 'chart.js'
+import "chartjs-plugin-annotation"
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -54,7 +54,7 @@ export default {
         },
         plantSpecies: function() {
             return this.getConfiguration.plantSpecies
-        }
+        },
     },
 
     watch: {
@@ -72,7 +72,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
 
         eclss: {
@@ -84,7 +84,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         crewQuarters: {
             handler: function() {
@@ -96,7 +96,7 @@ export default {
 
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         greenhouse: {
             handler: function() {
@@ -107,7 +107,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         powerGenerator: {
             handler: function() {
@@ -122,7 +122,7 @@ export default {
                 )
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         powerStorage: {
             handler: function() {
@@ -138,7 +138,7 @@ export default {
                 )
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
     },
 
@@ -170,7 +170,7 @@ export default {
                 let dataset = {
                     label: this.labels[i],
                     backgroundColor: this.colors[i],
-                    data: this.energy[key]
+                    data: this.energy[key],
                 }
                 this.chart.data.datasets.push(dataset)
             })
@@ -209,10 +209,10 @@ export default {
                             fontColor: "#eeeeee",
                             callback: function(value, index, values) {
                                 return value + ' kWh'
-                            }
+                            },
                         },
                         gridLines: {
-                            color: "#666666"
+                            color: "#666666",
                         },
                     }],
                     yAxes: [{
@@ -221,14 +221,14 @@ export default {
                             fontColor: "#eeeeee",
                         },
                         gridLines: {
-                            color: "#666666"
+                            color: "#666666",
                         },
                     }],
-                }
+                },
             },
         })
         this.updateChart()
-    }
+    },
 }
 </script>
 

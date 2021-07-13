@@ -18,7 +18,7 @@ import {mapGetters, mapMutations} from 'vuex'
 export default {
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('wizard', ['getTotalMissionHours'])
+        ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {
         ...mapMutations('dashboard', ['UPDATEBUFFERCURRENT']),

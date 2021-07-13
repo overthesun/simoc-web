@@ -290,7 +290,7 @@ export default {
         SETDEFAULTPANELS: function(state) {
             state.activePanels = [
                 "MissionInfo", "ProductionConsumption:enrg_kwh", "StorageLevels",
-                "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors"
+                "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors",
             ]
         },
         INITGAME: function(state, value) {
@@ -340,5 +340,5 @@ export default {
                 // commit('SETTERMINATED',item)
             })
         },
-    }
+    },
 }

@@ -89,7 +89,7 @@ export default {
         // remove these if when we leave the dashboard
         window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
         window.removeEventListener('unload', this.killGameOnUnload)
-        window.removeEventListener('keydown', this.keyListener);
+        window.removeEventListener('keydown', this.keyListener)
     },
 
     computed: {
@@ -306,7 +306,7 @@ export default {
             if (key_matched) {
                 e.preventDefault()
             }
-        }
+        },
     },
 
     watch: {
@@ -325,8 +325,8 @@ export default {
             if (this.getStopped) {
                 this.killGame()
             }
-        }
-    }
+        },
+    },
 }
 </script>
 

@@ -62,8 +62,8 @@ export default {
     methods: {
         toLogin: function() {
             this.$router.push('entry')
-        }
-    }
+        },
+    },
 }
 </script>
 

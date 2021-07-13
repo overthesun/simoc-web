@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
     // For simple configuration of static files in Flask
@@ -23,7 +23,7 @@ module.exports = {
             target: 'https://localhost:8443',
             logLevel: 'debug',
         },*/
-        }
+        },
     },
     css: {
         loaderOptions: {
@@ -44,4 +44,4 @@ module.exports = {
     // and restart the vue server.
     // ref: https://stegriff.co.uk/upblog/how-to-change-webpack-settings-set-by-vue-cli/)
     lintOnSave: true,
-};
+}

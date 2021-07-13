@@ -106,7 +106,7 @@ export default {
                 this.crewQuarters = crewQuarters
                 this.$refs.crew_quarters_type.reportValidity()
             },
-            deep: true // Must be used if the watched value is an object.
+            deep: true, // Must be used if the watched value is an object.
         },
         'getConfiguration.humans.amount': function() {
             const humans = this.getConfiguration.humans
@@ -127,7 +127,7 @@ export default {
             this.eclss = this.getConfiguration.eclss
             this.validateRef('eclss')
         },
-    }
+    },
 }
 </script>
 

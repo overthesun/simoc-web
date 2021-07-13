@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             value: 1,
-            stepMax: 40
+            stepMax: 40,
         }
     },
     computed: {
@@ -49,7 +49,7 @@ export default {
             }, 100)
 
 
-        }
+        },
     },
     mounted() {
         this.updateStep()
@@ -59,7 +59,7 @@ export default {
         setTimeout(() => {
             this.stepMax = 100
         }, 6000)
-    }
+    },
 }
 </script>
 

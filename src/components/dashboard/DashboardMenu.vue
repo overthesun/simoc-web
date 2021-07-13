@@ -87,7 +87,7 @@ export default {
         // Logout button route
         logout: async function() {
             if (!confirm('Stop the current simulation and log out?')) {
-                return;
+                return
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
             try {
@@ -104,7 +104,7 @@ export default {
         // New Simulation button
         toConfiguration: function() {
             if (!confirm('Stop the current simulation and configure a new one?')) {
-                return;
+                return
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
             // menuconfig is currently skipped, we default on Custom config
@@ -115,8 +115,8 @@ export default {
             this.SETLEAVEWITHOUTCONFIRMATION(true)
             // rely on DashboardView.beforeDestroy to stop the sim
             this.$router.push("menu")
-        }
-    }
+        },
+    },
 }
 </script>
 

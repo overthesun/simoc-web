@@ -93,7 +93,7 @@ export default {
             register: {
                 username: "",
                 password: "",
-                confirmPassword: ""
+                confirmPassword: "",
             },
         }
     },
@@ -154,7 +154,7 @@ export default {
         // Simply to reduce the callback hell.
         // It would also need to be made async in that case.
         entryHandler: function(params, route) {
-            axios.defaults.withCredentials = true;
+            axios.defaults.withCredentials = true
             axios.post(route, params).then(response => {
                 const {status} = response
                 if (response.data.status == 'ERROR') {
@@ -268,7 +268,7 @@ export default {
             this.register.password = rand_password
             this.register.confirmPassword = rand_password
         },
-    }
+    },
 }
 </script>
 

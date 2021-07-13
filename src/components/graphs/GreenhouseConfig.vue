@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import Chart from 'chart.js';
-import "chartjs-plugin-annotation";
+import Chart from 'chart.js'
+import "chartjs-plugin-annotation"
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -18,7 +18,7 @@ export default {
             greenhouseSizes: {
                 'greenhouse_small': 490,
                 'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
+                'greenhouse_large': 5610,
             },
             // colors used for the plants in the graphs
             colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',
@@ -74,7 +74,7 @@ export default {
                 let dataset = {
                     label: plant.type,
                     backgroundColor: this.colors[i],
-                    data: [null, plant.amount]
+                    data: [null, plant.amount],
                 }
                 this.chart.data.datasets.push(dataset)
             })
@@ -85,7 +85,7 @@ export default {
 
     mounted() {
         // TODO this is mostly duplicated with PowerUsage.vue: remove duplication
-        const ctx = document.getElementById(this.id);
+        const ctx = document.getElementById(this.id)
         this.chart = new Chart(ctx, {
             type: 'horizontalBar',
             data: {
@@ -114,10 +114,10 @@ export default {
                             fontColor: "#eeeeee",
                             callback: function(value, index, values) {
                                 return value + ' m³'
-                            }
+                            },
                         },
                         gridLines: {
-                            color: "#666666"
+                            color: "#666666",
                         },
                     }],
                     yAxes: [{
@@ -126,14 +126,14 @@ export default {
                             fontColor: "#eeeeee",
                         },
                         gridLines: {
-                            color: "#666666"
+                            color: "#666666",
                         },
                     }],
                 },
-            }
-        });
+            },
+        })
         this.updateChart()
-    }
+    },
 }
 </script>
 

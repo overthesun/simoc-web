@@ -28,7 +28,7 @@ export default {
             // actions they can use beforeDestroy
             this.SETMENUACTIVE(false)
         },
-    }
+    },
 }
 </script>
 

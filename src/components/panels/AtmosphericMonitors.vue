@@ -49,7 +49,7 @@ export default {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         total_storage_capacity: function() {
             return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
-        }
+        },
     },
     methods: {
         airStorageGetter: function(currency) {

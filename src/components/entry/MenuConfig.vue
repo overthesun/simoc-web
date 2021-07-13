@@ -35,7 +35,7 @@ export default {
         'BaseEntry': BaseEntry,
     },
     computed: {
-        ...mapGetters('wizard', [])
+        ...mapGetters('wizard', []),
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
@@ -51,8 +51,8 @@ export default {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push("configuration")
 
-        }
-    }
+        },
+    },
 }
 </script>
 

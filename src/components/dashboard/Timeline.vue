@@ -38,7 +38,7 @@ export default {
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
                                     'getIsTimerRunning', 'getStepInterval']),
-        ...mapGetters('wizard', ['getTotalMissionHours'])
+        ...mapGetters('wizard', ['getTotalMissionHours']),
 
     },
     methods: {

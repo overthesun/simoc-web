@@ -6,15 +6,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     modules,
     state: {
-        gameID: ""
+        gameID: "",
     },
     mutations: {
         SETGAMEID: function(state, value) {
             state.gameID = value
-        }
+        },
     },
     actions: {},
     getters: {
         getGameID: state => state.gameID,
-    }
+    },
 })

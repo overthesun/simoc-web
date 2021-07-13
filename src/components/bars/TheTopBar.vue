@@ -17,7 +17,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
     methods: {
-        ...mapMutations('dashboard', ['SETMENUACTIVE'])
+        ...mapMutations('dashboard', ['SETMENUACTIVE']),
     },
 }
 </script>

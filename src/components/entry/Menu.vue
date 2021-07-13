@@ -79,8 +79,8 @@ export default {
                 console.log(error)
             }
             this.$router.push("entry")
-        }
-    }
+        },
+    },
 }
 </script>
 

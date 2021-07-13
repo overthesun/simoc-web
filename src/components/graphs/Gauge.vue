@@ -14,8 +14,8 @@ See chart.js documentation for further explantion of below fucntionality.
 </template>
 
 <script>
-import Chart from 'chart.js';
-import "chartjs-plugin-annotation";
+import Chart from 'chart.js'
+import "chartjs-plugin-annotation"
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -24,11 +24,11 @@ export default {
         maximum: Number,
         label: String,
         getter: Function,
-        stepDataKey: String
+        stepDataKey: String,
     },
 
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer'])
+        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
     },
 
     watch: {
@@ -47,8 +47,8 @@ export default {
                 this.chart.options.elements.centerText.text = value.toFixed(4) + "%"
                 this.chart.update()
             },
-            deep: true
-        }
+            deep: true,
+        },
     },
 
     mounted() {
@@ -59,18 +59,18 @@ export default {
                 labels: [],
                 datasets: [{
                     backgroundColor: this.color,
-                    data: [10]
-                }]
+                    data: [10],
+                }],
             },
             rotation: Math.PI * -.5,
             options: {
                 elements: {
                     arc: {
-                        borderWidth: 0
+                        borderWidth: 0,
                     },
                     centerText: {
                         text: "Loading...",
-                    }
+                    },
                 },
                 tooltips: {
                     callbacks: {
@@ -78,23 +78,23 @@ export default {
                             // show "label: N%" in the tooltip
                             const label = data.labels[tooltipItems.index]
                             const value = data.datasets[0].data[tooltipItems.index]
-                            return label + ': ' + (value*100) + "%";
-                        }
-                    }
+                            return label + ': ' + (value*100) + "%"
+                        },
+                    },
                 },
                 legend: {
                     display: false,
                 },
                 animation: {
                     animateScale: false,
-                    animateRotate: false
+                    animateRotate: false,
                 },
                 responsive: true,
                 maintainAspectRatio: false,
                 drawborder: false,
                 cutoutPercentage: 70,
                 rotation: Math.PI,
-                circumference: 1 * Math.PI
+                circumference: 1 * Math.PI,
             },
             plugins: [{
                 beforeDraw: function(chart) {
@@ -117,10 +117,10 @@ export default {
                     ctx.fillStyle = '#eeeeee'
                     ctx.fillText(text, textX, textY)
                     ctx.save()
-                }
-            }]
+                },
+            }],
         })
-    }
+    },
 
 }
 </script>

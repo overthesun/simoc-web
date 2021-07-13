@@ -26,7 +26,7 @@ export default {
 
     computed: {
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer',
-                                    'getTotalProduction', 'getTotalConsumption'])
+                                    'getTotalProduction', 'getTotalConsumption']),
     },
 
     watch: {
@@ -75,22 +75,22 @@ export default {
                             borderColor: "#cd0000",
                             fill: false,
                             pointStyle: "line",
-                        }
-                    ]
+                        },
+                    ],
                 },
                 options: {
                     scales: {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => value + ' ' + this.unit
-                            }
+                                callback: (value, index, values) => value + ' ' + this.unit,
+                            },
                         }],
                         xAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                            }
-                        }]
+                            },
+                        }],
                     },
                     legend: {
                         display: true,
@@ -104,7 +104,7 @@ export default {
                     },
                     title: {
                         display: false,
-                        text: '(Energy) Consumption Vs Production'
+                        text: '(Energy) Consumption Vs Production',
                     },
 
                     defaultFontColor: '#1e1e1e',
@@ -113,8 +113,8 @@ export default {
                     drawborder: false,
                     cutoutPercentage: 70,
                     rotation: Math.PI,
-                    circumference: 1 * Math.PI
-                }
+                    circumference: 1 * Math.PI,
+                },
             })
             this.updateChart()
         },
@@ -152,7 +152,7 @@ export default {
             }
             this.chart.update()
             this.prevStep = currentStep
-        }
+        },
     },
 }
 </script>

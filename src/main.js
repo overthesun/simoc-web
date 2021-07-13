@@ -1,10 +1,10 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store/index.js";
-import VueGtag from "vue-gtag";
+import Vue from "vue"
+import App from "./App.vue"
+import router from "./router"
+import store from "./store/index.js"
+import VueGtag from "vue-gtag"
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
@@ -24,11 +24,11 @@ Vue.use(VueGtag, {
     // remember to use the right code for each branch
     config: {id: 'UA-29092818-6'},
     enabled: process.env.NODE_ENV === 'production',
-}, router);
+}, router)
 
 
 new Vue({
     router,
     store,
-    render: h => h(App)
-}).$mount("#app");
+    render: h => h(App),
+}).$mount("#app")

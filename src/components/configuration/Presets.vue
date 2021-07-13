@@ -122,7 +122,7 @@ export default {
                 this.selected = CUSTOM
             },
             deep: true,
-        }
+        },
     },
 }
 </script>

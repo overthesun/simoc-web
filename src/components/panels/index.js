@@ -14,6 +14,6 @@ requireModule.keys().forEach(fileName => {
         panel.panelTitle = panelName
     }
     panels[panelName] = panel
-});
+})
 
 export default panels

@@ -37,7 +37,7 @@ function get_presets() {
             powerGeneration: {type: 'solar_pv_array_mars', amount: 30, units: ''},
             powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
             greenhouse: {type: 'none', amount: 0, units: ''},
-            plantSpecies: [{type: '', amount: ''}]
+            plantSpecies: [{type: '', amount: ''}],
         },
         one_human_radish: {
             name: '1 Human + Radish',
@@ -65,7 +65,7 @@ function get_presets() {
             powerGeneration: {type: 'solar_pv_array_mars', amount: 30, units: ''},
             powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
             greenhouse: {type: 'none', amount: 0, units: ''},
-            plantSpecies: [{type: '', amount: ''}]
+            plantSpecies: [{type: '', amount: ''}],
         },
         four_humans_garden: {
             name: '4 Humans + Garden',
@@ -246,7 +246,7 @@ export default {
                 }
             })
             return fconfig
-        }
+        },
     },
     mutations: {
         // this method is accessed through the SETCONFIGURATION/SETPRESET actions
@@ -341,7 +341,7 @@ export default {
             state.activeFormIndex = 0
             state.activeReference = 'Reference'
             state.activeRefEntry = 'Welcome'
-        }
+        },
     },
     actions: {
         // TODO: not sure if this is the best way to handle this.
@@ -359,5 +359,5 @@ export default {
         SETPRESET: function(context, name) {
             context.commit('set_config', context.state.presets[name])
         },
-    }
+    },
 }

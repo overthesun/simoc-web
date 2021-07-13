@@ -74,7 +74,7 @@ export default {
         setEnergy: function() {
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)
-        }
+        },
     },
     watch: {
         // Update power generator/storage (this is necessary to update the form values
@@ -91,7 +91,7 @@ export default {
                     this.$refs.generator_input.reportValidity()
                 })
             },
-            deep: true // should trigger when powerGeneration.amount/type change
+            deep: true, // should trigger when powerGeneration.amount/type change
         },
         'getConfiguration.powerStorage': {
             handler: function() {
@@ -103,9 +103,9 @@ export default {
                     this.$refs.power_input.reportValidity()
                 })
             },
-            deep: true // should trigger when powerStorage.amount/type change
-        }
-    }
+            deep: true, // should trigger when powerStorage.amount/type change
+        },
+    },
 }
 </script>
 

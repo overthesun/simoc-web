@@ -38,7 +38,7 @@ export default {
                 return perc.toFixed(4) + "%"
             }
         },
-    }
+    },
 }
 </script>
 

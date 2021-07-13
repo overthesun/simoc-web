@@ -65,11 +65,11 @@ export default {
         // uses class-binding to activate the class and underline the title
         activeOption: function() {
             return this.getActiveReference
-        }
+        },
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVEREFERENCE']),
-    }
+    },
 }
 </script>
 

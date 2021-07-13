@@ -42,7 +42,7 @@ export default {
         window.addEventListener('keydown', this.keyListener.bind(this))
     },
     beforeDestroy: function() {
-        window.removeEventListener('keydown', this.keyListener);
+        window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
         ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
