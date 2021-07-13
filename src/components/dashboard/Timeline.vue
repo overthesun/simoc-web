@@ -1,14 +1,16 @@
-<!-- Timeline component
-There is an issues with this that causes the stepTimer to resume once the user slides the timeline indicator to a new place. It will override the current state of the timer.
-A condition needs to be added in if the timer is paused by some other means than just by the timeline indicator methods
--->
+<!-- Timeline component -->
 
 <template>
         <div class='timeline-wrapper'>
-<!--            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
-            -->
             <span class='timeline-item'>
-                <input class='timeline' type='range' min='1' :max="getTotalMissionHours" v-model.number="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer" :style="{'background-image':'linear-gradient(to right,#67e300 0%, #67e300 ' + currentPercentage + '%,#d0d0d0 ' + currentPercentage +'%,#d0d0d0 '+ bufferPercentage +'%,#444343 ' + bufferPercentage + '%,#444343 100%)'}" >
+                <input class='timeline' type='range' min='1' :max="getTotalMissionHours"
+                       v-model.number="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer"
+                       :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
+                               #67e300 ' + currentPercentage + '%, \
+                               #d0d0d0 ' + currentPercentage +'%, \
+                               #d0d0d0 '+ bufferPercentage +'%, \
+                               #444343 ' + bufferPercentage + '%, \
+                               #444343 100%)'}" >
             </span>
         </div>
 </template>
@@ -34,12 +36,14 @@ export default {
     },
 
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID', 'getIsTimerRunning', 'getStepInterval']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
+                                    'getIsTimerRunning', 'getStepInterval']),
         ...mapGetters('wizard', ['getTotalMissionHours'])
 
     },
     methods: {
-        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'UPDATEBUFFERCURRENT']),
+        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
+                                      'STOPTIMER', 'UPDATEBUFFERCURRENT']),
 
         startTimer: function() {
             // initialize and return the step timer that updates the

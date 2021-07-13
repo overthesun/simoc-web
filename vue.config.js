@@ -1,7 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    assetsDir: 'static', // For simple configuration of static files in Flask (the "static_folder='client/dist/static'" part in app.py)
+    // For simple configuration of static files in Flask
+    // (the "static_folder='client/dist/static'" part in app.py)
+    assetsDir: 'static',
     devServer: {
     // proxy the requests to the SIMOC server
     // proxy: 'http://localhost:8000',  // http

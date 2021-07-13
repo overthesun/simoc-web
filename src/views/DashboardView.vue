@@ -52,7 +52,7 @@ export default {
             // init a new game, set game id, reset all data buffers
             this.INITGAME(this.getGameID)
             // This sets the get_step parameter for the agentGrowth filter.
-            // TODO: this should actually be done in tandem with the configuration wizard plant updates.
+            // TODO: this should actually be done in tandem with the config wizard plant updates.
             // This must be done after INITGAME or it will be reset
             this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
@@ -94,14 +94,21 @@ export default {
 
     computed: {
         // getters from the vuex stores
-        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated', 'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer', 'getMaxStepBuffer', 'getLoadFromSimData']),
+        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
+                                    'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
+                                    'getMaxStepBuffer', 'getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
 
     methods: {
-        ...mapMutations('dashboard', ['SETPLANTSPECIESPARAM', 'STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'SETTIMERID', 'SETGETSTEPSTIMERID', 'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX', 'SETMINSTEPNUMBER', 'SETSTOPPED', 'SETTERMINATED', 'INITGAME', 'SETMENUACTIVE']),
-        // Action used for paring the get_step response on completion of retrieval. SEE dashboard store.
+        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'SETTIMERID',
+                                      'SETGETSTEPSTIMERID', 'SETMINSTEPNUMBER', 'INITGAME',
+                                      'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
+                                      'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
+                                      'SETPLANTSPECIESPARAM']),
+        // Action used for parsing the get_step response on completion of retrieval.
+        // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
 
         setupWebsocket: function() {
@@ -120,7 +127,8 @@ export default {
                 // the req includes the min_step_num -- in case of reconnection,
                 // it will requests steps starting from the last received + 1
                 this.socket.emit('get_steps', req)
-                console.log('Requesting', this.getTotalMissionHours, this.request_sent?'steps again':'steps')
+                console.log('Requesting', this.getTotalMissionHours,
+                            this.request_sent?'steps again':'steps')
                 this.request_sent = true
             })
             socket.on('step_data_handler', (msg) => {
@@ -143,12 +151,6 @@ export default {
 
         tearDownWebSocket: function() {
             if (this.socket !== null) {
-                /*
-                for (let event of ['connect', 'user_connected', 'step_data_handler', 'steps_sent']) {
-                    console.log('  Removing socket.' + event)
-                    this.socket.off(event)
-                }
-                */
                 if (this.socket.connected) {
                     console.log('Disconnecting user')
                     this.socket.emit('user_disconnected')
@@ -164,9 +166,11 @@ export default {
             // use the total number of mission hours as the number of steps to be calculated
             const stepToParams = {step_num: this.getTotalMissionHours, game_id: this.getGameID}
             try {
-                // begin creating the step buffer on the backend using the entire length of the simulation as the base
+                // begin creating the step buffer on the backend using
+                // the entire length of the simulation as the base
                 await axios.post('/get_step_to', stepToParams)
-                // TODO: the stepBufferTimer() function has been replaced by websocket and can now be removed
+                // TODO: the stepBufferTimer() function has been replaced by websocket
+                // and can now be removed.
                 // this.stepBufferTimer() // If everything went retrieve the first batch of steps.
                 this.setupWebsocket()  // setup the websocket to get the requested steps
             } catch (error) {

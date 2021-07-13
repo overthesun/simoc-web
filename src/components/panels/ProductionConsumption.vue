@@ -1,7 +1,9 @@
 <template>
     <div class='panel-graph'>
         <select v-model="currency" required>
-            <option value='atmo_co2' :selected="currency === 'atmo_co2' || !(currency in units)">Carbon dioxide (CO₂)</option>
+            <option value='atmo_co2' :selected="currency === 'atmo_co2' || !(currency in units)">
+                Carbon dioxide (CO₂)
+            </option>
             <option value='atmo_o2' :selected="currency === 'atmo_o2'">Oxygen (O₂)</option>
             <option value='h2o_potb' :selected="currency === 'h2o_potb'">Potable Water</option>
             <option value='enrg_kwh' :selected="currency === 'enrg_kwh'">Energy</option>

@@ -1,9 +1,11 @@
 <!--
-This component is the base component for creating the configuration wizard view. The slots within are
-used to populate the various sections with the approriate component passed in via the 'ConfigurationView' component.<template>
-The plan was that by configuring the base component in this way that the layout could be used for future features such as
-payload creator, greenhouse editor, etc for within the dashboard. With a fimiliar layout, and only the need to populate the slots with the
-approriate filler. A number of modifications would be needed to modify things like the title, and the configuration
+This component is the base component for creating the configuration wizard view.
+The slots within are used to populate the various sections with the approriate component passed in
+via the 'ConfigurationView' component.<template>
+The plan was that by configuring the base component in this way that the layout could be used
+for future features such as payload creator, greenhouse editor, etc for within the dashboard.
+With a familiar layout, and only the need to populate the slots with the approriate filler.
+A number of modifications would be needed to modify things like the title, and the configuration
 menu button being present on other unrelated configurations.
  -->
 
@@ -26,15 +28,22 @@ menu button being present on other unrelated configurations.
         <!-- The reference side of the wizard screen -->
         <section class='reference-wrapper'>
             <header>REFERENCE</header>
-            <!-- This is the navigation section at the top of the wizard reference. class-binding to a universal variable is used to dictate which one is set to active.
-                The universal variable is used so that things like the wizard form headers can be used to set what the active section is. Such as clicking a title and
-                the approriate reference entry appearing on the right side.
+            <!--
+              This is the navigation section at the top of the wizard reference.
+              class-binding to a universal variable is used to dictate which one is set to active.
+              The universal variable is used so that things like the wizard form headers can be
+              used to set what the active section is. Such as clicking a title and the approriate
+              reference entry appearing on the right side.
             -->
             <nav class='configuration-options reference-options'>
-                <div class='option-item' @click="SETACTIVEREFERENCE('Reference')" :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
-                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')" :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div> Enabled Once Recommended Is Completed
+                <div class='option-item' @click="SETACTIVEREFERENCE('Reference')"
+                     :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
+                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
+                         :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
+                         Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')" :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
+                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')"
+                     :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
             </nav>
             <main class='main main-reference'>
                 <slot name='main-wizard-reference'></slot>

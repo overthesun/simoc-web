@@ -1,21 +1,25 @@
 <template>
     <div class='entry-wrapper'>
-        <!-- This sectoin uses absolute positioning and overflow:hidden on the parent to hide it from the user.
-        class binding is used to display / hide the warning.  v-if will simply display it or not, and will not activate the
-        animation for displaying or hiding
+        <!-- This section uses absolute positioning and overflow:hidden on the parent to hide
+             it from the user.  class binding is used to display / hide the warning.
+             v-if will simply display it or not, and will not activate the animation
+             for displaying or hiding
         -->
         <div class='warning-wrapper' :class="{'warning-active': activeWarning}">
             <fa-icon class='fa-icon dismiss-icon' :icon="['fas','times']" @click="dismissWarning"/>
             <div class='warning-item' v-for="(item,index) in activeWarnings" :key="index">
-                <!-- removed because of missing pro-light-svg-icon dependency <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
+                <!-- removed because of missing pro-light-svg-icon dependency
+                     <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
                 {{activeWarnings[index]}}
             </div>
         </div>
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item' :class="{'option-item-active': 'login'===activeOption}" @click="activateOption('login')"> SIGN IN </div>
-                <div class='option-item' :class="{'option-item-active': 'register'===activeOption}" @click="activateOption('register')"> SIGN UP </div>
+                <div class='option-item' :class="{'option-item-active': 'login'===activeOption}"
+                     @click="activateOption('login')"> SIGN IN </div>
+                <div class='option-item' :class="{'option-item-active': 'register'===activeOption}"
+                     @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
@@ -24,24 +28,32 @@
                         <input v-model="user.username" type='text' class='input-field-text' placeholder="Username"/>
                         <input v-model="user.password" type='password' class='input-field-text' placeholder="Password"/>
                     </form>
-                    <p v-else>If you don't want to create an account, you can log in as a Guest. Guest accounts are temporary and will be deleted on a regular basis.</p>
+                    <p v-else>If you don't want to create an account, you can log in as a Guest.
+                              Guest accounts are temporary and will be deleted on a regular basis.</p>
                     <a id='guest-login' class='link' @click='showGuestLogin'>{{guestLoginLinkText}}</a>
                 </section>
-                <section class='entry-form entry-form-register' :class="{'entry-form-active': activeOption==='register'}">
+                <section class='entry-form entry-form-register'
+                         :class="{'entry-form-active': activeOption==='register'}">
                     <form @submit.prevent="registerUser" id='register-form'>
-                        <input v-model="register.username" type='text' class='input-field-text' placeholder="Choose Username"/>
-                        <input v-model="register.password" type='password' class='input-field-text' placeholder="Enter Password"/>
-                        <input v-model="register.confirmPassword" type='password' class='input-field-text' placeholder="Confirm Password"/>
+                        <input v-model="register.username" type='text' class='input-field-text'
+                               placeholder="Choose Username"/>
+                        <input v-model="register.password" type='password' class='input-field-text'
+                               placeholder="Enter Password"/>
+                        <input v-model="register.confirmPassword" type='password' class='input-field-text'
+                               placeholder="Confirm Password"/>
                     </form>
                 </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
-                <div class='btn-wrapper btn-wrapper-login' :class="{'btn-wrapper-active': activeOption==='login'}">
-                    <button v-if="activeGuestLogin" form='register-form' class='btn-warning' @click="guestLogin">SIGN IN AS GUEST</button>
+                <div class='btn-wrapper btn-wrapper-login'
+                     :class="{'btn-wrapper-active': activeOption==='login'}">
+                    <button v-if="activeGuestLogin" form='register-form' class='btn-warning'
+                            @click="guestLogin">SIGN IN AS GUEST</button>
                     <button v-else form='login-form' class='btn-warning'>SIGN IN</button>
                 </div>
-                <div class='btn-wrapper btn-wrapper-register' :class="{'btn-wrapper-active': activeOption==='register'}">
+                <div class='btn-wrapper btn-wrapper-register'
+                     :class="{'btn-wrapper-active': activeOption==='register'}">
                     <button form='register-form' class='btn-warning'>SIGN UP</button>
                 </div>
             </template>
@@ -69,7 +81,9 @@ export default {
             activeOption: 'login', // Which 'option' should be active
             activeGuestLogin: false, // true: guest login, false: regular login with user/pass form
             activeWarning: false, // Used to show or hide the warning panel
-            activeWarnings: [], // The current active warnings. This should really be a 'set' so that it only contains unique warnings. Currently will display duplicates.
+            // The current active warnings. This should really be a 'set' so that
+            // it only contains unique warnings. Currently will display duplicates.
+            activeWarnings: [],
 
             user: {
                 username: "",
@@ -90,7 +104,8 @@ export default {
     },
     methods: {
 
-        // On registration make sure the username + password meet the criteria before attempting to register.
+        // On registration make sure the username + password
+        // meet the criteria before attempting to register.
         // Warnings cannot be active before attempting login.
         registerUser: async function() {
             this.dismissWarning()  // clear existing warnings before starting
@@ -133,8 +148,10 @@ export default {
             }
         },
 
-        // Connection handler for the login / registeration. Takes in the parameters to be used, and the route to be called.
-        // This method should be converted over to the try/catch block as seen elsewhere. Simply to reduce the callback hell.
+        // Connection handler for the login / registration.
+        // Takes in the parameters to be used, and the route to be called.
+        // This method should be converted over to the try/catch block as seen elsewhere.
+        // Simply to reduce the callback hell.
         // It would also need to be made async in that case.
         entryHandler: function(params, route) {
             axios.defaults.withCredentials = true;

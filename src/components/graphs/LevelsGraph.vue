@@ -85,13 +85,15 @@ export default {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(24).fill(''),
                     // create N datasets with different labels/colors
-                    datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
-                        lineTension: 0,
-                        data: Array(24),
-                        label: label,
-                        backgroundColor: color,
-                        fill: true,
-                    })),
+                    datasets: this.setsinfo[this.storage_name].labels_colors.map(
+                        ([label, color]) => ({
+                            lineTension: 0,
+                            data: Array(24),
+                            label: label,
+                            backgroundColor: color,
+                            fill: true,
+                        })
+                    ),
                 },
                 options: {
                     responsive: true,
@@ -153,7 +155,8 @@ export default {
                 data.labels.shift()
                 // add the new values
                 if (step > 0) {
-                    let storage = this.getStorageCapacities(step)[this.storage_name][this.storage_num]
+                    const storage_capacities = this.getStorageCapacities(step)
+                    const storage = storage_capacities[this.storage_name][this.storage_num]
                     let tot_storage = Object.values(storage).reduce(
                         (acc, elem) => acc + elem['value'], 0  // start from 0
                     )
@@ -161,7 +164,8 @@ export default {
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
                             let index = this.setsinfo[this.storage_name].order[key]
-                            data.datasets[index].data.push((elem['value'] * 100 / tot_storage).toFixed(4))
+                            const ratio = (elem['value'] * 100 / tot_storage).toFixed(4)
+                            data.datasets[index].data.push(ratio)
                         }
                     )
                     data.labels.push(step)

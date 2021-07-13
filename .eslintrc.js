@@ -53,7 +53,7 @@ module.exports = {
         'computed-property-spacing': 'error',
 
         // STYLISTIC ISSUES
-        'max-len': ['warn', {code: 100}],
+        'max-len': ['warn', {code: 100}],  // overriden by vue/max-len for vue files
 
         // VARIABLE & FUNCTION DECLARATION
         'camelcase': 'off',
@@ -114,6 +114,20 @@ module.exports = {
 
 
         // VUE-SPECIFIC RULES
+        'vue/max-len': ['error', {
+            code: 100,
+            template: 120,
+            comments: 120,
+            ignorePattern: '',
+            ignoreComments: false,
+            ignoreTrailingComments: true,
+            ignoreUrls: true,
+            ignoreStrings: false,
+            ignoreTemplateLiterals: false,
+            ignoreRegExpLiterals: false,
+            ignoreHTMLAttributeValues: false,
+            ignoreHTMLTextContents: true,
+        }],
         'vue/no-unused-vars': 'error',
         'vue/require-v-for-key': 'error',
         'vue/no-parsing-error': 'error',
@@ -134,4 +148,10 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'global-require': 'off',
     },
+    overrides: [{
+        files: ['*.vue'],
+        rules: {
+            'max-len': 'off',  // overriden by vue/max-len
+        },
+    }],
 }

@@ -20,8 +20,10 @@
                 <form class='form-wrapper' ref='form' @submit.prevent="">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
-                    <!-- Else, if we are in the Custom config or in the Finalize step of the Guided config, show all components -->
-                    <section class='form-wrapper' :class="{'validating': validating}" v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
+                    <!-- Else, if we are in the Custom config or in the Finalize step
+                         of the Guided config, show all components -->
+                    <section class='form-wrapper' :class="{'validating': validating}"
+                             v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
                         <Presets ref="presets" v-if="activeConfigType === 'Custom'" />
                         <Initial ref="initial" />
                         <Inhabitants ref="inhabitants" />
@@ -51,7 +53,8 @@
 
             <template v-slot:main-wizard-reference>
                 <keep-alive>
-                    <component :is="getActiveReference"/> <!-- Display the component with the name stored in the variable-->
+                    <!-- Display the component with the name stored in the variable-->
+                    <component :is="getActiveReference"/>
                 </keep-alive>
                 <!--<Reference/>-->
                 <!--<GreenhouseDoughnut/>-->
@@ -66,7 +69,8 @@
 <script>
 import axios from 'axios'
 // import form components
-import {ConfigurationMenu, Inhabitants, Greenhouse, Initial, Energy, Reference, Graphs, Presets} from '../components/configuration'
+import {ConfigurationMenu, Inhabitants, Greenhouse,
+        Initial, Energy, Reference, Graphs, Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
@@ -88,8 +92,10 @@ export default {
             formIndex: 0, // Current index of the form that should be used from the wizard store
             activeForm: "Initial", // Default starting form
             forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
-            validating: false, // add a CSS class while validating to make missing required fields red
-            awaiting_response: false, // true while waiting for a response after clicking on "Launch Simulation"
+            // add a CSS class while validating to make missing required fields red
+            validating: false,
+            // true while waiting for a response after clicking on "Launch Simulation"
+            awaiting_response: false,
             menuActive: false, // Used with class binding to display the menu.
             stepMax: 1,
             greenhouseSize: {
@@ -107,10 +113,11 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
-        ...mapGetters('wizard', ['getConfiguration', 'getActiveConfigType', 'getActiveForm',
-                                 'getFormLength', 'getTotalMissionHours', 'getFormattedConfiguration',
-                                 'getActiveReference', 'getActiveRefEntry', 'getPresets',
-                                 'getSimdataLocation']),
+        ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
+                                 'getActiveConfigType', 'getActiveForm',
+                                 'getFormLength', 'getTotalMissionHours',
+                                 'getActiveReference', 'getActiveRefEntry',
+                                 'getPresets', 'getSimdataLocation']),
 
         // Used to hide the normal button and display the active button
         isFinalForm: function() {
@@ -227,12 +234,14 @@ export default {
             }
             try {
                 this.awaiting_response = true
-                const response = await axios.post('/new_game', configParams) // Wait for the new game to be created
+                // Wait for the new game to be created
+                const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
                 this.SETGAMECONFIG(response.data.game_config)
                 this.SETLOADFROMSIMDATA(false)
-                this.$router.push('dashboard') // If all is well then move the user to the dashboard screen
+                // If all is well then move the user to the dashboard screen
+                this.$router.push('dashboard')
             } catch (error) {
                 this.handleAxiosError(error)
             } finally {

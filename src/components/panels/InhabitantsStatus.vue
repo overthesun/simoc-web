@@ -20,7 +20,8 @@
         </dl>
         <div id="humans">
             <fa-icon class="alive" v-for="h in humans" v-bind:key="h" :icon="['fas','male']" />
-            <fa-icon class="dead" v-for="h in getConfiguration.humans.amount-humans" v-bind:key="h" :icon="['fas','male']" />
+            <fa-icon class="dead" v-for="h in getConfiguration.humans.amount-humans"
+                     v-bind:key="h" :icon="['fas','male']" />
         </div>
     </section>
 </template>
@@ -44,7 +45,8 @@ export default {
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer', 'getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
+                                    'getStorageCapacities', 'getGameConfig']),
         step: function() {
             return this.getCurrentStepBuffer
         },

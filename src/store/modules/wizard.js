@@ -1,8 +1,8 @@
 // Contains the shared state for all things related to the wizard.
 // User selected configuration
 // Currently active reference selections - Reference / Graphs / Recommended
-// Currently selected reference entry - this is used to set which entry should be active within the encylopedia. Mostly
-// used for clicking the form section headers to activate the approriate.
+// Currently selected reference entry - this is used to set which entry should be active within
+// the encylopedia. Mostly used for clicking the form section headers to activate the approriate.
 
 function get_default_config() {
     // return the default configuration,
@@ -329,8 +329,9 @@ export default {
         },
         SETACTIVEREFENTRY: (state, value) => {
             state.activeRefEntry = value
-            state.activeReference = 'Reference' // This is set here so I don't have to call it on every link.
+            // This is set here so I don't have to call it on every link.
             // It is redundant for the table of contents navigation.
+            state.activeReference = 'Reference'
         },
         SETRESETCONFIG: (state, value) => {
             state.resetConfig = value

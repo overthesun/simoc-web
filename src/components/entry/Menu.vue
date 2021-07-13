@@ -10,7 +10,8 @@
             <template v-slot:entry-main>
                 <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
+                <input type="file" accept="application/json"
+                       id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
                 <div class='btn-wrapper'>
@@ -69,7 +70,8 @@ export default {
             this.$router.push('dashboard')
         },
         // Logout method called when the user hits the logout button
-        // Sends the user back to the entry screen regardless if the server has successfully logged them out
+        // Sends the user back to the entry screen regardless
+        // if the server has successfully logged them out
         logout: async function() {
             try {
                 axios.get('/logout')

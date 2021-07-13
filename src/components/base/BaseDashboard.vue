@@ -20,7 +20,8 @@ future dashboard views
 </template>
 
 <script>
-import {Timeline, PlayButton, StepControls, SpeedControls, Main, DashboardMenu} from '../../components/dashboard'
+import {Timeline, PlayButton, StepControls,
+        SpeedControls, Main, DashboardMenu} from '../../components/dashboard'
 import {TheTopBar} from '../../components/bars'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {

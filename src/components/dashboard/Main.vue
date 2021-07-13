@@ -1,8 +1,8 @@
 <!--
-This is the main view of the dashboard.  It dynamically loads all the panels found in the panels/ dir
-and shows a list of default panels as defined in the activePanels variable.
-Each panel has a menu that allows adding, changing, or removing panels, that is populated with all the
-panels found in the panels/ dir.
+This is the main view of the dashboard.  It dynamically loads all the panels found in the panels/
+dir and shows a list of default panels as defined in the activePanels variable.
+Each panel has a menu that allows adding, changing, or removing panels,
+that is populated with all the panels found in the panels/ dir.
 The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
@@ -23,11 +23,13 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                         <ul v-if="index !== visiblePanelSelect">
                             <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
                             <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                            <li><button @click="removePanel(index)" v-if="activePanels.length > 1">Remove Panel</button></li>
+                            <li><button @click="removePanel(index)"
+                                        v-if="activePanels.length > 1">Remove Panel</button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
-                        <select v-else class='panel-select' v-model="selectedPanel" @change="updatePanels(index, replacePanel)">
+                        <select v-else class='panel-select' v-model="selectedPanel"
+                                @change="updatePanels(index, replacePanel)">
                             <option hidden selected value="null">Select Panel:</option>
                             <!-- populate the drop-down with all the available panels, sorted by title -->
                             <option v-for="[pTitle, pName] in sortedPanels" :value="pName">{{pTitle}}</option>

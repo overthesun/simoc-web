@@ -1,10 +1,10 @@
 <!--
 Gauge chart component used within the dashboard.
 
- Props are used to pass in the values for the gauges to use within the 'Gauge' component. Passing in the getter method
-was simply added so that the gauges were more generalized for future implementations beyond atmospheric tracking.
+Props are used to pass in the values for the gauges to use within the 'Gauge' component.
+Passing in the getter method was simply added so that the gauges were more generalized
+for future implementations beyond atmospheric tracking.
 See chart.js documentation for further explantion of below fucntionality.
-
 -->
 
 <template>

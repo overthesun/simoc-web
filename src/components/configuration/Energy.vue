@@ -8,14 +8,18 @@
             </div>
             <div class='input-description'>Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
             <div>
-                <!-- Use the retrieved generator value as the value for the field. On change set the configuration store value -->
-                <select class='input-field-select' ref='generator_select' required v-model="generator.type" v-on:change="setEnergy">
+                <!-- Use the retrieved generator value as the value for the field.
+                     On change set the configuration store value -->
+                <select class='input-field-select' ref='generator_select' required
+                        v-model="generator.type" v-on:change="setEnergy">
                     <!-- <option value='none' selected>None</option>
                     TODO: this is hardcoded on Mars and is currently the only option -->
                     <option value='solar_pv_array_mars' selected>Solar PV Array</option>
                 </select>
-                 <label><input class='input-field-number' ref="generator_input" type="number" pattern="^\d+$" placeholder="Quantity" required
-                               :min="generatorValues.min" :max="generatorValues.max" v-on:input="setEnergy" v-model="generator.amount"> panels</label>
+                 <label><input class='input-field-number' ref="generator_input" type="number"
+                               pattern="^\d+$" placeholder="Quantity" required
+                               :min="generatorValues.min" :max="generatorValues.max"
+                               v-on:input="setEnergy" v-model="generator.amount"> panels</label>
             </div>
         </label>
         <label class='input-wrapper'>
@@ -24,11 +28,14 @@
             </div>
             <div class='input-description'>Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
             <div>
-                <select class='input-field-select' ref='power_select' required v-model="storage.type" v-on:change="setEnergy">
+                <select class='input-field-select' ref='power_select' required
+                        v-model="storage.type" v-on:change="setEnergy">
                     <option value='power_storage' selected>Battery</option>
                 </select>
-                <label><input class='input-field-number' ref="power_input" type="number" pattern="^\d+$" placeholder="Quantity" required
-                              :min="storageValues.min" :max="storageValues.max" v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
+                <label><input class='input-field-number' ref="power_input" type="number"
+                              pattern="^\d+$" placeholder="Quantity" required
+                              :min="storageValues.min" :max="storageValues.max"
+                              v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
             </div>
         </label>
     </div>
@@ -62,8 +69,8 @@ export default {
         ...mapMutations('wizard', ['SETENERGY']),
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
 
-        // This method sets the selected values from above fields to the wizard store - configuration -powerGeneration & powerStorage values.
-        // It is called from all fields on change, and updates with all selected values from this form.
+        // Set the selected values from above fields to the wizard store.
+        // Called from all fields on change, and updates with all selected values from this form.
         setEnergy: function() {
             const value = {'powerGeneration': this.generator, 'powerStorage': this.storage}
             this.SETENERGY(value)

@@ -1,9 +1,8 @@
-// Universally used string formating method. Used to remove underscore from returned values from the backend.
-// Also capitalizes just the first letter.
-// Can be used to replace existing internal methods that do a similar function within a number of components. Specically the
-// Greenhouse configuration form.
+// Misc util functions
 
 export function StringFormatter(value) {
+    // replace underscores with spaces and capitalizes the first letter of each word
+    // e.g. 'food_ration' -> 'Food Ration'
     let formatted = ""
 
     formatted = value.replace(/_/g, " ")

@@ -5,7 +5,8 @@
                 Crew Quarters <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Select the size of your crew quarters.</div>
-            <select class='input-field-select' ref='crew_quarters_type' required v-on:change="setInhabitants" v-model="crewQuarters.type">
+            <select class='input-field-select' ref='crew_quarters_type' required
+                    v-on:change="setInhabitants" v-model="crewQuarters.type">
                 <option value="none" selected>None</option>
                 <option value="crew_habitat_small">Small 1000 m³</option>
                 <option value="crew_habitat_medium">Medium 2260 m³</option>
@@ -17,24 +18,27 @@
                 Inhabitants <fa-icon :icon="['fas','info-circle']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class='input-description'>The number of astronaut explorers to live in your habitat.</div>
-            <input class='input-field-number' ref='humans' type="number" pattern="^\d+$" placeholder="Quantity" required
-                   :min="ranges.humans.min" :max="ranges.humans.max" v-on:input="setInhabitants" v-model="humans.amount">
+            <input class='input-field-number' ref='humans' type="number" pattern="^\d+$"
+                   placeholder="Quantity" required :min="ranges.humans.min" :max="ranges.humans.max"
+                   v-on:input="setInhabitants" v-model="humans.amount">
         </label>
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('Food')">
                 Food Supply <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>Make certain you have <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('Food')">ample food</a> for an <a class='reference-link' href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 1.5kg food per day.</div>
-            <label><input class='input-field-number' ref='food' type="number" pattern="^\d+$" placeholder="Quantity" required
-                          :min="ranges.food.min" :max="ranges.food.max" v-on:input="setInhabitants" v-model="food.amount"> kg</label>
+            <label><input class='input-field-number' ref='food' type="number" pattern="^\d+$"
+                          placeholder="Quantity" required :min="ranges.food.min" :max="ranges.food.max"
+                          v-on:input="setInhabitants" v-model="food.amount"> kg</label>
         </label>
         <label class='input-wrapper'>
             <div class='input-title' @click="SETACTIVEREFENTRY('ECLSS')">
                 Life Support <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class='input-description'>As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <label><input class='input-field-number' ref='eclss' type="number" pattern="^\d+$" placeholder="Quantity" required
-                          :min="ranges.eclss.min" :max="ranges.eclss.max" v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
+            <label><input class='input-field-number' ref='eclss' type="number" pattern="^\d+$" required
+                          placeholder="Quantity":min="ranges.eclss.min" :max="ranges.eclss.max"
+                          v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
         </label>
     </div>
 </template>
@@ -108,9 +112,11 @@ export default {
             const humans = this.getConfiguration.humans
             this.humans = humans
             // if we have humans, check that the crew quarter is selected before checking the ranges
-            const humans_are_invalid = (humans.amount > 0 && (this.crewQuarters.type === "none" ||
-                                                              !this.$refs.crew_quarters_type.checkValidity()))
-            this.$refs.humans.setCustomValidity(humans_are_invalid ? 'Please select a crew quarters type.' : '')
+            const crew_quarters_are_invalid = (this.crewQuarters.type === "none" ||
+                                               !this.$refs.crew_quarters_type.checkValidity())
+            const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
+            this.$refs.humans.setCustomValidity(
+                humans_are_invalid ? 'Please select a crew quarters type.' : '')
             this.validateRef('humans')
         },
         'getConfiguration.food.amount': function() {
@@ -122,7 +128,6 @@ export default {
             this.validateRef('eclss')
         },
     }
-
 }
 </script>
 

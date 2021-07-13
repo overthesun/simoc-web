@@ -1,4 +1,4 @@
-<!-- Time speed control component used on the dashboard. SEE stepTimer.js in JS folder for more details on the functionality of the timer -->
+<!-- Play/Pause buttons for the Dashboard -->
 
 <template>
     <div id='dashboard-play-icon'>

@@ -1,4 +1,4 @@
-<!-- This chart compares the total production and consumption of energy in the configuration wizard. -->
+<!-- This chart compares the total production and consumption of energy in the config wizard. -->
 
 <template>
     <canvas :id="id" />
@@ -27,8 +27,10 @@ export default {
                 greenhouse: [null, 0],
             },
             // these two arrays should match the items in this.energy
-            labels: ['Solar array', /* 'Batteries',*/ 'Plants', 'ECLSS', 'Crew quarters', 'Greenhouse'],
-            colors: ['#0000ff', /* '#0000ee',*/ '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
+            labels: ['Solar array', /* 'Batteries', */ 'Plants',
+                     'ECLSS', 'Crew quarters', 'Greenhouse'],
+            colors: ['#0000ff', /* '#0000ee', */ '#ff0000',
+                     '#ee0000', '#dd0000', '#cc0000'],
         }
     },
 
@@ -109,23 +111,31 @@ export default {
         },
         powerGenerator: {
             handler: function() {
-                this.retrievePower(this.powerGenerator.type, this.powerGenerator.amount, (response) => {
-                    let {energy_output} = response
-                    this.energy.powerGenerator[0] = energy_output
-                    this.updateChart()
-                })
+                this.retrievePower(
+                    this.powerGenerator.type,
+                    this.powerGenerator.amount,
+                    (response) => {
+                        let {energy_output} = response
+                        this.energy.powerGenerator[0] = energy_output
+                        this.updateChart()
+                    }
+                )
             },
             immediate: true,
             deep: true
         },
         powerStorage: {
             handler: function() {
-                this.retrievePower(this.powerStorage.type, this.powerStorage.amount, (response) => {
-                    let {energy_capacity} = response
-                    // TODO: handle batteries
-                    // this.energy.powerStorage = energy_capacity
-                    // this.updateChart()
-                })
+                this.retrievePower(
+                    this.powerStorage.type,
+                    this.powerStorage.amount,
+                    (response) => {
+                        let {energy_capacity} = response
+                        // TODO: handle batteries
+                        // this.energy.powerStorage = energy_capacity
+                        // this.updateChart()
+                    }
+                )
             },
             immediate: true,
             deep: true

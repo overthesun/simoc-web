@@ -1,6 +1,10 @@
-<!-- Initial welcome screen component. Basic HTML component with the exception of the button click sending the user to the login screen.
-    Future version should use a cookie and store the current version number of SIMOC the user last accepted the welcome message on.
-    If it matches on mounted then the component should automatically send the user to the entry screens to prevent this from popping up on repeat vistors.
+<!--
+Initial welcome screen component. Basic HTML component with the exception of
+the button click sending the user to the login screen.
+Future version should use a cookie and store the current version number of SIMOC
+the user last accepted the welcome message on.
+If it matches on mounted then the component should automatically send the user
+to the entry screens to prevent this from popping up on repeat vistors.
 -->
 
 <template>

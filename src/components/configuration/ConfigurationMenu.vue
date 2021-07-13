@@ -6,7 +6,8 @@
         <template v-slot:menu-buttons>
             <button @click="downloadConfig">Download Configuration</button>
             <button  @click="uploadConfig">Upload Configuration</button>
-            <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleConfig" />
+            <input type="file" accept="application/json" id="configInputFile"
+                   ref="configInputFile" @change="handleConfig" />
             <button @click="resetConfig">Reset Configuration</button>
             <button class='btn-logout' @click="logout">Log Out</button>
         </template>

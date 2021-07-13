@@ -25,7 +25,8 @@ export default {
     },
 
     computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer', 'getTotalProduction', 'getTotalConsumption'])
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer',
+                                    'getTotalProduction', 'getTotalConsumption'])
     },
 
     watch: {

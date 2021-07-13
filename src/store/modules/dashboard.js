@@ -2,13 +2,17 @@
 
 // Parameters for the get_step route
 
-// Step data: broken down into objects based on filter type. These can be accessed via the below getters.
-// The idea is to use object deconstruction to set the variables for the individual parts within the calling method.
+// Step data: broken down into objects based on filter type.
+// These can be accessed via the below getters.
+// The idea is to use object deconstruction to set the variables
+// for the individual parts within the calling method.
 // agentCount | agentGrowth | totalProduction | totalConsumption | storageRatio
 
 
-// currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized, and the highest step in the buffer.
-// A number of watcher functions within components reference currentStepBuffer for updating various data points such as panels and charts.
+// currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized,
+// and the highest step in the buffer.
+// A number of watcher functions within components reference currentStepBuffer for updating
+// various data points such as panels and charts.
 
 // Timer ID: this is used to pause, resume, speed controls or kill the setTimeout object within.
 // SEE stepTimer.js within js folder for further details.
@@ -16,12 +20,14 @@
 // Termination flag: Universally accessible point to check if the simulation has terminated.
 
 // ACTIONS
-// ParseStep function is an async call to parse all data from a particular get_step response object. It's setup as async so that
-// it can continue to process get_step objects out of order as the step_number is used as the key within the resulting filter objects.
-// So order doesn't matter as long as the step_number is correct. This should also prevent any issues if a step is duplicated within two
-// different step objects
+// ParseStep function is an async call to parse all data from a particular get_step response object.
+// It's setup as async so that it can continue to process get_step objects out of order as
+// the step_number is used as the key within the resulting filter objects.
+// So order doesn't matter as long as the step_number is correct.
+// This should also prevent any issues if a step is duplicated within two different step objects
 
-// To be added: Need to add a variable to store the current step interval. This is currently only done locally within the Controls component.
+// To be added: Need to add a variable to store the current step interval.
+// This is currently only done locally within the Controls component.
 
 export default {
     state: {
@@ -183,7 +189,8 @@ export default {
             let {step_num: step} = value
             state.parameters.min_step_num = Math.max(step+1, state.parameters.min_step_num)
         },
-        // This is used for the number of steps to grab from get_step_to, after 100 steps have been buffered, . Updated after every get_step call
+        // This is used for the number of steps to grab from get_step_to,
+        // after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS: function(state, value) {
             let {step_num: step} = value
             state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
@@ -281,8 +288,10 @@ export default {
             state.activePanels = panels
         },
         SETDEFAULTPANELS: function(state) {
-            state.activePanels = ["MissionInfo", "ProductionConsumption:enrg_kwh", "StorageLevels",
-                                  "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors"]
+            state.activePanels = [
+                "MissionInfo", "ProductionConsumption:enrg_kwh", "StorageLevels",
+                "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors"
+            ]
         },
         INITGAME: function(state, value) {
             // set a new game_id and reset all other values

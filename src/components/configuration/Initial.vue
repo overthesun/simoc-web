@@ -16,8 +16,9 @@
             </div>
             <div class='input-description'>Select the duration of your stay on Mars.</div>
             <div class='input-duration-wrapper'>
-                <input class='input-field-number' ref="duration" type="number" pattern="^\d+$" placeholder="Length"
-                       required :min="duration_min" :max="duration_max" v-on:input="setInitial" v-model="duration.amount">
+                <input class='input-field-number' ref="duration" type="number" pattern="^\d+$"
+                       placeholder="Length" required :min="duration_min" :max="duration_max"
+                       v-on:input="setInitial" v-model="duration.amount">
                 <select class='input-field-select' ref="duration_unit" required
                         v-on:change="setInitial" v-model="duration.units">
                     <option value="none" hidden disabled>Units</option>

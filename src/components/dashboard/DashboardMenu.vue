@@ -59,8 +59,9 @@ export default {
             this.timerWasRunning = false  // make sure the timer doesn't restart
             this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
         },
-        // Download Simulation button, creates a json file with the sim data for the user to download
+        // Download Simulation button
         downloadSimData: function() {
+            // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
             let simdata = this.getSimulationData
             simdata['configuration'] = this.getConfiguration

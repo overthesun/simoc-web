@@ -1,4 +1,4 @@
-<!-- This chart compares the total and the used space of the greenhouse in the configuration wizard. -->
+<!-- This chart compares the total and the used space of the greenhouse in the config wizard. -->
 
 <template>
     <canvas :id="id" />

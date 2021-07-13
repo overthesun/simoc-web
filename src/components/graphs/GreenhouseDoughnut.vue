@@ -1,7 +1,9 @@
-<!-- Greenhouse Doughnut Graph
+<!--
+Greenhouse Doughnut Graph
 
-Updates and uses the values from the greenhouse and the plant species within the wizard store to populate the graph values. Currently
-has enough color values for up to 30 plants.
+Updates and uses the values from the greenhouse and the plant species
+within the wizard store to populate the graph values.
+Currently has enough color values for up to 30 plants.
 
 See chart.js documentation for more details.
 -->
@@ -22,7 +24,7 @@ export default {
 
     data() {
         return {
-            // Greenhouse volumes. These should be retrieved from the database in the future to populate.
+            // Greenhouse volumes. These should be retrieved from the database in the future.
             greenhouseSize: {
                 'none': 0,
                 'greenhouse_small': 490,
@@ -30,8 +32,14 @@ export default {
                 'greenhouse_large': 5610
             },
 
-            // Enough colors to cover all the plant types. Used to specify the color for each section of the pie chart.
-            backgroundColor: ["#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"]
+            // Enough colors to cover all the plant types.
+            // Used to specify the color for each section of the pie chart.
+            backgroundColor: [
+                "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0",
+                "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8",
+                "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff",
+                "#000000",
+            ]
         }
     },
     computed: {
@@ -70,12 +78,17 @@ export default {
         // Format the plant data to be used within the chart object.
 
         greenhouseConfiguration: function() {
-            const {greenhouse, plantSpecies} = this.getConfiguration // get the plants and greenhouse from the configuration
-            let values = {data: [this.greenhouseSize[greenhouse.type]], labels: ["Free Space"]} // Set the first value of the dataset to the size of the greenhouse and add the label free space
+            // get the plants and greenhouse from the configuration
+            const {greenhouse, plantSpecies} = this.getConfiguration
+            // Set the first value of the dataset to the size of the greenhouse
+            // and add the label free space
+            let values = {data: [this.greenhouseSize[greenhouse.type]], labels: ["Free Space"]}
             plantSpecies.forEach((item) => {
-                values.data[0] = Math.max(0, values.data[0] - item.amount) // Calculates the total free space left after all the plants are added, modifies the first index initialized above.
+                // Calculates the total free space left after all the plants are added,
+                // modifies the first index initialized above.
+                values.data[0] = Math.max(0, values.data[0] - item.amount)
                 values.data.push(item.amount) // Push in the amount of the plant that is present.
-                values.labels.push(StringFormatter(item.type)) // format the plant name string for display
+                values.labels.push(StringFormatter(item.type)) // format the plant name for display
             })
 
             return values
