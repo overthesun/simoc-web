@@ -1,5 +1,5 @@
 <template>
-    <div class='base-configuration-wrapper' :class="{'waiting': awaiting_response}">
+    <div class="base-configuration-wrapper" :class="{'waiting': awaiting_response}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
@@ -7,22 +7,22 @@
             <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
                 <!-- Set the activeForm index if the user changes the value to something other than selected -->
-                <select class='section-select' v-on:change="setActiveForm">
+                <select class="section-select" v-on:change="setActiveForm">
                     <option selected disabled>Jump To Section</option>
-                    <option value=0 :selected="formIndex === 0">Initial</option>
-                    <option value=1 :selected="formIndex === 1">Inhabitants</option>
-                    <option value=2 :selected="formIndex === 2">Greenhouse</option>
-                    <option value=3 :selected="formIndex === 3">Energy</option>
-                    <option value=4 :selected="formIndex === 4">Finalize</option>
+                    <option value="0" :selected="formIndex === 0">Initial</option>
+                    <option value="1" :selected="formIndex === 1">Inhabitants</option>
+                    <option value="2" :selected="formIndex === 2">Greenhouse</option>
+                    <option value="3" :selected="formIndex === 3">Energy</option>
+                    <option value="4" :selected="formIndex === 4">Finalize</option>
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <form class='form-wrapper' ref='form' @submit.prevent="">
+                <form class="form-wrapper" ref="form" @submit.prevent="">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
                     <!-- Else, if we are in the Custom config or in the Finalize step
                          of the Guided config, show all components -->
-                    <section class='form-wrapper' :class="{'validating': validating}"
+                    <section class="form-wrapper" :class="{'validating': validating}"
                              v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
                         <Presets ref="presets" v-if="activeConfigType === 'Custom'" />
                         <Initial ref="initial" />
@@ -38,16 +38,16 @@
             </template>
             <template v-slot:wizard-configuration-footer>
                 <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
-                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Guided'"">
+                <nav class="configuration-button-wrapper" v-if="activeConfigType === 'Guided'"">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
                          No animations present to require it. -->
-                    <button class='btn-previous' @click='decrementIndex' v-if="!isFirstForm">Previous Section</button>
-                    <button class='btn-next' @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
-                    <button class='btn-launch' @click="launchSimulation" v-if="isFinalForm">Launch Simulation</button>
+                    <button class="btn-previous" @click="decrementIndex" v-if="!isFirstForm">Previous Section</button>
+                    <button class="btn-next" @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
+                    <button class="btn-launch" @click="launchSimulation" v-if="isFinalForm">Launch Simulation</button>
                 </nav>
                 <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
-                <nav class='configuration-button-wrapper' v-if="activeConfigType === 'Custom'"">
-                    <button class='btn-launch' @click="launchSimulation">Launch Simulation</button>
+                <nav class="configuration-button-wrapper" v-if="activeConfigType === 'Custom'"">
+                    <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                 </nav>
             </template>
 
@@ -76,21 +76,21 @@ import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        'TheTopBar': TheTopBar,
-        'ConfigurationMenu': ConfigurationMenu,
-        'Presets': Presets,
-        'Initial': Initial,
-        'Inhabitants': Inhabitants,
-        'Greenhouse': Greenhouse,
-        'Energy': Energy,
-        'Reference': Reference,
-        'GreenhouseDoughnut': GreenhouseDoughnut,
-        'Graphs': Graphs,
+        TheTopBar: TheTopBar,
+        ConfigurationMenu: ConfigurationMenu,
+        Presets: Presets,
+        Initial: Initial,
+        Inhabitants: Inhabitants,
+        Greenhouse: Greenhouse,
+        Energy: Energy,
+        Reference: Reference,
+        GreenhouseDoughnut: GreenhouseDoughnut,
+        Graphs: Graphs,
     },
     data() {
         return {
             formIndex: 0, // Current index of the form that should be used from the wizard store
-            activeForm: "Initial", // Default starting form
+            activeForm: 'Initial', // Default starting form
             forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             // add a CSS class while validating to make missing required fields red
             validating: false,
@@ -99,10 +99,10 @@ export default {
             menuActive: false, // Used with class binding to display the menu.
             stepMax: 1,
             greenhouseSize: {
-                'none': 0,
-                'greenhouse_small': 490,
-                'greenhouse_medium': 2454,
-                'greenhouse_large': 5610,
+                none: 0,
+                greenhouse_small: 490,
+                greenhouse_medium: 2454,
+                greenhouse_large: 5610,
             },
         }
     },
@@ -161,7 +161,7 @@ export default {
             console.error(error)
             if (error.response && error.response.status == 401) {
                 alert('Please log in again to continue.')
-                this.$router.push("entry")
+                this.$router.push('entry')
             } else {
                 alert(error)
             }

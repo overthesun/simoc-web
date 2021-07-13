@@ -1,10 +1,10 @@
 <template>
     <section class="panel-dl-wrapper">
-        <div v-if="getCurrentStepBuffer < 1" class='storage-name'>[Loading data ...]</div>
+        <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <template v-else>
         <p v-if="selected_consumption === null">[Missing data]</p>
         <select v-else v-model="selected_currency" required id="currency-select">
-            <option  v-for="(data, name, index) in consumptions" :value=name :key=name>
+            <option  v-for="(data, name, index) in consumptions" :value="name" :key="name">
                 {{currencies[name]}}
             </option>
         </select>

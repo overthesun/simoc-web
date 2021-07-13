@@ -1,25 +1,25 @@
 <template>
     <div>
-        <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Location')">
+        <label class="input-wrapper">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Location')">
                 Location <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class='input-description'>Your habitat is located on the equatorial region of Mars.</div>
-            <select class='input-field-select' ref="location" required v-model="location" v-on:change="setInitial">
+            <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
+            <select class="input-field-select" ref="location" required v-model="location" v-on:change="setInitial">
                 <option value="none" disabled hidden>Location</option>
                 <option value="mars" selected>Mars</option>
             </select>
         </label>
-        <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Duration')">
+        <label class="input-wrapper">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Duration')">
                 Mission Duration <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Select the duration of your stay on Mars.</div>
-            <div class='input-duration-wrapper'>
-                <input class='input-field-number' ref="duration" type="number" pattern="^\d+$"
+            <div class="input-description">Select the duration of your stay on Mars.</div>
+            <div class="input-duration-wrapper">
+                <input class="input-field-number" ref="duration" type="number" pattern="^\d+$"
                        placeholder="Length" required :min="duration_min" :max="duration_max"
                        v-on:input="setInitial" v-model="duration.amount">
-                <select class='input-field-select' ref="duration_unit" required
+                <select class="input-field-select" ref="duration_unit" required
                         v-on:change="setInitial" v-model="duration.units">
                     <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
@@ -60,7 +60,7 @@ export default {
         setInitial: function() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
-            const value = {'location': this.location, 'duration': this.duration}
+            const value = {location: this.location, duration: this.duration}
             this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
         },
     },

@@ -9,19 +9,19 @@ Future version should also automatically switch the selected preset to 'custom' 
 -->
 
 <template>
-    <form class='form-wrapper form-presets' @submit.prevent="">
-        <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Presets')">
+    <form class="form-wrapper form-presets" @submit.prevent="">
+        <label class="input-wrapper">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Presets')">
                 Presets <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class='input-description'>Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
+            <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div>
-                <div class='presets-dropdown'>
-                    <select class='input-field-select' ref='preset_dropdown'
+                <div class="presets-dropdown">
+                    <select class="input-field-select" ref="preset_dropdown"
                             v-model="selected" v-on:change="updateConfig(selected)">
-                        <option :value=EMPTY hidden disabled selected>Preset</option>
-                        <option :value=name v-for="(preset, name) in getPresets" :key=name>{{preset.name}}</option>
-                        <option :value=CUSTOM>[Custom]</option>
+                        <option :value="EMPTY" hidden disabled selected>Preset</option>
+                        <option :value="name" v-for="(preset, name) in getPresets" :key="name">{{preset.name}}</option>
+                        <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
                 <div v-if="selected == CUSTOM" class="custom-preset">

@@ -3,14 +3,14 @@ future dashboard views
 -->
 
 <template>
-    <div id='dashboard-wrapper'>
+    <div id="dashboard-wrapper">
         <!-- Show the dashboard menu component when getMenuActive is true. -->
         <DashboardMenu v-if="getMenuActive" />
         <TheTopBar />
-        <section class='main-wrapper'>
+        <section class="main-wrapper">
             <Main />
         </section>
-        <section id='footer-wrapper'>
+        <section id="footer-wrapper">
             <PlayButton />
             <Timeline />
             <StepControls />
@@ -44,13 +44,13 @@ export default {
         }
     },
     components: {
-        "TheTopBar": TheTopBar,
-        "DashboardMenu": DashboardMenu,
-        "PlayButton": PlayButton,
-        "Timeline": Timeline,
-        "StepControls": StepControls,
-        "SpeedControls": SpeedControls,
-        "Main": Main,
+        TheTopBar: TheTopBar,
+        DashboardMenu: DashboardMenu,
+        PlayButton: PlayButton,
+        Timeline: Timeline,
+        StepControls: StepControls,
+        SpeedControls: SpeedControls,
+        Main: Main,
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),

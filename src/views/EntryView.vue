@@ -1,7 +1,7 @@
 <!-- Container for all entry related components -->
 
 <template>
-    <div class='base-entry-wrapper'>
+    <div class="base-entry-wrapper">
         <router-view/>
     </div>
 </template>

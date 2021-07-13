@@ -33,7 +33,7 @@ export default {
     state: {
         // parameters for the get_steps route
         parameters: {},
-        agentCount: {1: {"human_agent": 0}},
+        agentCount: {1: {human_agent: 0}},
         agentGrowth: {},
         lastAgentGrowth: {},  // store the last non-null growth
         totalProduction: {},
@@ -86,17 +86,17 @@ export default {
         // return a json obj that contains all the simulation data
         getSimulationData: function(state) {
             return {
-                'README': 'Format may vary, only import from the main menu.',
-                'game_config': state.gameConfig,
-                'steps': state.maxStepBuffer,
-                'parameters': state.parameters,
-                'total_consumption': state.totalConsumption,
-                'total_production': state.totalProduction,
-                'total_agent_count': state.agentCount,
-                'agent_growth': state.agentGrowth,
-                'storage_ratios': state.storageRatio,
-                'storage_capacities': state.storageCapacities,
-                'details_per_agent': state.detailsPerAgent,
+                README: 'Format may vary, only import from the main menu.',
+                game_config: state.gameConfig,
+                steps: state.maxStepBuffer,
+                parameters: state.parameters,
+                total_consumption: state.totalConsumption,
+                total_production: state.totalProduction,
+                total_agent_count: state.agentCount,
+                agent_growth: state.agentGrowth,
+                storage_ratios: state.storageRatio,
+                storage_capacities: state.storageCapacities,
+                details_per_agent: state.detailsPerAgent,
             }
         },
     },
@@ -289,8 +289,8 @@ export default {
         },
         SETDEFAULTPANELS: function(state) {
             state.activePanels = [
-                "MissionInfo", "ProductionConsumption:enrg_kwh", "StorageLevels",
-                "InhabitantsStatus", "ProductionConsumption:atmo_co2", "AtmosphericMonitors",
+                'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
+                'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
             ]
         },
         INITGAME: function(state, value) {
@@ -298,22 +298,22 @@ export default {
             state.parameters = {
                 // the game is set before reaching the dashboard and
                 // resetting, so preserve its value
-                "game_id": value,
-                "min_step_num": 0,
-                "n_steps": 10,
-                "total_agent_count": ["human_agent"],
-                "agent_growth": [],
-                "total_production": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
-                "total_consumption": ["atmo_co2", "atmo_o2", "h2o_potb", "enrg_kwh"],
+                game_id: value,
+                min_step_num: 0,
+                n_steps: 10,
+                total_agent_count: ['human_agent'],
+                agent_growth: [],
+                total_production: ['atmo_co2', 'atmo_o2', 'h2o_potb', 'enrg_kwh'],
+                total_consumption: ['atmo_co2', 'atmo_o2', 'h2o_potb', 'enrg_kwh'],
                 // we now calculate the ratios on the frontend
                 // "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
                 //                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
-                "storage_capacities": {}, // empty obj == get all values
-                "details_per_agent": {"agent_types": [], // empty obj == get all agents
-                                      "currency_types": ["enrg_kwh", "atmo_co2"],
-                                      "directions": ["in"]},
-                "parse_filters": [],
-                "single_agent": 1,
+                storage_capacities: {}, // empty obj == get all values
+                details_per_agent: {agent_types: [], // empty obj == get all agents
+                                    currency_types: ['enrg_kwh', 'atmo_co2'],
+                                    directions: ['in']},
+                parse_filters: [],
+                single_agent: 1,
             }
             state.agentGrowth = {}
             state.totalProduction = {}

@@ -1,13 +1,13 @@
 <template>
-    <div class='entry-wrapper'>
+    <div class="entry-wrapper">
         <!-- This section uses absolute positioning and overflow:hidden on the parent to hide
              it from the user.  class binding is used to display / hide the warning.
              v-if will simply display it or not, and will not activate the animation
              for displaying or hiding
         -->
-        <div class='warning-wrapper' :class="{'warning-active': activeWarning}">
-            <fa-icon class='fa-icon dismiss-icon' :icon="['fas','times']" @click="dismissWarning"/>
-            <div class='warning-item' v-for="(item,index) in activeWarnings" :key="index">
+        <div class="warning-wrapper" :class="{'warning-active': activeWarning}">
+            <fa-icon class="fa-icon dismiss-icon" :icon="['fas','times']" @click="dismissWarning"/>
+            <div class="warning-item" v-for="(item,index) in activeWarnings" :key="index">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
                 {{activeWarnings[index]}}
@@ -16,45 +16,45 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item' :class="{'option-item-active': 'login'===activeOption}"
+                <div class="option-item" :class="{'option-item-active': 'login'===activeOption}"
                      @click="activateOption('login')"> SIGN IN </div>
-                <div class='option-item' :class="{'option-item-active': 'register'===activeOption}"
+                <div class="option-item" :class="{'option-item-active': 'register'===activeOption}"
                      @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
-                <section class='entry-form entry-form-login' :class="{'entry-form-active': activeOption==='login'}">
-                    <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id='login-form'>
-                        <input v-model="user.username" type='text' class='input-field-text' placeholder="Username"/>
-                        <input v-model="user.password" type='password' class='input-field-text' placeholder="Password"/>
+                <section class="entry-form entry-form-login" :class="{'entry-form-active': activeOption==='login'}">
+                    <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id="login-form">
+                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username"/>
+                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password"/>
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                               Guest accounts are temporary and will be deleted on a regular basis.</p>
-                    <a id='guest-login' class='link' @click='showGuestLogin'>{{guestLoginLinkText}}</a>
+                    <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                 </section>
-                <section class='entry-form entry-form-register'
+                <section class="entry-form entry-form-register"
                          :class="{'entry-form-active': activeOption==='register'}">
-                    <form @submit.prevent="registerUser" id='register-form'>
-                        <input v-model="register.username" type='text' class='input-field-text'
+                    <form @submit.prevent="registerUser" id="register-form">
+                        <input v-model="register.username" type="text" class="input-field-text"
                                placeholder="Choose Username"/>
-                        <input v-model="register.password" type='password' class='input-field-text'
+                        <input v-model="register.password" type="password" class="input-field-text"
                                placeholder="Enter Password"/>
-                        <input v-model="register.confirmPassword" type='password' class='input-field-text'
+                        <input v-model="register.confirmPassword" type="password" class="input-field-text"
                                placeholder="Confirm Password"/>
                     </form>
                 </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
-                <div class='btn-wrapper btn-wrapper-login'
+                <div class="btn-wrapper btn-wrapper-login"
                      :class="{'btn-wrapper-active': activeOption==='login'}">
-                    <button v-if="activeGuestLogin" form='register-form' class='btn-warning'
+                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
                             @click="guestLogin">SIGN IN AS GUEST</button>
-                    <button v-else form='login-form' class='btn-warning'>SIGN IN</button>
+                    <button v-else form="login-form" class="btn-warning">SIGN IN</button>
                 </div>
-                <div class='btn-wrapper btn-wrapper-register'
+                <div class="btn-wrapper btn-wrapper-register"
                      :class="{'btn-wrapper-active': activeOption==='register'}">
-                    <button form='register-form' class='btn-warning'>SIGN UP</button>
+                    <button form="register-form" class="btn-warning">SIGN UP</button>
                 </div>
             </template>
             <!--<template v-slot:entry-footer>
@@ -71,7 +71,7 @@ import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        'BaseEntry': BaseEntry,
+        BaseEntry: BaseEntry,
     },
 
     data() {
@@ -86,14 +86,14 @@ export default {
             activeWarnings: [],
 
             user: {
-                username: "",
-                password: "",
+                username: '',
+                password: '',
             },
 
             register: {
-                username: "",
-                password: "",
-                confirmPassword: "",
+                username: '',
+                password: '',
+                confirmPassword: '',
             },
         }
     },
@@ -128,7 +128,7 @@ export default {
             // if no warnings were present pass in the username object to the register route
             if (!this.activeWarning) {
                 const {username, password} = this.register
-                const params = {'username': username, 'password': password}
+                const params = {username: username, password: password}
                 await this.entryHandler(params, '/register')  // Attempt the route
             }
         },
@@ -139,7 +139,7 @@ export default {
             const loginCorrect = await this.verifyLogin()
 
             if (!loginCorrect) {
-                this.addWarning("Invalid username or password")
+                this.addWarning('Invalid username or password')
             }
 
             if (loginCorrect) {
@@ -159,20 +159,20 @@ export default {
                 const {status} = response
                 if (response.data.status == 'ERROR') {
                     const errmsg = 'Error: ' + response.data.message
-                    this.$gtag.exception({'description': errmsg})
+                    this.$gtag.exception({description: errmsg})
                     this.addWarning(errmsg)
                 } else if (status === 200) {
                     if (this.activeOption === 'login') {
                         if (!this.activeGuestLogin) {
-                            this.$gtag.event('user login', {'event_category': 'signin',
-                                                            'event_label': this.user.username})
+                            this.$gtag.event('user login', {event_category: 'signin',
+                                                            event_label: this.user.username})
                         } else {
-                            this.$gtag.event('guest login', {'event_category': 'signin',
-                                                             'event_label': this.register.username})
+                            this.$gtag.event('guest login', {event_category: 'signin',
+                                                             event_label: this.register.username})
                         }
                     } else {
-                        this.$gtag.event('new user signup', {'event_category': 'signup',
-                                                             'event_label': this.register.username})
+                        this.$gtag.event('new user signup', {event_category: 'signup',
+                                                             event_label: this.register.username})
                     }
                     /*
                     this.$gtag.event('login', { method: 'Google' })
@@ -199,7 +199,7 @@ export default {
                         // fallback on a generic one
                         message = error.message
                     }
-                    this.$gtag.exception({'description': message})
+                    this.$gtag.exception({description: message})
                     if (status === 401) {
                         this.addWarning('Login Error: ' + message)
                     } else if (status === 409) {

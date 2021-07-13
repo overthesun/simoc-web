@@ -1,12 +1,12 @@
 <template>
-    <section id='header-wrapper'>
-        <div id='logo-wrapper'>
-            <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
-            <span class='simoc-logo-title'>SIMOC</span>
+    <section id="header-wrapper">
+        <div id="logo-wrapper">
+            <img src="../../assets/simoc-logo.svg" class="simoc-logo"/>
+            <span class="simoc-logo-title">SIMOC</span>
         </div>
-        <div id='dashboard-menu-icon'>
-            <span @click='SETMENUACTIVE(true)' title='Open menu'>
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']"/>
+        <div id="dashboard-menu-icon">
+            <span @click="SETMENUACTIVE(true)" title="Open menu">
+                <fa-icon class="fa-icon menu-icon" :icon="['fas','bars']"/>
             </span>
         </div>
     </section>

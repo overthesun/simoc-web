@@ -1,9 +1,9 @@
 <template>
-  <div id="app" class='app'>
-      <div class='orientation-portrait'>
-        <img src='./assets/orientation.svg' class='orientation-logo'/>
+  <div id="app" class="app">
+      <div class="orientation-portrait">
+        <img src="./assets/orientation.svg" class="orientation-logo"/>
       </div>
-      <div class='normal orientation-landscape'>
+      <div class="normal orientation-landscape">
         <router-view />
       </div>
   </div>

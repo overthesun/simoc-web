@@ -8,11 +8,11 @@ to the entry screens to prevent this from popping up on repeat vistors.
 -->
 
 <template>
-    <div class='entry-wrapper'>
+    <div class="entry-wrapper">
         <BaseEntry>
             <template v-slot:entry-main>
-                <div class='welcome-wrapper'>
-                    <p class='welcome-title'>WELCOME TO SIMOC</p>
+                <div class="welcome-wrapper">
+                    <p class="welcome-title">WELCOME TO SIMOC</p>
 
                     <p>SIMOC is a Scalable, Interactive Model of an Off-world Community.</p>
 
@@ -31,23 +31,23 @@ to the entry screens to prevent this from popping up on repeat vistors.
                     to download your preferred configurations and simulation data.</p>
 
                     <p>If you experience a bug while using SIMOC, please submit a report to
-                    <a class='link' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
+                    <a class="link" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
                     bugs@simoc.space</a> with a complete description, including what you were
                     doing prior to the issue.</p>
 
                     <p>To learn more about SIMOC, enjoy tutorials, and download classroom
-                    curricula visit: <a class='link' target='_blank' href="https://simoc.space/">
+                    curricula visit: <a class="link" target="_blank" href="https://simoc.space/">
                     simoc.space</a></p>
 
                     <p>Finally, by pressing the PROCEED button below, you confirm that you have
                     read and agree to the
-                    <a class='link' href="https://simoc.space/about/end-user-license-agreement/"
-                    target='_blank'>End User License Agreement</a>.</p>
+                    <a class="link" href="https://simoc.space/about/end-user-license-agreement/"
+                    target="_blank">End User License Agreement</a>.</p>
                 </div>
             </template>
 
             <template v-slot:entry-button>
-                <button class='btn-warning' @click='toLogin'>PROCEED</button>
+                <button class="btn-warning" @click="toLogin">PROCEED</button>
             </template>
         </BaseEntry>
     </div>
@@ -57,7 +57,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 import {BaseEntry} from '../../components/base'
 export default {
     components: {
-        'BaseEntry': BaseEntry,
+        BaseEntry: BaseEntry,
     },
     methods: {
         toLogin: function() {

@@ -1,5 +1,5 @@
 <template>
-    <div class='panel-graph'>
+    <div class="panel-graph">
         <GreenhouseDoughnut :id="'canvas'+ canvasNumber"/>
     </div>
 </template>
@@ -14,7 +14,7 @@ export default {
         canvasNumber: 0,
     },
     components: {
-        'GreenhouseDoughnut': GreenhouseDoughnut,
+        GreenhouseDoughnut: GreenhouseDoughnut,
     },
 }
 </script>

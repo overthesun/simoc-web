@@ -1,34 +1,34 @@
 <template>
-    <div class='panel-graph-gauge'>
-        <div class='gauge-wrapper'>
+    <div class="panel-graph-gauge">
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas1'+canvasNumber" color="#e6194b" :maximum="3"
                    :getter="airStorageGetter('atmo_co2')" label="CO₂"/>
-            <div class='gauge-text'>CO₂ (0-3%)</div>
+            <div class="gauge-text">CO₂ (0-3%)</div>
         </div>
-        <div class='gauge-wrapper'>
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas2'+canvasNumber" color="#3cb44b" :maximum="100"
                    :getter="airStorageGetter('atmo_o2')" label="O₂"/>
-            <div class='gauge-text'>O₂ (0-100%)</div>
+            <div class="gauge-text">O₂ (0-100%)</div>
         </div>
-        <div class='gauge-wrapper'>
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas3'+canvasNumber" color="#46f0f0" :maximum="3"
                    :getter="airStorageGetter('atmo_h2o')" label="H₂O Vapor"/>
-            <div class='gauge-text'>H₂O Vapor (0-3%)</div>
+            <div class="gauge-text">H₂O Vapor (0-3%)</div>
         </div>
-        <div class='gauge-wrapper'>
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas4'+canvasNumber" color="#ffe119" :maximum="3"
                    :getter="airStorageGetter('atmo_h2')" label="H₂"/>
-            <div class='gauge-text'>H₂ (0-3%)</div>
+            <div class="gauge-text">H₂ (0-3%)</div>
         </div>
-        <div class='gauge-wrapper'>
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas5'+canvasNumber" color="#4363d8" :maximum="100"
                    :getter="airStorageGetter('atmo_n2')" label="N₂"/>
-            <div class='gauge-text'>N₂ (0-100%)</div>
+            <div class="gauge-text">N₂ (0-100%)</div>
         </div>
-        <div class='gauge-wrapper'>
+        <div class="gauge-wrapper">
             <Gauge :id="'canvas6'+canvasNumber" color="#f58231" :maximum="3"
                    :getter="airStorageGetter('atmo_ch4')" label="CH₄"/>
-            <div class='gauge-text'>CH₄ (0-3%)</div>
+            <div class="gauge-text">CH₄ (0-3%)</div>
         </div>
     </div>
 </template>
@@ -42,7 +42,7 @@ export default {
         canvasNumber: 0,
     },
     components: {
-        'Gauge': Gauge,
+        Gauge: Gauge,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),

@@ -6,7 +6,7 @@
 
 <script>
 import Chart from 'chart.js'
-import "chartjs-plugin-annotation"
+import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -16,9 +16,9 @@ export default {
     data() {
         return {
             greenhouseSizes: {
-                'greenhouse_small': 490,
-                'greenhouse_medium': 2454,
-                'greenhouse_large': 5610,
+                greenhouse_small: 490,
+                greenhouse_medium: 2454,
+                greenhouse_large: 5610,
             },
             // colors used for the plants in the graphs
             colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',
@@ -98,7 +98,7 @@ export default {
                 title: {
                     display: true,
                     text: 'Total Greenhouse Space vs Used Space',
-                    fontColor: "#eeeeee",
+                    fontColor: '#eeeeee',
                 },
                 tooltips: {
                     mode: 'point',  // show single value
@@ -111,22 +111,22 @@ export default {
                         stacked: true,
                         ticks: {
                             beginAtZero: true,
-                            fontColor: "#eeeeee",
+                            fontColor: '#eeeeee',
                             callback: function(value, index, values) {
                                 return value + ' m³'
                             },
                         },
                         gridLines: {
-                            color: "#666666",
+                            color: '#666666',
                         },
                     }],
                     yAxes: [{
                         stacked: true,
                         ticks: {
-                            fontColor: "#eeeeee",
+                            fontColor: '#eeeeee',
                         },
                         gridLines: {
-                            color: "#666666",
+                            color: '#666666',
                         },
                     }],
                 },

@@ -7,17 +7,17 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div class='dashboard-view-wrapper'>
+    <div class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection],index) in activePanels.map(p => p.split(':'))" :key="index">
-            <template v-slot:panel-title><div class='panel-title'>{{panels[panelName].panelTitle}}</div></template>
+            <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-menu>
-                <div class='panel-menu'>
+                <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
-                    <div class='menu-icon-wrapper' @click="openPanelMenu(index)">
-                        <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']"/>
+                    <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
+                        <fa-icon class="fa-icon menu-icon" :icon="['fas','bars']"/>
                     </div>
                     <!-- the options menu -->
-                    <div class='panel-menu-options' v-if="index === visibleMenu">
+                    <div class="panel-menu-options" v-if="index === visibleMenu">
                         <!-- this menu has two steps: first shows the add/change/remove options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
@@ -28,7 +28,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
-                        <select v-else class='panel-select' v-model="selectedPanel"
+                        <select v-else class="panel-select" v-model="selectedPanel"
                                 @change="updatePanels(index, replacePanel)">
                             <option hidden selected value="null">Select Panel:</option>
                             <!-- populate the drop-down with all the available panels, sorted by title -->
@@ -73,7 +73,7 @@ export default {
         }
     },
     components: {
-        'BasePanel': BasePanel,
+        BasePanel: BasePanel,
         ...panels,  // add all panels as components
     },
     computed: {

@@ -8,14 +8,14 @@ See chart.js documentation for further explantion of below fucntionality.
 -->
 
 <template>
-    <div style='position:relative'>
+    <div style="position:relative">
         <canvas :id="id" />
     </div>
 </template>
 
 <script>
 import Chart from 'chart.js'
-import "chartjs-plugin-annotation"
+import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -44,7 +44,7 @@ export default {
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
-                this.chart.options.elements.centerText.text = value.toFixed(4) + "%"
+                this.chart.options.elements.centerText.text = value.toFixed(4) + '%'
                 this.chart.update()
             },
             deep: true,
@@ -69,7 +69,7 @@ export default {
                         borderWidth: 0,
                     },
                     centerText: {
-                        text: "Loading...",
+                        text: 'Loading...',
                     },
                 },
                 tooltips: {
@@ -78,7 +78,7 @@ export default {
                             // show "label: N%" in the tooltip
                             const label = data.labels[tooltipItems.index]
                             const value = data.datasets[0].data[tooltipItems.index]
-                            return label + ': ' + (value*100) + "%"
+                            return label + ': ' + (value*100) + '%'
                         },
                     },
                 },
@@ -106,8 +106,8 @@ export default {
                     // scale the font size based on the width, so that
                     // it doesn't overlap with the gauge, but max 16px
                     var fontSize = Math.min((width/8), 16).toFixed(2)
-                    ctx.font = fontSize + "px sans-serif"
-                    ctx.textBaseline = "alphabetic"
+                    ctx.font = fontSize + 'px sans-serif'
+                    ctx.textBaseline = 'alphabetic'
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),

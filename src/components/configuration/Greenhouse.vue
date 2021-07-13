@@ -1,36 +1,36 @@
 <template>
     <div>
-        <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('Greenhouse')">
+        <label class="input-wrapper">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Greenhouse')">
                 Greenhouse <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class='input-description'>Select the size of your greenouse. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
-            <select class='input-field-select' ref='greenhouse_type' required
+            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <select class="input-field-select" ref="greenhouse_type" required
                     v-model="greenhouse.type" v-on:change="setGreenhouse">
-                <option value='none' selected>None</option>
-                <option value='greenhouse_small'>Small (490 m³)</option>
-                <option value='greenhouse_medium'>Medium (2452 m³)</option>
-                <option value='greenhouse_large'>Large (5610 m³)</option>
+                <option value="none" selected>None</option>
+                <option value="greenhouse_small">Small (490 m³)</option>
+                <option value="greenhouse_medium">Medium (2452 m³)</option>
+                <option value="greenhouse_large">Large (5610 m³)</option>
             </select>
         </label>
-        <label class='input-wrapper'>
-            <div class='input-title' @click="SETACTIVEREFENTRY('PlantSpecies')">
+        <label class="input-wrapper">
+            <div class="input-title" @click="SETACTIVEREFENTRY('PlantSpecies')">
                 Plant Species <fa-icon :icon="['fas','info-circle']" />
             </div>
 
-            <div class='input-description'>Select plants to grow in your greenhouse. See <a class='reference-link' href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
                   Index is used as a key to store which plant field has been updated within the configuration
             -->
-            <div class='input-plant-wrapper' v-for="(item,index) in plantSpecies" :key=index>
-                <select class='input-field-select' ref="plant_selects"
+            <div class="input-plant-wrapper" v-for="(item,index) in plantSpecies" :key="index">
+                <select class="input-field-select" ref="plant_selects"
                         v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
-                    <option :value="name" v-for="(name,k) in plantValue" :key=k >{{plantFormatted[k]}}</option>
+                    <option :value="name" v-for="(name,k) in plantValue" :key="k" >{{plantFormatted[k]}}</option>
                 </select>
-                <label><input class='input-field-number' ref="plant_inputs" type="number"
+                <label><input class="input-field-number" ref="plant_inputs" type="number"
                               min="0" :max="plantMax[index]" pattern="^\d+$"
                               placeholder="Quantity" v-on:input="updatePlantSpecies(index)"
                               v-model="plantSpecies[index].amount"> m³</label>
@@ -105,15 +105,15 @@ export default {
         // This is done automatically by Vue
         updatePlantSpecies: function(index) {
             let plant = this.plantSpecies[index]
-            this.UPDATEPLANTSPECIES({'index': index, 'plant': plant})
+            this.UPDATEPLANTSPECIES({index: index, plant: plant})
         },
 
         // Set the greenhouse type within the wizard store. It also sets the default number of
         // greenhouses to one if any type other than 'none' is selected. Plants are not included
         // as they do their own thing differently than other form elements.
         setGreenhouse: function() {
-            this.greenhouse.amount = this.greenhouse.type == "none" ? 0 : 1
-            const value = {'greenhouse': this.greenhouse}
+            this.greenhouse.amount = this.greenhouse.type == 'none' ? 0 : 1
+            const value = {greenhouse: this.greenhouse}
             this.SETGREENHOUSE(value)
         },
 
@@ -155,13 +155,13 @@ export default {
         // remove any underscores or dashes and replace them with spaces.
         // TODO: use the function in javascript/utils.js
         formatPlantName: function(name) {
-            let formatted = ""
+            let formatted = ''
 
-            formatted = name.replace(/_/g, " ")
+            formatted = name.replace(/_/g, ' ')
             formatted = formatted.toLowerCase()
-                    .split(" ")
+                    .split(' ')
                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-                    .join(" ")
+                    .join(' ')
 
             this.plantFormatted.push(formatted)
         },
@@ -190,7 +190,7 @@ export default {
             }).catch(error => {
                 const {status} = error.response
                 if (status == 401) {
-                    console.log("Plant retrieval error")
+                    console.log('Plant retrieval error')
                 }
             })
         },
@@ -207,10 +207,10 @@ export default {
             const plantSpecies = this.getConfiguration.plantSpecies
             // TODO: this is duplicated in a number of places
             const greenhouse_size = {
-                'none': 0,
-                'greenhouse_small': 490,
-                'greenhouse_medium': 2454,
-                'greenhouse_large': 5610,
+                none: 0,
+                greenhouse_small: 490,
+                greenhouse_medium: 2454,
+                greenhouse_large: 5610,
             }[this.greenhouse.type]
             // make sure that the amount doesn't overflow the greenhouse_size:
             // calculate the available space by subtracting the amount of the

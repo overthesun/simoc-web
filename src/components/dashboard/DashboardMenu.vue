@@ -13,7 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
-            <button class='btn-warning btn-logout'  @click="logout">Log Out</button>
+            <button class="btn-warning btn-logout"  @click="logout">Log Out</button>
         </template>
     </BaseMenu>
 </template>
@@ -30,7 +30,7 @@ export default {
         }
     },
     components: {
-        'BaseMenu': BaseMenu,
+        BaseMenu: BaseMenu,
     },
     mounted: function() {
         // save the status of the timer and pause it when the menu is opened
@@ -69,7 +69,7 @@ export default {
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
             const a = document.createElement('a')
-            a.download = "simoc-simulation-data.json"
+            a.download = 'simoc-simulation-data.json'
             a.href = window.URL.createObjectURL(blob)
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
             a.click()
@@ -98,7 +98,7 @@ export default {
             // the user already confirmed, don't ask twice
             this.SETLEAVEWITHOUTCONFIRMATION(true)
             // rely on DashboardView.beforeDestroy to stop the sim
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
 
         // New Simulation button
@@ -114,7 +114,7 @@ export default {
             // the user already confirmed, don't ask twice
             this.SETLEAVEWITHOUTCONFIRMATION(true)
             // rely on DashboardView.beforeDestroy to stop the sim
-            this.$router.push("menu")
+            this.$router.push('menu')
         },
     },
 }

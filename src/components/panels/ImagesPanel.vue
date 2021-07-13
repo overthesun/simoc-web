@@ -1,6 +1,6 @@
 <template>
-    <div id='image-wrapper'>
-        <img src ='../../assets/images/simoc-00.jpg'>
+    <div id="image-wrapper">
+        <img src ="../../assets/images/simoc-00.jpg">
     </div>
 </template>
 

@@ -10,23 +10,23 @@ menu button being present on other unrelated configurations.
  -->
 
 <template>
-    <div class='configuration-wrapper' >
+    <div class="configuration-wrapper" >
         <!-- The form side of the wizard screen -->
-        <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
+        <section class="wizard-wrapper" :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
-            <nav v-if="getActiveConfigType === 'Guided'" class='navigation-wrapper'>
-                <slot name='navigation-section-select'></slot>
+            <nav v-if="getActiveConfigType === 'Guided'" class="navigation-wrapper">
+                <slot name="navigation-section-select"></slot>
             </nav>
-            <main class='main main-wizard'>
-                <slot name='main-wizard-input'></slot>
+            <main class="main main-wizard">
+                <slot name="main-wizard-input"></slot>
             </main>
-            <footer class='footer'>
-                <slot name='wizard-configuration-footer'></slot>
+            <footer class="footer">
+                <slot name="wizard-configuration-footer"></slot>
             </footer>
         </section>
         <!-- The reference side of the wizard screen -->
-        <section class='reference-wrapper'>
+        <section class="reference-wrapper">
             <header>REFERENCE</header>
             <!--
               This is the navigation section at the top of the wizard reference.
@@ -35,21 +35,21 @@ menu button being present on other unrelated configurations.
               used to set what the active section is. Such as clicking a title and the approriate
               reference entry appearing on the right side.
             -->
-            <nav class='configuration-options reference-options'>
-                <div class='option-item' @click="SETACTIVEREFERENCE('Reference')"
+            <nav class="configuration-options reference-options">
+                <div class="option-item" @click="SETACTIVEREFERENCE('Reference')"
                      :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
                 <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
                          :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')"
+                <div class="option-item" @click="SETACTIVEREFERENCE('Graphs')"
                      :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
             </nav>
-            <main class='main main-reference'>
-                <slot name='main-wizard-reference'></slot>
+            <main class="main main-reference">
+                <slot name="main-wizard-reference"></slot>
             </main>
-            <footer class='footer'>
-                <slot name='footer-wizard-reference'></slot>
+            <footer class="footer">
+                <slot name="footer-wizard-reference"></slot>
             </footer>
         </section>
     </div>

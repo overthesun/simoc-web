@@ -14,7 +14,7 @@ See chart.js documentation for more details.
 
 <script>
 import Chart from 'chart.js'
-import "chartjs-plugin-annotation"
+import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 export default {
@@ -26,19 +26,19 @@ export default {
         return {
             // Greenhouse volumes. These should be retrieved from the database in the future.
             greenhouseSize: {
-                'none': 0,
-                'greenhouse_small': 490,
-                'greenhouse_medium': 2454,
-                'greenhouse_large': 5610,
+                none: 0,
+                greenhouse_small: 490,
+                greenhouse_medium: 2454,
+                greenhouse_large: 5610,
             },
 
             // Enough colors to cover all the plant types.
             // Used to specify the color for each section of the pie chart.
             backgroundColor: [
-                "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0",
-                "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8",
-                "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff",
-                "#000000",
+                '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
+                '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
+                '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
+                '#000000',
             ],
         }
     },
@@ -82,7 +82,7 @@ export default {
             const {greenhouse, plantSpecies} = this.getConfiguration
             // Set the first value of the dataset to the size of the greenhouse
             // and add the label free space
-            let values = {data: [this.greenhouseSize[greenhouse.type]], labels: ["Free Space"]}
+            let values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
             plantSpecies.forEach((item) => {
                 // Calculates the total free space left after all the plants are added,
                 // modifies the first index initialized above.
@@ -105,7 +105,7 @@ export default {
                 // otherwise show both the doughnut and the text
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = data
-                var text = data[0] + " m³ / " + this.greenhouseSize[greenhouse.type] + " m³"
+                var text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
             }
             this.chart.options.elements.centerText.text = text
             this.chart.update()
@@ -135,7 +135,7 @@ export default {
         this.chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ["Free Space"],
+                labels: ['Free Space'],
                 datasets: [{
                     backgroundColor: this.backgroundColor,
                     data: [0],
@@ -156,11 +156,11 @@ export default {
                 legend: {
                     onClick: null,
                     display: true,
-                    fontColor: "#eeeeee",
+                    fontColor: '#eeeeee',
                     position: 'bottom',
                     labels: {
-                        fontColor: "#eeeeee",
-                        fontFamily: "open sans",
+                        fontColor: '#eeeeee',
+                        fontFamily: 'open sans',
                         fontSize: 14,
                         boxWidth: 4,
                         usePointStyle: true,
@@ -180,8 +180,8 @@ export default {
 
                     ctx.restore()
                     var fontSize = (height/300).toFixed(2)
-                    ctx.font = fontSize + "em sans-serif"
-                    ctx.textBaseline = "bottom"
+                    ctx.font = fontSize + 'em sans-serif'
+                    ctx.textBaseline = 'bottom'
 
                     var text = chart.chart.options.elements.centerText.text,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),

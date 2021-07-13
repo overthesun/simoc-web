@@ -1,5 +1,5 @@
 <template>
-    <div class='panel-graph'>
+    <div class="panel-graph">
         <select v-model="storage" required>
           <template v-for="(stor_group, stor_name) in getStorages">
             <option v-for="(stor, stor_id) in stor_group" :value="stor_name + '/' + (stor_id+1)"
@@ -38,7 +38,7 @@ export default {
         panelSection: undefined,
     },
     components: {
-        'LevelsGraph': LevelsGraph,
+        LevelsGraph: LevelsGraph,
     },
     computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),

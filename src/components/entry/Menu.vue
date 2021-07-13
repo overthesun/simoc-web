@@ -2,20 +2,20 @@
 <!-- Menu screen presented to the user on successful login. -->
 
 <template>
-    <div class='entry-wrapper'>
+    <div class="entry-wrapper">
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item option-item-active'> MAIN MENU </div>
+                <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
-                <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <input type="file" accept="application/json"
                        id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
             </template>
             <template v-slot:entry-button>
-                <div class='btn-wrapper'>
-                    <button form='login-form' class='btn-warning' @click="logout">Log Out</button>
+                <div class="btn-wrapper">
+                    <button form="login-form" class="btn-warning" @click="logout">Log Out</button>
                 </div>
             </template>
         </BaseEntry>
@@ -29,7 +29,7 @@ import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        'BaseEntry': BaseEntry,
+        BaseEntry: BaseEntry,
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
@@ -41,7 +41,7 @@ export default {
             // this.$router.push('menuconfig')
 
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("configuration")
+            this.$router.push('configuration')
         },
         // TODO: the next 3 methods are duplicated in the config menu
         uploadSimData: function() {
@@ -78,7 +78,7 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
     },
 }

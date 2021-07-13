@@ -1,5 +1,5 @@
 <template>
-    <div class='base-dashboard-wrapper'>
+    <div class="base-dashboard-wrapper">
         <router-view>
         </router-view>
     </div>

@@ -8,18 +8,18 @@ function get_default_config() {
     // return the default configuration,
     // and ensures that a new object is returned
     return {
-        name: "Default config",
-        simdata_file: "",
-        location: "mars",
-        duration: {type: "none", amount: null, units: "day"},
-        humans: {type: "human_agent", amount: null, units: ""},
-        food: {type: "food_storage", amount: null, units: "kg"},
-        eclss: {type: "eclss", amount: null, units: ""},
-        powerGeneration: {type: "solar_pv_array_mars", amount: null, units: ""},
-        powerStorage: {type: "power_storage", amount: null, units: "kWh"},
-        crewQuarters: {type: "none", amount: 0, units: ""},
-        greenhouse: {type: "none", amount: 0, units: ""},
-        plantSpecies: [{type: "", amount: ""}],
+        name: 'Default config',
+        simdata_file: '',
+        location: 'mars',
+        duration: {type: 'none', amount: null, units: 'day'},
+        humans: {type: 'human_agent', amount: null, units: ''},
+        food: {type: 'food_storage', amount: null, units: 'kg'},
+        eclss: {type: 'eclss', amount: null, units: ''},
+        powerGeneration: {type: 'solar_pv_array_mars', amount: null, units: ''},
+        powerStorage: {type: 'power_storage', amount: null, units: 'kWh'},
+        crewQuarters: {type: 'none', amount: 0, units: ''},
+        greenhouse: {type: 'none', amount: 0, units: ''},
+        plantSpecies: [{type: '', amount: ''}],
     }
 }
 
@@ -298,7 +298,7 @@ export default {
         },
         // Adds an empty plant to the plant species array
         ADDPLANTSPECIES: (state) => {
-            state.configuration.plantSpecies.push({type: "", amount: ''})
+            state.configuration.plantSpecies.push({type: '', amount: ''})
         },
         // Updates the plant at the index with the new values
         UPDATEPLANTSPECIES: (state, value) => {

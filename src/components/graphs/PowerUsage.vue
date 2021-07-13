@@ -7,7 +7,7 @@
 <script>
 import axios from 'axios'
 import Chart from 'chart.js'
-import "chartjs-plugin-annotation"
+import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 export default {
     props: {
@@ -193,7 +193,7 @@ export default {
                 title: {
                     display: true,
                     text: 'Total Energy Production vs Consumption',
-                    fontColor: "#eeeeee",
+                    fontColor: '#eeeeee',
                 },
                 tooltips: {
                     mode: 'point',  // show single value
@@ -206,22 +206,22 @@ export default {
                         stacked: true,
                         ticks: {
                             beginAtZero: true,
-                            fontColor: "#eeeeee",
+                            fontColor: '#eeeeee',
                             callback: function(value, index, values) {
                                 return value + ' kWh'
                             },
                         },
                         gridLines: {
-                            color: "#666666",
+                            color: '#666666',
                         },
                     }],
                     yAxes: [{
                         stacked: true,
                         ticks: {
-                            fontColor: "#eeeeee",
+                            fontColor: '#eeeeee',
                         },
                         gridLines: {
-                            color: "#666666",
+                            color: '#666666',
                         },
                     }],
                 },

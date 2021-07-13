@@ -1,7 +1,7 @@
 <template>
-    <div class='dashboard-wrapper'>
-        <div class='timeline-wrapper'>
-            <input class='timeline' type='range' min='0' max='100' v-model="value"
+    <div class="dashboard-wrapper">
+        <div class="timeline-wrapper">
+            <input class="timeline" type="range" min="0" max="100" v-model="value"
                    :style="{'background-image': ('linear-gradient( \
                      to right, green 0%, \
                      green ' + value + '%, \

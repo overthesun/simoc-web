@@ -4,7 +4,7 @@ This component would have a similar functionality to that of the reference wiki.
 -->
 
 <template>
-    <section class='graphs-wrapper'><!--
+    <section class="graphs-wrapper"><!--
         <PowerUsage class="power-config-graph" :id="'pu-config-canvas-'+ canvasNumber"
             v-if="(getActiveConfigType === 'Custom' ||
                    (getActiveReference === 'Graphs' &&
@@ -14,8 +14,8 @@ This component would have a similar functionality to that of the reference wiki.
                    (getActiveReference === 'Graphs' &&
                     (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
         <!-- The wrapper divs make ChartJS happy. -->
-        <div><PowerUsage class="power-config-graph" id='pu-config-canvas' /></div>
-        <div><GreenhouseConfig class="greenhouse-config-graph" id='gh-config-canvas' /></div>
+        <div><PowerUsage class="power-config-graph" id="pu-config-canvas" /></div>
+        <div><GreenhouseConfig class="greenhouse-config-graph" id="gh-config-canvas" /></div>
     </section>
 </template>
 
@@ -24,8 +24,8 @@ import {GreenhouseConfig, PowerUsage} from '../../components/graphs'
 import {mapGetters} from 'vuex'
 export default {
     components: {
-        'GreenhouseConfig': GreenhouseConfig,
-        'PowerUsage': PowerUsage,
+        GreenhouseConfig: GreenhouseConfig,
+        PowerUsage: PowerUsage,
     },
     computed: {
         // ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),

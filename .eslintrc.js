@@ -129,6 +129,7 @@ module.exports = {
             ignoreHTMLAttributeValues: false,
             ignoreHTMLTextContents: true,
         }],
+        'vue/html-quotes': ['error', 'double', {avoidEscape: true}],
         'vue/no-unused-vars': 'error',
         'vue/require-v-for-key': 'error',
         'vue/no-parsing-error': 'error',

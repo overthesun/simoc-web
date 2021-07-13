@@ -7,18 +7,18 @@ Can be reenabled in Menu.vue if needed.
 -->
 
 <template>
-    <div class='entry-wrapper'>
+    <div class="entry-wrapper">
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item option-item-active'> CONFIGURATION MENU </div>
+                <div class="option-item option-item-active"> CONFIGURATION MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button form='login-form' class='btn-normal' @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form='login-form' class='btn-normal' @click="toCustom">CUSTOM CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="toGuided">GUIDED CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="toCustom">CUSTOM CONFIGURATION</button>
             </template>
             <template v-slot:entry-button>
-                <div class='btn-wrapper'>
-                    <button form='login-form' class='btn-warning' @click="toMainMenu">MAIN MENU</button>
+                <div class="btn-wrapper">
+                    <button form="login-form" class="btn-warning" @click="toMainMenu">MAIN MENU</button>
                 </div>
             </template>
         </BaseEntry>
@@ -32,7 +32,7 @@ import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
     components: {
-        'BaseEntry': BaseEntry,
+        BaseEntry: BaseEntry,
     },
     computed: {
         ...mapGetters('wizard', []),
@@ -41,15 +41,15 @@ export default {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
 
         toMainMenu: function() {
-            this.$router.push("menu")
+            this.$router.push('menu')
         },
         toGuided: function() {
             this.SETACTIVECONFIGTYPE('Guided')
-            this.$router.push("configuration")
+            this.$router.push('configuration')
         },
         toCustom: function() {
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("configuration")
+            this.$router.push('configuration')
 
         },
     },

@@ -9,7 +9,7 @@
             <input type="file" accept="application/json" id="configInputFile"
                    ref="configInputFile" @change="handleConfig" />
             <button @click="resetConfig">Reset Configuration</button>
-            <button class='btn-logout' @click="logout">Log Out</button>
+            <button class="btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
 </template>
@@ -21,7 +21,7 @@ import {BaseMenu} from '../../components/base'
 
 export default {
     components: {
-        'BaseMenu': BaseMenu,
+        BaseMenu: BaseMenu,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
@@ -38,7 +38,7 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
         downloadConfig: function() {
             const form = this.$parent.$refs.form
@@ -51,7 +51,7 @@ export default {
             const data = JSON.stringify(config)
             const blob = new Blob([data], {type: 'application/json'})
             const a = document.createElement('a')
-            a.download = "simoc-config.json"
+            a.download = 'simoc-config.json'
             a.href = window.URL.createObjectURL(blob)
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
             a.click()

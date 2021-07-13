@@ -1,10 +1,10 @@
 <template v-slot:panel-content>
-    <div class='panel'>
-        <header class='panel-header'>
-            <slot name='panel-title'></slot>
-            <slot name='panel-menu'></slot>
+    <div class="panel">
+        <header class="panel-header">
+            <slot name="panel-title"></slot>
+            <slot name="panel-menu"></slot>
         </header>
-        <slot name='panel-content'></slot>
+        <slot name="panel-content"></slot>
     </div>
 </template>
 

@@ -1,5 +1,5 @@
-import Vue from "vue"
-import Router from "vue-router"
+import Vue from 'vue'
+import Router from 'vue-router'
 
 import {EntryView, ConfigurationView, DashboardView} from './views'
 import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
@@ -10,11 +10,11 @@ import {BaseConfiguration, BaseDashboard} from './components/base'
 Vue.use(Router)
 
 export default new Router({
-    mode: "history",
+    mode: 'history',
     base: process.env.BASE_URL,
     routes: [
         {
-            path: "/",
+            path: '/',
             component: EntryView,
 
             children: [
@@ -41,8 +41,8 @@ export default new Router({
             ],
         },
         {
-            path: "/configuration",
-            name: "configuration",
+            path: '/configuration',
+            name: 'configuration',
             component: ConfigurationView,
 
             children: [
@@ -53,12 +53,12 @@ export default new Router({
             ],
         },
         {
-            path: "/dashboard",
-            name: "dashboard",
+            path: '/dashboard',
+            name: 'dashboard',
             component: DashboardView,
             children: [
                 {
-                    path: "/dashboard",
+                    path: '/dashboard',
                     component: BaseDashboard,
                 },
             ],
