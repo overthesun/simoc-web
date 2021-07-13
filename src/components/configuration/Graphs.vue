@@ -24,8 +24,8 @@ import {GreenhouseConfig, PowerUsage} from '../../components/graphs'
 import {mapGetters} from 'vuex'
 export default {
     components: {
-        GreenhouseConfig: GreenhouseConfig,
-        PowerUsage: PowerUsage,
+        GreenhouseConfig,
+        PowerUsage,
     },
     computed: {
         // ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),

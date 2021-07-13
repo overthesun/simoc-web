@@ -28,13 +28,13 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
-        storage: function(step) {
+        storage(step) {
             let storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
             delete storage['nutrient_storage'][1]['biomass_edible']
             return storage
         },
-        label2name: function(label) {
+        label2name(label) {
             return {
                 atmo_o2: 'Oxygen (O₂)',
                 atmo_co2: 'Carbon dioxide (CO₂)',

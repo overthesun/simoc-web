@@ -23,7 +23,7 @@ export default {
     methods: {
         // TODO this should be moved out of the dashboard store
         ...mapMutations('dashboard', ['SETMENUACTIVE']),
-        closeMenu: function() {
+        closeMenu() {
             // if the other menus want to perform additional
             // actions they can use beforeDestroy
             this.SETMENUACTIVE(false)

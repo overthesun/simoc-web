@@ -41,7 +41,7 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getDetailsPerAgent']),
-        selected_consumption: function() {
+        selected_consumption() {
             try {
                 if (this.selected_currency === null) {
                     this.selected_currency = Object.keys(this.consumptions)[0]
@@ -52,13 +52,13 @@ export default {
                 return null
             }
         },
-        consumptions: function() {
+        consumptions() {
             return this.getDetailsPerAgent(this.getCurrentStepBuffer).in
         },
     },
     methods: {
         stringFormatter: StringFormatter,
-        fix_unit: function(unit) {
+        fix_unit(unit) {
             // TODO: this is currently unused.  The server either sends the
             // unit or nothing if the value is 0, and if it's kWh we need to
             // use kW, so use hardcoded units for now

@@ -57,7 +57,7 @@ export default {
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
 
-        updateConfig: function(name) {
+        updateConfig(name) {
             // don't set [custom] if the user picks a preset
             this.dont_set_custom = true
             if (name === CUSTOM) {
@@ -66,7 +66,7 @@ export default {
                 this.SETPRESET(name)
             }
         },
-        saveToLocalStorage: function() {
+        saveToLocalStorage() {
             // save custom preset to local storage
             if (confirm('Save the current configuration as a custom preset?')) {
                 try {
@@ -79,7 +79,7 @@ export default {
                 alert('Custom preset saved.')
             }
         },
-        loadFromLocalStorage: function(ask_confirm) {
+        loadFromLocalStorage(ask_confirm) {
             // this is called either when the user selects "[Custom]" or
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
@@ -95,7 +95,7 @@ export default {
         },
     },
     watch: {
-        getResetConfig: function() {
+        getResetConfig() {
             // someone changed the resetconfig var, so we have to reset the form
             if (!this.getResetConfig) {
                 return  // only reset it when it's true
@@ -109,7 +109,7 @@ export default {
             this.SETRESETCONFIG(false)
         },
         getConfiguration: {
-            handler: function() {
+            handler() {
                 // Triggered when the configuration changed.
                 // This happens either when the user selected a new preset
                 // or when they edited a field.  If they selected a preset

@@ -19,7 +19,7 @@ export default {
         }
     },
 
-    beforeMount: function() {
+    beforeMount() {
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
@@ -76,7 +76,7 @@ export default {
         window.addEventListener('keydown', this.keyListener)
     },
 
-    beforeDestroy: function() {
+    beforeDestroy() {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
         this.STOPTIMER()   // stop the step timer
@@ -111,7 +111,7 @@ export default {
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
 
-        setupWebsocket: function() {
+        setupWebsocket() {
             const socket = this.socket = io()
             // console.log('socket created:', this.socket)
 
@@ -149,7 +149,7 @@ export default {
             })
         },
 
-        tearDownWebSocket: function() {
+        tearDownWebSocket() {
             if (this.socket !== null) {
                 if (this.socket.connected) {
                     console.log('Disconnecting user')
@@ -160,7 +160,7 @@ export default {
             }
         },
 
-        requestStepsNum: async function() {
+        async requestStepsNum() {
             // tell the backend how many steps we need for this game
 
             // use the total number of mission hours as the number of steps to be calculated
@@ -178,7 +178,7 @@ export default {
             }
         },
 
-        stepBufferTimer: async function() {
+        async stepBufferTimer() {
             // replaced by websockets
             const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
@@ -198,7 +198,7 @@ export default {
             }
         },
 
-        updateStepBuffer: async function(step_data) {
+        async updateStepBuffer(step_data) {
             // replaced by websockets
 
             // wait until all the steps have been parsed by parseStep
@@ -213,14 +213,14 @@ export default {
             }
         },
 
-        confirmBeforeLeaving: function(event) {
+        confirmBeforeLeaving(event) {
             // Use standard browser popup to ask the user before leaving
             event.preventDefault()
             event.returnValue = 'All unsaved data will be lost.'
             return 'All unsaved data will be lost.'
         },
 
-        killGame: async function() {
+        async killGame() {
             // See https://github.com/kstaats/simoc-web/issues/51#issuecomment-524494720
             // for some background on this method.
             // Stop the get_steps timer and tell the server
@@ -243,7 +243,7 @@ export default {
             }
         },
 
-        killGameOnUnload: function() {
+        killGameOnUnload() {
             // use sendBeacon to reliably send a kill_game during unload
             const params = {game_id: this.getGameID}
             var status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
@@ -252,7 +252,7 @@ export default {
             }
         },
 
-        keyListener: function(e) {
+        keyListener(e) {
             // Listen for these keypresses on the keyboard:
             //   spacebar: play/pause
             //   left/right arrows: ±1 step
@@ -312,7 +312,7 @@ export default {
     watch: {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
-        getCurrentStepBuffer: function() {
+        getCurrentStepBuffer() {
             // check that we have values in the buffer to avoid pausing
             // the timer when current/max are set to 0 at the beginning
             if ((this.getMaxStepBuffer > 1) &&
@@ -320,7 +320,7 @@ export default {
                 this.PAUSETIMER()
             }
         },
-        getStopped: function() {
+        getStopped() {
             // if the simulation got stopped, tell the server
             if (this.getStopped) {
                 this.killGame()

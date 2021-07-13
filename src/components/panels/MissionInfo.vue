@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
-        humanCount: function() {
+        humanCount() {
             let agents = this.getAgentType(this.getCurrentStepBuffer)
             if (agents !== undefined && agents['human_agent'] !== undefined) {
                 return agents['human_agent']
@@ -91,13 +91,13 @@ export default {
                 return this.getConfiguration.humans.amount
             }
         },
-        calcDays: function(totalHours) {
+        calcDays(totalHours) {
             var totalHours = Math.max(totalHours, 0)
             let days = Math.floor(totalHours/24)
             let hours = totalHours%24
             return days + 'd ' + hours + 'h 0m'
         },
-        calcSols: function(totalHours) {
+        calcSols(totalHours) {
             var totalHours = Math.max(totalHours, 0)
             let days = Math.floor(totalHours/24.629444)
             let hours = totalHours%24.629444

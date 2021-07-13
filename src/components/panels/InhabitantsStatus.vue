@@ -47,14 +47,14 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
                                     'getStorageCapacities', 'getGameConfig']),
-        step: function() {
+        step() {
             return this.getCurrentStepBuffer
         },
-        total_air_storage_capacity: function() {
+        total_air_storage_capacity() {
             // return the total capacity of the air storage
             return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
         },
-        o2: function() {
+        o2() {
             return this.attempt_read(() => {
                 const o2_perc = this.get_gas_percentage('atmo_o2')
                 /*
@@ -73,7 +73,7 @@ export default {
                 return o2_perc.toFixed(3) + '%'
             })
         },
-        co2: function() {
+        co2() {
             return this.attempt_read(() => {
                 const co2_perc = this.get_gas_percentage('atmo_co2')
                 /*
@@ -92,21 +92,21 @@ export default {
                 return co2_perc.toFixed(3) + '%'
             })
         },
-        water: function() {
+        water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
                 const h2o_potb = storage['water_storage'][1]['h2o_potb']
                 return h2o_potb.value + ' ' + h2o_potb.unit
             })
         },
-        food: function() {
+        food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
                 const food_edbl = storage['food_storage'][1]['food_edbl']
                 return food_edbl.value + ' ' + food_edbl.unit
             })
         },
-        humans: function() {
+        humans() {
             let agents = this.getAgentType(this.getCurrentStepBuffer)
             if (agents !== undefined && agents['human_agent'] !== undefined) {
                 return agents['human_agent']
@@ -118,7 +118,7 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
-        get_gas_percentage: function(currency) {
+        get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
             const air_storage = this.getStorageCapacities(this.step)['air_storage'][1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100

@@ -44,7 +44,7 @@ export default {
             duration_max: undefined,
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         // Get the values from the configuration that is initially set
         const {duration, location} = this.getConfiguration
         this.location = location
@@ -57,7 +57,7 @@ export default {
         ...mapMutations('wizard', ['SETINITIAL']),
         ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
 
-        setInitial: function() {
+        setInitial() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
             const value = {location: this.location, duration: this.duration}
@@ -74,7 +74,7 @@ export default {
             })
         },
         'getConfiguration.duration': {
-            handler: function() {
+            handler() {
                 // update and validate duration
                 const duration = this.getConfiguration.duration
                 this.duration = duration

@@ -21,7 +21,7 @@ import {BaseMenu} from '../../components/base'
 
 export default {
     components: {
-        BaseMenu: BaseMenu,
+        BaseMenu,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
@@ -29,7 +29,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        logout: async function() {
+        async logout() {
             if (!confirm('Do you want to log out?')) {
                 return
             }
@@ -40,7 +40,7 @@ export default {
             }
             this.$router.push('entry')
         },
-        downloadConfig: function() {
+        downloadConfig() {
             const form = this.$parent.$refs.form
             if (!form.checkValidity()) {
                 form.reportValidity()
@@ -56,17 +56,17 @@ export default {
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
             a.click()
         },
-        uploadConfig: function() {
+        uploadConfig() {
             this.$refs.configInputFile.click()
         },
-        handleConfig: function(e) {
+        handleConfig(e) {
             const files = e.target.files
             const config = files[0]
             const reader = new FileReader()
             reader.onload = ((file) => this.readConfig)(config)
             reader.readAsText(config)
         },
-        readConfig: function(e) {
+        readConfig(e) {
             try {
                 const json_config = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_config)
@@ -75,7 +75,7 @@ export default {
                 return
             }
         },
-        resetConfig: function() {
+        resetConfig() {
             if (!confirm('Reset the current configuration?')) {
                 return
             }

@@ -71,7 +71,7 @@ module.exports = {
         'dot-notation': 'error',
         'no-param-reassign': 'warn',
         'no-unused-vars': ['error', {args: 'after-used'}],
-        'object-shorthand': 'warn',
+        'object-shorthand': ['error', 'methods', {avoidQuotes: true}],
         'func-names': 'warn',
 
 
@@ -129,6 +129,7 @@ module.exports = {
             ignoreHTMLAttributeValues: false,
             ignoreHTMLTextContents: true,
         }],
+        'vue/html-indent': ['error', 4],
         'vue/html-quotes': ['error', 'double', {avoidEscape: true}],
         'vue/no-unused-vars': 'error',
         'vue/require-v-for-key': 'error',

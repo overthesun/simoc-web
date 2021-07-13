@@ -34,7 +34,7 @@ export default {
     watch: {
         // update the chart datasets and labels when the current step buffer has changed.
         getCurrentStepBuffer: {
-            handler: function() {
+            handler() {
                 const current = this.getCurrentStepBuffer
                 let value = this.getter(current)
                 let gauge_value = Math.min(value, this.maximum) // clip at max
@@ -74,7 +74,7 @@ export default {
                 },
                 tooltips: {
                     callbacks: {
-                        label: function(tooltipItems, data) {
+                        label(tooltipItems, data) {
                             // show "label: N%" in the tooltip
                             const label = data.labels[tooltipItems.index]
                             const value = data.datasets[0].data[tooltipItems.index]
@@ -97,7 +97,7 @@ export default {
                 circumference: 1 * Math.PI,
             },
             plugins: [{
-                beforeDraw: function(chart) {
+                beforeDraw(chart) {
                     var width = chart.chart.width
                     var height = chart.chart.height
                     var ctx = chart.chart.ctx

@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
-        getAgentGrowthPerc: function(index) {
+        getAgentGrowthPerc(index) {
             let agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
             if (agentGrowth === undefined) {
                 return '[loading data...]'

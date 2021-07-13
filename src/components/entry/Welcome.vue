@@ -57,10 +57,10 @@ to the entry screens to prevent this from popping up on repeat vistors.
 import {BaseEntry} from '../../components/base'
 export default {
     components: {
-        BaseEntry: BaseEntry,
+        BaseEntry,
     },
     methods: {
-        toLogin: function() {
+        toLogin() {
             this.$router.push('entry')
         },
     },

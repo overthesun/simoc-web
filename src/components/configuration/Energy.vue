@@ -51,7 +51,7 @@ export default {
             storage: undefined,
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         const {powerGeneration, powerStorage} = this.getConfiguration
         this.generator = powerGeneration
         this.storage = powerStorage
@@ -71,7 +71,7 @@ export default {
 
         // Set the selected values from above fields to the wizard store.
         // Called from all fields on change, and updates with all selected values from this form.
-        setEnergy: function() {
+        setEnergy() {
             const value = {powerGeneration: this.generator, powerStorage: this.storage}
             this.SETENERGY(value)
         },
@@ -81,7 +81,7 @@ export default {
         // when e.g. a config file is uploaded and the values in the store change)
         // and show error popups if the fields are invalid while the user is typing
         'getConfiguration.powerGeneration': {
-            handler: function() {
+            handler() {
                 const powerGeneration = this.getConfiguration.powerGeneration
                 this.generator = powerGeneration
                 this.$nextTick(function() {
@@ -94,7 +94,7 @@ export default {
             deep: true, // should trigger when powerGeneration.amount/type change
         },
         'getConfiguration.powerStorage': {
-            handler: function() {
+            handler() {
                 const powerStorage = this.getConfiguration.powerStorage
                 this.storage = powerStorage
                 this.$nextTick(function() {

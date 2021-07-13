@@ -22,7 +22,7 @@ export default {
             speedIndex: null,
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         // set the initial speed to 1x
         this.speedIndex = 2
         this.changeSpeed(0)
@@ -41,12 +41,12 @@ export default {
         }
         window.addEventListener('keydown', this.keyListener.bind(this))
     },
-    beforeDestroy: function() {
+    beforeDestroy() {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
         ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
-        changeSpeed: function(offset) {
+        changeSpeed(offset) {
             // Change the speed of the step timer.
             // offset can be -1 or +1 to use the previous/next speed in the array
             this.speedIndex = Math.max(0, Math.min(this.speeds.length-1, this.speedIndex+offset))

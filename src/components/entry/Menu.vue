@@ -29,14 +29,14 @@ import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        BaseEntry: BaseEntry,
+        BaseEntry,
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         // Sends the user to the configuration menu screen. See router.js
-        toConfiguration: function() {
+        toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
 
@@ -44,10 +44,10 @@ export default {
             this.$router.push('configuration')
         },
         // TODO: the next 3 methods are duplicated in the config menu
-        uploadSimData: function() {
+        uploadSimData() {
             this.$refs.simDataInputFile.click()
         },
-        handleSimData: function(e) {
+        handleSimData(e) {
             const files = e.target.files
             const simdata = files[0]
             const reader = new FileReader()
@@ -55,7 +55,7 @@ export default {
             reader.readAsText(simdata)
         },
         // read uploaded file, set vars, and go to the dashboard
-        readSimData: function(e) {
+        readSimData(e) {
             try {
                 const json_data = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_data.configuration)
@@ -72,7 +72,7 @@ export default {
         // Logout method called when the user hits the logout button
         // Sends the user back to the entry screen regardless
         // if the server has successfully logged them out
-        logout: async function() {
+        async logout() {
             try {
                 axios.get('/logout')
             } catch (error) {

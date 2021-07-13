@@ -55,11 +55,11 @@ export default {
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer: function() {
+        getCurrentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_storage: function() {
+        plotted_storage() {
             this.initChart()
         },
     },
@@ -70,7 +70,7 @@ export default {
 
     methods: {
         // TODO: this code is very similar to VersusGraph.vue
-        initChart: function() {
+        initChart() {
             [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
             if (this.chart) {
                 // when switching chart we have to destroy
@@ -108,7 +108,7 @@ export default {
                                 // of stopping at 100%, but with max: 100 it's
                                 // always stuck at 100% and it doesn't scale
                                 // when only small values are displayed
-                                callback: function(value, index, values) {
+                                callback(value, index, values) {
                                     return value + '%'
                                 },
                             },
@@ -137,7 +137,7 @@ export default {
             })
             this.updateChart()
         },
-        updateChart: function() {
+        updateChart() {
             const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)

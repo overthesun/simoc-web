@@ -44,13 +44,13 @@ export default {
         }
     },
     components: {
-        TheTopBar: TheTopBar,
-        DashboardMenu: DashboardMenu,
-        PlayButton: PlayButton,
-        Timeline: Timeline,
-        StepControls: StepControls,
-        SpeedControls: SpeedControls,
-        Main: Main,
+        TheTopBar,
+        DashboardMenu,
+        PlayButton,
+        Timeline,
+        StepControls,
+        SpeedControls,
+        Main,
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),

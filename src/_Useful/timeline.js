@@ -25,7 +25,7 @@ export default {
     computed: {
     },
     methods: {
-        updateStep: function() {
+        updateStep() {
             this.clock = setTimeout(() => {
                 this.value = parseInt(this.value) + 1
 
@@ -37,10 +37,10 @@ export default {
                 }
             }, 100)
         },
-        killClock: function() {
+        killClock() {
             window.clearInterval(this.clock)
         },
-        updateBuffer: function() {
+        updateBuffer() {
             let bufferClock = setTimeout(() => {
                 if (this.value < this.stepMax)
                     this.updateStep()

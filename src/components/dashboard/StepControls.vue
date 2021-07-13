@@ -22,10 +22,10 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['UPDATEBUFFERCURRENT']),
-        prevStep: function() {
+        prevStep() {
             this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer - 1)
         },
-        nextStep: function() {
+        nextStep() {
             this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
         },
     },

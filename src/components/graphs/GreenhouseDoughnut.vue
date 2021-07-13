@@ -77,7 +77,7 @@ export default {
     methods: {
         // Format the plant data to be used within the chart object.
 
-        greenhouseConfiguration: function() {
+        greenhouseConfiguration() {
             // get the plants and greenhouse from the configuration
             const {greenhouse, plantSpecies} = this.getConfiguration
             // Set the first value of the dataset to the size of the greenhouse
@@ -93,7 +93,7 @@ export default {
 
             return values
         },
-        updateChart: function() {
+        updateChart() {
             const {greenhouse, plantSpecies} = this.getConfiguration
             const {data, labels} = this.greenhouseConfiguration()
             this.chart.data.labels = labels  // labels are always visible
@@ -114,14 +114,14 @@ export default {
     watch: {
         // Watches for changes in getCurrentStepBuffer within the
         // dashboard store to update the graph in the dashboard
-        getCurrentStepBuffer: function() {
+        getCurrentStepBuffer() {
             this.updateChart()
         },
 
         // Watches for changes within the getConfiguration object within
         // the wizard store to update the graph in the config wizard
         getConfiguration: {
-            handler: function() {
+            handler() {
                 this.updateChart()
             },
             deep: true,
@@ -173,7 +173,7 @@ export default {
                 drawborder: false,
             },
             plugins: [{
-                beforeDraw: function(chart) {
+                beforeDraw(chart) {
                     var width = chart.chart.width
                     var height = chart.chart.height
                     var ctx = chart.chart.ctx

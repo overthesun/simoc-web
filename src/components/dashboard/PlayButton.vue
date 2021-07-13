@@ -24,11 +24,11 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer: function() {
+        pauseTimer() {
             // pause the timer when the user clicks on the pause button
             this.PAUSETIMER()
         },
-        resumeTimer: function() {
+        resumeTimer() {
             // start/resume the timer when the user clicks on the play button
             this.STARTTIMER()
         },

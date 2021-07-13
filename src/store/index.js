@@ -9,7 +9,7 @@ export default new Vuex.Store({
         gameID: '',
     },
     mutations: {
-        SETGAMEID: function(state, value) {
+        SETGAMEID(state, value) {
             state.gameID = value
         },
     },

@@ -32,7 +32,7 @@ import {mapState, mapGetters, mapMutations} from 'vuex'
 
 export default {
     components: {
-        BaseEntry: BaseEntry,
+        BaseEntry,
     },
     computed: {
         ...mapGetters('wizard', []),
@@ -40,14 +40,14 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
 
-        toMainMenu: function() {
+        toMainMenu() {
             this.$router.push('menu')
         },
-        toGuided: function() {
+        toGuided() {
             this.SETACTIVECONFIGTYPE('Guided')
             this.$router.push('configuration')
         },
-        toCustom: function() {
+        toCustom() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('configuration')
 

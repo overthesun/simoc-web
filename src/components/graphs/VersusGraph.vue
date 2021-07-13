@@ -32,11 +32,11 @@ export default {
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer: function() {
+        getCurrentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_value: function() {
+        plotted_value() {
             this.initChart()
         },
     },
@@ -47,7 +47,7 @@ export default {
 
     methods: {
         // TODO: this code is very similar to LevelsGraph.vue
-        initChart: function() {
+        initChart() {
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
@@ -118,7 +118,7 @@ export default {
             })
             this.updateChart()
         },
-        updateChart: function() {
+        updateChart() {
             const currentStep = this.getCurrentStepBuffer
             const data = this.chart.data
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)

@@ -76,16 +76,16 @@ import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        TheTopBar: TheTopBar,
-        ConfigurationMenu: ConfigurationMenu,
-        Presets: Presets,
-        Initial: Initial,
-        Inhabitants: Inhabitants,
-        Greenhouse: Greenhouse,
-        Energy: Energy,
-        Reference: Reference,
-        GreenhouseDoughnut: GreenhouseDoughnut,
-        Graphs: Graphs,
+        TheTopBar,
+        ConfigurationMenu,
+        Presets,
+        Initial,
+        Inhabitants,
+        Greenhouse,
+        Energy,
+        Reference,
+        GreenhouseDoughnut,
+        Graphs,
     },
     data() {
         return {
@@ -106,7 +106,7 @@ export default {
             },
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         this.RESETCONFIG()
         this.activeForm = this.getActiveForm
         this.activeConfigType = this.getActiveConfigType
@@ -120,11 +120,11 @@ export default {
                                  'getPresets', 'getSimdataLocation']),
 
         // Used to hide the normal button and display the active button
-        isFinalForm: function() {
+        isFinalForm() {
             return (this.getFormLength-1) === this.formIndex
         },
         // Hides the prvevious button if the active form is the first one.
-        isFirstForm: function() {
+        isFirstForm() {
             return this.formIndex === 0
         },
     },
@@ -136,28 +136,28 @@ export default {
         ...mapActions('wizard', ['SETCONFIGURATION']),
 
 
-        toggleMenu: function() {
+        toggleMenu() {
             this.menuActive = !this.menuActive
         },
 
         // Sets the active form, using the value from the select field
         // This happens automatically by changing the watched formIndex
-        setActiveForm: function(event) {
+        setActiveForm(event) {
             let {value: index} = event.target
             this.formIndex = parseInt(index)
         },
 
-        decrementIndex: function() {
+        decrementIndex() {
             let index = Math.max(0, (this.formIndex-1))
             this.formIndex = index
         },
 
-        incrementIndex: function() {
+        incrementIndex() {
             let max = this.getFormLength-1
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
-        handleAxiosError: function(error) {
+        handleAxiosError(error) {
             console.error(error)
             if (error.response && error.response.status == 401) {
                 alert('Please log in again to continue.')
@@ -167,7 +167,7 @@ export default {
             }
         },
 
-        importPresetData: function(preset) {
+        importPresetData(preset) {
             // import cached simulation data for the preset
             try {
                 console.log('* Loading cached simdata...')
@@ -181,7 +181,7 @@ export default {
             }
         },
 
-        launchSimulation: async function() {
+        async launchSimulation() {
             if (this.awaiting_response) {
                 return  // wait for a response before sending a new request
             }
@@ -252,7 +252,7 @@ export default {
     watch: {
         // If the active form changes update the activeForm variable with the one at the formIndex
         getActiveForm: {
-            handler: function() {
+            handler() {
                 this.activeForm = this.getActiveForm
             },
             deep: true,
@@ -260,7 +260,7 @@ export default {
         // If the form index changes update the active form with the one at the formIndex
         // Mostly used for when either the buttons or the select menu or used to navigate
         formIndex: {
-            handler: function() {
+            handler() {
                 this.SETACTIVEFORMINDEX(this.formIndex)
                 this.activeForm = this.getActiveForm
             },

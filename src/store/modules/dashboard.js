@@ -84,7 +84,7 @@ export default {
         getGameConfig: state => state.gameConfig,
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
-        getSimulationData: function(state) {
+        getSimulationData(state) {
             return {
                 README: 'Format may vary, only import from the main menu.',
                 game_config: state.gameConfig,
@@ -102,7 +102,7 @@ export default {
     },
     mutations: {
         // restore simulation data returned by getSimulationData
-        SETSIMULATIONDATA: function(state, simdata) {
+        SETSIMULATIONDATA(state, simdata) {
             state.gameConfig = simdata.game_config
             state.parameters = simdata.parameters
             state.totalConsumption = simdata.total_consumption
@@ -113,18 +113,18 @@ export default {
             state.storageCapacities = simdata.storage_capacities
             state.detailsPerAgent = simdata.details_per_agent
         },
-        SETPARAMETERS: function(state, value) {
+        SETPARAMETERS(state, value) {
             state.parameters = value
         },
         // show the dashboard menu when true, hide it otherwise
-        SETMENUACTIVE: function(state, value) {
+        SETMENUACTIVE(state, value) {
             state.menuActive = value
         },
-        SETLEAVEWITHOUTCONFIRMATION: function(state, value) {
+        SETLEAVEWITHOUTCONFIRMATION(state, value) {
             state.leaveWithoutConfirmation = value
         },
         // load from uploaded sim data when true, from the server if false
-        SETLOADFROMSIMDATA: function(state, value) {
+        SETLOADFROMSIMDATA(state, value) {
             state.loadFromSimData = value
         },
 
@@ -132,33 +132,33 @@ export default {
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
         // are met for a reasonable buffer amount.
-        STARTTIMER: function(state, value) {
+        STARTTIMER(state, value) {
             // if((state.maxStepBuffer >= 100 || state.terminated ) && !state.isTimerRunning){
             // console.log("Step Timer running")
             state.timerID.resume()
             state.isTimerRunning = true
             // }
         },
-        PAUSETIMER: function(state, value) {
+        PAUSETIMER(state, value) {
             // console.log("Step Timer paused")
             state.timerID.pause()
             state.isTimerRunning = false
         },
-        STOPTIMER: function(state, value) {
+        STOPTIMER(state, value) {
             if (state.timerID != null) {
                 // console.log("Step Timer stopped")
                 state.timerID.stop()
             }
             state.isTimerRunning = false
         },
-        SETTIMERID: function(state, value) {
+        SETTIMERID(state, value) {
             state.timerID = value
         },
-        SETGETSTEPSTIMERID: function(state, value) {
+        SETGETSTEPSTIMERID(state, value) {
             state.getStepsTimerID = value
         },
 
-        SETSTOPPED: function(state, value) {
+        SETSTOPPED(state, value) {
             // this var should be set only when we interrupt the
             // simulation before receiving all the steps
             state.stopped = value
@@ -167,63 +167,63 @@ export default {
             state.terminated = value
         },
 
-        SETTERMINATED: function(state, value) {
+        SETTERMINATED(state, value) {
             state.terminated = value
         },
         // Is the step_timer already been created and running initiall?
-        SETISTIMERRUNNING: function(state, value) {
+        SETISTIMERRUNNING(state, value) {
             state.isTimerRunning = value
         },
-        SETGAMEID: function(state, value) {
+        SETGAMEID(state, value) {
             state.parameters.game_id = value
         },
         // this is the full game_config returned by the backend after a /new_game
-        SETGAMECONFIG: function(state, value) {
+        SETGAMECONFIG(state, value) {
             state.gameConfig = value
         },
-        SETMINSTEPNUMBER: function(state, value) {
+        SETMINSTEPNUMBER(state, value) {
             state.parameters.min_step_num = value
         },
         // This is used for the starting step of get_step batches. Updated after every get_step call
-        UPDATEMINSTEPNUMBER: function(state, value) {
+        UPDATEMINSTEPNUMBER(state, value) {
             let {step_num: step} = value
             state.parameters.min_step_num = Math.max(step+1, state.parameters.min_step_num)
         },
         // This is used for the number of steps to grab from get_step_to,
         // after 100 steps have been buffered, . Updated after every get_step call
-        SETNSTEPS: function(state, value) {
+        SETNSTEPS(state, value) {
             let {step_num: step} = value
             state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
         // unconditionally set the maxStepBuffer
-        SETBUFFERMAX: function(state, value) {
+        SETBUFFERMAX(state, value) {
             state.maxStepBuffer = value
         },
         // conditionally update maxStepBuffer
-        UPDATEBUFFERMAX: function(state, value) {
+        UPDATEBUFFERMAX(state, value) {
             let {step_num: step} = value
             state.maxStepBuffer = Math.max(step, state.maxStepBuffer)
         },
         // unconditionally set the currentStepBuffer
-        SETBUFFERCURRENT: function(state, value) {
+        SETBUFFERCURRENT(state, value) {
             state.currentStepBuffer = value
         },
         // update the currentStepBuffer, making sure it's <= maxStepBuffer
-        UPDATEBUFFERCURRENT: function(state, value) {
+        UPDATEBUFFERCURRENT(state, value) {
             state.currentStepBuffer = Math.max(1, Math.min(value, state.maxStepBuffer))
         },
-        SETSTEPINTERVAL: function(state, value) {
+        SETSTEPINTERVAL(state, value) {
             state.stepInterval = value
             if (state.timerID != null) {
                 state.timerID.changeInterval(state.stepInterval)
             }
         },
-        SETAGENTTYPE: function(state, value) {
+        SETAGENTTYPE(state, value) {
             let {step_num: step} = value
             let {total_agent_count} = value
             state.agentCount[step] = total_agent_count
         },
-        SETAGENTGROWTH: function(state, value) {
+        SETAGENTGROWTH(state, value) {
             let{step_num: step, agent_growth} = value
             // If the plant skips a step we get a null, indicating that it didn't grow.
             // Instead of storing null, reuse the last value stored in lastAgentGrowth
@@ -241,31 +241,31 @@ export default {
             })
             state.agentGrowth[step] = agent_growth
         },
-        SETTOTALCONSUMPTION: function(state, value) {
+        SETTOTALCONSUMPTION(state, value) {
             let{step_num: step} = value
             let{total_consumption} = value
 
             state.totalConsumption[step] = total_consumption
         },
-        SETTOTALPRODUCTION: function(state, value) {
+        SETTOTALPRODUCTION(state, value) {
             let {step_num: step} = value
             let {total_production} = value
 
             state.totalProduction[step] = total_production
         },
-        SETSTORAGERATIOS: function(state, value) {
+        SETSTORAGERATIOS(state, value) {
             let {step_num: step} = value
             let {storage_ratios} = value
 
             state.storageRatio[step] = storage_ratios
         },
-        SETSTORAGECAPACITIES: function(state, value) {
+        SETSTORAGECAPACITIES(state, value) {
             let {step_num: step} = value
             let {storage_capacities} = value
 
             state.storageCapacities[step] = storage_capacities
         },
-        SETDETAILSPERAGENT: function(state, value) {
+        SETDETAILSPERAGENT(state, value) {
             let {step_num: step} = value
             let {details_per_agent} = value
 
@@ -276,7 +276,7 @@ export default {
         // Populates the parameters object with the selected plants from the
         // configuration wizard. This should actually called and updated similar to how the
         // wizard store updates its plants list on the fly.
-        SETPLANTSPECIESPARAM: function(state, value) {
+        SETPLANTSPECIESPARAM(state, value) {
             let {plantSpecies} = value
 
             plantSpecies.forEach((item) => {
@@ -284,16 +284,16 @@ export default {
                 state.agentGrowth[item.type] = 0
             })
         },
-        SETACTIVEPANELS: function(state, panels) {
+        SETACTIVEPANELS(state, panels) {
             state.activePanels = panels
         },
-        SETDEFAULTPANELS: function(state) {
+        SETDEFAULTPANELS(state) {
             state.activePanels = [
                 'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
                 'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
             ]
         },
-        INITGAME: function(state, value) {
+        INITGAME(state, value) {
             // set a new game_id and reset all other values
             state.parameters = {
                 // the game is set before reaching the dashboard and

@@ -42,17 +42,17 @@ export default {
         canvasNumber: 0,
     },
     components: {
-        Gauge: Gauge,
+        Gauge,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
-        total_storage_capacity: function() {
+        total_storage_capacity() {
             return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
         },
     },
     methods: {
-        airStorageGetter: function(currency) {
+        airStorageGetter(currency) {
             // TODO: handle multiple air_storages with an optional dropdown
             const total_storage_capacity = this.total_storage_capacity
             return (step) => {

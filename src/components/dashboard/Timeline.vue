@@ -29,7 +29,7 @@ export default {
         }
     },
 
-    mounted: function() {
+    mounted() {
         // start the timer when the component is mounted, the actual
         // visualization will start only when the buffer has enough data
         this.startTimer()
@@ -45,7 +45,7 @@ export default {
         ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
                                       'STOPTIMER', 'UPDATEBUFFERCURRENT']),
 
-        startTimer: function() {
+        startTimer() {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
@@ -64,7 +64,7 @@ export default {
 
         // called when the user starts dragging the timeline slider to
         // prevent updates while the user is interacting with the slider
-        pauseBuffer: function() {
+        pauseBuffer() {
             // update the graphs in real-time while the user drags
             this.UPDATEBUFFERCURRENT(this.currentStep)
             if (this.userIsDragging) {
@@ -80,7 +80,7 @@ export default {
         },
 
         // called when the user selects a new step on the timeline slider
-        updateBuffer: function() {
+        updateBuffer() {
             this.userIsDragging = false  // the user released the slider
             this.UPDATEBUFFERCURRENT(this.currentStep)
             // when the timer is paused and the slider moved beyond the max
@@ -91,7 +91,7 @@ export default {
             }
         },
 
-        updatePercentages: function() {
+        updatePercentages() {
             this.currentStep = this.getCurrentStepBuffer
             this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100
             this.bufferPercentage = (this.getMaxStepBuffer / this.getTotalMissionHours) * 100
@@ -99,8 +99,8 @@ export default {
     },
     watch: {
         // update scrubber percentages when the current and/or max step change
-        getCurrentStepBuffer: function() { this.updatePercentages() },
-        getMaxStepBuffer: function() { this.updatePercentages() },
+        getCurrentStepBuffer() { this.updatePercentages() },
+        getMaxStepBuffer() { this.updatePercentages() },
     },
 }
 </script>

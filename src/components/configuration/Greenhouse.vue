@@ -89,7 +89,7 @@ export default {
 
         // This method creates a new plant object within the wizard store.
         // It also makes sure that the user can't add more fields than there are options for plants.
-        addPlantSpecies: function() {
+        addPlantSpecies() {
             let {plantSpecies} = this.getConfiguration
             const arrLength = plantSpecies.length
             const maxLength = this.plantValue.length
@@ -103,15 +103,15 @@ export default {
         // The index is passed in from the above v-for index key when the fields are created.
         // Indexes are repopulated on deletion of any row. Row 3 becomes 2 if row 2 is deleted.
         // This is done automatically by Vue
-        updatePlantSpecies: function(index) {
+        updatePlantSpecies(index) {
             let plant = this.plantSpecies[index]
-            this.UPDATEPLANTSPECIES({index: index, plant: plant})
+            this.UPDATEPLANTSPECIES({index, plant})
         },
 
         // Set the greenhouse type within the wizard store. It also sets the default number of
         // greenhouses to one if any type other than 'none' is selected. Plants are not included
         // as they do their own thing differently than other form elements.
-        setGreenhouse: function() {
+        setGreenhouse() {
             this.greenhouse.amount = this.greenhouse.type == 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
             this.SETGREENHOUSE(value)
@@ -154,7 +154,7 @@ export default {
         // Format the plant names so that the first letter is capitalized and
         // remove any underscores or dashes and replace them with spaces.
         // TODO: use the function in javascript/utils.js
-        formatPlantName: function(name) {
+        formatPlantName(name) {
             let formatted = ''
 
             formatted = name.replace(/_/g, ' ')
@@ -172,12 +172,12 @@ export default {
 
         // this method should also be switch over to the try/catch block
         // of similar route calls. Simply to reduce the callback hell look.
-        retrievePlantSpecies: function() {
+        retrievePlantSpecies() {
             axios.defaults.withCredentials = true
 
             const params = {agent_class: 'plants'}
 
-            axios.get('/get_agent_types', {params: params}).then(response => {
+            axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach((item) => {
                         let {name} = item
@@ -194,7 +194,7 @@ export default {
                 }
             })
         },
-        updateAndValidate: function() {
+        updateAndValidate() {
             // validate and update greenhouse type
             const greenhouse = this.getConfiguration.greenhouse
             const gh_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
@@ -269,7 +269,7 @@ export default {
             this.updateAndValidate()
         },
         'getConfiguration.plantSpecies': {
-            handler: function() {
+            handler() {
                 this.updateAndValidate()
             },
             deep: true,

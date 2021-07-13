@@ -38,11 +38,11 @@ export default {
         panelSection: undefined,
     },
     components: {
-        LevelsGraph: LevelsGraph,
+        LevelsGraph,
     },
     computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
-        getStorages: function() {
+        getStorages() {
             return this.getGameConfig['storages']
         },
     },
@@ -50,12 +50,12 @@ export default {
         stringFormatter: StringFormatter,
     },
     watch: {
-        storage: function() {
+        storage() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, this.storage)
         },
-        getActivePanels: function() {
+        getActivePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.storage = this.getActivePanels[this.panelIndex].split(':')[1]
         },

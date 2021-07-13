@@ -37,29 +37,29 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
 
-        crewQuarters: function() {
+        crewQuarters() {
             return this.getConfiguration.crewQuarters
         },
-        eclss: function() {
+        eclss() {
             return this.getConfiguration.eclss
         },
-        powerGenerator: function() {
+        powerGenerator() {
             return this.getConfiguration.powerGeneration
         },
-        powerStorage: function() {
+        powerStorage() {
             return this.getConfiguration.powerStorage
         },
-        greenhouse: function() {
+        greenhouse() {
             return this.getConfiguration.greenhouse
         },
-        plantSpecies: function() {
+        plantSpecies() {
             return this.getConfiguration.plantSpecies
         },
     },
 
     watch: {
         plantSpecies: {
-            handler: function() {
+            handler() {
                 this.energy.plantSpecies[1] = 0
                 this.plantSpecies.forEach((element) => {
                     if (element.type != null && element.amount > 0) {
@@ -76,7 +76,7 @@ export default {
         },
 
         eclss: {
-            handler: function() {
+            handler() {
                 this.retrievePower(this.eclss.type, this.eclss.amount, (response) => {
                     let {energy_input} = response
                     this.energy.eclss[1] = energy_input
@@ -87,7 +87,7 @@ export default {
             deep: true,
         },
         crewQuarters: {
-            handler: function() {
+            handler() {
                 this.retrievePower(this.crewQuarters.type, 1, (response) => {
                     let {energy_input} = response
                     this.energy.crewQuarters[1] = energy_input
@@ -99,7 +99,7 @@ export default {
             deep: true,
         },
         greenhouse: {
-            handler: function() {
+            handler() {
                 this.retrievePower(this.greenhouse.type, 1, (response) => {
                     let {energy_input} = response
                     this.energy.greenhouse[1] = energy_input
@@ -110,7 +110,7 @@ export default {
             deep: true,
         },
         powerGenerator: {
-            handler: function() {
+            handler() {
                 this.retrievePower(
                     this.powerGenerator.type,
                     this.powerGenerator.amount,
@@ -125,7 +125,7 @@ export default {
             deep: true,
         },
         powerStorage: {
-            handler: function() {
+            handler() {
                 this.retrievePower(
                     this.powerStorage.type,
                     this.powerStorage.amount,
@@ -144,10 +144,10 @@ export default {
 
     methods: {
         // TODO request all data as a single json, do math client-side
-        retrievePower: function(agent, amount=1, callback) {
+        retrievePower(agent, amount=1, callback) {
             axios.defaults.withCredentials = true
             const params = {agent_name: agent, quantity: amount}
-            return axios.get('/get_energy', {params: params})
+            return axios.get('/get_energy', {params})
                     .then(response => {
                         if (response.status === 200) {
                             callback(response.data)
@@ -156,7 +156,7 @@ export default {
                         console.log(error)
                     })
         },
-        updateChart: function() {
+        updateChart() {
             // Instead of accepting a dataset for each row (i.e. one for
             // production and one for consumption), ChartJS wants several
             // datasets with a 2-elems [production, consumption] array.
@@ -207,7 +207,7 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             fontColor: '#eeeeee',
-                            callback: function(value, index, values) {
+                            callback(value, index, values) {
                                 return value + ' kWh'
                             },
                         },

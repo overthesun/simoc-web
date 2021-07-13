@@ -30,9 +30,9 @@ export default {
         }
     },
     components: {
-        BaseMenu: BaseMenu,
+        BaseMenu,
     },
-    mounted: function() {
+    mounted() {
         // save the status of the timer and pause it when the menu is opened
         this.timerWasRunning = this.getIsTimerRunning
         this.PAUSETIMER()
@@ -43,7 +43,7 @@ export default {
         ...mapGetters(['getGameID']),
     },
     // Called when the menu is closed, resumes the timer if it was running
-    beforeDestroy: function() {
+    beforeDestroy() {
         if (this.timerWasRunning) {
             this.STARTTIMER()
         }
@@ -54,13 +54,13 @@ export default {
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
 
         // Stop Simulation button, this stops the timers and the simulation
-        stopSimulation: async function() {
+        async stopSimulation() {
             this.PAUSETIMER()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
             this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
         },
         // Download Simulation button
-        downloadSimData: function() {
+        downloadSimData() {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
             let simdata = this.getSimulationData
@@ -75,17 +75,17 @@ export default {
             a.click()
         },
         // Save Panels Layout button
-        savePanelsLayout: function() {
+        savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.getActivePanels)
             localStorage.setItem('panels-layout', panelsLayout)
         },
         // Reset Panels Layout button
-        resetPanelsLayout: function() {
+        resetPanelsLayout() {
             localStorage.removeItem('panels-layout')
             this.SETDEFAULTPANELS()
         },
         // Logout button route
-        logout: async function() {
+        async logout() {
             if (!confirm('Stop the current simulation and log out?')) {
                 return
             }
@@ -102,7 +102,7 @@ export default {
         },
 
         // New Simulation button
-        toConfiguration: function() {
+        toConfiguration() {
             if (!confirm('Stop the current simulation and configure a new one?')) {
                 return
             }

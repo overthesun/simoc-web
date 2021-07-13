@@ -73,13 +73,13 @@ export default {
         }
     },
     components: {
-        BasePanel: BasePanel,
+        BasePanel,
         ...panels,  // add all panels as components
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getActivePanels']),
-        sortedPanels: function() {
+        sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             let sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
@@ -91,24 +91,24 @@ export default {
     methods: {
         ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
 
-        openPanelMenu: function(index) {
+        openPanelMenu(index) {
             // open the panel menu at index or close it if it's already open
             this.visibleMenu = (this.visibleMenu === index) ? null : index
         },
-        closePanelMenu: function(index) {
+        closePanelMenu(index) {
             // reset variables and close the menu
             this.replacePanel = null
             this.selectedPanel = null
             this.visiblePanelSelect = null
             this.visibleMenu = null
         },
-        showPanelSelect: function(index, replace) {
+        showPanelSelect(index, replace) {
             // show the panel select dropdown
             this.visiblePanelSelect = index
             // set whether the selected panel will replace the one at index or added at index+1
             this.replacePanel = replace  // 1: replace panel, 0: add new one
         },
-        updatePanels: function(index, replace) {
+        updatePanels(index, replace) {
             // do nothing if we are replacing a panel with the same panel
             if (this.replacePanel && this.selectedPanel == this.activePanels[index].split(':')[0]) {
                 this.closePanelMenu()
@@ -120,13 +120,13 @@ export default {
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
         },
-        updatePanelSection: function(index, section) {
+        updatePanelSection(index, section) {
             // update the section of the panel at index
             let panelName = this.activePanels[index].split(':')[0]
             this.activePanels[index] = [panelName, section].join(':')
             this.SETACTIVEPANELS(this.activePanels)
         },
-        removePanel: function(index) {
+        removePanel(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
             this.SETACTIVEPANELS(this.activePanels)
@@ -134,7 +134,7 @@ export default {
         },
     },
     watch: {
-        getActivePanels: function() {
+        getActivePanels() {
             this.activePanels = this.getActivePanels
         },
     },

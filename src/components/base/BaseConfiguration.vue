@@ -63,7 +63,7 @@ export default {
 
         // used to flag which section link is active within the reference navigation
         // uses class-binding to activate the class and underline the title
-        activeOption: function() {
+        activeOption() {
             return this.getActiveReference
         },
     },

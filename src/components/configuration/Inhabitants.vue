@@ -55,7 +55,7 @@ export default {
             eclss: undefined,
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         // Get the values from the configuration that is initially set
         const {humans, food, crewQuarters, eclss} = this.getConfiguration
         this.humans = humans
@@ -73,13 +73,13 @@ export default {
         ...mapMutations('wizard', ['SETINHABITANTS']),
         ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
 
-        setInhabitants: function() {
+        setInhabitants() {
             // Sets all related values for the inhabitants form into the wizard store.
             const value = {humans: this.humans, food: this.food,
                            crewQuarters: this.crewQuarters, eclss: this.eclss}
             this.SETINHABITANTS(value)
         },
-        validateRef: function(ref) {
+        validateRef(ref) {
             // wait for the fields to be updated before attempting validation
             this.$nextTick(function() {
                 this.$refs[ref].reportValidity()
@@ -91,7 +91,7 @@ export default {
         // The validation doesn't happen in setInhabitants because this is also triggered
         // when a config file is uploaded
         'getConfiguration.crewQuarters': {
-            handler: function() {
+            handler() {
                 const crewQuarters = this.getConfiguration.crewQuarters
                 // TODO: maybe the amount should be a hidden field
                 if (crewQuarters.type === 'none') {

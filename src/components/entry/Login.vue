@@ -71,7 +71,7 @@ import {BaseEntry} from '../../components/base'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components: {
-        BaseEntry: BaseEntry,
+        BaseEntry,
     },
 
     data() {
@@ -98,7 +98,7 @@ export default {
         }
     },
     computed: {
-        guestLoginLinkText: function() {
+        guestLoginLinkText() {
             return this.activeGuestLogin ? 'Return to SIGN IN.' : 'Sign in as a Guest.'
         },
     },
@@ -107,7 +107,7 @@ export default {
         // On registration make sure the username + password
         // meet the criteria before attempting to register.
         // Warnings cannot be active before attempting login.
-        registerUser: async function() {
+        async registerUser() {
             this.dismissWarning()  // clear existing warnings before starting
             // check criteria
             const usernameIsValid = await this.verifyUsername()
@@ -128,13 +128,13 @@ export default {
             // if no warnings were present pass in the username object to the register route
             if (!this.activeWarning) {
                 const {username, password} = this.register
-                const params = {username: username, password: password}
+                const params = {username, password}
                 await this.entryHandler(params, '/register')  // Attempt the route
             }
         },
 
         // Login the user if the criteria is met.
-        loginUser: async function() {
+        async loginUser() {
             this.dismissWarning()
             const loginCorrect = await this.verifyLogin()
 
@@ -153,7 +153,7 @@ export default {
         // This method should be converted over to the try/catch block as seen elsewhere.
         // Simply to reduce the callback hell.
         // It would also need to be made async in that case.
-        entryHandler: function(params, route) {
+        entryHandler(params, route) {
             axios.defaults.withCredentials = true
             axios.post(route, params).then(response => {
                 const {status} = response
@@ -212,17 +212,17 @@ export default {
         },
 
         // Make sure that the password and username are at least not empty before proceeding.
-        verifyLogin: function() {
+        verifyLogin() {
             const {username, password} = this.user
             return username.length > 0 && password.length > 0
         },
 
-        verifyUsername: function() {
+        verifyUsername() {
             const {username} = this.register
             const userRegex = RegExp('^[a-zA-Z0-9_.-]{4,}$')
             return userRegex.test(username)
         },
-        verifyPassword: function() {
+        verifyPassword() {
             const {password} = this.register
             const passRegex = RegExp('.{8,}')
             return passRegex.test(password)
@@ -230,20 +230,20 @@ export default {
 
         // Verifies that both the password field and confirm field match and neither is empty
         // Returns the solved boolean value
-        verifyPasswordMatch: function() {
+        verifyPasswordMatch() {
             const {password, confirmPassword} = this.register
             return password === confirmPassword
         },
 
         // add a warning and set the state to true
-        addWarning: function(warningsMsg) {
+        addWarning(warningsMsg) {
             this.activeWarnings.push(warningsMsg)
             this.activeWarning = true
         },
 
         // Called when the user closes the warning message popup.
         // Clears all warning entries.
-        dismissWarning: function() {
+        dismissWarning() {
             this.activeWarnings = []
             this.activeWarning = false
         },
@@ -251,15 +251,15 @@ export default {
         // Used to activate which section the user is under Sign In or Sign Up
         // Called from the above options sections within the HTMl, passes in the
         // name value of the section that should have the active class.
-        activateOption: function(sectionName) {
+        activateOption(sectionName) {
             this.dismissWarning()
             this.activeOption = sectionName
         },
-        showGuestLogin: function() {
+        showGuestLogin() {
             // swap between guest login and regular login
             this.activeGuestLogin = !this.activeGuestLogin
         },
-        guestLogin: function() {
+        guestLogin() {
             // create a random user/pass and use them to login as guest
             const rand_userid = ('guest-' + Date.now().toString(36) + '-' +
                                  Math.random().toString(36).substring(2, 15))

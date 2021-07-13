@@ -14,7 +14,7 @@ export default {
         canvasNumber: 0,
     },
     components: {
-        GreenhouseDoughnut: GreenhouseDoughnut,
+        GreenhouseDoughnut,
     },
 }
 </script>

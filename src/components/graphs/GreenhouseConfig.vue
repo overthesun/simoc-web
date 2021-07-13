@@ -30,10 +30,10 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
 
-        plantSpecies: function() {
+        plantSpecies() {
             return this.getConfiguration.plantSpecies
         },
-        greenhouseSize: function() {
+        greenhouseSize() {
             return this.greenhouseSizes[this.getConfiguration.greenhouse.type]
         },
     },
@@ -41,18 +41,18 @@ export default {
     watch: {
         // update graph when the plants or greenhouse change
         plantSpecies: {
-            handler: function() {
+            handler() {
                 this.updateChart()
             },
             deep: true,
         },
-        greenhouseSize: function() {
+        greenhouseSize() {
             this.updateChart()
         },
     },
 
     methods: {
-        updateChart: function() {
+        updateChart() {
             // Instead of accepting a dataset for each row (i.e. one for
             // production and one for consumption), ChartJS wants several
             // datasets with a 2-elems [production, consumption] array.
@@ -112,7 +112,7 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             fontColor: '#eeeeee',
-                            callback: function(value, index, values) {
+                            callback(value, index, values) {
                                 return value + ' m³'
                             },
                         },

@@ -196,7 +196,7 @@ export default {
 
         // This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
-        getTotalMissionHours: function(state) {
+        getTotalMissionHours(state) {
             let totalHours = 0
             let durationLength = state.configuration.duration.amount
             let durationUnits = state.configuration.duration.units
@@ -215,7 +215,7 @@ export default {
         },
 
         // Returns a formatted configuration object in the format required by the backend.
-        getFormattedConfiguration: function(state) {
+        getFormattedConfiguration(state) {
             const config = state.configuration
             // create formatted configuration
             let fconfig = {
@@ -250,7 +250,7 @@ export default {
     },
     mutations: {
         // this method is accessed through the SETCONFIGURATION/SETPRESET actions
-        set_config: function(state, value) {
+        set_config(state, value) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
@@ -275,23 +275,23 @@ export default {
             }
             state.configuration = newconfig
         },
-        SETINITIAL: function(state, value) {
+        SETINITIAL(state, value) {
             const {location, duration} = value
             state.configuration.location = location
             state.configuration.duration = duration
         },
-        SETINHABITANTS: function(state, value) {
+        SETINHABITANTS(state, value) {
             const {humans, food, crewQuarters, eclss} = value
             state.configuration.humans = humans
             state.configuration.food = food
             state.configuration.crewQuarters = crewQuarters
             state.configuration.eclss = eclss
         },
-        SETGREENHOUSE: function(state, value) {
+        SETGREENHOUSE(state, value) {
             const {greenhouse} = value
             state.configuration.greenhouse = greenhouse
         },
-        SETENERGY: function(state, value) {
+        SETENERGY(state, value) {
             const {powerGeneration, powerStorage} = value
             state.configuration.powerGeneration = powerGeneration
             state.configuration.powerStorage = powerStorage
@@ -336,7 +336,7 @@ export default {
         SETRESETCONFIG: (state, value) => {
             state.resetConfig = value
         },
-        RESETCONFIG: function(state) {
+        RESETCONFIG(state) {
             state.configuration = get_default_config()
             state.activeFormIndex = 0
             state.activeReference = 'Reference'
@@ -352,11 +352,11 @@ export default {
         // and a mutation instead.
         //
         // set the configuration directly
-        SETCONFIGURATION: function(context, config) {
+        SETCONFIGURATION(context, config) {
             context.commit('set_config', config)
         },
         // set the configuration from one of the default presets
-        SETPRESET: function(context, name) {
+        SETPRESET(context, name) {
             context.commit('set_config', context.state.presets[name])
         },
     },
