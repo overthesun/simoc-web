@@ -82,7 +82,7 @@ export default {
             const {greenhouse, plantSpecies} = this.getConfiguration
             // Set the first value of the dataset to the size of the greenhouse
             // and add the label free space
-            let values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
+            const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
             plantSpecies.forEach((item) => {
                 // Calculates the total free space left after all the plants are added,
                 // modifies the first index initialized above.
@@ -100,12 +100,12 @@ export default {
             if (greenhouse.type === 'none') {
                 // only show the text if the greenhouse type is none
                 this.chart.data.datasets[0].data = []
-                var text = 'No Greenhouse Type Selected'
+                const text = 'No Greenhouse Type Selected'
             } else {
                 // otherwise show both the doughnut and the text
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = data
-                var text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
+                const text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
             }
             this.chart.options.elements.centerText.text = text
             this.chart.update()
@@ -174,16 +174,14 @@ export default {
             },
             plugins: [{
                 beforeDraw(chart) {
-                    var width = chart.chart.width
-                    var height = chart.chart.height
-                    var ctx = chart.chart.ctx
+                    const {width, height, ctx} = chart.chart
 
                     ctx.restore()
-                    var fontSize = (height/300).toFixed(2)
+                    const fontSize = (height/300).toFixed(2)
                     ctx.font = fontSize + 'em sans-serif'
                     ctx.textBaseline = 'bottom'
 
-                    var text = chart.chart.options.elements.centerText.text,
+                    const {text} = chart.chart.options.elements.centerText,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
                         textY = height / 2
 

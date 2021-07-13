@@ -193,12 +193,8 @@ export default {
                 } else {
                     // we got a response back from the server
                     const {status} = error.response
-                    let {message} = error.response.data
-                    if (!message) {
-                        // if we don't get an err message from the server
-                        // fallback on a generic one
-                        message = error.message
-                    }
+                    // get the error msg from the server if available, or the generic one
+                    const message = error.response.data.message || error.message
                     this.$gtag.exception({description: message})
                     if (status === 401) {
                         this.addWarning('Login Error: ' + message)

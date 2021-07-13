@@ -64,7 +64,7 @@ export default {
                 O2 <= 12% -- red -- respiration and pulse increase
                 O2 <= 8% -- red2 -- terminated
                 */
-                for (let [k, threshold] of [8, 12, 15, 19.5, 100].entries()) {
+                for (const [k, threshold] of [8, 12, 15, 19.5, 100].entries()) {
                     if (o2_perc <= threshold) {
                         this.o2_style.color = this.colors[k]
                         break
@@ -83,7 +83,7 @@ export default {
                 CO2 >= 0.5% -- red -- adverse health effects
                 CO2 >= 1% -- red2 -- terminated
                 */
-                for (let [k, threshold] of [1, 0.5, 0.25, 0.1, 0].entries()) {
+                for (const [k, threshold] of [1, 0.5, 0.25, 0.1, 0].entries()) {
                     if (co2_perc >= threshold) {
                         this.co2_style.color = this.colors[k]
                         break
@@ -95,19 +95,19 @@ export default {
         water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const h2o_potb = storage['water_storage'][1]['h2o_potb']
+                const {h2o_potb} = storage['water_storage'][1]
                 return h2o_potb.value + ' ' + h2o_potb.unit
             })
         },
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const food_edbl = storage['food_storage'][1]['food_edbl']
+                const {food_edbl} = storage['food_storage'][1]
                 return food_edbl.value + ' ' + food_edbl.unit
             })
         },
         humans() {
-            let agents = this.getAgentType(this.getCurrentStepBuffer)
+            const agents = this.getAgentType(this.getCurrentStepBuffer)
             if (agents !== undefined && agents['human_agent'] !== undefined) {
                 return agents['human_agent']
             } else {

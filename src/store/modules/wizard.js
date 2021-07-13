@@ -198,8 +198,8 @@ export default {
         // As one step = one hour.
         getTotalMissionHours(state) {
             let totalHours = 0
-            let durationLength = state.configuration.duration.amount
-            let durationUnits = state.configuration.duration.units
+            const durationLength = state.configuration.duration.amount
+            const durationUnits = state.configuration.duration.units
 
             if (durationUnits === 'day') {
                 totalHours = durationLength * 24
@@ -218,7 +218,7 @@ export default {
         getFormattedConfiguration(state) {
             const config = state.configuration
             // create formatted configuration
-            let fconfig = {
+            const fconfig = {
                 duration: {type: config.duration.units, value: parseInt(config.duration.amount)},
                 human_agent: {amount: parseInt(config.humans.amount)},
                 food_storage: {food_edbl: parseInt(config.food.amount)},
@@ -254,13 +254,13 @@ export default {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
-            value = JSON.parse(JSON.stringify(value))
-            let newconfig = get_default_config()
-            let valid_keys = []
-            let invalid_keys = []
-            Object.keys(value).forEach((key, i) => {
+            const newvalue = JSON.parse(JSON.stringify(value))
+            const newconfig = get_default_config()
+            const valid_keys = []
+            const invalid_keys = []
+            Object.keys(newvalue).forEach((key, i) => {
                 if (newconfig.hasOwnProperty(key)) {
-                    newconfig[key] = value[key]
+                    newconfig[key] = newvalue[key]
                     valid_keys.push(key)
                 } else {
                     invalid_keys.push(key)
@@ -307,7 +307,7 @@ export default {
         },
         // Removes the plant at the index
         REMOVEPLANTSPECIES: (state, value) => {
-            let index = value
+            const index = value
             const arrLength = state.configuration.plantSpecies.length
             if (arrLength > 1) {
                 state.configuration.plantSpecies.splice(index, 1)

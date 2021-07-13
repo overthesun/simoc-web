@@ -90,7 +90,7 @@ export default {
         // This method creates a new plant object within the wizard store.
         // It also makes sure that the user can't add more fields than there are options for plants.
         addPlantSpecies() {
-            let {plantSpecies} = this.getConfiguration
+            const {plantSpecies} = this.getConfiguration
             const arrLength = plantSpecies.length
             const maxLength = this.plantValue.length
 
@@ -104,7 +104,7 @@ export default {
         // Indexes are repopulated on deletion of any row. Row 3 becomes 2 if row 2 is deleted.
         // This is done automatically by Vue
         updatePlantSpecies(index) {
-            let plant = this.plantSpecies[index]
+            const plant = this.plantSpecies[index]
             this.UPDATEPLANTSPECIES({index, plant})
         },
 
@@ -180,7 +180,7 @@ export default {
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach((item) => {
-                        let {name} = item
+                        const {name} = item
                         this.plantValue.push(name)
                         // console.log(this.formatPlantName(name))
                         this.formatPlantName(name)
@@ -196,7 +196,7 @@ export default {
         },
         updateAndValidate() {
             // validate and update greenhouse type
-            const greenhouse = this.getConfiguration.greenhouse
+            const {greenhouse} = this.getConfiguration
             const gh_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
             this.$refs.greenhouse_type.setCustomValidity(
                 gh_is_valid ? '' : 'Please select a valid greenhouse type.')
@@ -204,7 +204,7 @@ export default {
             this.greenhouse = greenhouse
 
             // validate and update plants
-            const plantSpecies = this.getConfiguration.plantSpecies
+            const {plantSpecies} = this.getConfiguration
             // TODO: this is duplicated in a number of places
             const greenhouse_size = {
                 none: 0,

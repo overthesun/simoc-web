@@ -67,7 +67,7 @@ export default {
     watch: {
         'getConfiguration.location': function() {
             // update location and report validity
-            const location = this.getConfiguration.location
+            const {location} = this.getConfiguration
             this.location = location
             this.$nextTick(function() {
                 this.$refs.location.reportValidity()
@@ -76,7 +76,7 @@ export default {
         'getConfiguration.duration': {
             handler() {
                 // update and validate duration
-                const duration = this.getConfiguration.duration
+                const {duration} = this.getConfiguration
                 this.duration = duration
                 // validate duration units
                 const validValues = this.getValidValues

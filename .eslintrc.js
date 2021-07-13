@@ -67,7 +67,7 @@ module.exports = {
         'no-shadow': 'error',
         'prefer-const': 'warn',
         'prefer-template': 'warn',
-        'prefer-destructuring': 'warn',
+        'prefer-destructuring': ['warn', {object: true, array: false}],
         'dot-notation': 'error',
         'no-param-reassign': 'warn',
         'no-unused-vars': ['error', {args: 'after-used'}],

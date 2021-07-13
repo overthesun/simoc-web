@@ -120,7 +120,7 @@ export default {
         },
         updateChart() {
             const currentStep = this.getCurrentStepBuffer
-            const data = this.chart.data
+            const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
             let startingStep
@@ -136,8 +136,8 @@ export default {
                 data.datasets[1].data.shift()
                 data.labels.shift()
                 if (step > 0) {
-                    let production = this.getTotalProduction(step)[this.plotted_value].value
-                    let consumption = this.getTotalConsumption(step)[this.plotted_value].value
+                    const production = this.getTotalProduction(step)[this.plotted_value].value
+                    const consumption = this.getTotalConsumption(step)[this.plotted_value].value
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)

@@ -81,7 +81,7 @@ export default {
         ...mapGetters('dashboard', ['getActivePanels']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
-            let sorted = []
+            const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
                 sorted.push([panel.panelTitle, panelName])
             })
@@ -115,14 +115,14 @@ export default {
                 return
             }
             // replace or add the selected panel
-            let panelName = this.selectedPanel
+            const panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
         },
         updatePanelSection(index, section) {
             // update the section of the panel at index
-            let panelName = this.activePanels[index].split(':')[0]
+            const panelName = this.activePanels[index].split(':')[0]
             this.activePanels[index] = [panelName, section].join(':')
             this.SETACTIVEPANELS(this.activePanels)
         },

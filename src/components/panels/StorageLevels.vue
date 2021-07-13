@@ -29,7 +29,7 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
         storage(step) {
-            let storage = this.getStorageCapacities(step)
+            const storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
             delete storage['nutrient_storage'][1]['biomass_edible']
             return storage

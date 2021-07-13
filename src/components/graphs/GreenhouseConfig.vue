@@ -71,7 +71,7 @@ export default {
             })
             // add datasets for each plant in the used row
             this.plantSpecies.forEach((plant, i) => {
-                let dataset = {
+                const dataset = {
                     label: plant.type,
                     backgroundColor: this.colors[i],
                     data: [null, plant.amount],

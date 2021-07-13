@@ -49,7 +49,7 @@ export default {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
-            let stepTimer = new StepTimer(() => {
+            const stepTimer = new StepTimer(() => {
                 // increment the step only if we have enough buffered steps
                 // TODO check the number of steps requests so we can still
                 // run simulations with a number of steps <= the limit

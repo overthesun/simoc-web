@@ -82,7 +82,7 @@ export default {
         // and show error popups if the fields are invalid while the user is typing
         'getConfiguration.powerGeneration': {
             handler() {
-                const powerGeneration = this.getConfiguration.powerGeneration
+                const {powerGeneration} = this.getConfiguration
                 this.generator = powerGeneration
                 this.$nextTick(function() {
                     // wait for the forms to update before validating,
@@ -95,7 +95,7 @@ export default {
         },
         'getConfiguration.powerStorage': {
             handler() {
-                const powerStorage = this.getConfiguration.powerStorage
+                const {powerStorage} = this.getConfiguration
                 this.storage = powerStorage
                 this.$nextTick(function() {
                     // same as above

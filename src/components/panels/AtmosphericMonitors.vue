@@ -54,7 +54,7 @@ export default {
     methods: {
         airStorageGetter(currency) {
             // TODO: handle multiple air_storages with an optional dropdown
-            const total_storage_capacity = this.total_storage_capacity
+            const {total_storage_capacity} = this
             return (step) => {
                 const amount = this.getStorageCapacities(step)['air_storage'][1][currency].value
                 return amount / total_storage_capacity * 100

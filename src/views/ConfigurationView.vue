@@ -143,17 +143,17 @@ export default {
         // Sets the active form, using the value from the select field
         // This happens automatically by changing the watched formIndex
         setActiveForm(event) {
-            let {value: index} = event.target
+            const {value: index} = event.target
             this.formIndex = parseInt(index)
         },
 
         decrementIndex() {
-            let index = Math.max(0, (this.formIndex-1))
+            const index = Math.max(0, (this.formIndex-1))
             this.formIndex = index
         },
 
         incrementIndex() {
-            let max = this.getFormLength-1
+            const max = this.getFormLength-1
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
@@ -187,7 +187,7 @@ export default {
             }
             // check if the form is valid
             this.validating = true
-            const form = this.$refs.form
+            const {form} = this.$refs
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return  // abort until the form is invalid
@@ -226,8 +226,8 @@ export default {
             // ask the server to calculate the simdata for custom (non-preset) configs
             try {
                 // get the formatted configuration from wizard store
-                var configParams = {step_num: this.getTotalMissionHours,
-                                    game_config: this.getFormattedConfiguration}
+                const configParams = {step_num: this.getTotalMissionHours,
+                                      game_config: this.getFormattedConfiguration}
             } catch (err_msg) {
                 alert(err_msg)
                 return  // abort if there are any errors

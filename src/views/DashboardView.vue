@@ -185,7 +185,7 @@ export default {
             if (!this.getTerminated) {
                 // if the sim is not terminated, set a timer that will
                 // retrieve and parse a batch of step
-                let getStepsTimerID = setTimeout(async() => {
+                const getStepsTimerID = setTimeout(async() => {
                     try {
                         const response = await axios.post('/get_steps', stepParams)
                         this.updateStepBuffer(response.data.step_data)
@@ -246,7 +246,7 @@ export default {
         killGameOnUnload() {
             // use sendBeacon to reliably send a kill_game during unload
             const params = {game_id: this.getGameID}
-            var status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
+            const status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
             if (status) {
                 console.log('Simulation terminated.')
             }

@@ -64,7 +64,7 @@ export default {
                 this.plantSpecies.forEach((element) => {
                     if (element.type != null && element.amount > 0) {
                         this.retrievePower(element.type, element.amount, (response) => {
-                            let {energy_input} = response
+                            const {energy_input} = response
                             this.energy.plantSpecies[1] += energy_input
                             this.updateChart()
                         })
@@ -78,7 +78,7 @@ export default {
         eclss: {
             handler() {
                 this.retrievePower(this.eclss.type, this.eclss.amount, (response) => {
-                    let {energy_input} = response
+                    const {energy_input} = response
                     this.energy.eclss[1] = energy_input
                     this.updateChart()
                 })
@@ -89,7 +89,7 @@ export default {
         crewQuarters: {
             handler() {
                 this.retrievePower(this.crewQuarters.type, 1, (response) => {
-                    let {energy_input} = response
+                    const {energy_input} = response
                     this.energy.crewQuarters[1] = energy_input
                     this.updateChart()
                 })
@@ -101,7 +101,7 @@ export default {
         greenhouse: {
             handler() {
                 this.retrievePower(this.greenhouse.type, 1, (response) => {
-                    let {energy_input} = response
+                    const {energy_input} = response
                     this.energy.greenhouse[1] = energy_input
                     this.updateChart()
                 })
@@ -115,7 +115,7 @@ export default {
                     this.powerGenerator.type,
                     this.powerGenerator.amount,
                     (response) => {
-                        let {energy_output} = response
+                        const {energy_output} = response
                         this.energy.powerGenerator[0] = energy_output
                         this.updateChart()
                     }
@@ -130,7 +130,7 @@ export default {
                     this.powerStorage.type,
                     this.powerStorage.amount,
                     (response) => {
-                        let {energy_capacity} = response
+                        const {energy_capacity} = response
                         // TODO: handle batteries
                         // this.energy.powerStorage = energy_capacity
                         // this.updateChart()
@@ -167,7 +167,7 @@ export default {
             // and vice versa.
             this.chart.data.datasets = []
             Object.keys(this.energy).forEach((key, i) => {
-                let dataset = {
+                const dataset = {
                     label: this.labels[i],
                     backgroundColor: this.colors[i],
                     data: this.energy[key],

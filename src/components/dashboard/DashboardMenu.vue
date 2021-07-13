@@ -63,7 +63,7 @@ export default {
         downloadSimData() {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
-            let simdata = this.getSimulationData
+            const simdata = this.getSimulationData
             simdata['configuration'] = this.getConfiguration
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)

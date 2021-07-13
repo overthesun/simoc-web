@@ -139,7 +139,7 @@ export default {
         },
         updateChart() {
             const currentStep = this.getCurrentStepBuffer
-            const data = this.chart.data
+            const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
             let startingStep
@@ -157,13 +157,13 @@ export default {
                 if (step > 0) {
                     const storage_capacities = this.getStorageCapacities(step)
                     const storage = storage_capacities[this.storage_name][this.storage_num]
-                    let tot_storage = Object.values(storage).reduce(
+                    const tot_storage = Object.values(storage).reduce(
                         (acc, elem) => acc + elem['value'], 0  // start from 0
                     )
                     Object.entries(storage).map(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
-                            let index = this.setsinfo[this.storage_name].order[key]
+                            const index = this.setsinfo[this.storage_name].order[key]
                             const ratio = (elem['value'] * 100 / tot_storage).toFixed(4)
                             data.datasets[index].data.push(ratio)
                         }

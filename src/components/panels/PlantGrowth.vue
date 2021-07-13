@@ -30,11 +30,11 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
         getAgentGrowthPerc(index) {
-            let agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
+            const agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
             if (agentGrowth === undefined) {
                 return '[loading data...]'
             } else {
-                let perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
+                const perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
                 return perc.toFixed(4) + '%'
             }
         },

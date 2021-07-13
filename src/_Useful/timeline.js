@@ -41,7 +41,7 @@ export default {
             window.clearInterval(this.clock)
         },
         updateBuffer() {
-            let bufferClock = setTimeout(() => {
+            const bufferClock = setTimeout(() => {
                 if (this.value < this.stepMax)
                     this.updateStep()
                 else

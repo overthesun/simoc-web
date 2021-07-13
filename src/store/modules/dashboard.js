@@ -186,13 +186,13 @@ export default {
         },
         // This is used for the starting step of get_step batches. Updated after every get_step call
         UPDATEMINSTEPNUMBER(state, value) {
-            let {step_num: step} = value
+            const {step_num: step} = value
             state.parameters.min_step_num = Math.max(step+1, state.parameters.min_step_num)
         },
         // This is used for the number of steps to grab from get_step_to,
         // after 100 steps have been buffered, . Updated after every get_step call
         SETNSTEPS(state, value) {
-            let {step_num: step} = value
+            const {step_num: step} = value
             state.parameters.n_steps = state.maxStepBuffer > 100 ? 100 : 10
         },
         // unconditionally set the maxStepBuffer
@@ -201,7 +201,7 @@ export default {
         },
         // conditionally update maxStepBuffer
         UPDATEBUFFERMAX(state, value) {
-            let {step_num: step} = value
+            const {step_num: step} = value
             state.maxStepBuffer = Math.max(step, state.maxStepBuffer)
         },
         // unconditionally set the currentStepBuffer
@@ -219,12 +219,12 @@ export default {
             }
         },
         SETAGENTTYPE(state, value) {
-            let {step_num: step} = value
-            let {total_agent_count} = value
+            const {step_num: step} = value
+            const {total_agent_count} = value
             state.agentCount[step] = total_agent_count
         },
         SETAGENTGROWTH(state, value) {
-            let{step_num: step, agent_growth} = value
+            const {step_num: step, agent_growth} = value
             // If the plant skips a step we get a null, indicating that it didn't grow.
             // Instead of storing null, reuse the last value stored in lastAgentGrowth
             Object.entries(agent_growth).forEach(([name, value]) => {
@@ -242,32 +242,32 @@ export default {
             state.agentGrowth[step] = agent_growth
         },
         SETTOTALCONSUMPTION(state, value) {
-            let{step_num: step} = value
-            let{total_consumption} = value
+            const {step_num: step} = value
+            const {total_consumption} = value
 
             state.totalConsumption[step] = total_consumption
         },
         SETTOTALPRODUCTION(state, value) {
-            let {step_num: step} = value
-            let {total_production} = value
+            const {step_num: step} = value
+            const {total_production} = value
 
             state.totalProduction[step] = total_production
         },
         SETSTORAGERATIOS(state, value) {
-            let {step_num: step} = value
-            let {storage_ratios} = value
+            const {step_num: step} = value
+            const {storage_ratios} = value
 
             state.storageRatio[step] = storage_ratios
         },
         SETSTORAGECAPACITIES(state, value) {
-            let {step_num: step} = value
-            let {storage_capacities} = value
+            const {step_num: step} = value
+            const {storage_capacities} = value
 
             state.storageCapacities[step] = storage_capacities
         },
         SETDETAILSPERAGENT(state, value) {
-            let {step_num: step} = value
-            let {details_per_agent} = value
+            const {step_num: step} = value
+            const {details_per_agent} = value
 
             state.detailsPerAgent[step] = details_per_agent
         },
@@ -277,7 +277,7 @@ export default {
         // configuration wizard. This should actually called and updated similar to how the
         // wizard store updates its plants list on the fly.
         SETPLANTSPECIESPARAM(state, value) {
-            let {plantSpecies} = value
+            const {plantSpecies} = value
 
             plantSpecies.forEach((item) => {
                 state.parameters.agent_growth.push(item.type)

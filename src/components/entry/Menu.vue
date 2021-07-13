@@ -48,7 +48,7 @@ export default {
             this.$refs.simDataInputFile.click()
         },
         handleSimData(e) {
-            const files = e.target.files
+            const {files} = e.target
             const simdata = files[0]
             const reader = new FileReader()
             reader.onload = ((file) => this.readSimData)(simdata)

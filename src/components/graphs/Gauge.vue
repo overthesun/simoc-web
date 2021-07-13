@@ -36,9 +36,9 @@ export default {
         getCurrentStepBuffer: {
             handler() {
                 const current = this.getCurrentStepBuffer
-                let value = this.getter(current)
-                let gauge_value = Math.min(value, this.maximum) // clip at max
-                let gauge_remainder = this.maximum - gauge_value
+                const value = this.getter(current)
+                const gauge_value = Math.min(value, this.maximum) // clip at max
+                const gauge_remainder = this.maximum - gauge_value
 
                 this.chart.data.labels = [this.label, 'to limit']
                 this.chart.data.datasets[0].data.pop()
@@ -98,18 +98,16 @@ export default {
             },
             plugins: [{
                 beforeDraw(chart) {
-                    var width = chart.chart.width
-                    var height = chart.chart.height
-                    var ctx = chart.chart.ctx
+                    const {width, height, ctx} = chart.chart
                     ctx.restore()
 
                     // scale the font size based on the width, so that
                     // it doesn't overlap with the gauge, but max 16px
-                    var fontSize = Math.min((width/8), 16).toFixed(2)
+                    const fontSize = Math.min((width/8), 16).toFixed(2)
                     ctx.font = fontSize + 'px sans-serif'
                     ctx.textBaseline = 'alphabetic'
 
-                    var text = chart.chart.options.elements.centerText.text,
+                    const {text} = chart.chart.options.elements.centerText,
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
                         arcH = width/2,  // height of the arc
                         textY = Math.min((height-arcH)/2 + arcH, height)

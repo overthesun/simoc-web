@@ -92,7 +92,7 @@ export default {
         // when a config file is uploaded
         'getConfiguration.crewQuarters': {
             handler() {
-                const crewQuarters = this.getConfiguration.crewQuarters
+                const {crewQuarters} = this.getConfiguration
                 // TODO: maybe the amount should be a hidden field
                 if (crewQuarters.type === 'none') {
                     this.humans.amount = 0  // can't have humans without crew quarters
@@ -109,7 +109,7 @@ export default {
             deep: true, // Must be used if the watched value is an object.
         },
         'getConfiguration.humans.amount': function() {
-            const humans = this.getConfiguration.humans
+            const {humans} = this.getConfiguration
             this.humans = humans
             // if we have humans, check that the crew quarter is selected before checking the ranges
             const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||

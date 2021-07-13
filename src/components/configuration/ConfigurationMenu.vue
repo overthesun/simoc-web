@@ -41,7 +41,7 @@ export default {
             this.$router.push('entry')
         },
         downloadConfig() {
-            const form = this.$parent.$refs.form
+            const {form} = this.$parent.$refs
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return  // abort if the form is invalid
@@ -60,7 +60,7 @@ export default {
             this.$refs.configInputFile.click()
         },
         handleConfig(e) {
-            const files = e.target.files
+            const {files} = e.target
             const config = files[0]
             const reader = new FileReader()
             reader.onload = ((file) => this.readConfig)(config)
