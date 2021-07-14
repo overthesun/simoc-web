@@ -19,7 +19,7 @@
             <template v-slot:main-wizard-input>
                 <form class="form-wrapper" ref="form" @submit.prevent="">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
-                    <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'"/>
+                    <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
                     <!-- Else, if we are in the Custom config or in the Finalize step
                          of the Guided config, show all components -->
                     <section class="form-wrapper" :class="{'validating': validating}"
@@ -54,13 +54,12 @@
             <template v-slot:main-wizard-reference>
                 <keep-alive>
                     <!-- Display the component with the name stored in the variable-->
-                    <component :is="getActiveReference"/>
+                    <component :is="getActiveReference" />
                 </keep-alive>
                 <!--<Reference/>-->
                 <!--<GreenhouseDoughnut/>-->
             </template>
-            <template v-slot:footer-wizard-reference>
-            </template>
+            <template v-slot:footer-wizard-reference />
         </router-view>
     </div>
 

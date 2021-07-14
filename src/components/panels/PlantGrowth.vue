@@ -8,7 +8,7 @@
             </tr>
             <tr v-for="(item,index) in getConfiguration.plantSpecies"
                 v-if="item.type != ''" :key="index">
-                <td >{{stringFormatter(item.type)}}</td>
+                <td>{{stringFormatter(item.type)}}</td>
                 <td>{{item.amount}}</td>
                 <td>{{getAgentGrowthPerc(index)}}</td>
             </tr>

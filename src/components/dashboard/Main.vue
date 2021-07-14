@@ -14,7 +14,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
-                        <fa-icon class="fa-icon menu-icon" :icon="['fas','bars']"/>
+                        <fa-icon class="fa-icon menu-icon" :icon="['fas','bars']" />
                     </div>
                     <!-- the options menu -->
                     <div class="panel-menu-options" v-if="index === visibleMenu">
@@ -40,7 +40,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
             <template v-slot:panel-content>
                 <component :is="panelName" :canvasNumber="index"
                            :panelIndex="index" :panelSection="panelSection"
-                           v-on:panel-section-changed="updatePanelSection"></component>
+                           v-on:panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
     </div>

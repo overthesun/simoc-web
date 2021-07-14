@@ -6,7 +6,7 @@
              for displaying or hiding
         -->
         <div class="warning-wrapper" :class="{'warning-active': activeWarning}">
-            <fa-icon class="fa-icon dismiss-icon" :icon="['fas','times']" @click="dismissWarning"/>
+            <fa-icon class="fa-icon dismiss-icon" :icon="['fas','times']" @click="dismissWarning" />
             <div class="warning-item" v-for="(item,index) in activeWarnings" :key="index">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
@@ -25,8 +25,8 @@
             <template v-slot:entry-main>
                 <section class="entry-form entry-form-login" :class="{'entry-form-active': activeOption==='login'}">
                     <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id="login-form">
-                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username"/>
-                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password"/>
+                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
+                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                         Guest accounts are temporary and will be deleted on a regular basis.</p>
@@ -36,11 +36,11 @@
                          :class="{'entry-form-active': activeOption==='register'}">
                     <form @submit.prevent="registerUser" id="register-form">
                         <input v-model="register.username" type="text" class="input-field-text"
-                               placeholder="Choose Username"/>
+                               placeholder="Choose Username">
                         <input v-model="register.password" type="password" class="input-field-text"
-                               placeholder="Enter Password"/>
+                               placeholder="Enter Password">
                         <input v-model="register.confirmPassword" type="password" class="input-field-text"
-                               placeholder="Confirm Password"/>
+                               placeholder="Confirm Password">
                     </form>
                 </section>
             </template>

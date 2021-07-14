@@ -7,8 +7,8 @@
             Select an agent to get started.
         </div>
         <div class="editor" :class="{'hidden': activeAgent === null}">
-            <div id="agentEditor" :class="{'hidden': isCustomAgent}"></div>
-            <div id="customEditor" :class="{'hidden': !isCustomAgent}"></div>
+            <div id="agentEditor" :class="{'hidden': isCustomAgent}" />
+            <div id="customEditor" :class="{'hidden': !isCustomAgent}" />
         </div>
     </div>
 </template>

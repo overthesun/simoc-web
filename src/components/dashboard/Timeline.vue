@@ -10,7 +10,7 @@
                             #d0d0d0 ' + currentPercentage +'%, \
                             #d0d0d0 '+ bufferPercentage +'%, \
                             #444343 ' + bufferPercentage + '%, \
-                            #444343 100%)'}" >
+                            #444343 100%)'}">
         </span>
     </div>
 </template>

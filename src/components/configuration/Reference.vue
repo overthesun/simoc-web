@@ -10,7 +10,7 @@ using v-for to populate all links with the title and the approriate value for th
     <div class="encyclopedia-wrapper">
         <div class="reference-item" v-if="getActiveRefEntry === 'Welcome'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Welcome To SIMOC
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Welcome To SIMOC
             </div>
             <div class="reference-item-entry">
                 <p>Welcome to SIMOC, a scalable, interactive model of an off-world community. Here you will enjoy the challenges and rewards of designing a habitat for <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Inhabitants')">humans</a> and <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> using data from four decades of NASA research that defines the simulated interactions.</p>
@@ -25,7 +25,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Presets'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Presets
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Presets
             </div>
             <div class="reference-item-entry">
                 <p>The Presets are a means to explore simple configurations of the SIMOC simulation, to learn how the agents interact and affect each other over time. With Preset 1 you venture to Mars with one human, one <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a>, and plenty of food rations for a 10 days mission. You’ll make it. But this is not a static system. Note how CO₂, O₂, food, and power change with time. As with all scientific studies, we encourage you to change one variable at a time. Next, modify this baseline by adding another human, or increase the stay without increasing the food rations. <i>What happens?</i></p>
@@ -37,7 +37,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Location'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Location
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Location
             </div>
             <div class="reference-item-entry">
                 <p>This version of SIMOC offers one location: Mars.  It is assumed the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a> has been built to your specifications and deployed in advance of your arrival.  The habitat is located close to the equator for relatively equal periods of day and night through the Martian year.</p>
@@ -48,7 +48,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Duration'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Mission Duration
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Mission Duration
             </div>
             <div class="reference-item-entry">
                 <p>The duration of your mission may be set in hours, days, or years. Each unit of simulated time (a "time step") is equivalent to one hour Earth time. Therefore a duration of 240 time steps is a simulation of 10 Earth days. While the rotational period for each celestial body is unique from that of Earth, SIMOC is set to Earth time due to the fact that the human body is biologically set to Earth time, and the growth cycle of the available <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a>, as defined by data provided by NASA, is also measured in Earth time.</p>
@@ -60,7 +60,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Inhabitants'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Inhabitants
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Inhabitants
             </div>
             <div class="reference-item-entry">
                 <p>While you can use SIMOC to simulate a plant-only configuration, if you design a mission that includes humans, then Environmental Control and Life Support System (<a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a>), <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Food')">food</a>, and a <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">crew quarters</a> are required. It is assumed the food and life support required to bring the humans from Earth to Mars are already accounted for, your SIMOC mission starting the day you land and occupy the habitat. Be certain to provide ample food for the astronauts to consume until the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a> produces the first edible <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a>. You must include at least one ECLSS to maintain breathable air and potable water, as well as manage human waste products. The ELCSS will likely continue to be used when the plants are harvested or plant growth is not maintained due to environmental constraints.</p>
@@ -70,14 +70,14 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Food'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Food Supply
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Food Supply
             </div>
             <div class="reference-item-entry">
                 <p>It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
                 <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (cabbage) while others offer very little for the human to digest (wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO2 reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
                 <p>The following table can be used as a reference for the amount of food required (in kg):</p>
                 <table id="food-table">
-                    <tr><td colspan="2" rowspan="2"></td><th colspan="7">Mission Duration (Earth days)</th></tr>
+                    <tr><td colspan="2" rowspan="2" /><th colspan="7">Mission Duration (Earth days)</th></tr>
                     <tr><th>1</th><th>7</th><th>30</th><th>90</th><th>180</th><th>365</th></tr>
                     <tr><th rowspan="5">Inhabitants</th><th>1</th><td>1.5</td><td>10.5</td><td>45</td><td>135</td><td>270</td><td>547.5</td></tr>
                     <tr><th>2</th><td>3</td><td>21</td><td>90</td><td>270</td><td>540</td><td>1095</td></tr>
@@ -90,7 +90,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'CrewQuarters'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Crew Quarters
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Crew Quarters
             </div>
             <div class="reference-item-entry">
                 <p>In selecting your crew quarters, it is prudent to consider a balance between the volume required to support the number of astronauts you have chosen, for their physical comfort and the benefits of a larger space. In the real world, we would be concerned with the amount of communal and personal space the inhabitants enjoy. As SIMOC does not currently simulate psycho-social interactions, you may consider the volume of a larger space as an atmosphere storage buffer. In times of reduced breathable atmosphere (power outage), a larger habitat can provide breathable air for a longer period of time. However, a larger habitat is also more massive, consuming more fuel and payload in transit from Earth to the destination (currently recorded but not tracked).</p>
@@ -101,7 +101,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'ECLSS'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> ECLSS
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> ECLSS
             </div>
             <div class="reference-item-entry">
                 <p>An Environmental Control and Life Support System (ECLSS) is a tightly integrated, mechanical and chemical system whose function is to maintain clean air, water, and relative humidity while sustaining a comfortable temperature for <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Inhabitants')">human</a> occupants of a closed environment, as used on submarines, the International Space Station, and near future off-world habitats.</p>
@@ -114,7 +114,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'Greenhouse'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Greenhouse
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Greenhouse
             </div>
             <div class="reference-item-entry">
                 <p>As with the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">crew quarters</a>, the size of the greenhouse is your choice. If you intend for your astronauts to consume only the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Food')">food</a> they have brought with them and rely fully on <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">mechanical life support</a>, a greenhouse is not required. If you desire for your astronauts to consume some fresh fruits, vegetables, and grains, and for the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> to offset atmosphere and water recycling, a greenhouse is an integral component to a long-duration mission.</p>
@@ -125,7 +125,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'PlantSpecies'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Plant Species
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Plant Species
             </div>
             <div class="reference-item-entry">
                 <p>If your elect to provide your astronauts with something more interesting than <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Food')">food rations</a> for a long <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Duration')">duration</a> mission, a <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a> and plants are a welcomed respite from the monotony of meals in squeeze bottles and aluminum foil containers. Not only do fruits and vegetables provide nutrients and calories, they also help maintain a breathable atmosphere and clean water, off-setting, maybe even replacing the function of the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> modules. When selecting your plants you will also select the percentage of the total volume of the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a> allocated to each plant species.</p>
@@ -138,7 +138,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'PowerGeneration'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Power Generation
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Power Generation
             </div>
             <div class="reference-item-entry">
                 <p>Select the number of solar photovoltaic (PV) panels required to sustain the electrical power needs of your <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a>. This includes electric heat, lighting for the human occupied space, and grow lights for the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PlantSpecies')">plants</a> in the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a>, <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> operation, radio communication from the habitat to the orbiter, and personal computers.</p>
@@ -151,7 +151,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div class="reference-item" v-if="getActiveRefEntry === 'PowerStorage'">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')"/> Power Storage
+                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents" @click="SETACTIVEREFENTRY('Table')" /> Power Storage
             </div>
             <div class="reference-item-entry">
                 <p>While <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('PowerGeneration')">solar PV panels</a> generate power by day, it is the batteries that provide power at night. Therefore, the total battery capacity should be large enough to power the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Greenhouse')">greenhouse</a> grow lights, which extends beyond day light hours, with ample power for the <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('CrewQuarters')">habitat</a> through an entire Martian night.</p>

@@ -13,7 +13,7 @@
                 <button form="login-form" class="btn-normal" @click="toAce"
                         :class="{'hidden': !showAgentEditor}">AGENT EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile"
-                       ref="simDataInputFile" @change="handleSimData" />
+                       ref="simDataInputFile" @change="handleSimData">
             </template>
             <template v-slot:entry-button>
                 <div class="btn-wrapper">

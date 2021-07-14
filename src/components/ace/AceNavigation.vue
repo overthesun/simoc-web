@@ -7,7 +7,7 @@
                 @click="toggle(section)">
                 {{ stringFormatter(section) }}
             </div>
-            <div class="menu" :class="{'menu-open': isOpen[section]}" >
+            <div class="menu" :class="{'menu-open': isOpen[section]}">
                 <div v-for="agent in Object.keys(agentDesc[section])" :key="section+agent" class="agent-wrapper">
                     <div
                         class="agent"

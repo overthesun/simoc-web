@@ -2,7 +2,7 @@
 
 <template>
     <div class="base-entry-wrapper">
-        <router-view/>
+        <router-view />
     </div>
 </template>
 

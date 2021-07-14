@@ -3,18 +3,18 @@
 <template>
     <div class="entry-wrapper">
         <header class="header">
-            <img src="../../assets/simoc-logo.svg" class="simoc-logo"/>
+            <img src="../../assets/simoc-logo.svg" class="simoc-logo">
             <span class="simoc-logo-title">SIMOC</span>
-            <img src="../../assets/natgeo-trans.png" class="natgeo-logo"/>
+            <img src="../../assets/natgeo-trans.png" class="natgeo-logo">
         </header>
         <div class="main-options">
-            <slot name="option-items"></slot>
+            <slot name="option-items" />
         </div>
         <main class="main">
-            <slot name="entry-main"></slot>
+            <slot name="entry-main" />
         </main>
         <div class="entry-button-wrapper">
-            <slot name="entry-button"></slot>
+            <slot name="entry-button" />
         </div>
         <footer class="footer">
             <a class="link" title="Go to the simoc.space homepage" target="_blank"

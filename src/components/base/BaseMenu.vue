@@ -4,7 +4,7 @@
     <div id="main-menu-wrapper" @click="closeMenu">
         <div id="menu-wrapper">
             <header>
-                <img src="../../assets/simoc-logo.svg" class="simoc-logo"/>
+                <img src="../../assets/simoc-logo.svg" class="simoc-logo">
                 <span class="simoc-logo-title">SIMOC</span>
             </header>
             <div id="menu-title">

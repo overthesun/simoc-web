@@ -1,6 +1,6 @@
 <template>
     <div class="panel-graph">
-        <GreenhouseDoughnut :id="'canvas'+ canvasNumber"/>
+        <GreenhouseDoughnut :id="'canvas'+ canvasNumber" />
     </div>
 </template>
 

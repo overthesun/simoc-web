@@ -10,19 +10,19 @@ menu button being present on other unrelated configurations.
  -->
 
 <template>
-    <div class="configuration-wrapper" >
+    <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
         <section class="wizard-wrapper" :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
             <nav v-if="getActiveConfigType === 'Guided'" class="navigation-wrapper">
-                <slot name="navigation-section-select"></slot>
+                <slot name="navigation-section-select" />
             </nav>
             <main class="main main-wizard">
-                <slot name="main-wizard-input"></slot>
+                <slot name="main-wizard-input" />
             </main>
             <footer class="footer">
-                <slot name="wizard-configuration-footer"></slot>
+                <slot name="wizard-configuration-footer" />
             </footer>
         </section>
         <!-- The reference side of the wizard screen -->
@@ -46,10 +46,10 @@ menu button being present on other unrelated configurations.
                      :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
             </nav>
             <main class="main main-reference">
-                <slot name="main-wizard-reference"></slot>
+                <slot name="main-wizard-reference" />
             </main>
             <footer class="footer">
-                <slot name="footer-wizard-reference"></slot>
+                <slot name="footer-wizard-reference" />
             </footer>
         </section>
     </div>

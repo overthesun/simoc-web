@@ -1,7 +1,6 @@
 <template>
     <div class="base-dashboard-wrapper">
-        <router-view>
-        </router-view>
+        <router-view />
     </div>
 </template>
 

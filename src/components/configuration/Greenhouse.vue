@@ -28,7 +28,7 @@
                 <select class="input-field-select" ref="plant_selects"
                         v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
-                    <option :value="name" v-for="(name,k) in plantValue" :key="k" >{{plantFormatted[k]}}</option>
+                    <option :value="name" v-for="(name,k) in plantValue" :key="k">{{plantFormatted[k]}}</option>
                 </select>
                 <label><input class="input-field-number" ref="plant_inputs" type="number"
                               min="0" :max="plantMax[index]" pattern="^\d+$"
@@ -39,7 +39,7 @@
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)">
                     <!-- Deletes the object at the specicied key within the wizard store. -->
-                    <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7"/>
+                    <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>
             </div>
         </label>
