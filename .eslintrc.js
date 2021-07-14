@@ -149,6 +149,8 @@ module.exports = {
         }],
         'vue/html-indent': ['error', 4],
         'vue/html-quotes': ['error', 'double', {avoidEscape: true}],
+        'vue/no-spaces-around-equal-signs-in-attribute': 'error',
+        'vue/no-multi-spaces': 'error',
         'vue/no-unused-vars': 'error',
         'vue/require-v-for-key': 'error',
         'vue/no-parsing-error': 'error',
@@ -156,6 +158,8 @@ module.exports = {
         'vue/require-prop-type-constructor': 'warn',
         'vue/no-use-v-if-with-v-for': 'warn',
 
+        'vue/singleline-html-element-content-newline': 'off',
+        'vue/multiline-html-element-content-newline': 'off',
         'vue/comment-directive': 'off',
 
 

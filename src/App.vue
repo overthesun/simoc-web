@@ -1,12 +1,12 @@
 <template>
-  <div id="app" class="app">
-      <div class="orientation-portrait">
-        <img src="./assets/orientation.svg" class="orientation-logo"/>
-      </div>
-      <div class="normal orientation-landscape">
-        <router-view />
-      </div>
-  </div>
+    <div id="app" class="app">
+        <div class="orientation-portrait">
+            <img src="./assets/orientation.svg" class="orientation-logo"/>
+        </div>
+        <div class="normal orientation-landscape">
+            <router-view />
+        </div>
+    </div>
 </template>
 
 

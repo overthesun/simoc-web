@@ -8,17 +8,17 @@
 
         <dl v-if="info_section == 'mission-status'">
             <dt v-if="getGameID">Mission ID:</dt>
-                <dd v-if="getGameID">{{getGameID}}</dd>
+            <dd v-if="getGameID">{{getGameID}}</dd>
             <dt>Location:</dt>
-                <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dd>{{stringFormatter(getConfiguration.location)}}</dd>
             <dt>Duration:</dt>
-                <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
             <dt>Mars days:</dt>
-                <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
             <dt>Earth days:</dt>
-                <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
             <dt>Inhabitants:</dt>
-                <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
+            <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
             <!-- TODO: restore this when we get the value from the backend
             <dt>Food:</dt>
                 <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
@@ -26,38 +26,38 @@
 
         <dl v-if="info_section == 'mission-config'">
             <dt>Location:</dt>
-                <dd>Mars</dd>
+            <dd>Mars</dd>
             <dt>Duration:</dt>
-                <dd>{{getConfiguration.duration.amount}} {{stringFormatter(getConfiguration.duration.units)}}</dd>
+            <dd>{{getConfiguration.duration.amount}} {{stringFormatter(getConfiguration.duration.units)}}</dd>
             <dt>Food:</dt>
-                <dd>{{getConfiguration.food.amount}} {{getConfiguration.food.units}}</dd>
+            <dd>{{getConfiguration.food.amount}} {{getConfiguration.food.units}}</dd>
             <dt>Crew Quarters:</dt>
-                <dd>{{stringFormatter(getConfiguration.crewQuarters.type).split(' ').pop()}}</dd>
+            <dd>{{stringFormatter(getConfiguration.crewQuarters.type).split(' ').pop()}}</dd>
             <dt>Greenhouse:</dt>
-                <dd>{{stringFormatter(getConfiguration.greenhouse.type).split(' ').pop()}}</dd>
+            <dd>{{stringFormatter(getConfiguration.greenhouse.type).split(' ').pop()}}</dd>
             <dt>Solar PV Array:</dt>
-                <dd>{{getConfiguration.powerGeneration.amount}} panels</dd>
+            <dd>{{getConfiguration.powerGeneration.amount}} panels</dd>
             <dt>Batteries:</dt>
-                <dd>{{getConfiguration.powerStorage.amount}} {{getConfiguration.powerStorage.units}}</dd>
+            <dd>{{getConfiguration.powerStorage.amount}} {{getConfiguration.powerStorage.units}}</dd>
             <dt>ECLSS:</dt>
-                <dd>{{getConfiguration.eclss.amount}}</dd>
+            <dd>{{getConfiguration.eclss.amount}}</dd>
             <dt>Inhabitants:</dt>
-                <dd>{{getConfiguration.humans.amount}}</dd>
+            <dd>{{getConfiguration.humans.amount}}</dd>
         </dl>
 
         <dl v-if="info_section == 'location-info'">
             <dt>Location:</dt>
-                <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dd>{{stringFormatter(getConfiguration.location)}}</dd>
             <dt>Day length:</dt>
-                <dd>24h 37m 23s</dd>
+            <dd>24h 37m 23s</dd>
             <dt>Surface Temperature:</dt>
-                <dd>210 K | -63 °C | -81 °F</dd>
+            <dd>210 K | -63 °C | -81 °F</dd>
             <dt>Solar Gain:</dt>
-                <dd>500 W/m²</dd>
+            <dd>500 W/m²</dd>
             <dt>Atmospheric Pressure:</dt>
-                <dd>0.636 kPa</dd>
+            <dd>0.636 kPa</dd>
             <dt>Gravity:</dt>
-                <dd>3.71 m/s²</dd>
+            <dd>3.71 m/s²</dd>
         </dl>
 
     </section>

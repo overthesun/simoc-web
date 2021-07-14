@@ -1,12 +1,12 @@
 <template>
     <div class="panel-graph">
         <select v-model="storage" required>
-          <template v-for="(stor_group, stor_name) in getStorages">
-            <option v-for="(stor, stor_id) in stor_group" :value="stor_name + '/' + (stor_id+1)"
-                    v-if="Object.keys(stor).length > 2">
-              {{stringFormatter(stor_name)}} {{stor_id+1}}
-            </option>
-          </template>
+            <template v-for="(stor_group, stor_name) in getStorages">
+                <option v-for="(stor, stor_id) in stor_group" :value="stor_name + '/' + (stor_id+1)"
+                        v-if="Object.keys(stor).length > 2">
+                    {{stringFormatter(stor_name)}} {{stor_id+1}}
+                </option>
+            </template>
         </select>
         <div>
             <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted_storage="storage" />

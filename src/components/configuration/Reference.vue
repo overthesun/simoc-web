@@ -19,7 +19,7 @@ using v-for to populate all links with the title and the approriate value for th
             </div>
             <div class="reference-item-entry">
                 <i>You can click on the <fa-icon :icon="['fas','info-circle']" />
-                icons on the left to navigate to the corresponding entries.</i>
+                    icons on the left to navigate to the corresponding entries.</i>
             </div>
         </div>
 
@@ -77,12 +77,12 @@ using v-for to populate all links with the title and the approriate value for th
                 <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (cabbage) while others offer very little for the human to digest (wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO2 reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
                 <p>The following table can be used as a reference for the amount of food required (in kg):</p>
                 <table id="food-table">
-                  <tr><td colspan="2" rowspan="2"></td><th colspan="7">Mission Duration (Earth days)</th></tr>
-                  <tr><th>1</th><th>7</th><th>30</th><th>90</th><th>180</th><th>365</th></tr>
-                  <tr><th rowspan="5">Inhabitants</th><th>1</th><td>1.5</td><td>10.5</td><td>45</td><td>135</td><td>270</td><td>547.5</td></tr>
-                  <tr><th>2</th><td>3</td><td>21</td><td>90</td><td>270</td><td>540</td><td>1095</td></tr>
-                  <tr><th>5</th><td>7.5</td><td>52.5</td><td>225</td><td>675</td><td>1350</td><td>2737.5</td></tr>
-                  <tr><th>10</th><td>15</td><td>105</td><td>450</td><td>1350</td><td>2700</td><td>5475</td></tr>
+                    <tr><td colspan="2" rowspan="2"></td><th colspan="7">Mission Duration (Earth days)</th></tr>
+                    <tr><th>1</th><th>7</th><th>30</th><th>90</th><th>180</th><th>365</th></tr>
+                    <tr><th rowspan="5">Inhabitants</th><th>1</th><td>1.5</td><td>10.5</td><td>45</td><td>135</td><td>270</td><td>547.5</td></tr>
+                    <tr><th>2</th><td>3</td><td>21</td><td>90</td><td>270</td><td>540</td><td>1095</td></tr>
+                    <tr><th>5</th><td>7.5</td><td>52.5</td><td>225</td><td>675</td><td>1350</td><td>2737.5</td></tr>
+                    <tr><th>10</th><td>15</td><td>105</td><td>450</td><td>1350</td><td>2700</td><td>5475</td></tr>
                 </table>
                 <p><i>FOOD is not required if no astronauts are selected.</i></p>
             </div>

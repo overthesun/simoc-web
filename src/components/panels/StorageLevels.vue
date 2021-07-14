@@ -7,7 +7,7 @@
                 <dl>
                     <template v-for="(value, name) in stor_values">
                         <dt>{{label2name(name)}}</dt>
-                            <dd>{{value.value}} {{value.unit}}</dd>
+                        <dd>{{value.value}} {{value.unit}}</dd>
                     </template>
                 </dl>
             </template>

@@ -4,19 +4,19 @@
             <dt title="&lt;=19.5%: minimum permissible level; &lt;=15%: decreased ability to work strenuously;
                        &lt;=12%: respiration and pulse increase; &lt;=8%: termination">
                 O₂ (min. 8%):</dt>
-                <dd :style="o2_style">{{o2}}</dd>
+            <dd :style="o2_style">{{o2}}</dd>
             <dt title="&gt;=0.1%: complaints of stiffness and odors; &gt;=0.25%: general drowsiness;
                        &gt;=0.5%: adverse health effects; &gt;=1%: termination">
                 CO₂ (max. 1%):</dt>
-                <dd :style="co2_style">{{co2}}</dd>
+            <dd :style="co2_style">{{co2}}</dd>
             <dt title="Inhabitants are terminated after 3 days with no water">
                 Potable Water (sans 3 days):</dt>
-                <dd>{{water}}</dd>
+            <dd>{{water}}</dd>
             <dt title="Inhabitants are terminated after 20 days with no food">
                 Food (sans 20 days):</dt>
-                <dd>{{food}}</dd>
+            <dd>{{food}}</dd>
             <dt>Inhabitants:</dt>
-                <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
+            <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
         </dl>
         <div id="humans">
             <fa-icon class="alive" v-for="h in humans" v-bind:key="h" :icon="['fas','male']" />

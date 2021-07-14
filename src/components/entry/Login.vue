@@ -29,7 +29,7 @@
                         <input v-model="user.password" type="password" class="input-field-text" placeholder="Password"/>
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
-                              Guest accounts are temporary and will be deleted on a regular basis.</p>
+                        Guest accounts are temporary and will be deleted on a regular basis.</p>
                     <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                 </section>
                 <section class="entry-form entry-form-register"

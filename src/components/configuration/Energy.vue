@@ -16,10 +16,10 @@
                     TODO: this is hardcoded on Mars and is currently the only option -->
                     <option value="solar_pv_array_mars" selected>Solar PV Array</option>
                 </select>
-                 <label><input class="input-field-number" ref="generator_input" type="number"
-                               pattern="^\d+$" placeholder="Quantity" required
-                               :min="generatorValues.min" :max="generatorValues.max"
-                               v-on:input="setEnergy" v-model="generator.amount"> panels</label>
+                <label><input class="input-field-number" ref="generator_input" type="number"
+                              pattern="^\d+$" placeholder="Quantity" required
+                              :min="generatorValues.min" :max="generatorValues.max"
+                              v-on:input="setEnergy" v-model="generator.amount"> panels</label>
             </div>
         </label>
         <label class="input-wrapper">

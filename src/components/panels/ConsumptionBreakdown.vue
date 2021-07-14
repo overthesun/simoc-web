@@ -2,18 +2,18 @@
     <section class="panel-dl-wrapper">
         <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <template v-else>
-        <p v-if="selected_consumption === null">[Missing data]</p>
-        <select v-else v-model="selected_currency" required id="currency-select">
-            <option  v-for="(data, name) in consumptions" :value="name" :key="name">
-                {{currencies[name]}}
-            </option>
-        </select>
-        <dl>
-            <template v-for="(agent_data, agent_name) in selected_consumption">
-            <dt>{{stringFormatter(agent_name)}}</dt>
-                <dd>{{agent_data.value}} {{units[selected_currency]}}</dd>
-            </template>
-        </dl>
+            <p v-if="selected_consumption === null">[Missing data]</p>
+            <select v-else v-model="selected_currency" required id="currency-select">
+                <option v-for="(data, name) in consumptions" :value="name" :key="name">
+                    {{currencies[name]}}
+                </option>
+            </select>
+            <dl>
+                <template v-for="(agent_data, agent_name) in selected_consumption">
+                    <dt>{{stringFormatter(agent_name)}}</dt>
+                    <dd>{{agent_data.value}} {{units[selected_currency]}}</dd>
+                </template>
+            </dl>
         </template>
     </section>
 </template>

@@ -1,19 +1,19 @@
 <template>
-  <section class="plant-growth-wrapper">
-      <table class="plant-growth">
-          <tr>
-              <th>Plant Species</th>
-              <th>Qty</th>
-              <th>% of Growth</th>
-          </tr>
-          <tr v-for="(item,index) in getConfiguration.plantSpecies"
-              v-if="item.type != ''" :key="index">
-              <td >{{stringFormatter(item.type)}}</td>
-              <td>{{item.amount}}</td>
-              <td>{{getAgentGrowthPerc(index)}}</td>
-          </tr>
-      </table>
-  </section>
+    <section class="plant-growth-wrapper">
+        <table class="plant-growth">
+            <tr>
+                <th>Plant Species</th>
+                <th>Qty</th>
+                <th>% of Growth</th>
+            </tr>
+            <tr v-for="(item,index) in getConfiguration.plantSpecies"
+                v-if="item.type != ''" :key="index">
+                <td >{{stringFormatter(item.type)}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{getAgentGrowthPerc(index)}}</td>
+            </tr>
+        </table>
+    </section>
 </template>
 
 
