@@ -182,7 +182,7 @@ export default {
                 // imported dynamically and lazily and that they shoultn't be bundled
                 const simdata = await import('../assets/simdata/' + fname + '.json')
                 return simdata.default  // get the actual data out of the module object
-            } catch(error) {
+            } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
                 console.error(error)
                 return null

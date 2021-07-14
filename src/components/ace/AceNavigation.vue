@@ -2,7 +2,7 @@
     <div class="ace-nav-wrapper">
         <div v-for="section in sections" :key="section">
             <div 
-                class='section' 
+                class="section" 
                 :class="{'section-active': section === activeSection}" 
                 @click="toggle(section)">
                 {{ stringFormatter(section) }}
@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     data() {
-        return{
+        return {
             isOpen: {},
         }
     },
@@ -49,7 +49,7 @@ export default {
             sections: 'getSections',
             activeSection: 'getActiveSection',
             activeAgent: 'getActiveAgent',
-            editorValid: 'getEditorValid'
+            editorValid: 'getEditorValid',
         }),
     },
     mounted() {
@@ -58,18 +58,18 @@ export default {
         })
     },
     methods: {
-        ...mapMutations('ace',['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
+        ...mapMutations('ace', ['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
 
         stringFormatter: StringFormatter,
 
-        toggle: function(section) {
+        toggle(section) {
             this.$set(this.isOpen, section, !this.isOpen[section])
         }, 
 
-        handleAgent: function(section, agent) {
+        handleAgent(section, agent) {
             if (!this.editorValid) {
                 // If user doesn't confirm, return without changing screens
-                if (!confirm("The current agent configuration is invalid. Revert changes?")) {
+                if (!confirm('The current agent configuration is invalid. Revert changes?')) {
                     return
                 }
             }
@@ -77,16 +77,16 @@ export default {
             this.SETACTIVEAGENT(agent)
         },
 
-        handleAddAgent: function(section) {
+        handleAddAgent(section) {
             this.ADDAGENT(section)
         },
 
-        handleRemoveAgent: function(section, agent) {
+        handleRemoveAgent(section, agent) {
             if (confirm(`Are you sure you want to remove '${agent}'?`)) {
                 this.REMOVEAGENT({section: section, agent: agent})
             }
         },
-    }
+    },
 }
 </script>
 

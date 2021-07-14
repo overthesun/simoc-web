@@ -17,10 +17,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
-import {DownloadConfig,UploadConfig,Logout} from '../menu'
+import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
 export default {
     components: {
@@ -32,20 +31,20 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
 
-        isValid: function() {
-            const form = this.$parent.$refs.form
+        isValid() {
+            const {form} = this.$parent.$refs
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return false
             } else {
                 return true
             }
-        }
+        },
     },
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        handleUpload: function(json_config) {
+        handleUpload(json_config) {
             this.SETCONFIGURATION(json_config)
         },
         resetConfig() {

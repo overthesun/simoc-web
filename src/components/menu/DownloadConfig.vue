@@ -10,7 +10,7 @@ export default {
         config: null,
         fileName: {
             type: String,
-            default: 'simoc_download.json'
+            default: 'simoc_download.json',
         },
         alertUserOnInvalid: {
             type: Boolean,
@@ -18,15 +18,15 @@ export default {
         },
         buttonText: {
             type: String,
-            default: 'Download Configuration'
-        }
+            default: 'Download Configuration',
+        },
     },
     methods: {
-        handleClick: function() {
+        handleClick() {
             // abort if parent declares invalid
             if (!this.isValid) {
                 if (this.alertUserOnInvalid) {
-                    alert("Current form invalid")
+                    alert('Current form invalid')
                 }
                 return
             }
@@ -46,7 +46,7 @@ export default {
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
             a.click()
         },
-    }
+    },
 }
 </script>
 

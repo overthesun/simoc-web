@@ -1,7 +1,8 @@
 <template>
     <button  @click="uploadConfig">
         {{ buttonText }}
-        <input type="file" accept="application/json" id="configInputFile" ref="configInputFile" @change="handleUpload" />
+        <input type="file" accept="application/json" id="configInputFile"
+               ref="configInputFile" @change="handleUpload" />
     </button>
 </template>
 
@@ -14,41 +15,41 @@ export default {
         },
         buttonText: {
             type: String,
-            default: 'Upload Configuration'
-        }
+            default: 'Upload Configuration',
+        },
     },
     methods: {
-        uploadConfig: function() {
+        uploadConfig() {
             this.$refs.configInputFile.click()
         },
         // ref: (both functions) https://blog.shovonhasan.com/using-promises-with-filereader/
-        readUploadedFileAsText: function(inputFile) {
+        readUploadedFileAsText(inputFile) {
             const temporaryFileReader = new FileReader()
 
             return new Promise((resolve, reject) => {
                 temporaryFileReader.onerror = () => {
-                    temporaryFileReader.abort();
-                    reject(new DOMException("Problem parsing input file."))
-                };
+                    temporaryFileReader.abort()
+                    reject(new DOMException('Problem parsing input file.'))
+                }
                 temporaryFileReader.onload = () => {
                     resolve(temporaryFileReader.result)
-                };
+                }
                 temporaryFileReader.readAsText(inputFile)
             })
         },
-        handleUpload: async function(event) {
+        async handleUpload(event) {
             const file = event.target.files[0]
             try {
                 await this.readUploadedFileAsText(file).then(data => {
-                    let parsed = JSON.parse(data)
+                    const parsed = JSON.parse(data)
                     this.handleFile(parsed)
                 })
             } catch (e) {
                 alert('An error occurred while reading the file.')
                 console.warn(e.message)
             }
-        }
-    }
+        },
+    },
 }
 </script>
 

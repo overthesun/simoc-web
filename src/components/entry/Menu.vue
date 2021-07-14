@@ -8,9 +8,9 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
-                <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button form='login-form' class='btn-normal' @click="toAce"
+                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button form="login-form" class="btn-normal" @click="toAce"
                         :class="{'hidden': !showAgentEditor}">AGENT EDITOR</button>
                 <input type="file" accept="application/json" id="simDataInputFile"
                        ref="simDataInputFile" @change="handleSimData" />
@@ -33,7 +33,7 @@ import {BaseEntry} from '../base'
 export default {
     data() {
         return {
-            showAgentEditor: false
+            showAgentEditor: false,
         }
     },
     components: {
@@ -54,7 +54,7 @@ export default {
         // Send the user to the ACE Configuration Editor
         toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("ace")
+            this.$router.push('ace')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
@@ -90,10 +90,10 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
         // Adapted from '../views/DashboardView.vue'
-        keyListener: function(e) {
+        keyListener(e) {
             let key_matched = true
             switch (e.key) {
                 case 'a':
@@ -106,13 +106,13 @@ export default {
             if (key_matched) {
                 e.preventDefault()
             }
-        }
+        },
     },
     mounted() {
         window.addEventListener('keydown', this.keyListener)
     },
     beforeDestroy() {
-        window.removeEventListener('keydown', this.keyListener);
+        window.removeEventListener('keydown', this.keyListener)
     },
 }
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import {EntryView, ConfigurationView, DashboardView} from './views'
+import {EntryView, ConfigurationView, DashboardView, AceView} from './views'
 import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
 import {BaseConfiguration, BaseDashboard} from './components/base'
 // import {Login,Welcome,MainMenu} from './components/entry'
@@ -16,7 +16,6 @@ export default new Router({
         {
             path: '/',
             component: EntryView,
-
             children: [
                 {
                     path: '',
@@ -41,40 +40,32 @@ export default new Router({
             ],
         },
         {
-          path:'menuconfig',
-          name:'menuconfig',
-          component:EntryMenuConfig
+            path: 'menuconfig',
+            name: 'menuconfig',
+            component: EntryMenuConfig,
         },
-      ]
-    },
-    {
-      path:"/ace",
-      name:"ace",
-      component:AceView,
-
-    },
-    {
-      path:"/configuration",
-      name:"configuration",
-      component:ConfigurationView,
-
-            children: [
-                {
-                    path: '/configuration',
-                    component: BaseConfiguration,
-                },
-            ],
+        {
+            path: '/ace',
+            name: 'ace',
+            component: AceView,
+        },
+        {
+            path: '/configuration',
+            name: 'configuration',
+            component: ConfigurationView,
+            children: [{
+                path: '/configuration',
+                component: BaseConfiguration,
+            }],
         },
         {
             path: '/dashboard',
             name: 'dashboard',
             component: DashboardView,
-            children: [
-                {
-                    path: '/dashboard',
-                    component: BaseDashboard,
-                },
-            ],
+            children: [{
+                path: '/dashboard',
+                component: BaseDashboard,
+            }],
         },
     ],
 })

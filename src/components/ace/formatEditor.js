@@ -1,18 +1,18 @@
 const formatEditor = (editorName) => {
 
     // Nested panels for each node
-    var panels = document.getElementsByClassName('je-indented-panel')
+    const panels = document.getElementsByClassName('je-indented-panel')
     panels.forEach(panel => panel.classList.add('editor-panel'))
 
     // Select currency bar
-    var tabHolders = document.getElementsByClassName('je-tabholder')
+    const tabHolders = document.getElementsByClassName('je-tabholder')
     tabHolders.forEach(tabholder => tabholder.classList.add('editor-tabholder'))
 
     // Currency tab button
-    var tabs = document.getElementsByClassName('je-tab')
+    const tabs = document.getElementsByClassName('je-tab')
     tabs.forEach(tab => tab.classList.add('editor-tab'))
 
-    var contents = document.getElementsByClassName('content')
+    const contents = document.getElementsByClassName('content')
     contents.forEach(content => content.classList.add('editor-content'))
 
     // Buttons match dashboard panel buttons
@@ -30,8 +30,8 @@ const formatEditor = (editorName) => {
     })
 
     // Remove Collapse button & 'Agent' at top of editor
-    var editor = document.getElementById(editorName)
-    editor.firstChild.firstChild.style.display = "none"
+    const editor = document.getElementById(editorName)
+    editor.firstChild.firstChild.style.display = 'none'
 
     // Remove delete last row and delete all
     const removeButtons = [
@@ -39,33 +39,33 @@ const formatEditor = (editorName) => {
         'json-editor-btntype-deleteall',
     ]
     removeButtons.forEach(buttonType => {
-        var buttons = document.getElementsByClassName(buttonType)
+        const buttons = document.getElementsByClassName(buttonType)
         buttons.forEach(button => {
-            button.style.display = "none"
+            button.style.display = 'none'
         })
     })
 
     // Field labels
-    var headers = document.getElementsByClassName('je-header')
+    const headers = document.getElementsByClassName('je-header')
     headers.forEach(header => {
-        var schema = header.parentNode.dataset.schemapath.split(".")
+        const schema = header.parentNode.dataset.schemapath.split('.')
         if (schema.length === 3) {
             // Hide title of currency name
-            header.style.display = "none"
-            header.nextSibling.style.display = "none"
+            header.style.display = 'none'
+            header.nextSibling.style.display = 'none'
         } else if (schema[3] === 'flow_rate') {
             // Hide flow rate
-            header.style.display = "none"
-            header.nextSibling.style.display = "none"
-            header.nextSibling.nextSibling.padding = "0"
+            header.style.display = 'none'
+            header.nextSibling.style.display = 'none'
+            header.nextSibling.nextSibling.padding = '0'
         } else if (schema.length === 4) {
             header.firstChild.nextSibling.classList.add('editor-field')
         }
     })
 
     // Field labels
-    var inputLabels = document.getElementsByClassName("je-form-input-label")
+    const inputLabels = document.getElementsByClassName('je-form-input-label')
     inputLabels.forEach(label => label.classList.add('editor-field'))
 }
 
-export { formatEditor }
+export {formatEditor}
