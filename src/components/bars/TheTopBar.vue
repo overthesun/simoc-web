@@ -6,7 +6,7 @@
         </div>
         <div id="dashboard-menu-icon">
             <span @click="SETMENUACTIVE(true)" title="Open menu">
-                <fa-icon class="fa-icon menu-icon" :icon="['fas','bars']" />
+                <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
             </span>
         </div>
     </section>

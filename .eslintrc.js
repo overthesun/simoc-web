@@ -159,13 +159,15 @@ module.exports = {
         'vue/no-parsing-error': 'error',
         'vue/prop-name-casing': 'error',
         'vue/attribute-hyphenation': 'error',
+        'vue/attributes-order': 'error',
         'vue/no-side-effects-in-computed-properties': 'warn',
         'vue/require-prop-type-constructor': 'warn',
         'vue/no-use-v-if-with-v-for': 'warn',
 
+        'vue/comment-directive': 'off',
+        'vue/max-attributes-per-line': 'off',
         'vue/singleline-html-element-content-newline': 'off',
         'vue/multiline-html-element-content-newline': 'off',
-        'vue/comment-directive': 'off',
 
 
         // IMPORT

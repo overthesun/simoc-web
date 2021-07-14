@@ -19,9 +19,9 @@
             <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
         </dl>
         <div id="humans">
-            <fa-icon class="alive" v-for="h in humans" v-bind:key="h" :icon="['fas','male']" />
-            <fa-icon class="dead" v-for="h in getConfiguration.humans.amount-humans"
-                     v-bind:key="h" :icon="['fas','male']" />
+            <fa-icon v-for="h in humans" v-bind:key="h" :icon="['fas','male']" class="alive" />
+            <fa-icon v-for="h in getConfiguration.humans.amount-humans" v-bind:key="h"
+                     :icon="['fas','male']" class="dead" />
         </div>
     </section>
 </template>

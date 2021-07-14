@@ -14,8 +14,8 @@ This component would have a similar functionality to that of the reference wiki.
                    (getActiveReference === 'Graphs' &&
                     (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
         <!-- The wrapper divs make ChartJS happy. -->
-        <div><PowerUsage class="power-config-graph" id="pu-config-canvas" /></div>
-        <div><GreenhouseConfig class="greenhouse-config-graph" id="gh-config-canvas" /></div>
+        <div><PowerUsage id="pu-config-canvas" class="power-config-graph" /></div>
+        <div><GreenhouseConfig id="gh-config-canvas" class="greenhouse-config-graph" /></div>
     </section>
 </template>
 

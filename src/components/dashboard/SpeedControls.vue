@@ -3,12 +3,12 @@
 <template>
     <div id="speed-controls">
         <!-- Looks like: - 1x + -->
-        <span class="icon-wrapper" @click="changeSpeed(-1)" title="Decrease speed">
-            <fa-icon class="fa-icon" :icon="['fas','minus']" />
+        <span @click="changeSpeed(-1)" class="icon-wrapper" title="Decrease speed">
+            <fa-icon :icon="['fas','minus']" class="fa-icon" />
         </span>
         <span title="Current speed">{{speeds[speedIndex]}}x</span>
-        <span class="icon-wrapper" @click="changeSpeed(+1)" title="Increase speed">
-            <fa-icon class="fa-icon" :icon="['fas','plus']" />
+        <span @click="changeSpeed(+1)" class="icon-wrapper" title="Increase speed">
+            <fa-icon :icon="['fas','plus']" class="fa-icon" />
         </span>
     </div>
 </template>

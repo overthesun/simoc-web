@@ -13,12 +13,12 @@ Can be reenabled in Menu.vue if needed.
                 <div class="option-item option-item-active"> CONFIGURATION MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button form="login-form" class="btn-normal" @click="toGuided">GUIDED CONFIGURATION</button>
-                <button form="login-form" class="btn-normal" @click="toCustom">CUSTOM CONFIGURATION</button>
+                <button @click="toGuided" form="login-form" class="btn-normal">GUIDED CONFIGURATION</button>
+                <button @click="toCustom" form="login-form" class="btn-normal">CUSTOM CONFIGURATION</button>
             </template>
             <template v-slot:entry-button>
                 <div class="btn-wrapper">
-                    <button form="login-form" class="btn-warning" @click="toMainMenu">MAIN MENU</button>
+                    <button @click="toMainMenu" form="login-form" class="btn-warning">MAIN MENU</button>
                 </div>
             </template>
         </BaseEntry>

@@ -1,5 +1,5 @@
 <template>
-    <div class="base-configuration-wrapper" :class="{'waiting': awaiting_response}">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
@@ -7,23 +7,23 @@
             <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
                 <!-- Set the activeForm index if the user changes the value to something other than selected -->
-                <select class="section-select" v-on:change="setActiveForm">
+                <select v-on:change="setActiveForm" class="section-select">
                     <option selected disabled>Jump To Section</option>
-                    <option value="0" :selected="formIndex === 0">Initial</option>
-                    <option value="1" :selected="formIndex === 1">Inhabitants</option>
-                    <option value="2" :selected="formIndex === 2">Greenhouse</option>
-                    <option value="3" :selected="formIndex === 3">Energy</option>
-                    <option value="4" :selected="formIndex === 4">Finalize</option>
+                    <option :selected="formIndex === 0" value="0">Initial</option>
+                    <option :selected="formIndex === 1" value="1">Inhabitants</option>
+                    <option :selected="formIndex === 2" value="2">Greenhouse</option>
+                    <option :selected="formIndex === 3" value="3">Energy</option>
+                    <option :selected="formIndex === 4" value="4">Finalize</option>
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <form class="form-wrapper" ref="form" @submit.prevent="">
+                <form ref="form" @submit.prevent="" class="form-wrapper">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
                     <!-- Else, if we are in the Custom config or in the Finalize step
                          of the Guided config, show all components -->
-                    <section class="form-wrapper" :class="{'validating': validating}"
-                             v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'">
+                    <section v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'"
+                             :class="{'validating': validating}" class="form-wrapper">
                         <Presets ref="presets" v-if="activeConfigType === 'Custom'" />
                         <Initial ref="initial" />
                         <Inhabitants ref="inhabitants" />
@@ -38,16 +38,16 @@
             </template>
             <template v-slot:wizard-configuration-footer>
                 <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
-                <nav class="configuration-button-wrapper" v-if="activeConfigType === 'Guided'"">
+                <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper"">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
                          No animations present to require it. -->
-                    <button class="btn-previous" @click="decrementIndex" v-if="!isFirstForm">Previous Section</button>
-                    <button class="btn-next" @click="incrementIndex" v-if="!isFinalForm">Next Section</button>
-                    <button class="btn-launch" @click="launchSimulation" v-if="isFinalForm">Launch Simulation</button>
+                    <button @click="decrementIndex" v-if="!isFirstForm" class="btn-previous">Previous Section</button>
+                    <button @click="incrementIndex" v-if="!isFinalForm" class="btn-next">Next Section</button>
+                    <button @click="launchSimulation" v-if="isFinalForm" class="btn-launch">Launch Simulation</button>
                 </nav>
                 <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
-                <nav class="configuration-button-wrapper" v-if="activeConfigType === 'Custom'"">
-                    <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
+                <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper"">
+                    <button @click="launchSimulation" class="btn-launch">Launch Simulation</button>
                 </nav>
             </template>
 

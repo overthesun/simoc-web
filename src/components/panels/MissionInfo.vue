@@ -1,6 +1,6 @@
 <template>
     <section class="panel-dl-wrapper">
-        <select v-model="info_section" required id="mission-info-select">
+        <select id="mission-info-select" v-model="info_section" required>
             <option value="mission-status" selected>Mission Status</option>
             <option value="mission-config">Initial Configuration</option>
             <option value="location-info">Location Info</option>

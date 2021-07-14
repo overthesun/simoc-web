@@ -3,7 +3,7 @@
         <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <template v-else>
             <p v-if="selected_consumption === null">[Missing data]</p>
-            <select v-else v-model="selected_currency" required id="currency-select">
+            <select id="currency-select" v-else v-model="selected_currency" required>
                 <option v-for="(data, name) in consumptions" :value="name" :key="name">
                     {{currencies[name]}}
                 </option>

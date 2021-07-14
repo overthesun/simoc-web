@@ -3,39 +3,37 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PowerGeneration')">
+            <div @click="SETACTIVEREFENTRY('PowerGeneration')" class="input-title">
                 Power Generation <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class="input-description">Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a @click="SETACTIVEREFERENCE('Graphs')" class="reference-link" href="#">graph at right</a>.</div>
             <div>
                 <!-- Use the retrieved generator value as the value for the field.
                      On change set the configuration store value -->
-                <select class="input-field-select" ref="generator_select" required
-                        v-model="generator.type" v-on:change="setEnergy">
+                <select ref="generator_select" v-model="generator.type" v-on:change="setEnergy"
+                        class="input-field-select" required>
                     <!-- <option value='none' selected>None</option>
                     TODO: this is hardcoded on Mars and is currently the only option -->
                     <option value="solar_pv_array_mars" selected>Solar PV Array</option>
                 </select>
-                <label><input class="input-field-number" ref="generator_input" type="number"
-                              pattern="^\d+$" placeholder="Quantity" required
-                              :min="generatorValues.min" :max="generatorValues.max"
-                              v-on:input="setEnergy" v-model="generator.amount"> panels</label>
+                <label><input ref="generator_input" :min="generatorValues.min" :max="generatorValues.max"
+                              v-on:input="setEnergy" v-model="generator.amount" class="input-field-number"
+                              type="number" pattern="^\d+$" placeholder="Quantity" required> panels</label>
             </div>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PowerStorage')">
+            <div @click="SETACTIVEREFENTRY('PowerStorage')" class="input-title">
                 Power Storage <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class="input-description">Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
             <div>
-                <select class="input-field-select" ref="power_select" required
-                        v-model="storage.type" v-on:change="setEnergy">
+                <select ref="power_select" v-model="storage.type" v-on:change="setEnergy"
+                        class="input-field-select" required>
                     <option value="power_storage" selected>Battery</option>
                 </select>
-                <label><input class="input-field-number" ref="power_input" type="number"
-                              pattern="^\d+$" placeholder="Quantity" required
-                              :min="storageValues.min" :max="storageValues.max"
-                              v-on:input="setEnergy" v-model="storage.amount"> kWh</label>
+                <label><input ref="power_input" :min="storageValues.min" :max="storageValues.max"
+                              v-on:input="setEnergy" v-model="storage.amount" class="input-field-number"
+                              type="number" pattern="^\d+$" placeholder="Quantity" required> kWh</label>
             </div>
         </label>
     </div>

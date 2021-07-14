@@ -1,12 +1,12 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('CrewQuarters')">
+            <div @click="SETACTIVEREFENTRY('CrewQuarters')" class="input-title">
                 Crew Quarters <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class="input-description">Select the size of your crew quarters.</div>
-            <select class="input-field-select" ref="crew_quarters_type" required
-                    v-on:change="setInhabitants" v-model="crewQuarters.type">
+            <select ref="crew_quarters_type" v-on:change="setInhabitants" v-model="crewQuarters.type"
+                    class="input-field-select" required>
                 <option value="none" selected>None</option>
                 <option value="crew_habitat_small">Small 1000 m³</option>
                 <option value="crew_habitat_medium">Medium 2260 m³</option>
@@ -14,31 +14,32 @@
             </select>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Inhabitants')">
+            <div @click="SETACTIVEREFENTRY('Inhabitants')" class="input-title">
                 Inhabitants <fa-icon :icon="['fas','info-circle']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">The number of astronaut explorers to live in your habitat.</div>
-            <input class="input-field-number" ref="humans" type="number" pattern="^\d+$"
-                   placeholder="Quantity" required :min="ranges.humans.min" :max="ranges.humans.max"
-                   v-on:input="setInhabitants" v-model="humans.amount">
+            <input ref="humans" :min="ranges.humans.min" :max="ranges.humans.max" v-on:input="setInhabitants"
+                   v-model="humans.amount" class="input-field-number" type="number" pattern="^\d+$"
+                   placeholder="Quantity" required>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Food')">
+            <div @click="SETACTIVEREFENTRY('Food')" class="input-title">
                 Food Supply <fa-icon :icon="['fas','info-circle']" />
             </div>
-            <div class="input-description">Make certain you have <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Food')">ample food</a> for an <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 1.5kg food per day.</div>
-            <label><input class="input-field-number" ref="food" type="number" pattern="^\d+$"
-                          placeholder="Quantity" required :min="ranges.food.min" :max="ranges.food.max"
-                          v-on:input="setInhabitants" v-model="food.amount"> kg</label>
+            <div class="input-description">Make certain you have <a @click="SETACTIVEREFENTRY('Food')" class="reference-link" href="#">ample food</a> for an <a @click="SETACTIVEREFENTRY('ECLSS')" class="reference-link" href="#">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 1.5kg food per day.</div>
+            <label><input ref="food" :min="ranges.food.min" :max="ranges.food.max" v-on:input="setInhabitants"
+                          v-model="food.amount" class="input-field-number" type="number" pattern="^\d+$"
+                          placeholder="Quantity" required> kg</label>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('ECLSS')">
+            <div @click="SETACTIVEREFENTRY('ECLSS')" class="input-title">
                 Life Support <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class="input-description">As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <label><input class="input-field-number" ref="eclss" type="number" pattern="^\d+$" required
-                          placeholder="Quantity":min="ranges.eclss.min" :max="ranges.eclss.max"
-                          v-on:input="setInhabitants" v-model="eclss.amount"> ECLSS modules</label>
+            <label><input ref="eclss" :min="ranges.eclss.min" :max="ranges.eclss.max"
+                          v-on:input="setInhabitants" v-model="eclss.amount"
+                          class="input-field-number" type="number" pattern="^\d+$"
+                          placeholder="Quantity" required> ECLSS modules</label>
         </label>
     </div>
 </template>

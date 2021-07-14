@@ -12,7 +12,7 @@ menu button being present on other unrelated configurations.
 <template>
     <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
-        <section class="wizard-wrapper" :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
+        <section :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}" class="wizard-wrapper">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
             <nav v-if="getActiveConfigType === 'Guided'" class="navigation-wrapper">
@@ -36,14 +36,16 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div class="option-item" @click="SETACTIVEREFERENCE('Reference')"
-                     :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
+                <div @click="SETACTIVEREFERENCE('Reference')"
+                     :class="{'option-item-active': 'Reference'===activeOption}"
+                     class="option-item">REFERENCE</div>
                 <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
                          :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div class="option-item" @click="SETACTIVEREFERENCE('Graphs')"
-                     :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
+                <div @click="SETACTIVEREFERENCE('Graphs')"
+                     :class="{'option-item-active' : 'Graphs'===activeOption}"
+                     class="option-item">GRAPHS</div>
             </nav>
             <main class="main main-reference">
                 <slot name="main-wizard-reference" />

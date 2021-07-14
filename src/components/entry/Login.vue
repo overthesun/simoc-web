@@ -5,9 +5,9 @@
              v-if will simply display it or not, and will not activate the animation
              for displaying or hiding
         -->
-        <div class="warning-wrapper" :class="{'warning-active': activeWarning}">
-            <fa-icon class="fa-icon dismiss-icon" :icon="['fas','times']" @click="dismissWarning" />
-            <div class="warning-item" v-for="(item,index) in activeWarnings" :key="index">
+        <div :class="{'warning-active': activeWarning}" class="warning-wrapper">
+            <fa-icon :icon="['fas','times']" @click="dismissWarning" class="fa-icon dismiss-icon" />
+            <div v-for="(item,index) in activeWarnings" :key="index" class="warning-item">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
                 {{activeWarnings[index]}}
@@ -16,25 +16,25 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div class="option-item" :class="{'option-item-active': 'login'===activeOption}"
-                     @click="activateOption('login')"> SIGN IN </div>
-                <div class="option-item" :class="{'option-item-active': 'register'===activeOption}"
-                     @click="activateOption('register')"> SIGN UP </div>
+                <div :class="{'option-item-active': 'login'===activeOption}" @click="activateOption('login')"
+                     class="option-item"> SIGN IN </div>
+                <div :class="{'option-item-active': 'register'===activeOption}" @click="activateOption('register')"
+                     class="option-item"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
-                <section class="entry-form entry-form-login" :class="{'entry-form-active': activeOption==='login'}">
-                    <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id="login-form">
+                <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
+                    <form id="login-form" v-if="!activeGuestLogin" @submit.prevent="loginUser">
                         <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
                         <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                         Guest accounts are temporary and will be deleted on a regular basis.</p>
-                    <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
+                    <a id="guest-login" @click="showGuestLogin" class="link">{{guestLoginLinkText}}</a>
                 </section>
-                <section class="entry-form entry-form-register"
-                         :class="{'entry-form-active': activeOption==='register'}">
-                    <form @submit.prevent="registerUser" id="register-form">
+                <section :class="{'entry-form-active': activeOption==='register'}"
+                         class="entry-form entry-form-register">
+                    <form id="register-form" @submit.prevent="registerUser">
                         <input v-model="register.username" type="text" class="input-field-text"
                                placeholder="Choose Username">
                         <input v-model="register.password" type="password" class="input-field-text"
@@ -46,14 +46,14 @@
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
-                <div class="btn-wrapper btn-wrapper-login"
-                     :class="{'btn-wrapper-active': activeOption==='login'}">
-                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
-                            @click="guestLogin">SIGN IN AS GUEST</button>
+                <div :class="{'btn-wrapper-active': activeOption==='login'}"
+                     class="btn-wrapper btn-wrapper-login">
+                    <button v-if="activeGuestLogin" @click="guestLogin" form="register-form"
+                            class="btn-warning">SIGN IN AS GUEST</button>
                     <button v-else form="login-form" class="btn-warning">SIGN IN</button>
                 </div>
-                <div class="btn-wrapper btn-wrapper-register"
-                     :class="{'btn-wrapper-active': activeOption==='register'}">
+                <div :class="{'btn-wrapper-active': activeOption==='register'}"
+                     class="btn-wrapper btn-wrapper-register">
                     <button form="register-form" class="btn-warning">SIGN UP</button>
                 </div>
             </template>

@@ -3,14 +3,15 @@
 <template>
     <div class="timeline-wrapper">
         <span class="timeline-item">
-            <input class="timeline" type="range" min="1" :max="getTotalMissionHours"
-                   v-model.number="currentStep" v-on:input="pauseBuffer" v-on:change="updateBuffer"
+            <input :min="1" :max="getTotalMissionHours" v-model.number="currentStep"
+                   v-on:input="pauseBuffer" v-on:change="updateBuffer"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
                             #67e300 ' + currentPercentage + '%, \
                             #d0d0d0 ' + currentPercentage +'%, \
                             #d0d0d0 '+ bufferPercentage +'%, \
                             #444343 ' + bufferPercentage + '%, \
-                            #444343 100%)'}">
+                            #444343 100%)'}"
+                   class="timeline" type="range">
         </span>
     </div>
 </template>

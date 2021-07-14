@@ -47,7 +47,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template v-slot:entry-button>
-                <button class="btn-warning" @click="toLogin">PROCEED</button>
+                <button @click="toLogin" class="btn-warning">PROCEED</button>
             </template>
         </BaseEntry>
     </div>

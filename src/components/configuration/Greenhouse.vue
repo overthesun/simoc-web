@@ -1,13 +1,13 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Greenhouse')">
+            <div @click="SETACTIVEREFENTRY('Greenhouse')" class="input-title">
                 Greenhouse <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
-            <select class="input-field-select" ref="greenhouse_type" required
-                    v-model="greenhouse.type" v-on:change="setGreenhouse">
+            <div class="input-description">Select the size of your greenouse. See <a @click="SETACTIVEREFERENCE('Graphs')" class="reference-link" href="#">graph at right</a>.</div>
+            <select ref="greenhouse_type" v-model="greenhouse.type" v-on:change="setGreenhouse"
+                    class="input-field-select" required>
                 <option value="none" selected>None</option>
                 <option value="greenhouse_small">Small (490 m³)</option>
                 <option value="greenhouse_medium">Medium (2452 m³)</option>
@@ -15,29 +15,28 @@
             </select>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PlantSpecies')">
+            <div @click="SETACTIVEREFENTRY('PlantSpecies')" class="input-title">
                 Plant Species <fa-icon :icon="['fas','info-circle']" />
             </div>
 
-            <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select plants to grow in your greenhouse. See <a @click="SETACTIVEREFERENCE('Graphs')" class="reference-link" href="#">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
                   Index is used as a key to store which plant field has been updated within the configuration
             -->
-            <div class="input-plant-wrapper" v-for="(item,index) in plantSpecies" :key="index">
-                <select class="input-field-select" ref="plant_selects"
-                        v-model="plantSpecies[index].type" v-on:change="updatePlantSpecies(index)">
+            <div v-for="(item,index) in plantSpecies" :key="index" class="input-plant-wrapper">
+                <select ref="plant_selects" v-model="plantSpecies[index].type"
+                        v-on:change="updatePlantSpecies(index)" class="input-field-select">
                     <option value="" selected hidden disabled>Species</option>
                     <option :value="name" v-for="(name,k) in plantValue" :key="k">{{plantFormatted[k]}}</option>
                 </select>
-                <label><input class="input-field-number" ref="plant_inputs" type="number"
-                              min="0" :max="plantMax[index]" pattern="^\d+$"
-                              placeholder="Quantity" v-on:input="updatePlantSpecies(index)"
-                              v-model="plantSpecies[index].amount"> m³</label>
-                <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
+                <label><input ref="plant_inputs" :min="0" :max="plantMax[index]" v-on:input="updatePlantSpecies(index)"
+                              v-model="plantSpecies[index].amount" class="input-field-number" type="number"
+                              pattern="^\d+$" placeholder="Quantity"> m³</label>
+                <fa-layers @click="addPlantSpecies" class="fa-2x plant-row-icon icon-add">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
-                <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)">
+                <fa-layers @click="REMOVEPLANTSPECIES(index)" class="fa-2x plant-row-icon icon-trash">
                     <!-- Deletes the object at the specicied key within the wizard store. -->
                     <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>

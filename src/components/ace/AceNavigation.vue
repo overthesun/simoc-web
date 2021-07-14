@@ -2,30 +2,30 @@
     <div class="ace-nav-wrapper">
         <div v-for="section in sections" :key="section">
             <div
-                class="section"
                 :class="{'section-active': section === activeSection}"
-                @click="toggle(section)">
+                @click="toggle(section)"
+                class="section">
                 {{ stringFormatter(section) }}
             </div>
-            <div class="menu" :class="{'menu-open': isOpen[section]}">
+            <div :class="{'menu-open': isOpen[section]}" class="menu">
                 <div v-for="agent in Object.keys(agentDesc[section])" :key="section+agent" class="agent-wrapper">
                     <div
-                        class="agent"
                         @click="handleAgent(section, agent)"
-                        :class="{'agent-active': agent === activeAgent}">
+                        :class="{'agent-active': agent === activeAgent}"
+                        class="agent">
                         <fa-layers
-                            class="fa-1x agent-icon-remove"
                             @click="handleRemoveAgent(section, agent)"
-                            :class="{'hidden': section === 'simulation_variables'}">
+                            :class="{'hidden': section === 'simulation_variables'}"
+                            class="fa-1x agent-icon-remove">
                             <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                         </fa-layers>
                         <span class="agent-label">{{ stringFormatter(agent) }}</span>
                     </div>
                 </div>
                 <fa-layers
-                    class="fa-1x agent-icon-add"
                     @click="handleAddAgent(section)"
-                    :class="{'hidden': section === 'simulation_variables'}">
+                    :class="{'hidden': section === 'simulation_variables'}"
+                    class="fa-1x agent-icon-add">
                     <fa-icon :icon="['fas','plus-circle']" />
                 </fa-layers>
             </div>

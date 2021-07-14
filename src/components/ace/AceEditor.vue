@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="empty=msg" :class="{'hidden': (isBuilt)}">
+        <div :class="{'hidden': (isBuilt)}" class="empty=msg">
             Loading editor schema...
         </div>
-        <div class="empty-msg" :class="{'hidden': (activeAgent || !isBuilt)}">
+        <div :class="{'hidden': (activeAgent || !isBuilt)}" class="empty-msg">
             Select an agent to get started.
         </div>
-        <div class="editor" :class="{'hidden': activeAgent === null}">
+        <div :class="{'hidden': activeAgent === null}" class="editor">
             <div id="agentEditor" :class="{'hidden': isCustomAgent}" />
             <div id="customEditor" :class="{'hidden': !isCustomAgent}" />
         </div>
