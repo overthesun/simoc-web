@@ -3,53 +3,48 @@
 </template>
 
 <script>
-// import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader'
-
 import {createControls} from './systems/controls.js'
 import {createRenderer} from './systems/renderer.js'
 import {createCamera} from './components/camera.js'
-import {createCube} from './components/cube.js'
 import {createLights} from './components/lights.js'
 import {createScene} from './components/scene.js'
+import {buildLayout, buildHabitat} from './buildScene.js'
 
-// ref: https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
+// Vue/ThreeJS structure ref: 
+// https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
+
+// File structure ref:
+// discoverthreejs.com
+
 export default {
     props: [
         'gameConfig'
     ],
     data() {
         return {
-            // Systems
+            container: null,
             renderer: null,
             controls: null,
             resizer: null,
-
-            // Components
             camera: null,
-            cube: null,
             light: null,
             scene: null,
-
-            container: null
+            habitat: null,
         }
     },
     methods: {
         init() {
+            this.container = document.getElementById('scene-container')
             // Setup the scene
             this.camera = createCamera()
             this.scene = createScene()
             this.renderer = createRenderer()
             this.controls = createControls(this.camera, this.renderer.domElement)
-
-            this.container = document.getElementById('scene-container')
             this.container.append(this.renderer.domElement)
-
-            // Add objects to scene
-            this.cube = createCube()
-            this.light = createLights()
-            this.scene.add(this.cube, this.light)
-
             this.resizeHandler()
+            // Add lighting
+            this.light = createLights()
+            this.scene.add(this.light)
         },
         animate() {
             requestAnimationFrame(this.animate)
@@ -59,13 +54,19 @@ export default {
             let width = this.container.offsetWidth
             let height = this.container.offsetHeight
             let aspectRatio = width / height
-
             this.camera.aspect = aspectRatio;
-            this.camera.updateProjectionMatrix();
-
-            this.renderer.setSize(width, height);
+            this.camera.updateProjectionMatrix()
+            this.renderer.setSize(width, height)
             this.renderer.setPixelRatio(aspectRatio)
-        }
+        },
+        buildScene() {
+            if (this.habitat) {
+                this.scene.remove(this.habitat)
+            }
+            let layout = buildLayout(this.gameConfig)
+            this.habitat = buildHabitat(layout)
+            this.scene.add(this.habitat)
+        },
     },
     mounted() {
         this.init()
@@ -74,7 +75,12 @@ export default {
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.resizeHandler)
-    }
+    },
+    watch: {
+        gameConfig() {
+            this.buildScene()
+        }
+    },
 }
 </script>
 

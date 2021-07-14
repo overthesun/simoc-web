@@ -2,7 +2,7 @@ This component renders a 3d view of the habitat using threeJS.
 ref: https://discoverthreejs.com/book/introduction/threejs-with-frameworks/
 
 <template>
-    <World :gameConfig="getGameConfig" />
+    <World :gameConfig="getConfiguration" />
 </template>
 
 <script>
@@ -14,13 +14,8 @@ export default {
     components: {
         'World': World,
     },
-    data() {
-        return {
-
-        }
-    },
     computed: {
-        ...mapGetters('dashboard', ['getGameConfig']),
+        ...mapGetters('wizard', ['getConfiguration']),
     },
 }
 </script>
