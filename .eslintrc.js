@@ -157,6 +157,8 @@ module.exports = {
         'vue/no-unused-vars': 'error',
         'vue/require-v-for-key': 'error',
         'vue/no-parsing-error': 'error',
+        'vue/prop-name-casing': 'error',
+        'vue/attribute-hyphenation': 'error',
         'vue/no-side-effects-in-computed-properties': 'warn',
         'vue/require-prop-type-constructor': 'warn',
         'vue/no-use-v-if-with-v-for': 'warn',

@@ -7,10 +7,10 @@
             <DownloadConfig
                 :isValid="getEditorValid"
                 :config="getActiveAgentDesc"
-                fileName="agent_desc.json"
+                file-name="agent_desc.json"
                 :alertUserOnInvalid="true"
-                buttonText="Download Agent File" />
-            <UploadConfig :handleFile="handleUpload" buttonText="Upload Agent File"/>
+                button-text="Download Agent File" />
+            <UploadConfig :handleFile="handleUpload" button-text="Upload Agent File" />
             <button @click="resetConfig">Reset Agent File</button>
             <Logout name="logout" />
         </template>

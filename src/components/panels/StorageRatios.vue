@@ -9,7 +9,7 @@
             </template>
         </select>
         <div>
-            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted_storage="storage" />
+            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage" />
         </div>
     </div>
 </template>

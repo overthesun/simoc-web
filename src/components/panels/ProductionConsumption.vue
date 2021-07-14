@@ -9,7 +9,7 @@
             <option value="enrg_kwh" :selected="currency === 'enrg_kwh'">Energy</option>
         </select>
         <div>
-            <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted_value="currency" :unit="units[currency]" />
+            <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency" :unit="units[currency]" />
         </div>
     </div>
 </template>

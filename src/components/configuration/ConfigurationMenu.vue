@@ -7,7 +7,7 @@
             <DownloadConfig
                 :isValid="isValid"
                 :config="getConfiguration"
-                fileName="simoc-config.json"
+                file-name="simoc-config.json"
                 :alertUserOnInvalid="false" />
             <UploadConfig :handleFile="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>

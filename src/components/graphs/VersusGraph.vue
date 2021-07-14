@@ -22,7 +22,7 @@ export default {
     },
     props: {
         id: String,
-        plotted_value: String,
+        plottedValue: String,
         unit: String,
     },
 
@@ -38,7 +38,7 @@ export default {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_value() {
+        plottedValue() {
             this.initChart()
         },
     },
@@ -138,8 +138,8 @@ export default {
                 data.datasets[1].data.shift()
                 data.labels.shift()
                 if (step > 0) {
-                    const production = this.getTotalProduction(step)[this.plotted_value].value
-                    const consumption = this.getTotalConsumption(step)[this.plotted_value].value
+                    const production = this.getTotalProduction(step)[this.plottedValue].value
+                    const consumption = this.getTotalConsumption(step)[this.plottedValue].value
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)

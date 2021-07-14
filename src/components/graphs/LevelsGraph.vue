@@ -47,7 +47,7 @@ export default {
     },
     props: {
         id: String,
-        plotted_storage: String,
+        plottedStorage: String,
     },
 
     computed: {
@@ -61,7 +61,7 @@ export default {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_storage() {
+        plottedStorage() {
             this.initChart()
         },
     },
@@ -73,7 +73,7 @@ export default {
     methods: {
         // TODO: this code is very similar to VersusGraph.vue
         initChart() {
-            [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
+            [this.storage_name, this.storage_num] = this.plottedStorage.split('/')
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
