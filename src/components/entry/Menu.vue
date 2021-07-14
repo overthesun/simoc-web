@@ -64,7 +64,7 @@ export default {
             const {files} = e.target
             const simdata = files[0]
             const reader = new FileReader()
-            reader.onload = ((file) => this.readSimData)(simdata)
+            reader.onload = (file => this.readSimData)(simdata)
             reader.readAsText(simdata)
         },
         // read uploaded file, set vars, and go to the dashboard

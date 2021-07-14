@@ -7,12 +7,12 @@ export function StepTimer(callback, delay) {
     let newdelay = delay
     let stopped = null
 
-    this.pause = function() {
+    this.pause = () => {
         window.clearTimeout(timerID)
         remaining -= Date.now() - start
     }
 
-    this.resume = function() {
+    this.resume = () => {
         if (stopped) {
             return  // don't resume stopped timer
         }
@@ -25,14 +25,13 @@ export function StepTimer(callback, delay) {
         }, remaining)
     }
 
-    this.changeInterval = function(interval) {
+    this.changeInterval = interval => {
         newdelay = interval
     }
 
-    this.stop = function() {
+    this.stop = () => {
         window.clearTimeout(timerID)
         timerID = null
         stopped = true
     }
 }
-

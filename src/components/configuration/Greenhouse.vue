@@ -112,7 +112,7 @@ export default {
         // greenhouses to one if any type other than 'none' is selected. Plants are not included
         // as they do their own thing differently than other form elements.
         setGreenhouse() {
-            this.greenhouse.amount = this.greenhouse.type == 'none' ? 0 : 1
+            this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
             this.SETGREENHOUSE(value)
         },
@@ -143,7 +143,7 @@ export default {
             console.log(plantTypes)
 
             let selectedOptions = plantTypes
-            if (currentOption != null) {
+            if (currentOption !== null) {
                 let selectedOptions = plantTypes.filter(x => !currentOption.includes(x))
             }
             let uniqueOptions = this.plantNames.filter(x => !selectedOptions.includes(x))
@@ -160,7 +160,7 @@ export default {
             formatted = name.replace(/_/g, ' ')
             formatted = formatted.toLowerCase()
                     .split(' ')
-                    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
                     .join(' ')
 
             this.plantFormatted.push(formatted)
@@ -179,17 +179,16 @@ export default {
 
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
-                    response.data.forEach((item) => {
+                    response.data.forEach(item => {
                         const {name} = item
                         this.plantValue.push(name)
                         // console.log(this.formatPlantName(name))
                         this.formatPlantName(name)
-
                     })
                 }
             }).catch(error => {
                 const {status} = error.response
-                if (status == 401) {
+                if (status === 401) {
                     console.log('Plant retrieval error')
                 }
             })
@@ -199,7 +198,8 @@ export default {
             const {greenhouse} = this.getConfiguration
             const gh_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
             this.$refs.greenhouse_type.setCustomValidity(
-                gh_is_valid ? '' : 'Please select a valid greenhouse type.')
+                gh_is_valid ? '' : 'Please select a valid greenhouse type.'
+            )
             this.$refs.greenhouse_type.reportValidity()
             this.greenhouse = greenhouse
 
@@ -221,7 +221,7 @@ export default {
                 max_amount -= plant.amount
             })
 
-            this.$nextTick(function() {
+            this.$nextTick(() => {
                 // when a new plant is added this watcher is called before creating the ref
                 // on the select, so we need to wait the next tick to access its plant_selects
                 plantSpecies.forEach((plant, i) => {
@@ -229,7 +229,8 @@ export default {
                     const plant_type_is_valid = (plant.type === '' ||
                                                  this.plantValue.includes(plant.type))
                     this.$refs.plant_selects[i].setCustomValidity(
-                        plant_type_is_valid ? '' : 'Please select a valid plant type.')
+                        plant_type_is_valid ? '' : 'Please select a valid plant type.'
+                    )
                     if (!plant_type_is_valid) {
                         this.$refs.plant_selects[i].reportValidity()
                         return  // if the plant is invalid don't even bother checking the rest
@@ -237,7 +238,8 @@ export default {
                     // if the plant quantity is > 0, the plant type must be specified
                     const plant_type_is_invalid = (plant.type === '' && plant.amount > 0)
                     this.$refs.plant_inputs[i].setCustomValidity(
-                        plant_type_is_invalid ? 'Please select a valid plant type.' : '')
+                        plant_type_is_invalid ? 'Please select a valid plant type.' : ''
+                    )
                     if (plant_type_is_invalid) {
                         this.$refs.plant_inputs[i].reportValidity()
                         return  // wait for the user to select a valid type before complaining about the value
@@ -245,7 +247,8 @@ export default {
                     // we got a valid type, check that the gh is selected if the amount is >0
                     const needs_greenhouse = (plant.amount > 0 && greenhouse.type === 'none')
                     this.$refs.plant_inputs[i].setCustomValidity(
-                        needs_greenhouse ? 'Please select a greenhouse type.' : '')
+                        needs_greenhouse ? 'Please select a greenhouse type.' : ''
+                    )
                     if (needs_greenhouse) {
                         this.$refs.plant_inputs[i].reportValidity()
                         return  // wait for the user to select a valid type before complaining about the value

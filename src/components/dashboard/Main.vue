@@ -110,7 +110,8 @@ export default {
         },
         updatePanels(index, replace) {
             // do nothing if we are replacing a panel with the same panel
-            if (this.replacePanel && this.selectedPanel == this.activePanels[index].split(':')[0]) {
+            if (this.replacePanel &&
+                this.selectedPanel === this.activePanels[index].split(':')[0]) {
                 this.closePanelMenu()
                 return
             }

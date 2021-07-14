@@ -31,7 +31,7 @@ export default {
     mounted() {
         // Handle keyboard shortcuts for +/-
         // The rest of the shortcuts are in DashboardView
-        this.keyListener = function(e) {
+        this.keyListener = e => {
             if (e.key === '+') {
                 this.changeSpeed(+1)
                 e.preventDefault()

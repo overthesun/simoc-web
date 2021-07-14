@@ -61,7 +61,7 @@ export default {
             plantSpecies.forEach((item) =>{
                 amounts.push(item.amount)
                 types.push(new StringFormatter(item.type))
-                totalUsed += parseInt(item.amount)
+                totalUsed += parseInt(item.amount, 10)
             })
 
             amounts.push()
@@ -84,7 +84,7 @@ export default {
             // Set the first value of the dataset to the size of the greenhouse
             // and add the label free space
             const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
-            plantSpecies.forEach((item) => {
+            plantSpecies.forEach(item => {
                 // Calculates the total free space left after all the plants are added,
                 // modifies the first index initialized above.
                 values.data[0] = Math.max(0, values.data[0] - item.amount)
@@ -107,7 +107,7 @@ export default {
                 // otherwise show both the doughnut and the text
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = data
-                text = data[0] + ' m³ / ' + this.greenhouseSize[greenhouse.type] + ' m³'
+                text = `${data[0]} m³ / ${this.greenhouseSize[greenhouse.type]} m³`
             }
             this.chart.options.elements.centerText.text = text
             this.chart.update()
@@ -180,7 +180,7 @@ export default {
 
                     ctx.restore()
                     const fontSize = (height/300).toFixed(2)
-                    ctx.font = fontSize + 'em sans-serif'
+                    ctx.font = `${fontSize}em sans-serif`
                     ctx.textBaseline = 'bottom'
 
                     const {text} = chart.chart.options.elements.centerText

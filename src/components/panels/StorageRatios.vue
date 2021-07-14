@@ -28,7 +28,7 @@ export default {
     },
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
-        this.storage = this.panelSection || Object.keys(this.getStorages)[0] + '/1'
+        this.storage = this.panelSection || `${Object.keys(this.getStorages)[0]}/1`
     },
     props: {
         canvasNumber: 0,
@@ -43,7 +43,7 @@ export default {
     computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         getStorages() {
-            return this.getGameConfig['storages']
+            return this.getGameConfig.storages
         },
     },
     methods: {

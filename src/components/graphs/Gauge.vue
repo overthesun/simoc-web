@@ -45,7 +45,7 @@ export default {
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
-                this.chart.options.elements.centerText.text = value.toFixed(4) + '%'
+                this.chart.options.elements.centerText.text = `${value.toFixed(4)}%`
                 this.chart.update()
             },
             deep: true,
@@ -63,7 +63,7 @@ export default {
                     data: [10],
                 }],
             },
-            rotation: Math.PI * -.5,
+            rotation: Math.PI * -0.5,
             options: {
                 elements: {
                     arc: {
@@ -79,7 +79,7 @@ export default {
                             // show "label: N%" in the tooltip
                             const label = data.labels[tooltipItems.index]
                             const value = data.datasets[0].data[tooltipItems.index]
-                            return label + ': ' + (value*100) + '%'
+                            return `${label}: ${value*100}%`
                         },
                     },
                 },
@@ -105,13 +105,13 @@ export default {
                     // scale the font size based on the width, so that
                     // it doesn't overlap with the gauge, but max 16px
                     const fontSize = Math.min((width/8), 16).toFixed(2)
-                    ctx.font = fontSize + 'px sans-serif'
+                    ctx.font = `${fontSize}px sans-serif`
                     ctx.textBaseline = 'alphabetic'
 
                     const {text} = chart.chart.options.elements.centerText
                     const textX = Math.round((width - ctx.measureText(text).width) / 2)
-                    const arcH = width/2  // height of the arc
-                    const textY = Math.min((height-arcH)/2 + arcH, height)
+                    const arcH = width / 2  // height of the arc
+                    const textY = Math.min(((height-arcH)/2) + arcH, height)
 
                     ctx.fillStyle = '#eeeeee'
                     ctx.fillText(text, textX, textY)

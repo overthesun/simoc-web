@@ -52,64 +52,58 @@ export default {
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
-            return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
+            return this.getGameConfig.storages.air_storage[0].total_capacity.value
         },
         o2() {
             return this.attempt_read(() => {
                 const o2_perc = this.get_gas_percentage('atmo_o2')
                 /*
-                Color the 02 value in the panel based of this:
+                Color the O2 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
                 O2 <= 15% -- orange -- decreased ability to work strenuously
                 O2 <= 12% -- red -- respiration and pulse increase
                 O2 <= 8% -- red2 -- terminated
                 */
-                for (const [k, threshold] of [8, 12, 15, 19.5, 100].entries()) {
-                    if (o2_perc <= threshold) {
-                        this.o2_style.color = this.colors[k]
-                        break
-                    }
-                }
-                return o2_perc.toFixed(3) + '%'
+                // find the index of the first value above the threshold
+                const k = [8, 12, 15, 19.5, 100].findIndex(threshold => threshold >= o2_perc)
+                this.o2_style.color = this.colors[k]
+                return `${o2_perc.toFixed(3)}%`
             })
         },
         co2() {
             return this.attempt_read(() => {
                 const co2_perc = this.get_gas_percentage('atmo_co2')
                 /*
-                Color the co2 value in the panel based of this:
+                Color the CO2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
                 CO2 >= 0.25% -- orange -- general drowsiness
                 CO2 >= 0.5% -- red -- adverse health effects
                 CO2 >= 1% -- red2 -- terminated
                 */
-                for (const [k, threshold] of [1, 0.5, 0.25, 0.1, 0].entries()) {
-                    if (co2_perc >= threshold) {
-                        this.co2_style.color = this.colors[k]
-                        break
-                    }
-                }
-                return co2_perc.toFixed(3) + '%'
+                // find the index of the first value below the threshold
+                const k = [1, 0.5, 0.25, 0.1, 0].findIndex(threshold => threshold <= co2_perc)
+                this.co2_style.color = this.colors[k]
+                return `${co2_perc.toFixed(3)}%`
             })
         },
         water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {h2o_potb} = storage['water_storage'][1]
-                return h2o_potb.value + ' ' + h2o_potb.unit
+                const {h2o_potb} = storage.water_storage[1]
+                return `${h2o_potb.value} ${h2o_potb.unit}`
             })
         },
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {food_edbl} = storage['food_storage'][1]
-                return food_edbl.value + ' ' + food_edbl.unit
+                const {food_edbl} = storage.food_storage[1]
+                return `${food_edbl.value} ${food_edbl.unit}`
             })
         },
         humans() {
             const agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents['human_agent'] !== undefined) {
-                return agents['human_agent']
+            if (agents !== undefined && agents.human_agent !== undefined) {
+                return agents.human_agent
             } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
@@ -120,7 +114,7 @@ export default {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step)['air_storage'][1]
+            const air_storage = this.getStorageCapacities(this.step).air_storage[1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {

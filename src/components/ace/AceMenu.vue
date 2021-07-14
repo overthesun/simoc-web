@@ -43,7 +43,7 @@ export default {
             })
         },
         resetConfig() {
-            if (confirm('Reset the current configuration to the SIMOC default?')) {
+            if (window.confirm('Reset the current configuration to the SIMOC default?')) {
                 this.SETAGENTDESC({
                     agent_desc: this.getDefaultAgentDesc,
                     isDefault: false,

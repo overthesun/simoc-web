@@ -50,7 +50,6 @@ export default {
 }
 
 
-
 .panel {
     background-color: #1e1e1eaa;
     border: 1px solid #666;
@@ -127,8 +126,6 @@ export default {
         font-size: 18px;
         font-weight: 600;
     }
-
-
 
 
     .section-title{

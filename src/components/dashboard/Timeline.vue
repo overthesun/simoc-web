@@ -75,7 +75,7 @@ export default {
             // save the current state before pausing
             this.timerWasRunning = this.getIsTimerRunning
             this.userIsDragging = true
-            if (this.getTimerID != null) {
+            if (this.getTimerID !== null) {
                 this.PAUSETIMER()
             }
         },
@@ -116,7 +116,6 @@ export default {
         margin: 8px 0px;
         position:relative;
     }
-
 
 
     .timeline-item{

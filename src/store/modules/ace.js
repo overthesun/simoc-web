@@ -110,15 +110,15 @@ export default {
             const valid_keys = []
             const invalid_keys = []
             Object.keys(agent_desc).forEach((key, i) => {
-                if (newAgentDesc.hasOwnProperty(key)) {
+                if (key in newAgentDesc) {
                     newAgentDesc[key] = inputAgentDesc[key]
                     valid_keys.push(key)
                 } else {
                     invalid_keys.push(key)
                 }
             })
-            if (valid_keys.length == 0) {
-                throw 'invalid agent_desc file.'
+            if (valid_keys.length === 0) {
+                throw new Error('invalid agent_desc file.')
             }
             if (invalid_keys.length > 0) {
                 console.log('* Ignoring invalid keys in the uploaded file:',
@@ -155,16 +155,16 @@ export default {
             const sectionAgents = Object.keys(state.activeAgentDesc[section])
             if (!sectionAgents.includes(oldName)) {
                 console.log('Agent not found.')
-                return false
-            } else if (sectionAgents.includes(newName)) {
-                console.log('Agent name already in use.')
-                return false
-            } else {
-                const data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
-                delete state.activeAgentDesc[section][oldName]
-                state.activeAgentDesc[section][newName] = data
-                state.activeAgent = newName
+                return
             }
+            if (sectionAgents.includes(newName)) {
+                console.log('Agent name already in use.')
+                return
+            }
+            const data = JSON.parse(JSON.stringify(state.activeAgentDesc[section][oldName]))
+            delete state.activeAgentDesc[section][oldName]
+            state.activeAgentDesc[section][newName] = data
+            state.activeAgent = newName
         },
         ADDAGENT(state, value) {
             // Create placeholder name
@@ -172,7 +172,7 @@ export default {
             Object.keys(state.activeAgentDesc[value]).forEach(name => {
                 const words = name.split('_')
                 if (words[0] === 'new' && words[1] === 'agent') {
-                    const currentAgentNumber = parseInt(words[2])
+                    const currentAgentNumber = parseInt(words[2], 10)
                     newAgentNumber = Math.max(newAgentNumber, currentAgentNumber)
                 }
             })

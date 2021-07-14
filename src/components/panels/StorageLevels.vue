@@ -31,7 +31,7 @@ export default {
         storage(step) {
             const storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
-            delete storage['nutrient_storage'][1]['biomass_edible']
+            delete storage.nutrient_storage[1].biomass_edible
             return storage
         },
         label2name(label) {

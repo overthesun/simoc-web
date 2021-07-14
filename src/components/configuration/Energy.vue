@@ -84,7 +84,7 @@ export default {
             handler() {
                 const {powerGeneration} = this.getConfiguration
                 this.generator = powerGeneration
-                this.$nextTick(function() {
+                this.$nextTick(() => {
                     // wait for the forms to update before validating,
                     // otherwise this gives an error while loading presets
                     this.$refs.generator_select.reportValidity()
@@ -97,7 +97,7 @@ export default {
             handler() {
                 const {powerStorage} = this.getConfiguration
                 this.storage = powerStorage
-                this.$nextTick(function() {
+                this.$nextTick(() => {
                     // same as above
                     this.$refs.power_select.reportValidity()
                     this.$refs.power_input.reportValidity()

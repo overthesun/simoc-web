@@ -49,15 +49,15 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         total_storage_capacity() {
-            return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
+            return this.getGameConfig.storages.air_storage[0].total_capacity.value
         },
     },
     methods: {
         airStorageGetter(currency) {
             // TODO: handle multiple air_storages with an optional dropdown
             const {total_storage_capacity} = this
-            return (step) => {
-                const amount = this.getStorageCapacities(step)['air_storage'][1][currency].value
+            return step => {
+                const amount = this.getStorageCapacities(step).air_storage[1][currency].value
                 return amount / total_storage_capacity * 100
             }
         },

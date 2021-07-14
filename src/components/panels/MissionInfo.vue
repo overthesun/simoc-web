@@ -84,8 +84,8 @@ export default {
         stringFormatter: StringFormatter,
         humanCount() {
             const agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents['human_agent'] !== undefined) {
-                return agents['human_agent']
+            if (agents !== undefined && agents.human_agent !== undefined) {
+                return agents.human_agent
             } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
@@ -95,14 +95,14 @@ export default {
             const total = Math.max(totalHours, 0)
             const days = Math.floor(total/24)
             const hours = totalHours%24
-            return days + 'd ' + hours + 'h 0m'
+            return `${days}d ${hours}h 0m`
         },
         calcSols(totalHours) {
             const total = Math.max(totalHours, 0)
-            const days = Math.floor(total/24.629444)
-            const hours = totalHours%24.629444
-            const minutes = Math.floor(hours%1*60)
-            return days + 'd ' + Math.floor(hours) + 'h ' + minutes + 'm'
+            const days = Math.floor(total / 24.629444)
+            const hours = totalHours % 24.629444
+            const minutes = Math.floor((hours % 1) * 60)
+            return `${days}d ${Math.floor(hours)}h ${minutes}m`
         },
     },
 }

@@ -24,7 +24,7 @@ Future version should also automatically switch the selected preset to 'custom' 
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
-                <div v-if="selected == CUSTOM" class="custom-preset">
+                <div v-if="selected === CUSTOM" class="custom-preset">
                     <button @click="saveToLocalStorage">Save</button>
                     <button @click="loadFromLocalStorage(true)">Reset</button>
                 </div>
@@ -68,12 +68,12 @@ export default {
         },
         saveToLocalStorage() {
             // save custom preset to local storage
-            if (confirm('Save the current configuration as a custom preset?')) {
+            if (window.confirm('Save the current configuration as a custom preset?')) {
                 try {
                     const config = JSON.stringify(this.getConfiguration)
                     localStorage.setItem('custom-config', config)
                 } catch (error) {
-                    alert('An error occurred while saving the configuration: ' + error)
+                    alert(`An error occurred while saving the configuration: ${error}`)
                     return
                 }
                 alert('Custom preset saved.')
@@ -83,7 +83,7 @@ export default {
             // this is called either when the user selects "[Custom]" or
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
-            if (ask_confirm && !confirm('Reset changes and reload the custom preset?')) {
+            if (ask_confirm && !window.confirm('Reset changes and reload the custom preset?')) {
                 return
             }
             const config = localStorage.getItem('custom-config')
@@ -115,7 +115,7 @@ export default {
                 // or when they edited a field.  If they selected a preset
                 // dont_set_custom should be true, so that "custom" won't be
                 // selected, otherwise it will when they edit a single field
-                if (this.dont_set_custom || this.selected == CUSTOM) {
+                if (this.dont_set_custom || this.selected === CUSTOM) {
                     this.dont_set_custom = false
                     return
                 }

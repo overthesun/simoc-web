@@ -145,7 +145,7 @@ export default {
         // This happens automatically by changing the watched formIndex
         setActiveForm(event) {
             const {value: index} = event.target
-            this.formIndex = parseInt(index)
+            this.formIndex = parseInt(index, 10)
         },
 
         decrementIndex() {
@@ -160,7 +160,7 @@ export default {
 
         handleAxiosError(error) {
             console.error(error)
-            if (error.response && error.response.status == 401) {
+            if (error.response && error.response.status === 401) {
                 alert('Please log in again to continue.')
                 this.$router.push('entry')
             } else {
@@ -180,6 +180,8 @@ export default {
                 // Using this form of await import(stringliteral + var + stringliteral)
                 // should ensure that webpack/babel recognize that these modules are
                 // imported dynamically and lazily and that they shoultn't be bundled
+                // TODO: check if this works with a template
+                // eslint-disable-next-line prefer-template
                 const simdata = await import('../assets/simdata/' + fname + '.json')
                 return simdata.default  // get the actual data out of the module object
             } catch (error) {

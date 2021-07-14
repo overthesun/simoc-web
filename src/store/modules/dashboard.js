@@ -46,8 +46,8 @@ export default {
         stepInterval: 1000,    // the time between the steps, in milliseconds
         stopped: false,        // true if we forced termination, also set terminated
         terminated: false,     // true if we stopped or retrieved all steps from the server
-        timerID: undefined,
-        getStepsTimerID: undefined,
+        timerID: null,
+        getStepsTimerID: null,
         isTimerRunning: false,
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
@@ -56,13 +56,13 @@ export default {
         activePanels: [],
     },
     getters: {
-        getMenuActive: (state) => state.menuActive,
-        getLeaveWithoutConfirmation: (state) => state.leaveWithoutConfirmation,
-        getLoadFromSimData: (state) => state.loadFromSimData,
-        getStepParams: (state) => state.parameters,
-        getMaxStepBuffer: (state) => state.maxStepBuffer,
-        getCurrentStepBuffer: (state) => state.currentStepBuffer,
-        getStepInterval: (state) => state.stepInterval,
+        getMenuActive: state => state.menuActive,
+        getLeaveWithoutConfirmation: state => state.leaveWithoutConfirmation,
+        getLoadFromSimData: state => state.loadFromSimData,
+        getStepParams: state => state.parameters,
+        getMaxStepBuffer: state => state.maxStepBuffer,
+        getCurrentStepBuffer: state => state.currentStepBuffer,
+        getStepInterval: state => state.stepInterval,
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
@@ -70,7 +70,7 @@ export default {
         getTotalProduction: state => stepNumber => state.totalProduction[stepNumber],
         getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
         getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
-        getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber]['air_storage_1'],
+        getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber].air_storage_1,
         getStorageCapacities: state => stepNumber => state.storageCapacities[stepNumber],
         getDetailsPerAgent: state => stepNumber => state.detailsPerAgent[stepNumber],
 
@@ -145,7 +145,7 @@ export default {
             state.isTimerRunning = false
         },
         STOPTIMER(state, value) {
-            if (state.timerID != null) {
+            if (state.timerID !== null) {
                 // console.log("Step Timer stopped")
                 state.timerID.stop()
             }
@@ -213,7 +213,7 @@ export default {
         },
         SETSTEPINTERVAL(state, value) {
             state.stepInterval = value
-            if (state.timerID != null) {
+            if (state.timerID !== null) {
                 state.timerID.changeInterval(state.stepInterval)
             }
         },
@@ -278,7 +278,7 @@ export default {
         SETPLANTSPECIESPARAM(state, value) {
             const {plantSpecies} = value
 
-            plantSpecies.forEach((item) => {
+            plantSpecies.forEach(item => {
                 state.parameters.agent_growth.push(item.type)
                 state.agentGrowth[item.type] = 0
             })
@@ -325,7 +325,7 @@ export default {
     actions: {
         parseStep({commit, dispatch}, stepData) {
             console.log(stepData)
-            stepData.forEach((item) => {
+            stepData.forEach(item => {
                 commit('SETTOTALCONSUMPTION', item)
                 commit('SETTOTALPRODUCTION', item)
                 commit('SETAGENTTYPE', item)

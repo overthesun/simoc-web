@@ -8,14 +8,13 @@ export function StringFormatter(value) {
     formatted = value.replace(/_/g, ' ')
     formatted = formatted.toLowerCase()
             .split(' ')
-            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .map(s => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ')
 
     return formatted
-
 }
 
 export function ensure_within(value, min, max) {
     // ensure that min <= value <= max, return 0 if value is not a number
-    return Math.max(min, Math.min(max, parseInt(value) || 0))
+    return Math.max(min, Math.min(max, parseInt(value, 10) || 0))
 }

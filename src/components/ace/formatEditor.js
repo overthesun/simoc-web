@@ -1,5 +1,4 @@
-const formatEditor = (editorName) => {
-
+const formatEditor = editorName => {
     // Nested panels for each node
     const panels = document.getElementsByClassName('je-indented-panel')
     panels.forEach(panel => panel.classList.add('editor-panel'))

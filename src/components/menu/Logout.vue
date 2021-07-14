@@ -8,7 +8,7 @@ import axios from 'axios'
 export default {
     methods: {
         async logout() {
-            if (!confirm('Do you want to log out?')) {
+            if (!window.confirm('Do you want to log out?')) {
                 return
             }
             try {

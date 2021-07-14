@@ -7,7 +7,7 @@
         <AceMenu v-if="getMenuActive" />
 
         <div class="ace-container">
-            <header>AGENT EDITOR</header> 
+            <header>AGENT EDITOR</header>
             <hr class="rule">
             <div class="ace-main">
                 <div class="nav-container">
@@ -38,17 +38,17 @@ export default {
         axios.defaults.withCredentials = true
         const params = {agent_desc: 'default'}
         axios.get('/get_agent_desc', {params: params})
-            .then(response => {
-                if (response.status === 200) {
-                    this.SETAGENTDESC({
-                        agent_desc: response.data.agent_desc,
-                        isDefault: true,
-                    })
-                    this.SETAGENTSCHEMA(response.data.agent_schema)
-                }
-            }).catch(error => {
-                console.log(error)
-            })
+                .then(response => {
+                    if (response.status === 200) {
+                        this.SETAGENTDESC({
+                            agent_desc: response.data.agent_desc,
+                            isDefault: true,
+                        })
+                        this.SETAGENTSCHEMA(response.data.agent_schema)
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),
@@ -119,7 +119,7 @@ header {
 }
 
 .editor-container {
-    margin-left: 16px; 
+    margin-left: 16px;
     flex-grow: 1;
     height: 100%;
     overflow: hidden;

@@ -85,7 +85,7 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => value + ' ' + this.unit,
+                                callback: (value, index, values) => `${value} ${this.unit}`,
                             },
                         }],
                         xAxes: [{
@@ -126,7 +126,7 @@ export default {
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
             let startingStep
-            if (currentStep != this.prevStep+1) {
+            if (currentStep !== this.prevStep+1) {
                 startingStep = currentStep - 23  // replace all 24 values
             } else {
                 startingStep = currentStep  // add the latest value

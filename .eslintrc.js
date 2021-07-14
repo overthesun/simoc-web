@@ -29,7 +29,6 @@ module.exports = {
     ],
     rules: {
         // SPACING
-        'comma-spacing': 'error',
         'indent': ['error', 4, {
             SwitchCase: 1,
             MemberExpression: 2,
@@ -41,17 +40,22 @@ module.exports = {
             CallExpression: {arguments: 'first'},
         }],
         'no-trailing-spaces': 'error',
+        'comma-spacing': 'error',
         'space-in-parens': ['error', 'never'],
         'space-before-function-paren': ['error', 'never'],
+        'function-paren-newline': ['error', 'consistent'],
         'key-spacing': ['error', {beforeColon: false, afterColon: true}],
         'space-before-blocks': 'error',
         'keyword-spacing': ['error', {before: true, after: true}],
         'arrow-spacing': ['error', {before: true, after: true}],
         'no-multi-spaces': ['error', {ignoreEOLComments: true}],
+        'no-multiple-empty-lines': 'error',
         'spaced-comment': ['error', 'always'],
         'object-curly-spacing': ['error', 'never',
                                  {arraysInObjects: false, objectsInObjects: false}],
         'array-bracket-spacing': 'error',
+        'padded-blocks': ['error', 'never'],
+        'object-property-newline': 'off',
         'computed-property-spacing': 'error',
 
         // STYLISTIC ISSUES
@@ -71,17 +75,13 @@ module.exports = {
         'prefer-template': 'warn',
         'prefer-destructuring': ['warn', {object: true, array: false}],
         'dot-notation': 'error',
-        'no-param-reassign': ['error', {
-            props: true,
-            // ignore this for vuex store states, and for JS events
-            ignorePropertyModificationsFor: ['state', 'event'],
-        }],
+        'no-param-reassign': ['error', {props: false}],
         'no-unused-vars': ['error', {
             args: 'none',
             varsIgnorePattern: 'mapState|mapGetters|mapMutations|mapActions',
         }],
         'object-shorthand': ['error', 'methods', {avoidQuotes: true}],
-        'func-names': 'warn',
+        'func-names': ['error', 'as-needed'],
 
 
         // OPERATORS
@@ -94,7 +94,13 @@ module.exports = {
 
 
         // SYNTAX
-        'comma-dangle': ['error', 'always-multiline'],
+        'comma-dangle': ['error', {
+            arrays: 'always-multiline',
+            objects: 'always-multiline',
+            imports: 'always-multiline',
+            exports: 'always-multiline',
+            functions: 'never',
+        }],
         'semi': ['error', 'never'],
         'brace-style': ['error', '1tbs', {allowSingleLine: true}],
         'object-curly-newline': ['error', {
@@ -105,15 +111,18 @@ module.exports = {
         }],
         'quotes': ['error', 'single', {avoidEscape: true, allowTemplateLiterals: true}],
         'quote-props': ['error', 'consistent-as-needed'],
-        'arrow-parens': ['warn', 'as-needed'],
+        'arrow-parens': ['error', 'as-needed'],
 
 
         // USE SPECIFIC OF FUNCTIONS
+        'curly': 'error',
+        'no-lonely-if': 'off',
+        'no-else-return': 'off',
         'array-callback-return': 'error',
-        'no-lonely-if': 'error',
-        'no-else-return': 'error',
-        'no-console': 'warn',
-        'no-alert': 'warn',
+        // TODO: set these 2 back to 'error' once we have proper popups
+        'no-console': 'off',
+        'no-alert': 'off',
+        'no-floating-decimal': 'error',
         'no-prototype-builtins': 'error',
         'no-restricted-globals': 'error',
         'radix': 'error',

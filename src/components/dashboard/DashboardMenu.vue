@@ -13,7 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
-            <button class="btn-warning btn-logout"  @click="logout">Log Out</button>
+            <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
 </template>
@@ -65,7 +65,7 @@ export default {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
-            simdata['configuration'] = this.getConfiguration
+            simdata.configuration = this.getConfiguration
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
@@ -87,7 +87,7 @@ export default {
         },
         // Logout button route
         async logout() {
-            if (!confirm('Stop the current simulation and log out?')) {
+            if (!window.confirm('Stop the current simulation and log out?')) {
                 return
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart
@@ -104,7 +104,7 @@ export default {
 
         // New Simulation button
         toConfiguration() {
-            if (!confirm('Stop the current simulation and configure a new one?')) {
+            if (!window.confirm('Stop the current simulation and configure a new one?')) {
                 return
             }
             this.timerWasRunning = false  // make sure the timer doesn't restart

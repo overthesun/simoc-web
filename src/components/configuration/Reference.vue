@@ -179,7 +179,6 @@ using v-for to populate all links with the title and the approriate value for th
         </div>
 
 
-
     </div>
 </template>
 

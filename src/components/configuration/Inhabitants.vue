@@ -81,9 +81,7 @@ export default {
         },
         validateRef(ref) {
             // wait for the fields to be updated before attempting validation
-            this.$nextTick(function() {
-                this.$refs[ref].reportValidity()
-            })
+            this.$nextTick(() => this.$refs[ref].reportValidity())
         },
     },
     watch: {
@@ -116,7 +114,8 @@ export default {
                                                !this.$refs.crew_quarters_type.checkValidity())
             const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
             this.$refs.humans.setCustomValidity(
-                humans_are_invalid ? 'Please select a crew quarters type.' : '')
+                humans_are_invalid ? 'Please select a crew quarters type.' : ''
+            )
             this.validateRef('humans')
         },
         'getConfiguration.food.amount': function() {

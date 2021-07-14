@@ -29,11 +29,11 @@ export default {
         }
         // reset more variables
         // the buffer current should be 0 so its value is updated when step 1 is received
-        this.SETTIMERID(undefined)          // Set the timerID to undefined
-        this.SETGETSTEPSTIMERID(undefined)  // Set the getStepsTimerID to undefined
-        this.SETBUFFERCURRENT(0)            // Reset the current buffer value
-        this.SETMINSTEPNUMBER(0)            // Reset the starting step
-        this.SETSTOPPED(false)              // Reset stopped and terminated flags
+        this.SETTIMERID(null)          // Set the timerID to null
+        this.SETGETSTEPSTIMERID(null)  // Set the getStepsTimerID to null
+        this.SETBUFFERCURRENT(0)       // Reset the current buffer value
+        this.SETMINSTEPNUMBER(0)       // Reset the starting step
+        this.SETSTOPPED(false)         // Reset stopped and terminated flags
 
         // TODO: we switched from using a timer to request steps via HTTP to
         // websockets, but for now all the old code is still there.
@@ -123,7 +123,7 @@ export default {
                 // but now this is no longer necessary since we request them all at once,
                 // so the store should be updated to match getTotalMissionHours,
                 // or getting rid of n_steps altogether
-                req['data']['n_steps'] = this.getTotalMissionHours
+                req.data.n_steps = this.getTotalMissionHours
                 // the req includes the min_step_num -- in case of reconnection,
                 // it will requests steps starting from the last received + 1
                 this.socket.emit('get_steps', req)
@@ -131,20 +131,20 @@ export default {
                             this.request_sent?'steps again':'steps')
                 this.request_sent = true
             })
-            socket.on('step_data_handler', (msg) => {
+            socket.on('step_data_handler', msg => {
                 // console.log('step_data_handler called, received:', msg)
                 this.parseStep(Object.values(msg.data))
                 // console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
             })
-            socket.on('steps_sent', (msg) => {
+            socket.on('steps_sent', msg => {
                 console.log(msg.message)
                 // disconnect once we got all the steps
                 this.tearDownWebSocket()
             })
-            socket.on('user_connected', (msg) => {
+            socket.on('user_connected', msg => {
                 console.log(msg.message)
             })
-            socket.on('disconnect', (msg) => {
+            socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')
             })
         },
@@ -206,7 +206,7 @@ export default {
             await this.parseStep(Object.values(step_data))
 
             // keep requesting steps until we retrieved them all, then terminate
-            if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours)) {
+            if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours, 10)) {
                 this.stepBufferTimer()
             } else {
                 this.SETTERMINATED(true)
@@ -237,7 +237,7 @@ export default {
             }
             this.SETTERMINATED(true)  // terminate the sim
             // stop timer that sends requests to get_steps
-            if (this.getGetStepsTimerID != null) {
+            if (this.getGetStepsTimerID !== null) {
                 window.clearTimeout(this.getGetStepsTimerID)
                 this.SETGETSTEPSTIMERID(null)
             }

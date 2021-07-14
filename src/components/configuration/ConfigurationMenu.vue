@@ -48,7 +48,7 @@ export default {
             this.SETCONFIGURATION(json_config)
         },
         resetConfig() {
-            if (!confirm('Reset the current configuration?')) {
+            if (!window.confirm('Reset the current configuration?')) {
                 return
             }
             this.SETRESETCONFIG(true)

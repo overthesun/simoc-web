@@ -69,9 +69,7 @@ export default {
             // update location and report validity
             const {location} = this.getConfiguration
             this.location = location
-            this.$nextTick(function() {
-                this.$refs.location.reportValidity()
-            })
+            this.$nextTick(() => this.$refs.location.reportValidity())
         },
         'getConfiguration.duration': {
             handler() {
@@ -89,10 +87,8 @@ export default {
                 } else {
                     this.$refs.duration_unit.reportValidity()
                 }
-                this.$nextTick(function() {
-                    // wait until the min/max are updated to validate
-                    this.$refs.duration.reportValidity()
-                })
+                // wait until the min/max are updated to validate
+                this.$nextTick(() => this.$refs.duration.reportValidity())
             },
             deep: true,  // should trigger when duration.amount/units change
         },

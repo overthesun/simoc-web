@@ -114,7 +114,7 @@ export default {
                             beginAtZero: true,
                             fontColor: '#eeeeee',
                             callback(value, index, values) {
-                                return value + ' m³'
+                                return `${value} m³`
                             },
                         },
                         gridLines: {

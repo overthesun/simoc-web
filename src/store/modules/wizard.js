@@ -203,10 +203,8 @@ export default {
 
             if (durationUnits === 'day') {
                 totalHours = durationLength * 24
-
-            } else if (durationUnits == 'year') {
+            } else if (durationUnits === 'year') {
                 totalHours = durationLength * 8760
-
             } else {
                 totalHours = durationLength
             }
@@ -219,30 +217,33 @@ export default {
             const config = state.configuration
             // create formatted configuration
             const fconfig = {
-                duration: {type: config.duration.units, value: parseInt(config.duration.amount)},
-                human_agent: {amount: parseInt(config.humans.amount)},
-                food_storage: {food_edbl: parseInt(config.food.amount)},
-                eclss: {amount: parseInt(config.eclss.amount)},
-                solar_pv_array_mars: {amount: parseInt(config.powerGeneration.amount)},
-                power_storage: {enrg_kwh: parseInt(config.powerStorage.amount)},
+                duration: {type: config.duration.units,
+                           value: parseInt(config.duration.amount, 10)},
+                human_agent: {amount: parseInt(config.humans.amount, 10)},
+                food_storage: {food_edbl: parseInt(config.food.amount, 10)},
+                eclss: {amount: parseInt(config.eclss.amount, 10)},
+                solar_pv_array_mars: {amount: parseInt(config.powerGeneration.amount, 10)},
+                power_storage: {enrg_kwh: parseInt(config.powerStorage.amount, 10)},
                 nutrient_storage: {sold_n: 100, sold_p: 100, sold_k: 100},
                 single_agent: 1,
                 plants: [],
             }
-            if ((state.configuration.greenhouse.type == 'none') &&
-                (state.configuration.crewQuarters.type == 'none')) {
-                throw 'Please select a value for the Crew Quarters and/or the Greenhouse.'
+            if ((state.configuration.greenhouse.type === 'none') &&
+                (state.configuration.crewQuarters.type === 'none')) {
+                throw new Error('Please select a value for the ' +
+                                'Crew Quarters and/or the Greenhouse.')
             }
-            if (state.configuration.greenhouse.type != 'none') {
-                fconfig['greenhouse'] = config.greenhouse.type
+            if (state.configuration.greenhouse.type !== 'none') {
+                fconfig.greenhouse = config.greenhouse.type
             }
-            if (state.configuration.crewQuarters.type != 'none') {
-                fconfig['habitat'] = config.crewQuarters.type
+            if (state.configuration.crewQuarters.type !== 'none') {
+                fconfig.habitat = config.crewQuarters.type
             }
             config.plantSpecies.forEach(element => {
                 // ignore plants if the plant type is not selected
-                if (element.type != '') {
-                    fconfig.plants.push({species: element.type, amount: parseInt(element.amount)})
+                if (element.type !== '') {
+                    fconfig.plants.push({species: element.type,
+                                         amount: parseInt(element.amount, 10)})
                 }
             })
             return fconfig
@@ -259,15 +260,15 @@ export default {
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
-                if (newconfig.hasOwnProperty(key)) {
+                if (key in newconfig) {
                     newconfig[key] = newvalue[key]
                     valid_keys.push(key)
                 } else {
                     invalid_keys.push(key)
                 }
             })
-            if (valid_keys.length == 0) {
-                throw 'invalid configuration file.'
+            if (valid_keys.length === 0) {
+                throw new Error('invalid configuration file.')
             }
             if (invalid_keys.length > 0) {
                 console.log('* Ignoring invalid keys in the uploaded file:',
@@ -297,7 +298,7 @@ export default {
             state.configuration.powerStorage = powerStorage
         },
         // Adds an empty plant to the plant species array
-        ADDPLANTSPECIES: (state) => {
+        ADDPLANTSPECIES: state => {
             state.configuration.plantSpecies.push({type: '', amount: ''})
         },
         // Updates the plant at the index with the new values

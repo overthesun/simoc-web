@@ -50,7 +50,6 @@ export default {
         toCustom() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('configuration')
-
         },
     },
 }

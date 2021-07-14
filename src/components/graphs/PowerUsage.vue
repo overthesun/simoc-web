@@ -62,9 +62,10 @@ export default {
         plantSpecies: {
             handler() {
                 this.energy.plantSpecies[1] = 0
-                this.plantSpecies.forEach((element) => {
-                    if (element.type != null && element.amount > 0) {
-                        this.retrievePower(element.type, element.amount, (response) => {
+                this.plantSpecies.forEach(element => {
+                    // TODO: double check the plantSpecies values in the presets
+                    if (element.type !== null && element.amount > 0) {
+                        this.retrievePower(element.type, element.amount, response => {
                             const {energy_input} = response
                             this.energy.plantSpecies[1] += energy_input
                             this.updateChart()
@@ -78,7 +79,7 @@ export default {
 
         eclss: {
             handler() {
-                this.retrievePower(this.eclss.type, this.eclss.amount, (response) => {
+                this.retrievePower(this.eclss.type, this.eclss.amount, response => {
                     const {energy_input} = response
                     this.energy.eclss[1] = energy_input
                     this.updateChart()
@@ -89,19 +90,18 @@ export default {
         },
         crewQuarters: {
             handler() {
-                this.retrievePower(this.crewQuarters.type, 1, (response) => {
+                this.retrievePower(this.crewQuarters.type, 1, response => {
                     const {energy_input} = response
                     this.energy.crewQuarters[1] = energy_input
                     this.updateChart()
                 })
-
             },
             immediate: true,
             deep: true,
         },
         greenhouse: {
             handler() {
-                this.retrievePower(this.greenhouse.type, 1, (response) => {
+                this.retrievePower(this.greenhouse.type, 1, response => {
                     const {energy_input} = response
                     this.energy.greenhouse[1] = energy_input
                     this.updateChart()
@@ -115,7 +115,7 @@ export default {
                 this.retrievePower(
                     this.powerGenerator.type,
                     this.powerGenerator.amount,
-                    (response) => {
+                    response => {
                         const {energy_output} = response
                         this.energy.powerGenerator[0] = energy_output
                         this.updateChart()
@@ -130,7 +130,7 @@ export default {
                 this.retrievePower(
                     this.powerStorage.type,
                     this.powerStorage.amount,
-                    (response) => {
+                    response => {
                         // const {energy_capacity} = response
                         // TODO: handle batteries
                         // this.energy.powerStorage = energy_capacity
@@ -209,7 +209,7 @@ export default {
                             beginAtZero: true,
                             fontColor: '#eeeeee',
                             callback(value, index, values) {
-                                return value + ' kWh'
+                                return `${value} kWh`
                             },
                         },
                         gridLines: {

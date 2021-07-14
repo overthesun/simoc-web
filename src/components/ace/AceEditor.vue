@@ -27,7 +27,7 @@ import {formatEditor} from './formatEditor'
 // empty would result in a validation error. For this reason
 // we use the following placeholders to set 'empty' editor.
 const editorNames = ['agentEditor', 'customEditor']
-const editorPlaceholder = (editorName) => {
+const editorPlaceholder = editorName => {
     switch (editorName) {
         case 'agentEditor':
             return {name: 'empty'}
@@ -217,8 +217,12 @@ export default {
             }
             const custom = this.customFields.includes(newAgent)
             const active = (custom) ? 'customEditor' : 'agentEditor'
-            const newData = (newAgent ?
-                             this.parseAgentData(this.agentData) : editorPlaceholder(active))
+            let newData
+            if (newAgent) {
+                newData = this.parseAgentData(this.agentData)
+            } else {
+                newData = editorPlaceholder(active)
+            }
             this[active].setValue(newData)
 
             const inactive = (custom) ? 'agentEditor' : 'customEditor'

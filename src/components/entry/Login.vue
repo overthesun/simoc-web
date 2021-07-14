@@ -76,7 +76,6 @@ export default {
     },
 
     data() {
-
         // Initialize all the values that will be used for v-model
         return {
             activeOption: 'login', // Which 'option' should be active
@@ -118,7 +117,8 @@ export default {
                 this.addWarning(
                     'Invalid Username: can only contain letters, ' +
                     'numbers, underscores (_), dashes (-), dots (.), ' +
-                    'and must be at least 4 characters long.')
+                    'and must be at least 4 characters long.'
+                )
             }
             if (!passwordIsValid) {
                 this.addWarning('Invalid Password: must be at least 8 characters long.')
@@ -158,8 +158,8 @@ export default {
             axios.defaults.withCredentials = true
             axios.post(route, params).then(response => {
                 const {status} = response
-                if (response.data.status == 'ERROR') {
-                    const errmsg = 'Error: ' + response.data.message
+                if (response.data.status === 'ERROR') {
+                    const errmsg = `Error: ${response.data.message}`
                     this.$gtag.exception({description: errmsg})
                     this.addWarning(errmsg)
                 } else if (status === 200) {
@@ -198,11 +198,11 @@ export default {
                     const message = error.response.data.message || error.message
                     this.$gtag.exception({description: message})
                     if (status === 401) {
-                        this.addWarning('Login Error: ' + message)
+                        this.addWarning(`Login Error: ${message}`)
                     } else if (status === 409) {
-                        this.addWarning('Registration Error: ' + message)
+                        this.addWarning(`Registration Error: ${message}`)
                     } else {
-                        this.addWarning('Error: ' + message)
+                        this.addWarning(`Error: ${message}`)
                     }
                 }
             })
@@ -258,8 +258,9 @@ export default {
         },
         guestLogin() {
             // create a random user/pass and use them to login as guest
-            const rand_userid = ('guest-' + Date.now().toString(36) + '-' +
-                                 Math.random().toString(36).substring(2, 15))
+            const date = Date.now().toString(36)
+            const rand_str = Math.random().toString(36).substring(2, 15)
+            const rand_userid = `guest-${date}-${rand_str}`
             const rand_password = Math.random().toString(36).substring(2, 15)
             this.register.username = rand_userid
             this.register.password = rand_password

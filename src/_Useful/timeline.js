@@ -27,7 +27,7 @@ export default {
     methods: {
         updateStep() {
             this.clock = setTimeout(() => {
-                this.value = parseInt(this.value) + 1
+                this.value = parseInt(this.value, 10) + 1
 
                 if (this.value >= this.stepMax) {
                     window.clearInterval(this.clock)
@@ -42,13 +42,12 @@ export default {
         },
         updateBuffer() {
             setTimeout(() => {
-                if (this.value < this.stepMax)
+                if (this.value < this.stepMax) {
                     this.updateStep()
-                else
+                } else {
                     this.updateBuffer()
+                }
             }, 100)
-
-
         },
     },
     mounted() {
@@ -111,10 +110,3 @@ export default {
     }
 
 </style>
-
-
-
-
-
-
-

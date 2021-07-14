@@ -111,7 +111,7 @@ export default {
                                 // always stuck at 100% and it doesn't scale
                                 // when only small values are displayed
                                 callback(value, index, values) {
-                                    return value + '%'
+                                    return `${value}%`
                                 },
                             },
                         }],
@@ -145,7 +145,7 @@ export default {
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
             let startingStep
-            if (currentStep != this.prevStep+1) {
+            if (currentStep !== this.prevStep+1) {
                 startingStep = currentStep - 23  // replace all 24 values
             } else {
                 startingStep = currentStep  // add the latest value
@@ -153,20 +153,20 @@ export default {
             // this will do 1 or 24 iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values and labels
-                Object.values(data.datasets).forEach((dataset) => dataset.data.shift())
+                Object.values(data.datasets).forEach(dataset => dataset.data.shift())
                 data.labels.shift()
                 // add the new values
                 if (step > 0) {
                     const storage_capacities = this.getStorageCapacities(step)
                     const storage = storage_capacities[this.storage_name][this.storage_num]
                     const tot_storage = Object.values(storage).reduce(
-                        (acc, elem) => acc + elem['value'], 0  // start from 0
+                        (acc, elem) => acc + elem.value, 0  // start from 0
                     )
-                    Object.entries(storage).map(
+                    Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
                             const index = this.setsinfo[this.storage_name].order[key]
-                            const ratio = (elem['value'] * 100 / tot_storage).toFixed(4)
+                            const ratio = (elem.value * 100 / tot_storage).toFixed(4)
                             data.datasets[index].data.push(ratio)
                         }
                     )
@@ -174,7 +174,7 @@ export default {
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 24 total items and is not stretched
-                    Object.values(data.datasets).forEach((dataset) => dataset.data.push(undefined))
+                    Object.values(data.datasets).forEach(dataset => dataset.data.push(undefined))
                     data.labels.push('')
                 }
             }
