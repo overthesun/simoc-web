@@ -25,23 +25,23 @@ import {mapState, mapGetters, mapMutations} from 'vuex'
 import {BaseMenu} from '../base'
 
 export default {
+    components: {
+        BaseMenu,
+    },
     data() {
         return {
             timerWasRunning: null,  // the status of timer before opening the menu
         }
     },
-    components: {
-        BaseMenu,
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
+        ...mapGetters(['getGameID']),
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
         this.timerWasRunning = this.getIsTimerRunning
         this.PAUSETIMER()
-    },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
-        ...mapGetters(['getGameID']),
     },
     // Called when the menu is closed, resumes the timer if it was running
     beforeDestroy() {

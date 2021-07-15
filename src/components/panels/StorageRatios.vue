@@ -21,14 +21,8 @@ import {LevelsGraph} from '../graphs'
 
 export default {
     panelTitle: 'Storage Ratios',
-    data() {
-        return {
-            storage: undefined,
-        }
-    },
-    created() {
-        // default on the first storage if we don't get anything (e.g. when using "Change panel")
-        this.storage = this.panelSection || `${Object.keys(this.getStorages)[0]}/1`
+    components: {
+        LevelsGraph,
     },
     props: {
         canvasNumber: 0,
@@ -37,17 +31,16 @@ export default {
         panelIndex: Number,
         panelSection: undefined,
     },
-    components: {
-        LevelsGraph,
+    data() {
+        return {
+            storage: undefined,
+        }
     },
     computed: {
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         getStorages() {
             return this.getGameConfig.storages
         },
-    },
-    methods: {
-        stringFormatter: StringFormatter,
     },
     watch: {
         storage() {
@@ -59,6 +52,13 @@ export default {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.storage = this.getActivePanels[this.panelIndex].split(':')[1]
         },
+    },
+    created() {
+        // default on the first storage if we don't get anything (e.g. when using "Change panel")
+        this.storage = this.panelSection || `${Object.keys(this.getStorages)[0]}/1`
+    },
+    methods: {
+        stringFormatter: StringFormatter,
     },
 }
 </script>

@@ -157,6 +157,7 @@ module.exports = {
         'vue/no-multi-spaces': 'error',
         'vue/no-unused-vars': 'error',
         'vue/no-unused-components': 'error',
+        'vue/order-in-components': 'error',
         'vue/require-component-is': 'error',
         'vue/require-v-for-key': 'error',
         'vue/no-parsing-error': 'error',

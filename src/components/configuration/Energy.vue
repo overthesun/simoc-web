@@ -49,11 +49,6 @@ export default {
             storage: undefined,
         }
     },
-    beforeMount() {
-        const {powerGeneration, powerStorage} = this.getConfiguration
-        this.generator = powerGeneration
-        this.storage = powerStorage
-    },
     computed: {
         ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
         generatorValues() {
@@ -61,17 +56,6 @@ export default {
         },
         storageValues() {
             return this.getValidValues.storage
-        },
-    },
-    methods: {
-        ...mapMutations('wizard', ['SETENERGY']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
-
-        // Set the selected values from above fields to the wizard store.
-        // Called from all fields on change, and updates with all selected values from this form.
-        setEnergy() {
-            const value = {powerGeneration: this.generator, powerStorage: this.storage}
-            this.SETENERGY(value)
         },
     },
     watch: {
@@ -102,6 +86,22 @@ export default {
                 })
             },
             deep: true, // should trigger when powerStorage.amount/type change
+        },
+    },
+    beforeMount() {
+        const {powerGeneration, powerStorage} = this.getConfiguration
+        this.generator = powerGeneration
+        this.storage = powerStorage
+    },
+    methods: {
+        ...mapMutations('wizard', ['SETENERGY']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
+
+        // Set the selected values from above fields to the wizard store.
+        // Called from all fields on change, and updates with all selected values from this form.
+        setEnergy() {
+            const value = {powerGeneration: this.generator, powerStorage: this.storage}
+            this.SETENERGY(value)
         },
     },
 }

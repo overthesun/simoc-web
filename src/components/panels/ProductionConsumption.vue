@@ -20,6 +20,16 @@ import {VersusGraph} from '../graphs'
 
 export default {
     panelTitle: 'Production / Consumption',
+    components: {
+        VersusGraph,
+    },
+    props: {
+        canvasNumber: 0,
+        // these are passed by dashboard/Main.vue and
+        // determine the panel index and the selected graph
+        panelIndex: Number,
+        panelSection: undefined,
+    },
     data() {
         return {
             // default on 'atmo_co2' if we don't get anything
@@ -32,16 +42,6 @@ export default {
                 enrg_kwh: 'kW',
             },
         }
-    },
-    props: {
-        canvasNumber: 0,
-        // these are passed by dashboard/Main.vue and
-        // determine the panel index and the selected graph
-        panelIndex: Number,
-        panelSection: undefined,
-    },
-    components: {
-        VersusGraph,
     },
     computed: {
         ...mapGetters('dashboard', ['getActivePanels']),

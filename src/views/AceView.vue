@@ -34,6 +34,9 @@ export default {
         AceEditor: AceEditor,
         AceNavigation: AceNavigation,
     },
+    computed: {
+        ...mapGetters('dashboard', ['getMenuActive']),
+    },
     async created() {
         axios.defaults.withCredentials = true
         const params = {agent_desc: 'default'}
@@ -49,9 +52,6 @@ export default {
                 }).catch(error => {
                     console.log(error)
                 })
-    },
-    computed: {
-        ...mapGetters('dashboard', ['getMenuActive']),
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC', 'SETAGENTSCHEMA']),

@@ -60,6 +60,20 @@ export default {
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
         }
     },
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
+    },
+    watch: {
+        'getConfiguration.greenhouse.type': function() {
+            this.updateAndValidate()
+        },
+        'getConfiguration.plantSpecies': {
+            handler() {
+                this.updateAndValidate()
+            },
+            deep: true,
+        },
+    },
     beforeMount() {
         // Get the values from the configuration that is initially set
         const {plantSpecies, greenhouse} = this.getConfiguration
@@ -77,9 +91,6 @@ export default {
 
         // See below. This is used to add all options for the plant names to the selection field.
         this.retrievePlantSpecies()
-    },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
     },
     methods: {
         ...mapMutations('wizard', ['SETGREENHOUSE', 'ADDPLANTSPECIES',
@@ -264,17 +275,6 @@ export default {
                 })
             })
             this.plantSpecies = plantSpecies
-        },
-    },
-    watch: {
-        'getConfiguration.greenhouse.type': function() {
-            this.updateAndValidate()
-        },
-        'getConfiguration.plantSpecies': {
-            handler() {
-                this.updateAndValidate()
-            },
-            deep: true,
         },
     },
 }

@@ -60,6 +60,67 @@ export default {
             return this.customFields.includes(this.activeAgent)
         },
     },
+    watch: {
+        // Load editors once, if and when a valid agentSchema appears in the store.
+        // ('agent_schema' and 'agent_desc' loaded async by parent component, AceView.vue)
+        agentSchema(newSchema, oldSchema) {
+            // Only build once
+            if (this.isBuilt || Object.keys(newSchema).length === 0) {
+                return
+            }
+            this.isBuilt = true
+            const agent_schema = JSON.parse(JSON.stringify(newSchema))
+
+            // Add 'currencies_of_exchange' list to schema
+            // TODO: Update schema as list of currencies changes. JSON-editor
+            // doesn't have a built-in function to update schema.
+            agent_schema.agent.definitions.type.enum = this.currencies
+
+            // Validate new currency names
+            JSONEditor.defaults.custom_validators.push((schema, value, path) => {
+                const errors = []
+                if (path === 'root.name') {
+                    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                        errors.push({
+                            path: path,
+                            property: 'format',
+                            message: 'Agent names must be alphanumeric and/or "_"',
+                        })
+                    }
+                }
+                return errors
+            })
+            this.loadEditor('agentEditor', agent_schema.agent)
+            this.loadEditor('customEditor', agent_schema.custom)
+        },
+
+        // Reload editor when activeAgent changes
+        activeAgent(newAgent, oldAgent) {
+            if (!this.agentData) {
+                // After deleting an agent, activeAgent is set to null
+                // and then (somehow?) set back to the deleted agent.
+                // This section compensates for that.
+                this.SETACTIVEAGENT(null)
+                return
+            }
+            // Ignore agents before editor is built
+            if (!this.isBuilt) {
+                return
+            }
+            const custom = this.customFields.includes(newAgent)
+            const active = (custom) ? 'customEditor' : 'agentEditor'
+            let newData
+            if (newAgent) {
+                newData = this.parseAgentData(this.agentData)
+            } else {
+                newData = editorPlaceholder(active)
+            }
+            this[active].setValue(newData)
+
+            const inactive = (custom) ? 'agentEditor' : 'customEditor'
+            this[inactive].setValue(editorPlaceholder(inactive))
+        },
+    },
     methods: {
         ...mapMutations('ace', ['UPDATEAGENT', 'SETEDITORVALID',
                                 'UPDATEAGENTNAME', 'SETACTIVEAGENT']),
@@ -166,67 +227,6 @@ export default {
                     },
                 }
             }
-        },
-    },
-    watch: {
-        // Load editors once, if and when a valid agentSchema appears in the store.
-        // ('agent_schema' and 'agent_desc' loaded async by parent component, AceView.vue)
-        agentSchema(newSchema, oldSchema) {
-            // Only build once
-            if (this.isBuilt || Object.keys(newSchema).length === 0) {
-                return
-            }
-            this.isBuilt = true
-            const agent_schema = JSON.parse(JSON.stringify(newSchema))
-
-            // Add 'currencies_of_exchange' list to schema
-            // TODO: Update schema as list of currencies changes. JSON-editor
-            // doesn't have a built-in function to update schema.
-            agent_schema.agent.definitions.type.enum = this.currencies
-
-            // Validate new currency names
-            JSONEditor.defaults.custom_validators.push((schema, value, path) => {
-                const errors = []
-                if (path === 'root.name') {
-                    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-                        errors.push({
-                            path: path,
-                            property: 'format',
-                            message: 'Agent names must be alphanumeric and/or "_"',
-                        })
-                    }
-                }
-                return errors
-            })
-            this.loadEditor('agentEditor', agent_schema.agent)
-            this.loadEditor('customEditor', agent_schema.custom)
-        },
-
-        // Reload editor when activeAgent changes
-        activeAgent(newAgent, oldAgent) {
-            if (!this.agentData) {
-                // After deleting an agent, activeAgent is set to null
-                // and then (somehow?) set back to the deleted agent.
-                // This section compensates for that.
-                this.SETACTIVEAGENT(null)
-                return
-            }
-            // Ignore agents before editor is built
-            if (!this.isBuilt) {
-                return
-            }
-            const custom = this.customFields.includes(newAgent)
-            const active = (custom) ? 'customEditor' : 'agentEditor'
-            let newData
-            if (newAgent) {
-                newData = this.parseAgentData(this.agentData)
-            } else {
-                newData = editorPlaceholder(active)
-            }
-            this[active].setValue(newData)
-
-            const inactive = (custom) ? 'agentEditor' : 'customEditor'
-            this[inactive].setValue(editorPlaceholder(inactive))
         },
     },
 }

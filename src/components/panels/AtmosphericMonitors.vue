@@ -45,11 +45,11 @@ import {Gauge} from '../graphs'
 
 export default {
     panelTitle: 'Atmospheric Monitors',
-    props: {
-        canvasNumber: 0,
-    },
     components: {
         Gauge,
+    },
+    props: {
+        canvasNumber: 0,
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),

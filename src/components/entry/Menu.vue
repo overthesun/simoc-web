@@ -31,13 +31,19 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseEntry} from '../base'
 
 export default {
+    components: {
+        BaseEntry,
+    },
     data() {
         return {
             showAgentEditor: false,
         }
     },
-    components: {
-        BaseEntry,
+    mounted() {
+        window.addEventListener('keydown', this.keyListener)
+    },
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
@@ -107,12 +113,6 @@ export default {
                 e.preventDefault()
             }
         },
-    },
-    mounted() {
-        window.addEventListener('keydown', this.keyListener)
-    },
-    beforeDestroy() {
-        window.removeEventListener('keydown', this.keyListener)
     },
 }
 </script>

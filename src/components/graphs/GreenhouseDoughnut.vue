@@ -74,45 +74,6 @@ export default {
             return data
         }*/
     },
-
-    methods: {
-        // Format the plant data to be used within the chart object.
-
-        greenhouseConfiguration() {
-            // get the plants and greenhouse from the configuration
-            const {greenhouse, plantSpecies} = this.getConfiguration
-            // Set the first value of the dataset to the size of the greenhouse
-            // and add the label free space
-            const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
-            plantSpecies.forEach(item => {
-                // Calculates the total free space left after all the plants are added,
-                // modifies the first index initialized above.
-                values.data[0] = Math.max(0, values.data[0] - item.amount)
-                values.data.push(item.amount) // Push in the amount of the plant that is present.
-                values.labels.push(StringFormatter(item.type)) // format the plant name for display
-            })
-
-            return values
-        },
-        updateChart() {
-            const {greenhouse} = this.getConfiguration
-            const {data, labels} = this.greenhouseConfiguration()
-            this.chart.data.labels = labels  // labels are always visible
-            let text
-            if (greenhouse.type === 'none') {
-                // only show the text if the greenhouse type is none
-                this.chart.data.datasets[0].data = []
-                text = 'No Greenhouse Type Selected'
-            } else {
-                // otherwise show both the doughnut and the text
-                this.chart.data.datasets[0].data.pop()
-                this.chart.data.datasets[0].data = data
-                text = `${data[0]} m³ / ${this.greenhouseSize[greenhouse.type]} m³`
-            }
-            this.chart.options.elements.centerText.text = text
-            this.chart.update()
-        },
-    },
     watch: {
         // Watches for changes in getCurrentStepBuffer within the
         // dashboard store to update the graph in the dashboard
@@ -128,9 +89,6 @@ export default {
             },
             deep: true,
         },
-    },
-    update() {
-
     },
     mounted() {
         const canvas = document.getElementById(this.id)
@@ -194,6 +152,48 @@ export default {
             }],
         })
         this.updateChart()  // this will set the center text and other things
+    },
+
+    methods: {
+        // Format the plant data to be used within the chart object.
+
+        greenhouseConfiguration() {
+            // get the plants and greenhouse from the configuration
+            const {greenhouse, plantSpecies} = this.getConfiguration
+            // Set the first value of the dataset to the size of the greenhouse
+            // and add the label free space
+            const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
+            plantSpecies.forEach(item => {
+                // Calculates the total free space left after all the plants are added,
+                // modifies the first index initialized above.
+                values.data[0] = Math.max(0, values.data[0] - item.amount)
+                values.data.push(item.amount) // Push in the amount of the plant that is present.
+                values.labels.push(StringFormatter(item.type)) // format the plant name for display
+            })
+
+            return values
+        },
+        updateChart() {
+            const {greenhouse} = this.getConfiguration
+            const {data, labels} = this.greenhouseConfiguration()
+            this.chart.data.labels = labels  // labels are always visible
+            let text
+            if (greenhouse.type === 'none') {
+                // only show the text if the greenhouse type is none
+                this.chart.data.datasets[0].data = []
+                text = 'No Greenhouse Type Selected'
+            } else {
+                // otherwise show both the doughnut and the text
+                this.chart.data.datasets[0].data.pop()
+                this.chart.data.datasets[0].data = data
+                text = `${data[0]} m³ / ${this.greenhouseSize[greenhouse.type]} m³`
+            }
+            this.chart.options.elements.centerText.text = text
+            this.chart.update()
+        },
+    },
+    update() {
+
     },
 }
 

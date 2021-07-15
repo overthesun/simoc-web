@@ -56,33 +56,10 @@ export default {
             eclss: undefined,
         }
     },
-    beforeMount() {
-        // Get the values from the configuration that is initially set
-        const {humans, food, crewQuarters, eclss} = this.getConfiguration
-        this.humans = humans
-        this.food = food
-        this.crewQuarters = crewQuarters
-        this.eclss = eclss
-    },
     computed: {
         ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
         ranges() {
             return this.getValidValues  // return the valid ranges for humans/food/eclss
-        },
-    },
-    methods: {
-        ...mapMutations('wizard', ['SETINHABITANTS']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
-
-        setInhabitants() {
-            // Sets all related values for the inhabitants form into the wizard store.
-            const value = {humans: this.humans, food: this.food,
-                           crewQuarters: this.crewQuarters, eclss: this.eclss}
-            this.SETINHABITANTS(value)
-        },
-        validateRef(ref) {
-            // wait for the fields to be updated before attempting validation
-            this.$nextTick(() => this.$refs[ref].reportValidity())
         },
     },
     watch: {
@@ -126,6 +103,29 @@ export default {
         'getConfiguration.eclss.amount': function() {
             this.eclss = this.getConfiguration.eclss
             this.validateRef('eclss')
+        },
+    },
+    beforeMount() {
+        // Get the values from the configuration that is initially set
+        const {humans, food, crewQuarters, eclss} = this.getConfiguration
+        this.humans = humans
+        this.food = food
+        this.crewQuarters = crewQuarters
+        this.eclss = eclss
+    },
+    methods: {
+        ...mapMutations('wizard', ['SETINHABITANTS']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
+
+        setInhabitants() {
+            // Sets all related values for the inhabitants form into the wizard store.
+            const value = {humans: this.humans, food: this.food,
+                           crewQuarters: this.crewQuarters, eclss: this.eclss}
+            this.SETINHABITANTS(value)
+        },
+        validateRef(ref) {
+            // wait for the fields to be updated before attempting validation
+            this.$nextTick(() => this.$refs[ref].reportValidity())
         },
     },
 }

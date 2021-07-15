@@ -53,6 +53,36 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration', 'getResetConfig', 'getPresets']),
     },
+    watch: {
+        getResetConfig() {
+            // someone changed the resetconfig var, so we have to reset the form
+            if (!this.getResetConfig) {
+                return  // only reset it when it's true
+            }
+            // avoid changing the selected preset to custom
+            this.dont_set_custom = true
+            // reset the config to the empty preset
+            this.selected = EMPTY
+            this.RESETCONFIG()
+            // restore the var to false
+            this.SETRESETCONFIG(false)
+        },
+        getConfiguration: {
+            handler() {
+                // Triggered when the configuration changed.
+                // This happens either when the user selected a new preset
+                // or when they edited a field.  If they selected a preset
+                // dont_set_custom should be true, so that "custom" won't be
+                // selected, otherwise it will when they edit a single field
+                if (this.dont_set_custom || this.selected === CUSTOM) {
+                    this.dont_set_custom = false
+                    return
+                }
+                this.selected = CUSTOM
+            },
+            deep: true,
+        },
+    },
     methods: {
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
@@ -92,36 +122,6 @@ export default {
             } else {
                 alert('No Custom preset found. Use the Save button to save one.')
             }
-        },
-    },
-    watch: {
-        getResetConfig() {
-            // someone changed the resetconfig var, so we have to reset the form
-            if (!this.getResetConfig) {
-                return  // only reset it when it's true
-            }
-            // avoid changing the selected preset to custom
-            this.dont_set_custom = true
-            // reset the config to the empty preset
-            this.selected = EMPTY
-            this.RESETCONFIG()
-            // restore the var to false
-            this.SETRESETCONFIG(false)
-        },
-        getConfiguration: {
-            handler() {
-                // Triggered when the configuration changed.
-                // This happens either when the user selected a new preset
-                // or when they edited a field.  If they selected a preset
-                // dont_set_custom should be true, so that "custom" won't be
-                // selected, otherwise it will when they edit a single field
-                if (this.dont_set_custom || this.selected === CUSTOM) {
-                    this.dont_set_custom = false
-                    return
-                }
-                this.selected = CUSTOM
-            },
-            deep: true,
         },
     },
 }

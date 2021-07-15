@@ -52,37 +52,6 @@ export default {
         },
     },
 
-    methods: {
-        updateChart() {
-            // Instead of accepting a dataset for each row (i.e. one for
-            // production and one for consumption), ChartJS wants several
-            // datasets with a 2-elems [production, consumption] array.
-            // Since values in the same dataset share label/color, a
-            // workaround is to use e.g. [10, null] for the total size and
-            // [null, 10] for the plants: these will show respectively a
-            // 10 in the total size row and nothing in the plants row
-            // and vice versa.
-            this.chart.data.datasets = []
-
-            // add dataset for the total size row
-            this.chart.data.datasets.push({
-                label: 'Greenhouse size',
-                backgroundColor: '#0000ff',
-                data: [this.greenhouseSize, null],
-            })
-            // add datasets for each plant in the used row
-            this.plantSpecies.forEach((plant, i) => {
-                const dataset = {
-                    label: plant.type,
-                    backgroundColor: this.colors[i],
-                    data: [null, plant.amount],
-                }
-                this.chart.data.datasets.push(dataset)
-            })
-            this.chart.update()
-        },
-    },
-
 
     mounted() {
         // TODO this is mostly duplicated with PowerUsage.vue: remove duplication
@@ -134,6 +103,37 @@ export default {
             },
         })
         this.updateChart()
+    },
+
+    methods: {
+        updateChart() {
+            // Instead of accepting a dataset for each row (i.e. one for
+            // production and one for consumption), ChartJS wants several
+            // datasets with a 2-elems [production, consumption] array.
+            // Since values in the same dataset share label/color, a
+            // workaround is to use e.g. [10, null] for the total size and
+            // [null, 10] for the plants: these will show respectively a
+            // 10 in the total size row and nothing in the plants row
+            // and vice versa.
+            this.chart.data.datasets = []
+
+            // add dataset for the total size row
+            this.chart.data.datasets.push({
+                label: 'Greenhouse size',
+                backgroundColor: '#0000ff',
+                data: [this.greenhouseSize, null],
+            })
+            // add datasets for each plant in the used row
+            this.plantSpecies.forEach((plant, i) => {
+                const dataset = {
+                    label: plant.type,
+                    backgroundColor: this.colors[i],
+                    data: [null, plant.amount],
+                }
+                this.chart.data.datasets.push(dataset)
+            })
+            this.chart.update()
+        },
     },
 }
 </script>

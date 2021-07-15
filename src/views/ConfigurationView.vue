@@ -104,11 +104,6 @@ export default {
             },
         }
     },
-    beforeMount() {
-        this.RESETCONFIG()
-        this.activeForm = this.getActiveForm
-        this.activeConfigType = this.getActiveConfigType
-    },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
         ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
@@ -125,6 +120,28 @@ export default {
         isFirstForm() {
             return this.formIndex === 0
         },
+    },
+    watch: {
+        // If the active form changes update the activeForm variable with the one at the formIndex
+        getActiveForm: {
+            handler() {
+                this.activeForm = this.getActiveForm
+            },
+            deep: true,
+        },
+        // If the form index changes update the active form with the one at the formIndex
+        // Mostly used for when either the buttons or the select menu or used to navigate
+        formIndex: {
+            handler() {
+                this.SETACTIVEFORMINDEX(this.formIndex)
+                this.activeForm = this.getActiveForm
+            },
+        },
+    },
+    beforeMount() {
+        this.RESETCONFIG()
+        this.activeForm = this.getActiveForm
+        this.activeConfigType = this.getActiveConfigType
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
@@ -256,23 +273,6 @@ export default {
             } finally {
                 this.awaiting_response = false
             }
-        },
-    },
-    watch: {
-        // If the active form changes update the activeForm variable with the one at the formIndex
-        getActiveForm: {
-            handler() {
-                this.activeForm = this.getActiveForm
-            },
-            deep: true,
-        },
-        // If the form index changes update the active form with the one at the formIndex
-        // Mostly used for when either the buttons or the select menu or used to navigate
-        formIndex: {
-            handler() {
-                this.SETACTIVEFORMINDEX(this.formIndex)
-                this.activeForm = this.getActiveForm
-            },
         },
     },
 }

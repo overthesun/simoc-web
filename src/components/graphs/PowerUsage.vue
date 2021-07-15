@@ -143,42 +143,6 @@ export default {
         },
     },
 
-    methods: {
-        // TODO request all data as a single json, do math client-side
-        retrievePower(agent, amount=1, callback) {
-            axios.defaults.withCredentials = true
-            const params = {agent_name: agent, quantity: amount}
-            return axios.get('/get_energy', {params})
-                    .then(response => {
-                        if (response.status === 200) {
-                            callback(response.data)
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
-        },
-        updateChart() {
-            // Instead of accepting a dataset for each row (i.e. one for
-            // production and one for consumption), ChartJS wants several
-            // datasets with a 2-elems [production, consumption] array.
-            // Since values in the same dataset share label/color, a
-            // workaround is to use e.g. [10, null] for production and
-            // [null, 10] for consumption: these will show respectively a
-            // 10 in the production row and nothing in the consumption row
-            // and vice versa.
-            this.chart.data.datasets = []
-            Object.keys(this.energy).forEach((key, i) => {
-                const dataset = {
-                    label: this.labels[i],
-                    backgroundColor: this.colors[i],
-                    data: this.energy[key],
-                }
-                this.chart.data.datasets.push(dataset)
-            })
-            this.chart.update()
-        },
-    },
-
     mounted() {
         // TODO this is mostly duplicated with GreenhouseConfiguration.vue: remove duplication
         const canvas = document.getElementById(this.id)
@@ -229,6 +193,42 @@ export default {
             },
         })
         this.updateChart()
+    },
+
+    methods: {
+        // TODO request all data as a single json, do math client-side
+        retrievePower(agent, amount=1, callback) {
+            axios.defaults.withCredentials = true
+            const params = {agent_name: agent, quantity: amount}
+            return axios.get('/get_energy', {params})
+                    .then(response => {
+                        if (response.status === 200) {
+                            callback(response.data)
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
+        },
+        updateChart() {
+            // Instead of accepting a dataset for each row (i.e. one for
+            // production and one for consumption), ChartJS wants several
+            // datasets with a 2-elems [production, consumption] array.
+            // Since values in the same dataset share label/color, a
+            // workaround is to use e.g. [10, null] for production and
+            // [null, 10] for consumption: these will show respectively a
+            // 10 in the production row and nothing in the consumption row
+            // and vice versa.
+            this.chart.data.datasets = []
+            Object.keys(this.energy).forEach((key, i) => {
+                const dataset = {
+                    label: this.labels[i],
+                    backgroundColor: this.colors[i],
+                    data: this.energy[key],
+                }
+                this.chart.data.datasets.push(dataset)
+            })
+            this.chart.update()
+        },
     },
 }
 </script>

@@ -30,18 +30,20 @@ export default {
             userIsDragging: false,  // true when the user is dragging the slider
         }
     },
-
-    mounted() {
-        // start the timer when the component is mounted, the actual
-        // visualization will start only when the buffer has enough data
-        this.startTimer()
-    },
-
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
                                     'getIsTimerRunning', 'getStepInterval']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
-
+    },
+    watch: {
+        // update scrubber percentages when the current and/or max step change
+        getCurrentStepBuffer() { this.updatePercentages() },
+        getMaxStepBuffer() { this.updatePercentages() },
+    },
+    mounted() {
+        // start the timer when the component is mounted, the actual
+        // visualization will start only when the buffer has enough data
+        this.startTimer()
     },
     methods: {
         ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
@@ -98,11 +100,6 @@ export default {
             this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100
             this.bufferPercentage = (this.getMaxStepBuffer / this.getTotalMissionHours) * 100
         },
-    },
-    watch: {
-        // update scrubber percentages when the current and/or max step change
-        getCurrentStepBuffer() { this.updatePercentages() },
-        getMaxStepBuffer() { this.updatePercentages() },
     },
 }
 </script>

@@ -44,25 +44,8 @@ export default {
             duration_max: undefined,
         }
     },
-    beforeMount() {
-        // Get the values from the configuration that is initially set
-        const {duration, location} = this.getConfiguration
-        this.location = location
-        this.duration = duration
-    },
     computed: {
         ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
-    },
-    methods: {
-        ...mapMutations('wizard', ['SETINITIAL']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
-
-        setInitial() {
-            // Called when any of the form values are changed, or input happens.
-            // Updates the wizard store values with the form values.
-            const value = {location: this.location, duration: this.duration}
-            this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
-        },
     },
     watch: {
         'getConfiguration.location': function() {
@@ -91,6 +74,23 @@ export default {
                 this.$nextTick(() => this.$refs.duration.reportValidity())
             },
             deep: true,  // should trigger when duration.amount/units change
+        },
+    },
+    beforeMount() {
+        // Get the values from the configuration that is initially set
+        const {duration, location} = this.getConfiguration
+        this.location = location
+        this.duration = duration
+    },
+    methods: {
+        ...mapMutations('wizard', ['SETINITIAL']),
+        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
+
+        setInitial() {
+            // Called when any of the form values are changed, or input happens.
+            // Updates the wizard store values with the form values.
+            const value = {location: this.location, duration: this.duration}
+            this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
         },
     },
 }

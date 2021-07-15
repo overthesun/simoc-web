@@ -17,6 +17,34 @@ export default {
         }
     },
 
+    computed: {
+        // getters from the vuex stores
+        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
+                                    'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
+                                    'getMaxStepBuffer', 'getLoadFromSimData']),
+        ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
+        ...mapGetters(['getGameID']),
+    },
+
+    watch: {
+        // this method pauses the current simulation if the current step
+        // is at or beyond the amount of steps that are currently buffered
+        getCurrentStepBuffer() {
+            // check that we have values in the buffer to avoid pausing
+            // the timer when current/max are set to 0 at the beginning
+            if ((this.getMaxStepBuffer > 1) &&
+                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
+                this.PAUSETIMER()
+            }
+        },
+        getStopped() {
+            // if the simulation got stopped, tell the server
+            if (this.getStopped) {
+                this.killGame()
+            }
+        },
+    },
+
     beforeMount() {
         // reinitialize everything, init a new game, and request steps num before mounting
 
@@ -88,15 +116,6 @@ export default {
         window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
         window.removeEventListener('unload', this.killGameOnUnload)
         window.removeEventListener('keydown', this.keyListener)
-    },
-
-    computed: {
-        // getters from the vuex stores
-        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
-                                    'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
-                                    'getMaxStepBuffer', 'getLoadFromSimData']),
-        ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
-        ...mapGetters(['getGameID']),
     },
 
     methods: {
@@ -304,25 +323,6 @@ export default {
             }
             if (key_matched) {
                 e.preventDefault()
-            }
-        },
-    },
-
-    watch: {
-        // this method pauses the current simulation if the current step
-        // is at or beyond the amount of steps that are currently buffered
-        getCurrentStepBuffer() {
-            // check that we have values in the buffer to avoid pausing
-            // the timer when current/max are set to 0 at the beginning
-            if ((this.getMaxStepBuffer > 1) &&
-                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
-                this.PAUSETIMER()
-            }
-        },
-        getStopped() {
-            // if the simulation got stopped, tell the server
-            if (this.getStopped) {
-                this.killGame()
             }
         },
     },

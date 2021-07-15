@@ -52,6 +52,10 @@ import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
 export default {
+    components: {
+        BasePanel,
+        ...panels,  // add all panels as components
+    },
     data() {
         return {
             // list of default panels; update this to change the initial panels displayed
@@ -62,19 +66,6 @@ export default {
             selectedPanel: null,  // store the name of the panel selected through the dropdown
             replacePanel: null,  // if 0, updatePanels will add a new panel; if 1, it will replace the panel
         }
-    },
-    beforeMount() {
-        // load saved panels from local storage or use default layout
-        const savedPanels = localStorage.getItem('panels-layout')
-        if (savedPanels) {
-            this.SETACTIVEPANELS(JSON.parse(savedPanels))
-        } else {
-            this.SETDEFAULTPANELS()
-        }
-    },
-    components: {
-        BasePanel,
-        ...panels,  // add all panels as components
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
@@ -87,6 +78,20 @@ export default {
             })
             return sorted.sort()
         },
+    },
+    watch: {
+        getActivePanels() {
+            this.activePanels = this.getActivePanels
+        },
+    },
+    beforeMount() {
+        // load saved panels from local storage or use default layout
+        const savedPanels = localStorage.getItem('panels-layout')
+        if (savedPanels) {
+            this.SETACTIVEPANELS(JSON.parse(savedPanels))
+        } else {
+            this.SETDEFAULTPANELS()
+        }
     },
     methods: {
         ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
@@ -132,11 +137,6 @@ export default {
             this.activePanels.splice(index, 1)
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
-        },
-    },
-    watch: {
-        getActivePanels() {
-            this.activePanels = this.getActivePanels
         },
     },
 }

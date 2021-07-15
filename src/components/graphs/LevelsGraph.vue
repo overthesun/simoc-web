@@ -15,6 +15,10 @@ import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
+    props: {
+        id: String,
+        plottedStorage: String,
+    },
     data() {
         return {
             prevStep: 0,
@@ -44,10 +48,6 @@ export default {
                 },
             },
         }
-    },
-    props: {
-        id: String,
-        plottedStorage: String,
     },
 
     computed: {

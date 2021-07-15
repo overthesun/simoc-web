@@ -15,15 +15,15 @@ import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
-    data() {
-        return {
-            prevStep: 0,
-        }
-    },
     props: {
         id: String,
         plottedValue: String,
         unit: String,
+    },
+    data() {
+        return {
+            prevStep: 0,
+        }
     },
 
     computed: {
