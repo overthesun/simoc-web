@@ -152,6 +152,7 @@ module.exports = {
         'vue/html-self-closing': 'error',
         'vue/html-closing-bracket-newline': ['error', {singleline: 'never', multiline: 'never'}],
         'vue/html-closing-bracket-spacing': 'error',
+        'vue/mustache-interpolation-spacing': ['error', 'never'],
         'vue/no-spaces-around-equal-signs-in-attribute': 'error',
         'vue/no-multi-spaces': 'error',
         'vue/no-unused-vars': 'error',

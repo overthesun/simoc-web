@@ -1,6 +1,6 @@
 <template>
     <button @click="uploadConfig">
-        {{ buttonText }}
+        {{buttonText}}
         <input id="configInputFile" ref="configInputFile" @change="handleUpload"
                type="file" accept="application/json">
     </button>

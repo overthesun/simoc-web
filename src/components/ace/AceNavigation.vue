@@ -5,7 +5,7 @@
                 :class="{'section-active': section === activeSection}"
                 @click="toggle(section)"
                 class="section">
-                {{ stringFormatter(section) }}
+                {{stringFormatter(section)}}
             </div>
             <div :class="{'menu-open': isOpen[section]}" class="menu">
                 <div v-for="agent in Object.keys(agentDesc[section])" :key="section+agent" class="agent-wrapper">
@@ -19,7 +19,7 @@
                             class="fa-1x agent-icon-remove">
                             <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
                         </fa-layers>
-                        <span class="agent-label">{{ stringFormatter(agent) }}</span>
+                        <span class="agent-label">{{stringFormatter(agent)}}</span>
                     </div>
                 </div>
                 <fa-layers

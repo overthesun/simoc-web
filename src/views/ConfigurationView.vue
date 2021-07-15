@@ -38,7 +38,7 @@
             </template>
             <template v-slot:wizard-configuration-footer>
                 <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
-                <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper"">
+                <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
                          No animations present to require it. -->
                     <button @click="decrementIndex" v-if="!isFirstForm" class="btn-previous">Previous Section</button>
@@ -46,7 +46,7 @@
                     <button @click="launchSimulation" v-if="isFinalForm" class="btn-launch">Launch Simulation</button>
                 </nav>
                 <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
-                <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper"">
+                <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper">
                     <button @click="launchSimulation" class="btn-launch">Launch Simulation</button>
                 </nav>
             </template>
