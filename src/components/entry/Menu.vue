@@ -8,16 +8,16 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button @click="toConfiguration" form="login-form" class="btn-normal">NEW CONFIGURATION</button>
-                <button @click="uploadSimData" form="login-form" class="btn-normal">LOAD SIMULATION DATA</button>
-                <button @click="toAce" :class="{'hidden': !showAgentEditor}" form="login-form"
-                        class="btn-normal">AGENT EDITOR</button>
-                <input id="simDataInputFile" ref="simDataInputFile" @change="handleSimData"
-                       type="file" accept="application/json">
+                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
+                        @click="toAce">AGENT EDITOR</button>
+                <input id="simDataInputFile" ref="simDataInputFile" type="file"
+                       accept="application/json" @change="handleSimData">
             </template>
             <template v-slot:entry-button>
                 <div class="btn-wrapper">
-                    <button @click="logout" form="login-form" class="btn-warning">Log Out</button>
+                    <button form="login-form" class="btn-warning" @click="logout">Log Out</button>
                 </div>
             </template>
         </BaseEntry>

@@ -36,16 +36,14 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div @click="SETACTIVEREFERENCE('Reference')"
-                     :class="{'option-item-active': 'Reference'===activeOption}"
-                     class="option-item">REFERENCE</div>
+                <div :class="{'option-item-active': 'Reference'===activeOption}"
+                     class="option-item" @click="SETACTIVEREFERENCE('Reference')">REFERENCE</div>
                 <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
                          :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div @click="SETACTIVEREFERENCE('Graphs')"
-                     :class="{'option-item-active' : 'Graphs'===activeOption}"
-                     class="option-item">GRAPHS</div>
+                <div :class="{'option-item-active' : 'Graphs'===activeOption}"
+                     class="option-item" @click="SETACTIVEREFERENCE('Graphs')">GRAPHS</div>
             </nav>
             <main class="main main-reference">
                 <slot name="main-wizard-reference" />

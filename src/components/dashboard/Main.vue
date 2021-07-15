@@ -13,7 +13,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
             <template v-slot:panel-menu>
                 <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
-                    <div @click="openPanelMenu(index)" class="menu-icon-wrapper">
+                    <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
                         <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
                     </div>
                     <!-- the options menu -->
@@ -23,13 +23,13 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                         <ul v-if="index !== visiblePanelSelect">
                             <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
                             <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                            <li><button @click="removePanel(index)"
-                                        v-if="activePanels.length > 1">Remove Panel</button></li>
+                            <li><button v-if="activePanels.length > 1"
+                                        @click="removePanel(index)">Remove Panel</button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
-                        <select v-else v-model="selectedPanel" @change="updatePanels(index, replacePanel)"
-                                class="panel-select">
+                        <select v-else v-model="selectedPanel" class="panel-select"
+                                @change="updatePanels(index, replacePanel)">
                             <option hidden selected value="null">Select Panel:</option>
                             <!-- populate the drop-down with all the available panels, sorted by title -->
                             <option v-for="[pTitle, pName] in sortedPanels" :value="pName">{{pTitle}}</option>
@@ -38,9 +38,9 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 </div>
             </template>
             <template v-slot:panel-content>
-                <component :is="panelName" :canvasNumber="index"
-                           :panelIndex="index" :panelSection="panelSection"
-                           v-on:panel-section-changed="updatePanelSection" />
+                <component :is="panelName" :canvas-number="index"
+                           :panel-index="index" :panel-section="panelSection"
+                           @panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
     </div>

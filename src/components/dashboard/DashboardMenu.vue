@@ -13,7 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
-            <button @click="logout" class="btn-warning btn-logout">Log Out</button>
+            <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
 </template>

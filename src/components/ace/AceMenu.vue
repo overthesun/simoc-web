@@ -5,12 +5,12 @@
         </template>
         <template v-slot:menu-buttons>
             <DownloadConfig
-                :isValid="getEditorValid"
+                :is-valid="getEditorValid"
                 :config="getActiveAgentDesc"
-                :alertUserOnInvalid="true"
+                :alert-user-on-invalid="true"
                 file-name="agent_desc.json"
                 button-text="Download Agent File" />
-            <UploadConfig :handleFile="handleUpload" button-text="Upload Agent File" />
+            <UploadConfig :handle-file="handleUpload" button-text="Upload Agent File" />
             <button @click="resetConfig">Reset Agent File</button>
             <Logout name="logout" />
         </template>

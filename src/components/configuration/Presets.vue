@@ -9,18 +9,18 @@ Future version should also automatically switch the selected preset to 'custom' 
 -->
 
 <template>
-    <form @submit.prevent="" class="form-wrapper form-presets">
+    <form class="form-wrapper form-presets" @submit.prevent="">
         <label class="input-wrapper">
-            <div @click="SETACTIVEREFENTRY('Presets')" class="input-title">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Presets')">
                 Presets <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div>
                 <div class="presets-dropdown">
                     <select ref="preset_dropdown" v-model="selected"
-                            v-on:change="updateConfig(selected)" class="input-field-select">
+                            class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option :value="name" v-for="(preset, name) in getPresets" :key="name">{{preset.name}}</option>
+                        <option v-for="(preset, name) in getPresets" :key="name" :value="name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>

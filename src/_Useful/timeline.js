@@ -8,8 +8,8 @@
                             lightgreen ' + value +'%, \
                             lightgreen '+ stepMax +'%, \
                             #999 ' + stepMax + '%,#999 100%)')}"
-                   v-on:input="killClock" v-on:change="updateStep"
-                   class="timeline" type="range" min="0" max="100">
+                   class="timeline" type="range" min="0" max="100"
+                   @input="killClock" @change="updateStep">
         </div>
     </div>
 </template>

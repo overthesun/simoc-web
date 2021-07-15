@@ -5,7 +5,7 @@
             <span class="simoc-logo-title">SIMOC</span>
         </div>
         <div id="dashboard-menu-icon">
-            <span @click="SETMENUACTIVE(true)" title="Open menu">
+            <span title="Open menu" @click="SETMENUACTIVE(true)">
                 <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
             </span>
         </div>

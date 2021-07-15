@@ -6,7 +6,7 @@
              for displaying or hiding
         -->
         <div :class="{'warning-active': activeWarning}" class="warning-wrapper">
-            <fa-icon :icon="['fas','times']" @click="dismissWarning" class="fa-icon dismiss-icon" />
+            <fa-icon :icon="['fas','times']" class="fa-icon dismiss-icon" @click="dismissWarning" />
             <div v-for="(item,index) in activeWarnings" :key="index" class="warning-item">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
@@ -16,21 +16,21 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div :class="{'option-item-active': 'login'===activeOption}" @click="activateOption('login')"
-                     class="option-item"> SIGN IN </div>
-                <div :class="{'option-item-active': 'register'===activeOption}" @click="activateOption('register')"
-                     class="option-item"> SIGN UP </div>
+                <div :class="{'option-item-active': 'login'===activeOption}" class="option-item"
+                     @click="activateOption('login')"> SIGN IN </div>
+                <div :class="{'option-item-active': 'register'===activeOption}" class="option-item"
+                     @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
                 <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
-                    <form id="login-form" v-if="!activeGuestLogin" @submit.prevent="loginUser">
+                    <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
                         <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
                         <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                         Guest accounts are temporary and will be deleted on a regular basis.</p>
-                    <a id="guest-login" @click="showGuestLogin" class="link">{{guestLoginLinkText}}</a>
+                    <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                 </section>
                 <section :class="{'entry-form-active': activeOption==='register'}"
                          class="entry-form entry-form-register">
@@ -48,8 +48,8 @@
             <template v-slot:entry-button>
                 <div :class="{'btn-wrapper-active': activeOption==='login'}"
                      class="btn-wrapper btn-wrapper-login">
-                    <button v-if="activeGuestLogin" @click="guestLogin" form="register-form"
-                            class="btn-warning">SIGN IN AS GUEST</button>
+                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
+                            @click="guestLogin">SIGN IN AS GUEST</button>
                     <button v-else form="login-form" class="btn-warning">SIGN IN</button>
                 </div>
                 <div :class="{'btn-wrapper-active': activeOption==='register'}"

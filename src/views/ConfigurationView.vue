@@ -7,7 +7,7 @@
             <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
                 <!-- Set the activeForm index if the user changes the value to something other than selected -->
-                <select v-on:change="setActiveForm" class="section-select">
+                <select class="section-select" @change="setActiveForm">
                     <option selected disabled>Jump To Section</option>
                     <option :selected="formIndex === 0" value="0">Initial</option>
                     <option :selected="formIndex === 1" value="1">Inhabitants</option>
@@ -17,14 +17,14 @@
                 </select>
             </template>
             <template v-slot:main-wizard-input>
-                <form ref="form" @submit.prevent="" class="form-wrapper">
+                <form ref="form" class="form-wrapper" @submit.prevent="">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
                     <!-- Else, if we are in the Custom config or in the Finalize step
                          of the Guided config, show all components -->
                     <section v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'"
                              :class="{'validating': validating}" class="form-wrapper">
-                        <Presets ref="presets" v-if="activeConfigType === 'Custom'" />
+                        <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
                         <Initial ref="initial" />
                         <Inhabitants ref="inhabitants" />
                         <Greenhouse ref="greenhouse" />
@@ -41,13 +41,13 @@
                 <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
                          No animations present to require it. -->
-                    <button @click="decrementIndex" v-if="!isFirstForm" class="btn-previous">Previous Section</button>
-                    <button @click="incrementIndex" v-if="!isFinalForm" class="btn-next">Next Section</button>
-                    <button @click="launchSimulation" v-if="isFinalForm" class="btn-launch">Launch Simulation</button>
+                    <button v-if="!isFirstForm" class="btn-previous" @click="decrementIndex">Previous Section</button>
+                    <button v-if="!isFinalForm" class="btn-next" @click="incrementIndex">Next Section</button>
+                    <button v-if="isFinalForm" class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                 </nav>
                 <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
                 <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper">
-                    <button @click="launchSimulation" class="btn-launch">Launch Simulation</button>
+                    <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                 </nav>
             </template>
 
@@ -69,10 +69,9 @@
 import axios from 'axios'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {ConfigurationMenu, Inhabitants, Greenhouse,
-        Initial, Energy, Reference, Graphs, Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
-import {GreenhouseDoughnut} from '../components/graphs'
+import {ConfigurationMenu, Presets, Initial, Inhabitants,
+        Greenhouse, Energy, Reference, Graphs} from '../components/configuration'
 
 export default {
     components: {
@@ -84,7 +83,6 @@ export default {
         Greenhouse,
         Energy,
         Reference,
-        GreenhouseDoughnut,
         Graphs,
     },
     data() {

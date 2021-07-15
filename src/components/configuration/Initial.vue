@@ -1,26 +1,26 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div @click="SETACTIVEREFENTRY('Location')" class="input-title">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Location')">
                 Location <fa-icon :icon="['fas','info-circle']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
-            <select ref="location" v-model="location" v-on:change="setInitial" class="input-field-select" required>
+            <select ref="location" v-model="location" class="input-field-select" required @change="setInitial">
                 <option value="none" disabled hidden>Location</option>
                 <option value="mars" selected>Mars</option>
             </select>
         </label>
         <label class="input-wrapper">
-            <div @click="SETACTIVEREFENTRY('Duration')" class="input-title">
+            <div class="input-title" @click="SETACTIVEREFENTRY('Duration')">
                 Mission Duration <fa-icon :icon="['fas','info-circle']" />
             </div>
             <div class="input-description">Select the duration of your stay on Mars.</div>
             <div class="input-duration-wrapper">
-                <input ref="duration" :min="duration_min" :max="duration_max" v-on:input="setInitial"
-                       v-model="duration.amount" class="input-field-number" type="number"
-                       pattern="^\d+$" placeholder="Length" required>
-                <select ref="duration_unit" v-on:change="setInitial" v-model="duration.units"
-                        class="input-field-select" required>
+                <input ref="duration" v-model="duration.amount" :min="duration_min" :max="duration_max"
+                       class="input-field-number" type="number" pattern="^\d+$"
+                       placeholder="Length" required @input="setInitial">
+                <select ref="duration_unit" v-model="duration.units"
+                        class="input-field-select" required @change="setInitial">
                     <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
                     <option value="day" selected>Earth Days (24h)</option>

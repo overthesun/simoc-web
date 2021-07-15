@@ -5,11 +5,11 @@
         </template>
         <template v-slot:menu-buttons>
             <DownloadConfig
-                :isValid="isValid"
+                :is-valid="isValid"
                 :config="getConfiguration"
-                :alertUserOnInvalid="false"
+                :alert-user-on-invalid="false"
                 file-name="simoc-config.json" />
-            <UploadConfig :handleFile="handleUpload" />
+            <UploadConfig :handle-file="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
             <Logout />
         </template>
