@@ -35,6 +35,7 @@ menu button being present on other unrelated configurations.
                 <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')" :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div> Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
                 <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')" :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
+                <div class='option-item' @click="SETACTIVEREFERENCE('Layout')" :class="{'option-item-active' : 'Layout'===activeOption}">LAYOUT</div>
             </nav>
             <main class='main main-reference'>
                 <slot name='main-wizard-reference'></slot>

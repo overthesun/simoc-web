@@ -77,6 +77,13 @@ export default {
         window.removeEventListener('resize', this.resizeHandler)
     },
     watch: {
+        // TODO:
+        // Individual sections, e.g. 'crewQuarters', change the corresponding
+        // property in gameConfig, but that doesn't trigger this watcher.
+        // Possible solutions:
+        // - Trigger an update from config page after every action
+        // - Make a separate getter for crewQuarters, also watch that
+        // - Add a 'modifed' flag to the store
         gameConfig() {
             this.buildScene()
         }

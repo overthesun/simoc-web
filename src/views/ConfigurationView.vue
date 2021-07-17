@@ -66,7 +66,7 @@
 <script>
 import axios from 'axios'
 //import form components
-import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Presets} from '../components/configuration'
+import {ConfigurationMenu,Inhabitants,Greenhouse,Initial,Energy,Reference,Graphs,Layout,Presets} from '../components/configuration'
 import {TheTopBar} from '../components/bars'
 import {GreenhouseDoughnut} from '../components/graphs'
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
@@ -82,6 +82,7 @@ export default {
         'Reference': Reference,
         'GreenhouseDoughnut': GreenhouseDoughnut,
         'Graphs': Graphs,
+        'Layout': Layout,
     },
     data(){
         return{
