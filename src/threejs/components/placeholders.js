@@ -1,4 +1,68 @@
-import {BoxBufferGeometry, Mesh, MeshStandardMaterial} from 'three'
+import {BoxBufferGeometry, Mesh, MeshStandardMaterial, Group, Box3} from 'three'
+
+// Returns an object or group of objects centered at origin
+const buildPlace = ({place, amount}) => {
+    console.log(`Building ${place}.`)
+	switch(place) {
+		case 'solar_pv_array_mars': {
+			if (!amount) {
+				return null
+			}
+			let panels = new Group()
+			// Find largest square, add append extras
+			let square = Math.floor(Math.sqrt(amount))
+			let extraPanels = amount - (square * square)
+			let extraRows = extraPanels % square
+			let arrayLayout = Array(square + extraRows).fill(square)
+			let extraCol = extraPanels - (extraRows * square)
+			arrayLayout.push(extraCol) // amount=20 => arrayLayout=[4, 4, 4, 4, 4]
+			// Add panels in grid
+			let panelRef = 'solar_pv_panel'
+			let panelSpacing = 0.1
+			let [width, height, depth] = modelRefs[panelRef].size
+			for (let i = 0; i < arrayLayout.length; i++) {
+				for (let j = 0; j < arrayLayout[i]; j++) {
+					let panelModel = buildModel(panelRef)
+					let offsetX = i * (width + panelSpacing) + width/2
+					let offsetZ = j * (depth + panelSpacing) + depth/2
+					panelModel.position.set(offsetX, 0, offsetZ)
+					panels.add(panelModel)
+				}
+			}
+			let bbox = new Box3().setFromObject(panels)
+			panels.position.x = -bbox.max.x/2
+			panels.position.z = -bbox.max.z/2
+			return panels
+		}
+		case 'storage': {
+			let storageTanks = new Group()
+			let stores = ['air_storage', 'water_storage', 'food_storage',
+						'nutrient_storage', 'power_storage']
+			let rightEdge = 0
+			for (let i = 0; i < stores.length; i++) {
+				let tank = buildModel(stores[i])
+				let [width, height, depth] = modelRefs[stores[i]].size
+				if (tank) {
+					tank.position.x = rightEdge + width/2
+					rightEdge = rightEdge + width * 1.2
+					storageTanks.add(tank)
+				}
+			}
+			let bbox = new Box3().setFromObject(storageTanks)
+			storageTanks.position.x = -bbox.max.x/2
+			storageTanks.position.z = -bbox.max.z/2
+			return storageTanks
+		}
+		default: {
+			if (Object.keys(modelRefs).includes(place)) {
+				return buildModel(place)
+			} else {
+				console.log(`can't load model for ${place}.`)
+				return null
+			}
+		}
+	}
+}
 
 const modelRefs = {
     // model references. for now, give a size
@@ -42,4 +106,4 @@ const buildModel = (key) => {
     return model
 }
 
-export {modelRefs, buildModel}
+export {buildPlace, modelRefs, buildModel}
