@@ -100,10 +100,17 @@ export default {
         grid-template-rows: 22px minmax(0,1fr) 48px;
     }
 
+    .main-reference{
+        width: 100%;
+        overflow: hidden;
+    }
+
     .reference-wrapper{
         height:100%;
+        max-width: 100%;
         padding:16px;
         box-sizing:border-box;
+        overflow: hidden;
     }
 
     header {
@@ -175,6 +182,7 @@ export default {
 
     .option-item{
         position:relative;
+        font-size:0.9em;
 
         &:hover{
             cursor:pointer;
