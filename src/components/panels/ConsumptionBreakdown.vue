@@ -44,10 +44,9 @@ export default {
         selected_consumption() {
             try {
                 if (this.selected_currency === null) {
-                    this.selected_currency = Object.keys(this.consumptions)[0]
+                    this.set_currency(Object.keys(this.consumptions)[0])
                 }
-                const value = this.consumptions[this.selected_currency]
-                return value
+                return this.consumptions[this.selected_currency]
             } catch (err) {
                 return null
             }
@@ -58,6 +57,10 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
+        set_currency(currency) {
+            // the linter complains if we set this directly in the computed
+            this.selected_currency = currency
+        },
         fix_unit(unit) {
             // TODO: this is currently unused.  The server either sends the
             // unit or nothing if the value is 0, and if it's kWh we need to

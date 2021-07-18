@@ -169,9 +169,9 @@ module.exports = {
         'vue/attributes-order': 'error',
         'vue/v-on-style': 'error',
         'vue/v-bind-style': 'error',
-        'vue/no-side-effects-in-computed-properties': 'warn',
         'vue/require-default-prop': 'error',
         'vue/require-prop-type-constructor': 'error',
+        'vue/no-side-effects-in-computed-properties': 'error',
 
         'vue/comment-directive': 'off',
         'vue/max-attributes-per-line': 'off',
