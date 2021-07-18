@@ -49,7 +49,7 @@ export default {
         Gauge,
     },
     props: {
-        canvasNumber: 0,
+        canvasNumber: {type: Number, required: true},
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),

@@ -20,7 +20,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     props: {
-        id: String,
+        id: {type: String, required: true},
     },
 
     data() {

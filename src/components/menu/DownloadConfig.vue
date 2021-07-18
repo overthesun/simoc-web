@@ -7,19 +7,10 @@
 export default {
     props: {
         isValid: Boolean,
-        config: null,
-        fileName: {
-            type: String,
-            default: 'simoc_download.json',
-        },
-        alertUserOnInvalid: {
-            type: Boolean,
-            default: false,
-        },
-        buttonText: {
-            type: String,
-            default: 'Download Configuration',
-        },
+        config: {type: Function, required: true},
+        fileName: {type: String, default: 'simoc_download.json'},
+        alertUserOnInvalid: {type: Boolean, default: false},
+        buttonText: {type: String, default: 'Download Configuration'},
     },
     methods: {
         handleClick() {

@@ -24,17 +24,17 @@ export default {
         VersusGraph,
     },
     props: {
-        canvasNumber: 0,
+        canvasNumber: {type: Number, required: true},
         // these are passed by dashboard/Main.vue and
         // determine the panel index and the selected graph
-        panelIndex: Number,
-        panelSection: undefined,
+        panelIndex: {type: Number, required: true},
+        panelSection: {type: String, default: null},
     },
     data() {
         return {
             // default on 'atmo_co2' if we don't get anything
             // (e.g. when using "Change panel")
-            currency: this.panelSection || 'atmo_co2',
+            currency: this.panelSection ?? 'atmo_co2',
             units: {
                 atmo_co2: 'kg',
                 atmo_o2: 'kg',

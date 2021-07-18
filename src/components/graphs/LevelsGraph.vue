@@ -16,8 +16,8 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
     props: {
-        id: String,
-        plottedStorage: String,
+        id: {type: String, required: true},
+        plottedStorage: {type: String, required: true},
     },
     data() {
         return {

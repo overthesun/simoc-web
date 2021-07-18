@@ -167,7 +167,8 @@ module.exports = {
         'vue/v-on-style': 'error',
         'vue/v-bind-style': 'error',
         'vue/no-side-effects-in-computed-properties': 'warn',
-        'vue/require-prop-type-constructor': 'warn',
+        'vue/require-default-prop': 'error',
+        'vue/require-prop-type-constructor': 'error',
         'vue/no-use-v-if-with-v-for': 'warn',
 
         'vue/comment-directive': 'off',

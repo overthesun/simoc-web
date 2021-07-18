@@ -25,11 +25,11 @@ export default {
         LevelsGraph,
     },
     props: {
-        canvasNumber: 0,
+        canvasNumber: {type: Number, required: true},
         // these are passed by dashboard/Main.vue and
         // determine the panel index and the selected graph
-        panelIndex: Number,
-        panelSection: undefined,
+        panelIndex: {type: Number, required: true},
+        panelSection: {type: String, default: null},
     },
     data() {
         return {
@@ -55,7 +55,7 @@ export default {
     },
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
-        this.storage = this.panelSection || `${Object.keys(this.getStorages)[0]}/1`
+        this.storage = this.panelSection ?? `${Object.keys(this.getStorages)[0]}/1`
     },
     methods: {
         stringFormatter: StringFormatter,

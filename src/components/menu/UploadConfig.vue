@@ -10,13 +10,8 @@
 
 export default {
     props: {
-        handleFile: {
-            type: Object,
-        },
-        buttonText: {
-            type: String,
-            default: 'Upload Configuration',
-        },
+        handleFile: {type: Function, required: true},
+        buttonText: {type: String, default: 'Upload Configuration'},
     },
     methods: {
         uploadConfig() {

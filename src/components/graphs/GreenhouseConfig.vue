@@ -11,7 +11,7 @@ import {mapState, mapGetters} from 'vuex'
 
 export default {
     props: {
-        id: String,
+        id: {type: String, required: true},
     },
 
     data() {

@@ -20,12 +20,11 @@ import {mapState, mapGetters} from 'vuex'
 
 export default {
     props: {
-        id: String,
-        color: String,
-        maximum: Number,
-        label: String,
-        getter: Function,
-        stepDataKey: String,
+        id: {type: String, required: true},
+        color: {type: String, required: true},
+        maximum: {type: Number, required: true},
+        label: {type: String, required: true},
+        getter: {type: Function, required: true},
     },
 
     computed: {

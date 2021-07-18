@@ -14,7 +14,7 @@ export default {
         GreenhouseDoughnut,
     },
     props: {
-        canvasNumber: 0,
+        canvasNumber: {type: Number, required: true},
     },
 }
 </script>
