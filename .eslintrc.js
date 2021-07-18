@@ -159,7 +159,10 @@ module.exports = {
         'vue/no-unused-components': 'error',
         'vue/order-in-components': 'error',
         'vue/require-component-is': 'error',
+        'vue/valid-v-for': 'error',
+        'vue/no-template-key': 'error',
         'vue/require-v-for-key': 'error',
+        'vue/no-use-v-if-with-v-for': 'error',
         'vue/no-parsing-error': 'error',
         'vue/prop-name-casing': 'error',
         'vue/attribute-hyphenation': 'error',
@@ -169,7 +172,6 @@ module.exports = {
         'vue/no-side-effects-in-computed-properties': 'warn',
         'vue/require-default-prop': 'error',
         'vue/require-prop-type-constructor': 'error',
-        'vue/no-use-v-if-with-v-for': 'warn',
 
         'vue/comment-directive': 'off',
         'vue/max-attributes-per-line': 'off',

@@ -3,11 +3,13 @@
         <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <template v-for="(stor_obj, stor_name) in storage(getCurrentStepBuffer)" v-else>
             <template v-for="(stor_values, stor_num) in stor_obj">
-                <div class="storage-name">{{stringFormatter(stor_name)}} {{stor_num}}</div>
-                <dl>
+                <div :key="`div_${stor_name}/${stor_num}`" class="storage-name">
+                    {{stringFormatter(stor_name)}} {{stor_num}}
+                </div>
+                <dl :key="`dl_${stor_name}/${stor_num}`">
                     <template v-for="(value, name) in stor_values">
-                        <dt>{{label2name(name)}}</dt>
-                        <dd>{{value.value}} {{value.unit}}</dd>
+                        <dt :key="`dt_${name}`">{{label2name(name)}}</dt>
+                        <dd :key="`dd_${name}`">{{value.value}} {{value.unit}}</dd>
                     </template>
                 </dl>
             </template>

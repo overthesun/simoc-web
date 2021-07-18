@@ -3,7 +3,7 @@
         <select v-model="storage" required>
             <template v-for="(stor_group, stor_name) in getStorages">
                 <option v-for="(stor, stor_id) in stor_group" v-if="Object.keys(stor).length > 2"
-                        :value="stor_name + '/' + (stor_id+1)">
+                        :key="`${stor_name}/${stor_id+1}`" :value="`${stor_name}/${stor_id+1}`">
                     {{stringFormatter(stor_name)}} {{stor_id+1}}
                 </option>
             </template>

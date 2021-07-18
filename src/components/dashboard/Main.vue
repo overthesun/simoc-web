@@ -8,7 +8,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <template>
     <div class="dashboard-view-wrapper">
-        <BasePanel v-for="([panelName, panelSection],index) in activePanels.map(p => p.split(':'))" :key="index">
+        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))" :key="index">
             <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-menu>
                 <div class="panel-menu">
@@ -32,7 +32,8 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                                 @change="updatePanels(index, replacePanel)">
                             <option hidden selected value="null">Select Panel:</option>
                             <!-- populate the drop-down with all the available panels, sorted by title -->
-                            <option v-for="[pTitle, pName] in sortedPanels" :value="pName">{{pTitle}}</option>
+                            <option v-for="[pTitle, pName] in sortedPanels"
+                                    :key="pName" :value="pName">{{pTitle}}</option>
                         </select>
                     </div>
                 </div>
