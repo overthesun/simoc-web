@@ -2,7 +2,6 @@ import {BoxBufferGeometry, Mesh, MeshStandardMaterial, Group, Box3} from 'three'
 
 // Returns an object or group of objects centered at origin
 const buildPlace = ({place, amount}) => {
-    console.log(`Building ${place}.`)
 	switch(place) {
 		case 'solar_pv_array_mars': {
 			if (!amount) {
@@ -103,6 +102,7 @@ const buildModel = (key) => {
     const spec = {color: color}
     const material = new MeshStandardMaterial(spec)
     const model = new Mesh(geometry, material)
+	model.userData.key = key
     return model
 }
 

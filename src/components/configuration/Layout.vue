@@ -2,7 +2,7 @@
 -->
 
 <template>
-    <World :gameConfig="getConfiguration" />
+    <World :gameConfig="getConfiguration" :isActive="active"/>
 </template>
 
 <script>
@@ -11,12 +11,22 @@ import {mapGetters} from 'vuex'
 import World from '../../threejs/World'
 
 export default {
+    data() {
+        return {
+            active: true
+        }
+    },
     components: {
         World,
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('wizard', ['getConfiguration', 'getActiveReference']),
     },
+    watch: {
+        getActiveReference(newRef, oldRef) {
+            this.active = (newRef === 'Layout') ? true : false
+        }
+    }
 }
 
 </script>

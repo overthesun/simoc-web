@@ -1,11 +1,15 @@
 <template>
-    <div id="scene-container"></div>
+    <div>
+        <div id="scene-container" class="scene-container" ref="sceneContainer"></div>
+    </div>
 </template>
 
 <script>
 import * as THREE from 'three'
 import {createControls} from './systems/controls.js'
 import {createRenderer} from './systems/renderer.js'
+import {Resizer} from './systems/resizer.js'
+import {Tooltip} from './systems/tooltip.js'
 import {createCamera} from './components/camera.js'
 import {createLights} from './components/lights.js'
 import {createScene} from './components/scene.js'
@@ -18,21 +22,31 @@ import {buildPlace} from './components/placeholders'
 // discoverthreejs.com
 
 export default {
-    props: [
-        'gameConfig'
-    ],
+    props: {
+        gameConfig: {
+            default: null
+        },
+        isActive: {
+            default: true
+        }
+    },
     data() {
         return {
+            containerId: 'scene-container',
             container: null,
             renderer: null,
             controls: null,
-            resizer: null,
             camera: null,
+            raycaster: null,
+            mouse: null,
             light: null,
             scene: null,
+            animationFrame: null,
             models: {}, // A cache of rendered models
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
+            hoveringOver: null,
+            hoverMessage: null,
         }
     },
     watch: {
@@ -44,43 +58,57 @@ export default {
         //   - Add a 'modifed' flag to the store
         gameConfig(newConfig, oldConfig) {
             this.buildScene(newConfig)
+        },
+        isActive(newActive, oldActive) {
+            if (newActive) {
+                this.hookup()
+            } else {
+                this.unhook()
+            }
         }
     },
     mounted() {
         this.init()
-        this.animate()
-        window.addEventListener('resize', this.resizeHandler)
+        this.render()
+        this.hookup = this.hookup.bind(this)
+        this.unhook = this.unhook.bind(this)
     },
     beforeDestroy() {
-        window.removeEventListener('resize', this.resizeHandler)
+        cancelAnimationFrame(this.animationFrame)
+        this.unhook()
     },
     methods: {
         init() {
             this.container = document.getElementById('scene-container')
-            // Setup the scene
+            console.log(this.$refs.sceneContainer)
             this.camera = createCamera()
             this.scene = createScene()
             this.renderer = createRenderer()
+
             this.controls = createControls(this.camera, this.renderer.domElement)
             this.container.append(this.renderer.domElement)
-            this.resizeHandler()
-            // Add lighting
+            
+            this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
+            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId)
             this.light = createLights()
             this.scene.add(this.light)
+
             this.buildScene(this.gameConfig)
         },
-        animate() {
-            requestAnimationFrame(this.animate)
-            this.renderer.render(this.scene, this.camera)
+        hookup() {
+            if (this.resizer) {this.resizer.hookup()}
+            if (this.tooltip) {this.tooltip.hookup()}
         },
-        resizeHandler() {
-            let width = this.container.offsetWidth
-            let height = this.container.offsetHeight
-            let aspectRatio = width / height
-            this.camera.aspect = aspectRatio;
-            this.camera.updateProjectionMatrix()
-            this.renderer.setSize(width, height)
-            this.renderer.setPixelRatio(aspectRatio)
+        unhook() {
+            if (this.resizer) {this.resizer.unhook()}
+            if (this.tooltip) {this.tooltip.unhook()}
+        },
+        render() {
+            this.animationFrame = requestAnimationFrame(this.render)
+            
+            this.tooltip.tick()
+
+            this.renderer.render(this.scene, this.camera)
         },
         buildScene(config) {
             // Ignore changes that don't affect layout
@@ -139,10 +167,10 @@ export default {
                 } else {
                     let model
                     if (!this.models[place.place]) {
+                        // Return a new Object3D centered at (0,0,0)
                         model = buildPlace(place)
                     } else {
-                        // TODO: 
-                        // Doesn't update when number of solar panels changes
+                        // TODO: Doesn't update when number of solar panels changes
                         model = this.models[place.place].clone(true)
                     }
                     if (model) {
@@ -164,9 +192,24 @@ export default {
 </script>
 
 <style scoped>
-#scene-container {
+
+#world {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+scene-container {
+    position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+
+#tool-tip {
+    position: absolute;
+    bottom: 0;
+    z-index: 100;
 }
 </style>
