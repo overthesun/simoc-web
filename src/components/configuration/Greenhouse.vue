@@ -11,6 +11,7 @@
                 <option value='greenhouse_small'>Small (490 m³)</option>
                 <option value='greenhouse_medium'>Medium (2452 m³)</option>
                 <option value='greenhouse_large'>Large (5610 m³)</option>
+                <option value='greenhouse_sam'>SAM (494 m³)</option>
             </select>
         </label>
         <label class='input-wrapper'>
@@ -197,7 +198,8 @@ export default {
                 'none': 0,
                 'greenhouse_small': 490,
                 'greenhouse_medium': 2454,
-                'greenhouse_large': 5610
+                'greenhouse_large': 5610,
+                'greenhouse_sam': 494,
             }[this.greenhouse.type]
             // make sure that the amount doesn't overflow the greenhouse_size:
             // calculate the available space by subtracting the amount of the
