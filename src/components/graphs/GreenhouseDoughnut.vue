@@ -22,7 +22,6 @@ export default {
     props: {
         id: {type: String, required: true},
     },
-
     data() {
         return {
             // Greenhouse volumes. These should be retrieved from the database in the future.
@@ -31,6 +30,7 @@ export default {
                 greenhouse_small: 490,
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
+                greenhouse_sam: 494,
             },
 
             // Enough colors to cover all the plant types.
