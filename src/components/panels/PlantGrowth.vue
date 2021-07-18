@@ -6,8 +6,7 @@
                 <th>Qty</th>
                 <th>% of Growth</th>
             </tr>
-            <tr v-for="(item,index) in getConfiguration.plantSpecies"
-                v-if="item.type != ''" :key="index">
+            <tr v-for="(item, index) in getPlants" :key="index">
                 <td>{{stringFormatter(item.type)}}</td>
                 <td>{{item.amount}}</td>
                 <td>{{getAgentGrowthPerc(index)}}</td>
@@ -26,6 +25,10 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),
+        getPlants() {
+            // filter out plants that don't have a type set
+            return this.getConfiguration.plantSpecies.filter(plant => !!plant.type)
+        },
     },
     methods: {
         stringFormatter: StringFormatter,
