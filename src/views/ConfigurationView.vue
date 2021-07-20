@@ -194,7 +194,9 @@ export default {
                 // Using this form of await import(stringliteral + var + stringliteral)
                 // should ensure that webpack/babel recognize that these modules are
                 // imported dynamically and lazily and that they shoultn't be bundled
-                const simdata = await import(`../assets/simdata/${fname}.json`)
+                // (note: template strings don't work here, so add a linter exception)
+                // eslint-disable-next-line prefer-template
+                const simdata = await import('../assets/simdata/' + fname + '.json')
                 return simdata.default  // get the actual data out of the module object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
