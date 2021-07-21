@@ -4,30 +4,31 @@
             <dt title="&lt;=19.5%: minimum permissible level; &lt;=15%: decreased ability to work strenuously;
                        &lt;=12%: respiration and pulse increase; &lt;=8%: termination">
                 O₂ (min. 8%):</dt>
-                <dd :style='o2_style'>{{o2}}</dd>
+            <dd :style="o2_style">{{o2}}</dd>
             <dt title="&gt;=0.1%: complaints of stiffness and odors; &gt;=0.25%: general drowsiness;
                        &gt;=0.5%: adverse health effects; &gt;=1%: termination">
                 CO₂ (max. 1%):</dt>
-                <dd :style='co2_style'>{{co2}}</dd>
+            <dd :style="co2_style">{{co2}}</dd>
             <dt title="Inhabitants are terminated after 3 days with no water">
                 Potable Water (sans 3 days):</dt>
-                <dd>{{water}}</dd>
+            <dd>{{water}}</dd>
             <dt title="Inhabitants are terminated after 20 days with no food">
                 Food (sans 20 days):</dt>
-                <dd>{{food}}</dd>
+            <dd>{{food}}</dd>
             <dt>Inhabitants:</dt>
-                <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
+            <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
         </dl>
         <div id="humans">
-            <fa-icon class="alive" v-for="h in humans" v-bind:key="h" :icon="['fas','male']" />
-            <fa-icon class="dead" v-for="h in getConfiguration.humans.amount-humans" v-bind:key="h" :icon="['fas','male']" />
+            <fa-icon v-for="h in humans" :key="h" :icon="['fas','male']" class="alive" />
+            <fa-icon v-for="h in getConfiguration.humans.amount-humans" :key="h"
+                     :icon="['fas','male']" class="dead" />
         </div>
     </section>
 </template>
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -41,92 +42,85 @@ export default {
             o2_style: {color: '#eee'},
         }
     },
-    computed:{
+    computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer','getStorageCapacities','getGameConfig']),
-        step: function() {
+        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
+                                    'getStorageCapacities', 'getGameConfig']),
+        step() {
             return this.getCurrentStepBuffer
         },
-        total_air_storage_capacity: function() {
+        total_air_storage_capacity() {
             // return the total capacity of the air storage
-            return this.getGameConfig['storages']['air_storage'][0].total_capacity.value
+            return this.getGameConfig.storages.air_storage[0].total_capacity.value
         },
-        o2: function() {
+        o2() {
             return this.attempt_read(() => {
                 const o2_perc = this.get_gas_percentage('atmo_o2')
                 /*
-                Color the 02 value in the panel based of this:
+                Color the O2 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
                 O2 <= 15% -- orange -- decreased ability to work strenuously
                 O2 <= 12% -- red -- respiration and pulse increase
                 O2 <= 8% -- red2 -- terminated
                 */
-                for (let [k, threshold] of [8, 12, 15, 19.5, 100].entries()) {
-                    if (o2_perc <= threshold) {
-                        this.o2_style.color = this.colors[k]
-                        break
-                    }
-                }
-                return o2_perc.toFixed(3) + '%'
+                // find the index of the first value above the threshold
+                const k = [8, 12, 15, 19.5, 100].findIndex(threshold => threshold >= o2_perc)
+                this.o2_style.color = this.colors[k]
+                return `${o2_perc.toFixed(3)}%`
             })
         },
-        co2: function() {
+        co2() {
             return this.attempt_read(() => {
                 const co2_perc = this.get_gas_percentage('atmo_co2')
                 /*
-                Color the co2 value in the panel based of this:
+                Color the CO2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
                 CO2 >= 0.25% -- orange -- general drowsiness
                 CO2 >= 0.5% -- red -- adverse health effects
                 CO2 >= 1% -- red2 -- terminated
                 */
-                for (let [k, threshold] of [1, 0.5, 0.25, 0.1, 0].entries()) {
-                    if (co2_perc >= threshold) {
-                        this.co2_style.color = this.colors[k]
-                        break
-                    }
-                }
-                return co2_perc.toFixed(3) + '%'
+                // find the index of the first value below the threshold
+                const k = [1, 0.5, 0.25, 0.1, 0].findIndex(threshold => threshold <= co2_perc)
+                this.co2_style.color = this.colors[k]
+                return `${co2_perc.toFixed(3)}%`
             })
         },
-        water: function() {
+        water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const h2o_potb = storage['water_storage'][1]['h2o_potb']
-                return h2o_potb.value + ' ' + h2o_potb.unit
+                const {h2o_potb} = storage.water_storage[1]
+                return `${h2o_potb.value} ${h2o_potb.unit}`
             })
         },
-        food: function() {
+        food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const food_edbl = storage['food_storage'][1]['food_edbl']
-                return food_edbl.value + ' ' + food_edbl.unit
+                const {food_edbl} = storage.food_storage[1]
+                return `${food_edbl.value} ${food_edbl.unit}`
             })
         },
-        humans: function() {
-            let agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents['human_agent'] !== undefined) {
-                return agents['human_agent']
-            }
-            else {
+        humans() {
+            const agents = this.getAgentType(this.getCurrentStepBuffer)
+            if (agents !== undefined && agents.human_agent !== undefined) {
+                return agents.human_agent
+            } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
             }
         },
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
-        get_gas_percentage: function(currency) {
+        get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step)['air_storage'][1]
+            const air_storage = this.getStorageCapacities(this.step).air_storage[1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {
             try {
                 return func()
-            }
-            catch (error) {
+            } catch (error) {
                 return '[loading data...]'
             }
         },

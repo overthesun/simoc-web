@@ -4,12 +4,12 @@
             Configuration Menu
         </template>
         <template v-slot:menu-buttons>
-            <DownloadConfig 
-                :isValid="isValid" 
-                :config="getConfiguration" 
-                fileName="simoc-config.json" 
-                :alertUserOnInvalid="false" />
-            <UploadConfig :handleFile="handleUpload" />
+            <DownloadConfig
+                :is-valid="isValid"
+                :config="getConfiguration"
+                :alert-user-on-invalid="false"
+                file-name="simoc-config.json" />
+            <UploadConfig :handle-file="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
             <Logout />
         </template>
@@ -17,45 +17,43 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {BaseMenu} from '../../components/base'
-import {DownloadConfig,UploadConfig,Logout} from '../../components/menu'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {BaseMenu} from '../base'
+import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
 export default {
     components: {
-        'BaseMenu': BaseMenu,
-        'DownloadConfig': DownloadConfig,
-        'UploadConfig': UploadConfig,
-        'Logout': Logout
-
+        BaseMenu,
+        DownloadConfig,
+        UploadConfig,
+        Logout,
     },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
 
-        isValid: function() {
-            const form = this.$parent.$refs.form
+        isValid() {
+            const {form} = this.$parent.$refs
             if (!form.checkValidity()) {
                 form.reportValidity()
                 return false
             } else {
                 return true
             }
-        }
+        },
     },
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        handleUpload: function(json_config) {
+        handleUpload(json_config) {
             this.SETCONFIGURATION(json_config)
         },
-        resetConfig: function() {
-            if (!confirm('Reset the current configuration?')) {
+        resetConfig() {
+            if (!window.confirm('Reset the current configuration?')) {
                 return
             }
             this.SETRESETCONFIG(true)
         },
-    }
+    },
 }
 </script>
 

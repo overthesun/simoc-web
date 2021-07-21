@@ -1,21 +1,22 @@
 <template v-slot:panel-content>
-    <div class='panel'>
-        <header class='panel-header'>
-            <slot name='panel-title'></slot>
-            <slot name='panel-menu'></slot>
+    <div class="panel">
+        <header class="panel-header">
+            <slot name="panel-title" />
+            <slot name="panel-menu" />
         </header>
-        <slot name='panel-content'></slot>
+        <slot name="panel-content" />
     </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
+
 export default {
-    data(){
-        return{
+    data() {
+        return {
 
         }
-    }
+    },
 }
 </script>
 
@@ -47,7 +48,6 @@ export default {
     text-indent: 0;
     text-align: right;
 }
-
 
 
 .panel {
@@ -126,8 +126,6 @@ export default {
         font-size: 18px;
         font-weight: 600;
     }
-
-
 
 
     .section-title{

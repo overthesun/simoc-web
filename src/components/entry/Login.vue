@@ -1,48 +1,60 @@
 <template>
-    <div class='entry-wrapper'>
-        <!-- This sectoin uses absolute positioning and overflow:hidden on the parent to hide it from the user.
-        class binding is used to display / hide the warning.  v-if will simply display it or not, and will not activate the
-        animation for displaying or hiding
+    <div class="entry-wrapper">
+        <!-- This section uses absolute positioning and overflow:hidden on the parent to hide
+             it from the user.  class binding is used to display / hide the warning.
+             v-if will simply display it or not, and will not activate the animation
+             for displaying or hiding
         -->
-        <div class='warning-wrapper' :class="{'warning-active': activeWarning}">
-            <fa-icon class='fa-icon dismiss-icon' :icon="['fas','times']" @click="dismissWarning"/>
-            <div class='warning-item' v-for="(item,index) in activeWarnings" :key="index">
-                <!-- removed because of missing pro-light-svg-icon dependency <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
+        <div :class="{'warning-active': activeWarning}" class="warning-wrapper">
+            <fa-icon :icon="['fas','times']" class="fa-icon dismiss-icon" @click="dismissWarning" />
+            <div v-for="(item,index) in activeWarnings" :key="index" class="warning-item">
+                <!-- removed because of missing pro-light-svg-icon dependency
+                     <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
                 {{activeWarnings[index]}}
             </div>
         </div>
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item' :class="{'option-item-active': 'login'===activeOption}" @click="activateOption('login')"> SIGN IN </div>
-                <div class='option-item' :class="{'option-item-active': 'register'===activeOption}" @click="activateOption('register')"> SIGN UP </div>
+                <div :class="{'option-item-active': 'login'===activeOption}" class="option-item"
+                     @click="activateOption('login')"> SIGN IN </div>
+                <div :class="{'option-item-active': 'register'===activeOption}" class="option-item"
+                     @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template v-slot:entry-main>
-                <section class='entry-form entry-form-login' :class="{'entry-form-active': activeOption==='login'}">
-                    <form v-if="!activeGuestLogin" @submit.prevent="loginUser" id='login-form'>
-                        <input v-model="user.username" type='text' class='input-field-text' placeholder="Username"/>
-                        <input v-model="user.password" type='password' class='input-field-text' placeholder="Password"/>
+                <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
+                    <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
+                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
+                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
                     </form>
-                    <p v-else>If you don't want to create an account, you can log in as a Guest. Guest accounts are temporary and will be deleted on a regular basis.</p>
-                    <a id='guest-login' class='link' @click='showGuestLogin'>{{guestLoginLinkText}}</a>
+                    <p v-else>If you don't want to create an account, you can log in as a Guest.
+                        Guest accounts are temporary and will be deleted on a regular basis.</p>
+                    <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                 </section>
-                <section class='entry-form entry-form-register' :class="{'entry-form-active': activeOption==='register'}">
-                    <form @submit.prevent="registerUser" id='register-form'>
-                        <input v-model="register.username" type='text' class='input-field-text' placeholder="Choose Username"/>
-                        <input v-model="register.password" type='password' class='input-field-text' placeholder="Enter Password"/>
-                        <input v-model="register.confirmPassword" type='password' class='input-field-text' placeholder="Confirm Password"/>
+                <section :class="{'entry-form-active': activeOption==='register'}"
+                         class="entry-form entry-form-register">
+                    <form id="register-form" @submit.prevent="registerUser">
+                        <input v-model="register.username" type="text" class="input-field-text"
+                               placeholder="Choose Username">
+                        <input v-model="register.password" type="password" class="input-field-text"
+                               placeholder="Enter Password">
+                        <input v-model="register.confirmPassword" type="password" class="input-field-text"
+                               placeholder="Confirm Password">
                     </form>
                 </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template v-slot:entry-button>
-                <div class='btn-wrapper btn-wrapper-login' :class="{'btn-wrapper-active': activeOption==='login'}">
-                    <button v-if="activeGuestLogin" form='register-form' class='btn-warning' @click="guestLogin">SIGN IN AS GUEST</button>
-                    <button v-else form='login-form' class='btn-warning'>SIGN IN</button>
+                <div :class="{'btn-wrapper-active': activeOption==='login'}"
+                     class="btn-wrapper btn-wrapper-login">
+                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
+                            @click="guestLogin">SIGN IN AS GUEST</button>
+                    <button v-else form="login-form" class="btn-warning">SIGN IN</button>
                 </div>
-                <div class='btn-wrapper btn-wrapper-register' :class="{'btn-wrapper-active': activeOption==='register'}">
-                    <button form='register-form' class='btn-warning'>SIGN UP</button>
+                <div :class="{'btn-wrapper-active': activeOption==='register'}"
+                     class="btn-wrapper btn-wrapper-register">
+                    <button form="register-form" class="btn-warning">SIGN UP</button>
                 </div>
             </template>
             <!--<template v-slot:entry-footer>
@@ -55,44 +67,47 @@
 
 <script>
 import axios from 'axios'
-import {BaseEntry} from '../../components/base'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {BaseEntry} from '../base'
+
 export default {
-    components:{
-        'BaseEntry':BaseEntry,
+    components: {
+        BaseEntry,
     },
 
-    data(){
-
-        //Initialize all the values that will be used for v-model
-        return{
+    data() {
+        // Initialize all the values that will be used for v-model
+        return {
             activeOption: 'login', // Which 'option' should be active
             activeGuestLogin: false, // true: guest login, false: regular login with user/pass form
             activeWarning: false, // Used to show or hide the warning panel
-            activeWarnings: [], // The current active warnings. This should really be a 'set' so that it only contains unique warnings. Currently will display duplicates.
+            // The current active warnings. This should really be a 'set' so that
+            // it only contains unique warnings. Currently will display duplicates.
+            activeWarnings: [],
 
-            user:{
-                username:"",
-                password:"",
+            user: {
+                username: '',
+                password: '',
             },
 
-            register:{
-                username:"",
-                password:"",
-                confirmPassword:""
+            register: {
+                username: '',
+                password: '',
+                confirmPassword: '',
             },
         }
     },
     computed: {
-        guestLoginLinkText: function() {
-            return this.activeGuestLogin?'Return to SIGN IN.':'Sign in as a Guest.'
+        guestLoginLinkText() {
+            return this.activeGuestLogin ? 'Return to SIGN IN.' : 'Sign in as a Guest.'
         },
     },
-    methods:{
+    methods: {
 
-        // On registration make sure the username + password meet the criteria before attempting to register.
+        // On registration make sure the username + password
+        // meet the criteria before attempting to register.
         // Warnings cannot be active before attempting login.
-        registerUser: async function() {
+        async registerUser() {
             this.dismissWarning()  // clear existing warnings before starting
             // check criteria
             const usernameIsValid = await this.verifyUsername()
@@ -102,7 +117,8 @@ export default {
                 this.addWarning(
                     'Invalid Username: can only contain letters, ' +
                     'numbers, underscores (_), dashes (-), dots (.), ' +
-                    'and must be at least 4 characters long.')
+                    'and must be at least 4 characters long.'
+                )
             }
             if (!passwordIsValid) {
                 this.addWarning('Invalid Password: must be at least 8 characters long.')
@@ -113,52 +129,51 @@ export default {
             // if no warnings were present pass in the username object to the register route
             if (!this.activeWarning) {
                 const {username, password} = this.register
-                const params = {'username': username, 'password': password}
+                const params = {username, password}
                 await this.entryHandler(params, '/register')  // Attempt the route
             }
         },
 
-        //Login the user if the criteria is met.
-        loginUser: async function() {
+        // Login the user if the criteria is met.
+        async loginUser() {
             this.dismissWarning()
             const loginCorrect = await this.verifyLogin()
 
             if (!loginCorrect) {
-                this.addWarning("Invalid username or password")
+                this.addWarning('Invalid username or password')
             }
 
             if (loginCorrect) {
-               const params = this.user
-               await this.entryHandler(params, '/login')  // Attempt the route
+                const params = this.user
+                await this.entryHandler(params, '/login')  // Attempt the route
             }
         },
 
-        //Connection handler for the login / registeration. Takes in the parameters to be used, and the route to be called.
-        //This method should be converted over to the try/catch block as seen elsewhere. Simply to reduce the callback hell.
-        //It would also need to be made async in that case.
-        entryHandler:function(params,route){
-            axios.defaults.withCredentials = true;
+        // Connection handler for the login / registration.
+        // Takes in the parameters to be used, and the route to be called.
+        // This method should be converted over to the try/catch block as seen elsewhere.
+        // Simply to reduce the callback hell.
+        // It would also need to be made async in that case.
+        entryHandler(params, route) {
+            axios.defaults.withCredentials = true
             axios.post(route, params).then(response => {
                 const {status} = response
-                if (response.data.status == 'ERROR') {
-                    const errmsg = 'Error: ' + response.data.message
-                    this.$gtag.exception({'description': errmsg})
+                if (response.data.status === 'ERROR') {
+                    const errmsg = `Error: ${response.data.message}`
+                    this.$gtag.exception({description: errmsg})
                     this.addWarning(errmsg)
-                }
-                else if (status === 200) {
+                } else if (status === 200) {
                     if (this.activeOption === 'login') {
                         if (!this.activeGuestLogin) {
-                            this.$gtag.event('user login', {'event_category': 'signin',
-                                                            'event_label': this.user.username})
+                            this.$gtag.event('user login', {event_category: 'signin',
+                                                            event_label: this.user.username})
+                        } else {
+                            this.$gtag.event('guest login', {event_category: 'signin',
+                                                             event_label: this.register.username})
                         }
-                        else {
-                            this.$gtag.event('guest login', {'event_category': 'signin',
-                                                             'event_label': this.register.username})
-                        }
-                    }
-                    else {
-                        this.$gtag.event('new user signup', {'event_category': 'signup',
-                                                             'event_label': this.register.username})
+                    } else {
+                        this.$gtag.event('new user signup', {event_category: 'signup',
+                                                             event_label: this.register.username})
                     }
                     /*
                     this.$gtag.event('login', { method: 'Google' })
@@ -176,88 +191,82 @@ export default {
                 if (!error.response) {
                     // we didn't get a response from the server
                     this.addWarning('Error: No response from the server')
-                }
-                else {
+                } else {
                     // we got a response back from the server
                     const {status} = error.response
-                    let {message} = error.response.data
-                    if (!message) {
-                        // if we don't get an err message from the server
-                        // fallback on a generic one
-                        message = error.message
-                    }
-                    this.$gtag.exception({'description': message})
+                    // get the error msg from the server if available, or the generic one
+                    const message = error.response.data.message || error.message
+                    this.$gtag.exception({description: message})
                     if (status === 401) {
-                        this.addWarning('Login Error: ' + message)
-                    }
-                    else if (status === 409) {
-                        this.addWarning('Registration Error: ' + message)
-                    }
-                    else {
-                        this.addWarning('Error: ' + message)
+                        this.addWarning(`Login Error: ${message}`)
+                    } else if (status === 409) {
+                        this.addWarning(`Registration Error: ${message}`)
+                    } else {
+                        this.addWarning(`Error: ${message}`)
                     }
                 }
             })
         },
 
-        //Make sure that the password and username are at least not empty before proceeding.
-        verifyLogin: function() {
-            const {username,password} = this.user
+        // Make sure that the password and username are at least not empty before proceeding.
+        verifyLogin() {
+            const {username, password} = this.user
             return username.length > 0 && password.length > 0
         },
 
-        verifyUsername: function() {
+        verifyUsername() {
             const {username} = this.register
             const userRegex = RegExp('^[a-zA-Z0-9_.-]{4,}$')
             return userRegex.test(username)
         },
-        verifyPassword: function() {
+        verifyPassword() {
             const {password} = this.register
             const passRegex = RegExp('.{8,}')
             return passRegex.test(password)
         },
 
-        //Verifies that both the password field and confirm field match and neither is empty
-        //Returns the solved boolean value
-        verifyPasswordMatch: function() {
+        // Verifies that both the password field and confirm field match and neither is empty
+        // Returns the solved boolean value
+        verifyPasswordMatch() {
             const {password, confirmPassword} = this.register
             return password === confirmPassword
         },
 
         // add a warning and set the state to true
-        addWarning: function(warningsMsg) {
+        addWarning(warningsMsg) {
             this.activeWarnings.push(warningsMsg)
             this.activeWarning = true
         },
 
-        //Called when the user closes the warning message popup.
-        //Clears all warning entries.
-        dismissWarning: function() {
+        // Called when the user closes the warning message popup.
+        // Clears all warning entries.
+        dismissWarning() {
             this.activeWarnings = []
             this.activeWarning = false
         },
 
-        //Used to activate which section the user is under Sign In or Sign Up
-        //Called from the above options sections within the HTMl, passes in the
-        //name value of the section that should have the active class.
-        activateOption: function(sectionName) {
+        // Used to activate which section the user is under Sign In or Sign Up
+        // Called from the above options sections within the HTMl, passes in the
+        // name value of the section that should have the active class.
+        activateOption(sectionName) {
             this.dismissWarning()
             this.activeOption = sectionName
         },
-        showGuestLogin: function() {
+        showGuestLogin() {
             // swap between guest login and regular login
             this.activeGuestLogin = !this.activeGuestLogin
         },
-        guestLogin: function() {
+        guestLogin() {
             // create a random user/pass and use them to login as guest
-            const rand_userid = ('guest-' + Date.now().toString(36) + '-' +
-                                 Math.random().toString(36).substring(2, 15))
+            const date = Date.now().toString(36)
+            const rand_str = Math.random().toString(36).substring(2, 15)
+            const rand_userid = `guest-${date}-${rand_str}`
             const rand_password = Math.random().toString(36).substring(2, 15)
             this.register.username = rand_userid
             this.register.password = rand_password
             this.register.confirmPassword = rand_password
         },
-    }
+    },
 }
 </script>
 

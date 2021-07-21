@@ -1,30 +1,30 @@
 <!-- component used for the holding the login / registration components. See EntryView for further details-->
 
 <template>
-    <div class='entry-wrapper'>
-        <header class='header'>
-            <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
-            <span class='simoc-logo-title'>SIMOC</span>
-            <img src='../../assets/natgeo-trans.png' class='natgeo-logo'/>
+    <div class="entry-wrapper">
+        <header class="header">
+            <img src="../../assets/simoc-logo.svg" class="simoc-logo">
+            <span class="simoc-logo-title">SIMOC</span>
+            <img src="../../assets/natgeo-trans.png" class="natgeo-logo">
         </header>
-        <div class='main-options'>
-            <slot name="option-items"></slot>
+        <div class="main-options">
+            <slot name="option-items" />
         </div>
-        <main class='main'>
-            <slot name='entry-main'></slot>
+        <main class="main">
+            <slot name="entry-main" />
         </main>
-        <div class='entry-button-wrapper'>
-            <slot name='entry-button'></slot>
+        <div class="entry-button-wrapper">
+            <slot name="entry-button" />
         </div>
-        <footer class='footer'>
-            <a class='link' title='Go to the simoc.space homepage' target='_blank'
+        <footer class="footer">
+            <a class="link" title="Go to the simoc.space homepage" target="_blank"
                href="https://simoc.space/">
                 SIMOC
             </a>
-            <a class='link' target='_blank' href='mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20'>
+            <a class="link" target="_blank" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
                 Report Bug
             </a>
-            <a class='link' title='End User License Agreement' target='_blank'
+            <a class="link" title="End User License Agreement" target="_blank"
                href="https://simoc.space/end-user-license-agreement/">
                 EULA
             </a>

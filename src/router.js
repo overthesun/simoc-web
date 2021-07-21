@@ -1,73 +1,71 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue'
+import Router from 'vue-router'
 
-import {EntryView,ConfigurationView,DashboardView,AceView} from './views'
-import {EntryWelcome,EntryLogin,EntryMenu,EntryMenuConfig} from './components/entry'
-import {BaseConfiguration,BaseDashboard} from './components/base'
-//import {Login,Welcome,MainMenu} from './components/entry'
-//import {MainMenu,ConfigurationMenu} from './components/mainmenu'
+import {EntryView, ConfigurationView, DashboardView, AceView} from './views'
+import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
+import {BaseConfiguration, BaseDashboard} from './components/base'
+// import {Login,Welcome,MainMenu} from './components/entry'
+// import {MainMenu,ConfigurationMenu} from './components/mainmenu'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: "/",
-      component: EntryView,
-
-      children:[
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: [
         {
-          path:'',
-          name: 'initial',
-          component:EntryWelcome
+            path: '/',
+            component: EntryView,
+            children: [
+                {
+                    path: '',
+                    name: 'initial',
+                    component: EntryWelcome,
+                },
+                {
+                    path: 'entry',
+                    name: 'entry',
+                    component: EntryLogin,
+                },
+                {
+                    path: 'menu',
+                    name: 'menu',
+                    component: EntryMenu,
+                },
+                {
+                    path: 'menuconfig',
+                    name: 'menuconfig',
+                    component: EntryMenuConfig,
+                },
+            ],
         },
         {
-          path:'entry',
-          name:'entry',
-          component:EntryLogin
+            path: 'menuconfig',
+            name: 'menuconfig',
+            component: EntryMenuConfig,
         },
         {
-          path:'menu',
-          name:'menu',
-          component:EntryMenu
+            path: '/ace',
+            name: 'ace',
+            component: AceView,
         },
         {
-          path:'menuconfig',
-          name:'menuconfig',
-          component:EntryMenuConfig
+            path: '/configuration',
+            name: 'configuration',
+            component: ConfigurationView,
+            children: [{
+                path: '/configuration',
+                component: BaseConfiguration,
+            }],
         },
-      ]
-    },
-    {
-      path:"/ace",
-      name:"ace",
-      component:AceView,
-
-    },
-    {
-      path:"/configuration",
-      name:"configuration",
-      component:ConfigurationView,
-
-      children:[
         {
-          path:'/configuration',
-          component:BaseConfiguration
+            path: '/dashboard',
+            name: 'dashboard',
+            component: DashboardView,
+            children: [{
+                path: '/dashboard',
+                component: BaseDashboard,
+            }],
         },
-      ]
-    },
-    {
-      path:"/dashboard",
-      name:"dashboard",
-      component:DashboardView,
-      children:[
-        {
-          path:"/dashboard",
-          component:BaseDashboard
-        }
-      ]
-    }
-  ]
-});
+    ],
+})

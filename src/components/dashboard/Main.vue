@@ -1,55 +1,62 @@
 <!--
-This is the main view of the dashboard.  It dynamically loads all the panels found in the panels/ dir
-and shows a list of default panels as defined in the activePanels variable.
-Each panel has a menu that allows adding, changing, or removing panels, that is populated with all the
-panels found in the panels/ dir.
+This is the main view of the dashboard.  It dynamically loads all the panels found in the panels/
+dir and shows a list of default panels as defined in the activePanels variable.
+Each panel has a menu that allows adding, changing, or removing panels,
+that is populated with all the panels found in the panels/ dir.
 The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div class='dashboard-view-wrapper'>
-        <BasePanel v-for="([panelName, panelSection],index) in activePanels.map(p => p.split(':'))" :key="index">
-            <template v-slot:panel-title><div class='panel-title'>{{panels[panelName].panelTitle}}</div></template>
+    <div class="dashboard-view-wrapper">
+        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))" :key="index">
+            <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-menu>
-                <div class='panel-menu'>
+                <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
-                    <div class='menu-icon-wrapper' @click="openPanelMenu(index)">
-                        <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']"/>
+                    <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
+                        <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
                     </div>
                     <!-- the options menu -->
-                    <div class='panel-menu-options' v-if="index === visibleMenu">
+                    <div v-if="index === visibleMenu" class="panel-menu-options">
                         <!-- this menu has two steps: first shows the add/change/remove options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
                             <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
                             <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                            <li><button @click="removePanel(index)" v-if="activePanels.length > 1">Remove Panel</button></li>
+                            <li><button v-if="activePanels.length > 1"
+                                        @click="removePanel(index)">Remove Panel</button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
-                        <select v-else class='panel-select' v-model="selectedPanel" @change="updatePanels(index, replacePanel)">
+                        <select v-else v-model="selectedPanel" class="panel-select"
+                                @change="updatePanels(index, replacePanel)">
                             <option hidden selected value="null">Select Panel:</option>
                             <!-- populate the drop-down with all the available panels, sorted by title -->
-                            <option v-for="[pTitle, pName] in sortedPanels" :value="pName">{{pTitle}}</option>
+                            <option v-for="[pTitle, pName] in sortedPanels"
+                                    :key="pName" :value="pName">{{pTitle}}</option>
                         </select>
                     </div>
                 </div>
             </template>
             <template v-slot:panel-content>
-                <component :is="panelName" :canvasNumber="index"
-                           :panelIndex="index" :panelSection="panelSection"
-                           v-on:panel-section-changed="updatePanelSection"></component>
+                <component :is="panelName" :canvas-number="index"
+                           :panel-index="index" :panel-section="panelSection"
+                           @panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
     </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-import {BasePanel} from '../../components/basepanel'
-import panels from '../../components/panels'  // import all panels
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {BasePanel} from '../basepanel'
+import panels from '../panels'  // import all panels
 
 export default {
+    components: {
+        BasePanel,
+        ...panels,  // add all panels as components
+    },
     data() {
         return {
             // list of default panels; update this to change the initial panels displayed
@@ -61,80 +68,76 @@ export default {
             replacePanel: null,  // if 0, updatePanels will add a new panel; if 1, it will replace the panel
         }
     },
-    beforeMount() {
-        // load saved panels from local storage or use default layout
-        const savedPanels = localStorage.getItem('panels-layout')
-        if (savedPanels) {
-            this.SETACTIVEPANELS(JSON.parse(savedPanels))
-        }
-        else {
-            this.SETDEFAULTPANELS()
-        }
-    },
-    components:{
-        'BasePanel': BasePanel,
-        ...panels,  // add all panels as components
-    },
-    computed:{
+    computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getActivePanels']),
-        sortedPanels: function () {
+        sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
-            let sorted = []
+            const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
                 sorted.push([panel.panelTitle, panelName])
             })
             return sorted.sort()
         },
     },
-    methods:{
+    watch: {
+        getActivePanels() {
+            this.activePanels = this.getActivePanels
+        },
+    },
+    beforeMount() {
+        // load saved panels from local storage or use default layout
+        const savedPanels = localStorage.getItem('panels-layout')
+        if (savedPanels) {
+            this.SETACTIVEPANELS(JSON.parse(savedPanels))
+        } else {
+            this.SETDEFAULTPANELS()
+        }
+    },
+    methods: {
         ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
 
-        openPanelMenu: function(index) {
+        openPanelMenu(index) {
             // open the panel menu at index or close it if it's already open
             this.visibleMenu = (this.visibleMenu === index) ? null : index
         },
-        closePanelMenu: function(index) {
+        closePanelMenu(index) {
             // reset variables and close the menu
             this.replacePanel = null
             this.selectedPanel = null
             this.visiblePanelSelect = null
             this.visibleMenu = null
         },
-        showPanelSelect: function(index, replace) {
+        showPanelSelect(index, replace) {
             // show the panel select dropdown
             this.visiblePanelSelect = index
             // set whether the selected panel will replace the one at index or added at index+1
             this.replacePanel = replace  // 1: replace panel, 0: add new one
         },
-        updatePanels: function(index, replace) {
+        updatePanels(index, replace) {
             // do nothing if we are replacing a panel with the same panel
-            if (this.replacePanel && this.selectedPanel == this.activePanels[index].split(':')[0]) {
+            if (this.replacePanel &&
+                this.selectedPanel === this.activePanels[index].split(':')[0]) {
                 this.closePanelMenu()
                 return
             }
             // replace or add the selected panel
-            let panelName = this.selectedPanel
+            const panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
         },
-        updatePanelSection: function(index, section) {
+        updatePanelSection(index, section) {
             // update the section of the panel at index
-            let panelName = this.activePanels[index].split(':')[0]
+            const panelName = this.activePanels[index].split(':')[0]
             this.activePanels[index] = [panelName, section].join(':')
             this.SETACTIVEPANELS(this.activePanels)
         },
-        removePanel: function(index) {
+        removePanel(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
             this.SETACTIVEPANELS(this.activePanels)
             this.closePanelMenu()
-        },
-    },
-    watch: {
-        getActivePanels: function () {
-            this.activePanels = this.getActivePanels
         },
     },
 }

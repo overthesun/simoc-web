@@ -1,44 +1,47 @@
 <template>
-  <section class="plant-growth-wrapper">
-      <table class="plant-growth">
-          <tr>
-              <th>Plant Species</th>
-              <th>Qty</th>
-              <th>% of Growth</th>
-          </tr>
-          <tr v-for="(item,index) in getConfiguration.plantSpecies" v-if="item.type != ''" :key="index">
-              <td >{{stringFormatter(item.type)}}</td>
-              <td>{{item.amount}}</td>
-              <td>{{getAgentGrowthPerc(index)}}</td>
-          </tr>
-      </table>
-  </section>
+    <section class="plant-growth-wrapper">
+        <table class="plant-growth">
+            <tr>
+                <th>Plant Species</th>
+                <th>Qty</th>
+                <th>% of Growth</th>
+            </tr>
+            <tr v-for="(item, index) in getPlants" :key="index">
+                <td>{{stringFormatter(item.type)}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{getAgentGrowthPerc(index)}}</td>
+            </tr>
+        </table>
+    </section>
 </template>
 
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
-    computed:{
-        ...mapGetters('wizard',['getConfiguration']),
-        ...mapGetters('dashboard',['getAgentGrowth','getCurrentStepBuffer','getAgentType']),
+    computed: {
+        ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),
+        getPlants() {
+            // filter out plants that don't have a type set
+            return this.getConfiguration.plantSpecies.filter(plant => !!plant.type)
+        },
     },
-    methods:{
+    methods: {
         stringFormatter: StringFormatter,
-        getAgentGrowthPerc: function(index) {
-            let agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
+        getAgentGrowthPerc(index) {
+            const agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
             if (agentGrowth === undefined) {
                 return '[loading data...]'
-            }
-            else {
-                let perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
-                return perc.toFixed(4) + "%"
+            } else {
+                const perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
+                return `${perc.toFixed(4)}%`
             }
         },
-    }
+    },
 }
 </script>
 
