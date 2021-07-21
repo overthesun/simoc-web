@@ -8,10 +8,10 @@
             <select ref="crew_quarters_type" v-model="crewQuarters.type"
                     class="input-field-select" required @change="setInhabitants">
                 <option value="none" selected>None</option>
-                <option value="crew_habitat_small">Small 1000 m³</option>
-                <option value="crew_habitat_medium">Medium 2260 m³</option>
-                <option value="crew_habitat_large">Large 4020 m³</option>
-                <option value="crew_habitat_sam">SAM 272 m³</option>
+                <option value="crew_habitat_small">Small (1000 m³)</option>
+                <option value="crew_habitat_medium">Medium (2260 m³)</option>
+                <option value="crew_habitat_large">Large (4020 m³)</option>
+                <option value="crew_habitat_sam">SAM (272 m³)</option>
             </select>
         </label>
         <label class="input-wrapper">
