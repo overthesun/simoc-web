@@ -1,17 +1,15 @@
-<template>
-
-</template>
+<template />
 
 <script>
 import * as THREE from 'three'
 
 export default {
     props: [
-        'scene'
+        'scene',
     ],
     data() {
         return {
-            loaded: false
+            loaded: false,
         }
     },
     watch: {
@@ -22,36 +20,36 @@ export default {
             }
             this.loadSkybox()
             this.loaded = true
-        }
+        },
     },
     methods: {
         loadSkybox() {
-            let angles = ['ft', 'bk', 'up', 'dn', 'rt', 'lf']
-            let images = {}
+            const angles = ['ft', 'bk', 'up', 'dn', 'rt', 'lf']
+            const images = {}
             angles.forEach(angle => {
                 // image source: https://opengameart.org/content/mayhems-skyboxes-more
                 // ref: (acdcjunior's answer) https://stackoverflow.com/questions/47313165/how-to-reference-static-assets-within-vue-javascript
-                images[angle] = require('../../assets/h2s_' + angle + '.jpg')
+                images[angle] = require(`../../assets/h2s_${angle}.jpg`)
             })
 
             // Add the skybox
             this.scene.background = new THREE.CubeTextureLoader()
-                .load(angles.map(angle => images[angle]))
+                    .load(angles.map(angle => images[angle]))
 
             // Add the ground
-            var groundTexture = new THREE.TextureLoader().load( images.dn );
-            groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-            groundTexture.repeat.set( 1000, 1000 );
-            var groundGeometry = new THREE.PlaneGeometry( 10000, 10000 )
-            var groundMaterial = new THREE.MeshStandardMaterial( { map: groundTexture } );
-            var mesh = new THREE.Mesh(groundGeometry, groundMaterial)
-            mesh.position.y = 0.0;
-            mesh.rotation.x = - Math.PI / 2;
-            mesh.receiveShadow = true;
+            const groundTexture = new THREE.TextureLoader().load(images.dn)
+            groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping
+            groundTexture.repeat.set(1000, 1000)
+            const groundGeometry = new THREE.PlaneGeometry(10000, 10000)
+            const groundMaterial = new THREE.MeshStandardMaterial({map: groundTexture})
+            const mesh = new THREE.Mesh(groundGeometry, groundMaterial)
+            mesh.position.y = 0.0
+            mesh.rotation.x = -Math.PI / 2
+            mesh.receiveShadow = true
             mesh.userData.key = 'ground'
-            this.scene.add( mesh );
-        }
-    }
+            this.scene.add(mesh)
+        },
+    },
 }
 </script>
 

@@ -42,10 +42,10 @@ menu button being present on other unrelated configurations.
                          :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')"
-                     :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
-                <div class='option-item' @click="SETACTIVEREFERENCE('Layout')"
-                     :class="{'option-item-active' : 'Layout'===activeOption}">LAYOUT</div>
+                <div class="option-item" :class="{'option-item-active' : 'Graphs'===activeOption}"
+                     @click="SETACTIVEREFERENCE('Graphs')">GRAPHS</div>
+                <div class="option-item" :class="{'option-item-active' : 'Layout'===activeOption}"
+                     @click="SETACTIVEREFERENCE('Layout')">LAYOUT</div>
             </nav>
             <main class="main main-reference">
                 <slot name="main-wizard-reference" />

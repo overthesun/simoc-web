@@ -2,31 +2,31 @@
 -->
 
 <template>
-    <World :gameConfig="getConfiguration" :isActive="active"/>
+    <World :game-config="getConfiguration" :is-active="active" />
 </template>
 
 <script>
-import {GreenhouseConfig, PowerUsage} from '../graphs'
 import {mapGetters} from 'vuex'
+import {GreenhouseConfig, PowerUsage} from '../graphs'
 import World from '../../threejs/World'
 
 export default {
-    data() {
-        return {
-            active: true
-        }
-    },
     components: {
         World,
+    },
+    data() {
+        return {
+            active: true,
+        }
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration', 'getActiveReference']),
     },
     watch: {
         getActiveReference(newRef, oldRef) {
-            this.active = (newRef === 'Layout') ? true : false
-        }
-    }
+            this.active = (newRef === 'Layout')
+        },
+    },
 }
 
 </script>

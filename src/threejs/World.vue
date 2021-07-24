@@ -1,6 +1,6 @@
 <template>
     <div id="world">
-        <div id="scene-container" class="scene-container" ref="sceneContainer"></div>
+        <div id="scene-container" ref="sceneContainer" class="scene-container" />
         <Skybox :scene="scene" />
     </div>
 </template>
@@ -26,11 +26,11 @@ export default {
     },
     props: {
         gameConfig: {
-            default: null
+            default: null,
         },
         isActive: {
-            default: true
-        }
+            default: true,
+        },
     },
     data() {
         return {
@@ -52,14 +52,14 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('threejs', ['getLayout'])
+        ...mapGetters('threejs', ['getLayout']),
     },
     watch: {
         gameConfig: {
-            handler: function() {
+            handler() {
                 this.buildScene(this.gameConfig)
             },
-            deep: true
+            deep: true,
         },
         isActive(newActive, oldActive) {
             if (newActive) {
@@ -67,7 +67,7 @@ export default {
             } else {
                 this.unhook()
             }
-        }
+        },
     },
     mounted() {
         this.init()
@@ -106,12 +106,12 @@ export default {
             this.buildScene(this.gameConfig)
         },
         hookup() {
-            if (this.resizer) {this.resizer.hookup()}
-            if (this.tooltip) {this.tooltip.hookup()}
+            if (this.resizer) { this.resizer.hookup() }
+            if (this.tooltip) { this.tooltip.hookup() }
         },
         unhook() {
-            if (this.resizer) {this.resizer.unhook()}
-            if (this.tooltip) {this.tooltip.unhook()}
+            if (this.resizer) { this.resizer.unhook() }
+            if (this.tooltip) { this.tooltip.unhook() }
         },
         render() {
             this.animationFrame = requestAnimationFrame(this.render)
@@ -122,7 +122,7 @@ export default {
         },
         async buildScene(config) {
             // Ignore changes that don't affect layout
-            let newLayout = this.buildLayout(config)
+            const newLayout = this.buildLayout(config)
             if (JSON.stringify(newLayout) === JSON.stringify(this.getLayout)) {
                 return
             }
@@ -137,12 +137,12 @@ export default {
             let layout = []
             if (Object.keys(config).includes('powerGeneration')) {
                 if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
-                    layout.push (
+                    layout.push(
                         {place: config.powerGeneration.type, amount: config.powerGeneration.amount}
                     )
                 }
             }
-            let pressurizedEnv = []
+            const pressurizedEnv = []
             if (config.crewQuarters.type !== 'none') {
                 pressurizedEnv.push(
                     {place: config.crewQuarters.type, amount: config.crewQuarters.amount}
@@ -169,26 +169,26 @@ export default {
             return layout
         },
         async buildHabitat(layout) {
-            let models = new THREE.Group()
+            const models = new THREE.Group()
             let edge = 0 // tracks the 'back' of last placed model
             for (let i = layout.length - 1; i >= 0; i--) {
-                let place = layout[i]
+                const place = layout[i]
                 if (place.place === 'empty') {
-                    edge = edge - place.amount
+                    edge -= place.amount
                 } else {
                     // Store with a given quantity
-                    let model = await this.getAsset(place)
-                    let bbox = new THREE.Box3().setFromObject(model)
+                    const model = await this.getAsset(place)
+                    const bbox = new THREE.Box3().setFromObject(model)
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
                     edge = edge - bbox.max.z + bbox.min.z // Reset back edge
                     models.add(model)
                 }
             }
-            let bbox = new THREE.Box3().setFromObject(models)
+            const bbox = new THREE.Box3().setFromObject(models)
             models.position.z -= bbox.max.z/2 // Center habitat on origin
             return models
-        }
+        },
     },
 }
 </script>

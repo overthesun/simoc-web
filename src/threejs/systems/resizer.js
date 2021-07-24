@@ -6,13 +6,13 @@ class Resizer {
         this.setSize()
         this.hookup()
     }
-    
+
     setSize() {
-        let container = document.getElementById(this.containerId)
-        let width = container.offsetWidth
-        let height = container.offsetHeight
-        let aspectRatio = width / height
-        this.camera.aspect = aspectRatio;
+        const container = document.getElementById(this.containerId)
+        const width = container.offsetWidth
+        const height = container.offsetHeight
+        const aspectRatio = width / height
+        this.camera.aspect = aspectRatio
         this.camera.updateProjectionMatrix()
         this.renderer.setSize(width, height)
         this.renderer.setPixelRatio(aspectRatio)
@@ -21,7 +21,7 @@ class Resizer {
     hookup() {
         window.addEventListener('resize', () => this.setSize())
     }
-    
+
     unhook() {
         window.removeEventListener('resize', this.setSize)
     }
