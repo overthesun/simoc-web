@@ -155,6 +155,7 @@ export default {
                     commit('REMOVEASSET', {hash})
                 }
             }
+            state.layout = null // So the dashboard panel reloads assets
         },
     },
 }

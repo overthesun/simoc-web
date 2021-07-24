@@ -2,7 +2,7 @@ This component renders a 3d view of the habitat using threeJS.
 ref: https://discoverthreejs.com/book/introduction/threejs-with-frameworks/
 
 <template>
-    <World :game-config="getConfiguration" />
+    <World :game-config="getConfiguration" :is-active="true"/>
 </template>
 
 <script>

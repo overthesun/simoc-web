@@ -78,6 +78,7 @@ export default {
     beforeDestroy() {
         cancelAnimationFrame(this.animationFrame)
         this.unhook()
+        this.CLEARCACHE()
     },
     methods: {
         ...mapMutations('threejs', ['SETLAYOUT']),
