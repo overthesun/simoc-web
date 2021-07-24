@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div id="world">
         <div id="scene-container" class="scene-container" ref="sceneContainer"></div>
+        <Skybox :scene="scene" />
     </div>
 </template>
 
@@ -10,6 +11,7 @@ import {createControls} from './systems/controls.js'
 import {createRenderer} from './systems/renderer.js'
 import {Resizer} from './systems/resizer.js'
 import {Tooltip} from './systems/tooltip.js'
+import Skybox from './systems/Skybox'
 import {createCamera} from './components/camera.js'
 import {createLights} from './components/lights.js'
 import {createScene} from './components/scene.js'
@@ -22,6 +24,9 @@ import {buildPlace} from './components/placeholders'
 // discoverthreejs.com
 
 export default {
+    components: {
+        Skybox,
+    },
     props: {
         gameConfig: {
             default: null
@@ -194,17 +199,21 @@ export default {
 <style scoped>
 
 #world {
+    display: flex;
+    flex-direction: column;
     position: relative;
     height: 100%;
     width: 100%;
     overflow: hidden;
 }
 
-scene-container {
+.scene-container {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    z-index: 10;
+    flex-grow: 1;
 }
 
 #tool-tip {
