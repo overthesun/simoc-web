@@ -1,29 +1,35 @@
-<!-- Component to house all graphs related to the reference section of the wizard. This component would have a
-similar functionality to that of the reference wiki. Table of contents to select which graph is active.
+<!--
+Component to house all graphs related to the reference section of the wizard.
+This component would have a similar functionality to that of the reference wiki.
 -->
 
 <template>
-    <section class='graphs-wrapper'><!--
+    <section class="graphs-wrapper"><!--
         <PowerUsage class="power-config-graph" :id="'pu-config-canvas-'+ canvasNumber"
-            v-if="getActiveConfigType === 'Custom' || (getActiveReference === 'Graphs' && (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
+            v-if="(getActiveConfigType === 'Custom' ||
+                   (getActiveReference === 'Graphs' &&
+                    (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
         <GreenhouseDoughnut class="greenhouse-config-graph" :id="'gh-config-canvas-'+ canvasNumber"
-            v-if="getActiveConfigType === 'Custom' || (getActiveReference === 'Graphs' && (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
+            v-if="(getActiveConfigType === 'Custom' ||
+                   (getActiveReference === 'Graphs' &&
+                    (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
         <!-- The wrapper divs make ChartJS happy. -->
-        <div><PowerUsage class="power-config-graph" id='pu-config-canvas' /></div>
-        <div><GreenhouseConfig class="greenhouse-config-graph" id='gh-config-canvas' /></div>
+        <div><PowerUsage id="pu-config-canvas" class="power-config-graph" /></div>
+        <div><GreenhouseConfig id="gh-config-canvas" class="greenhouse-config-graph" /></div>
     </section>
 </template>
 
 <script>
-import {GreenhouseConfig, PowerUsage} from '../../components/graphs'
 import {mapGetters} from 'vuex'
+import {GreenhouseConfig, PowerUsage} from '../graphs'
+
 export default {
-    components:{
-        'GreenhouseConfig': GreenhouseConfig,
-        'PowerUsage': PowerUsage,
+    components: {
+        GreenhouseConfig,
+        PowerUsage,
     },
-    computed:{
-        //...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
+    computed: {
+        // ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
     },
 }
 </script>

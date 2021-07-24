@@ -1,23 +1,23 @@
 <template>
-    <section id='header-wrapper'>
-        <div id='logo-wrapper'>
-            <img src='../../assets/simoc-logo.svg' class='simoc-logo'/>
-            <span class='simoc-logo-title'>SIMOC</span>
+    <section id="header-wrapper">
+        <div id="logo-wrapper">
+            <img src="../../assets/simoc-logo.svg" class="simoc-logo">
+            <span class="simoc-logo-title">SIMOC</span>
         </div>
-        <div id='dashboard-menu-icon'>
-            <span @click='SETMENUACTIVE(true)' title='Open menu'>
-                <fa-icon class='fa-icon menu-icon' :icon="['fas','bars']"/>
+        <div id="dashboard-menu-icon">
+            <span title="Open menu" @click="SETMENUACTIVE(true)">
+                <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
             </span>
         </div>
     </section>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
-    methods:{
-        ...mapMutations('dashboard', ['SETMENUACTIVE'])
+    methods: {
+        ...mapMutations('dashboard', ['SETMENUACTIVE']),
     },
 }
 </script>

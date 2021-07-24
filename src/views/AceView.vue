@@ -1,19 +1,19 @@
 <!-- Container for all ace-related components -->
 
 <template>
-    <div class='ace-wrapper'>
+    <div class="ace-wrapper">
         <TheTopBar />
         <!-- Show the ACE menu component when getMenuActive is true. -->
         <AceMenu v-if="getMenuActive" />
 
-        <div class='ace-container'>
-            <header>AGENT EDITOR</header> 
-            <hr class='rule'>
-            <div class='ace-main'>
-                <div class='nav-container'>
+        <div class="ace-container">
+            <header>AGENT EDITOR</header>
+            <hr class="rule">
+            <div class="ace-main">
+                <div class="nav-container">
                     <AceNavigation />
                 </div>
-                <div class='editor-container'>
+                <div class="editor-container">
                     <AceEditor />
                 </div>
             </div>
@@ -23,40 +23,40 @@
 
 <script>
 import axios from 'axios'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {TheTopBar} from '../components/bars'
-import {AceMenu,AceEditor,AceNavigation} from '../components/ace'
+import {AceMenu, AceEditor, AceNavigation} from '../components/ace'
 
 export default {
     components: {
-        'TheTopBar': TheTopBar,
-        'AceMenu': AceMenu,
-        'AceEditor': AceEditor,
-        'AceNavigation': AceNavigation,
-    },
-    async created() {
-        axios.defaults.withCredentials = true
-        const params = {agent_desc:'default'}
-        axios.get('/get_agent_desc', {params: params})
-            .then(response => {
-                if(response.status === 200) {
-                    this.SETAGENTDESC({
-                        agent_desc: response.data.agent_desc,
-                        isDefault: true
-                    })
-                    this.SETAGENTSCHEMA(response.data.agent_schema)
-                }
-            }).catch(error => {
-                console.log(error)
-            })
+        TheTopBar: TheTopBar,
+        AceMenu: AceMenu,
+        AceEditor: AceEditor,
+        AceNavigation: AceNavigation,
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive']),
     },
+    async created() {
+        axios.defaults.withCredentials = true
+        const params = {agent_desc: 'default'}
+        axios.get('/get_agent_desc', {params: params})
+                .then(response => {
+                    if (response.status === 200) {
+                        this.SETAGENTDESC({
+                            agent_desc: response.data.agent_desc,
+                            isDefault: true,
+                        })
+                        this.SETAGENTSCHEMA(response.data.agent_schema)
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+    },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC', 'SETAGENTSCHEMA']),
     },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -119,7 +119,7 @@ header {
 }
 
 .editor-container {
-    margin-left: 16px; 
+    margin-left: 16px;
     flex-grow: 1;
     height: 100%;
     overflow: hidden;

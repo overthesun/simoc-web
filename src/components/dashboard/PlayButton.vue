@@ -1,38 +1,39 @@
-<!-- Time speed control component used on the dashboard. SEE stepTimer.js in JS folder for more details on the functionality of the timer -->
+<!-- Play/Pause buttons for the Dashboard -->
 
 <template>
-    <div id='dashboard-play-icon'>
-        <span v-if='getIsTimerRunning' @click='pauseTimer' title='Pause'>
-             <fa-icon class='fa-icon' :icon="['fas','pause']"/>
+    <div id="dashboard-play-icon">
+        <span v-if="getIsTimerRunning" title="Pause" @click="pauseTimer">
+            <fa-icon :icon="['fas','pause']" class="fa-icon" />
         </span>
-        <span v-else @click='resumeTimer' title='Play'>
-             <fa-icon class='fa-icon' :icon="['fas','play']"/>
+        <span v-else title="Play" @click="resumeTimer">
+            <fa-icon :icon="['fas','play']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
-    data(){
-        return{
+    data() {
+        return {
 
         }
     },
-    computed:{
-        ...mapGetters('dashboard',['getIsTimerRunning'])
+    computed: {
+        ...mapGetters('dashboard', ['getIsTimerRunning']),
     },
-    methods:{
+    methods: {
         ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer:function(){
+        pauseTimer() {
             // pause the timer when the user clicks on the pause button
             this.PAUSETIMER()
         },
-        resumeTimer:function(){
+        resumeTimer() {
             // start/resume the timer when the user clicks on the play button
             this.STARTTIMER()
         },
-    }
+    },
 }
 </script>
 

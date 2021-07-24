@@ -20,11 +20,18 @@ jobs:
         with:
           node-version: '12'
           check-latest: true
-      - name: npm install, build, and test
+      - name: Download preset simdata
+        run: |
+          cd src/assets
+          mkdir simdata
+          cd simdata
+          wget -r -nH --cut-dirs=2 --no-parent --accept="*.json" -erobots=off -q --show-progress https://simoc.space/download/simdata/
+      - name: npm install, build, test, and lint
         run: |
           npm install
           npm run build --if-present
-          npm test --if-present 
+          npm test --if-present
+          npm run lint -- --no-fix
       - name: Create Frontend Artifacts
         run: tar -cvf frontend_dist.tar dist/
       - name: Save Frontend Artifacts

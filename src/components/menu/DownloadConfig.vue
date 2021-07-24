@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleClick">{{ buttonText }}</button>
+    <button @click="handleClick">{{buttonText}}</button>
 </template>
 
 <script>
@@ -7,26 +7,17 @@
 export default {
     props: {
         isValid: Boolean,
-        config: null,
-        fileName: {
-            type: String,
-            default: 'simoc_download.json'
-        },
-        alertUserOnInvalid: {
-            type: Boolean,
-            default: false,
-        },
-        buttonText: {
-            type: String,
-            default: 'Download Configuration'
-        }
+        config: {type: Function, required: true},
+        fileName: {type: String, default: 'simoc_download.json'},
+        alertUserOnInvalid: {type: Boolean, default: false},
+        buttonText: {type: String, default: 'Download Configuration'},
     },
     methods: {
-        handleClick: function() {
+        handleClick() {
             // abort if parent declares invalid
             if (!this.isValid) {
                 if (this.alertUserOnInvalid) {
-                    alert("Current form invalid")
+                    alert('Current form invalid')
                 }
                 return
             }
@@ -46,7 +37,7 @@ export default {
             a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
             a.click()
         },
-    }
+    },
 }
 </script>
 

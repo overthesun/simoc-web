@@ -2,20 +2,22 @@
 <!-- Menu screen presented to the user on successful login. -->
 
 <template>
-    <div class='entry-wrapper'>
+    <div class="entry-wrapper">
         <BaseEntry>
             <template v-slot:option-items>
-                <div class='option-item option-item-active'> MAIN MENU </div>
+                <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template v-slot:entry-main>
-                <button form='login-form' class='btn-normal' @click="toConfiguration">NEW CONFIGURATION</button>
-                <button form='login-form' class='btn-normal' @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button form='login-form' class='btn-normal' @click="toAce" :class="{'hidden': !showAgentEditor}">AGENT EDITOR</button>
-                <input type="file" accept="application/json" id="simDataInputFile" ref="simDataInputFile" @change="handleSimData" />
+                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
+                        @click="toAce">AGENT EDITOR</button>
+                <input id="simDataInputFile" ref="simDataInputFile" type="file"
+                       accept="application/json" @change="handleSimData">
             </template>
             <template v-slot:entry-button>
-                <div class='btn-wrapper'>
-                    <button form='login-form' class='btn-warning' @click="logout">Log Out</button>
+                <div class="btn-wrapper">
+                    <button form="login-form" class="btn-warning" @click="logout">Log Out</button>
                 </div>
             </template>
         </BaseEntry>
@@ -25,47 +27,54 @@
 
 <script>
 import axios from 'axios'
-import {BaseEntry} from '../../components/base'
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {BaseEntry} from '../base'
+
 export default {
+    components: {
+        BaseEntry,
+    },
     data() {
         return {
-            showAgentEditor: false
+            showAgentEditor: false,
         }
     },
-    components:{
-        'BaseEntry':BaseEntry,
+    mounted() {
+        window.addEventListener('keydown', this.keyListener)
     },
-    methods:{
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA','SETLOADFROMSIMDATA','SETBUFFERMAX']),
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.keyListener)
+    },
+    methods: {
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard',['SETCONFIGURATION']),
-        // Send the user to the configuration menu screen. See router.js
-        toConfiguration: function() {
+        ...mapActions('wizard', ['SETCONFIGURATION']),
+        // Sends the user to the configuration menu screen. See router.js
+        toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
-            //this.$router.push('menuconfig')
+            // this.$router.push('menuconfig')
 
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("configuration")
+            this.$router.push('configuration')
         },
         // Send the user to the ACE Configuration Editor
-        toAce: function() {
+        toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
-            this.$router.push("ace")
+            this.$router.push('ace')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
-        uploadSimData: function() {
+        uploadSimData() {
             this.$refs.simDataInputFile.click()
         },
-        handleSimData: function(e) {
-            const files = e.target.files
+        handleSimData(e) {
+            const {files} = e.target
             const simdata = files[0]
             const reader = new FileReader()
-            reader.onload = ((file) => this.readSimData)(simdata)
+            reader.onload = (file => this.readSimData)(simdata)
             reader.readAsText(simdata)
         },
         // read uploaded file, set vars, and go to the dashboard
-        readSimData: function(e) {
+        readSimData(e) {
             try {
                 const json_data = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_data.configuration)
@@ -79,17 +88,18 @@ export default {
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
+
         // TODO: Duplicated code; replace with /menu/Logout.vue
-        logout: async function() {
-            try{
+        async logout() {
+            try {
                 axios.get('/logout')
-            }catch(error){
+            } catch (error) {
                 console.log(error)
             }
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
         // Adapted from '../views/DashboardView.vue'
-        keyListener: function(e) {
+        keyListener(e) {
             let key_matched = true
             switch (e.key) {
                 case 'a':
@@ -102,13 +112,7 @@ export default {
             if (key_matched) {
                 e.preventDefault()
             }
-        }
-    },
-    mounted() {
-        window.addEventListener('keydown', this.keyListener)        
-    },
-    beforeDestroy() {
-        window.removeEventListener('keydown', this.keyListener);
+        },
     },
 }
 </script>

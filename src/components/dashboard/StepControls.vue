@@ -1,32 +1,33 @@
 <!-- Step controls component used on the dashboard. -->
 
 <template>
-    <div id='step-controls'>
+    <div id="step-controls">
         <!-- Looks like: |< 25/100 >| -->
-        <span class='icon-wrapper' @click='prevStep' title='Previous step'>
-            <fa-icon class='fa-icon' :icon="['fas','step-backward']"/>
+        <span class="icon-wrapper" title="Previous step" @click="prevStep">
+            <fa-icon :icon="['fas','step-backward']" class="fa-icon" />
         </span>
         <span>{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
-        <span class='icon-wrapper' @click='nextStep' title='Next step'>
-            <fa-icon class='fa-icon' :icon="['fas','step-forward']"/>
+        <span class="icon-wrapper" title="Next step" @click="nextStep">
+            <fa-icon :icon="['fas','step-forward']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
+
 export default {
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('wizard', ['getTotalMissionHours'])
+        ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {
         ...mapMutations('dashboard', ['UPDATEBUFFERCURRENT']),
-        prevStep: function() {
-            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-1)
+        prevStep() {
+            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer - 1)
         },
-        nextStep: function() {
-            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+        nextStep() {
+            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
         },
     },
 }

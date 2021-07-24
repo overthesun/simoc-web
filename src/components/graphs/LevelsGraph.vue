@@ -11,8 +11,14 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import Chart from 'chart.js'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
+    props: {
+        id: {type: String, required: true},
+        plottedStorage: {type: String, required: true},
+    },
     data() {
         return {
             prevStep: 0,
@@ -26,157 +32,155 @@ export default {
                     labels_colors: [['H₂O', '#46f0f0'], ['CO₂', '#e6194b'], ['H₂', '#ffe119'],
                                     ['CH₄', '#f58231'], ['O₂', '#3cb44b'], ['N₂', '#4363d8']],
                     order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2,
-                            atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5}
+                            atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5},
                 },
                 water_storage: {
                     labels_colors: [['Potable', '#46f0f0'], ['Treated', '#4363d8'],
                                     ['Urine', '#ffe119'], ['Waste', '#f58231']],
-                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3,}
+                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3},
                 },
                 nutrient_storage: {
                     labels_colors: [['Biomass Total', '#3cb44b'], ['Biomass Edible', '#bcf60c'],
                                     ['Waste', '#f58231'], ['Potassium', '#46f0f0'],
                                     ['Nitrogen', '#4363d8'], ['Phosphorus', '#f032e6']],
                     order: {biomass_edible: 0, biomass_totl: 1, sold_wste: 2,
-                            sold_k: 3, sold_n: 4, sold_p: 5}
+                            sold_k: 3, sold_n: 4, sold_p: 5},
                 },
             },
         }
     },
-    props:{
-        id: String,
-        plotted_storage: String,
+
+    computed: {
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getCurrentStepBuffer']),
     },
 
-    computed:{
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getCurrentStepBuffer'])
-    },
-
-    watch:{
+    watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer: function() {
+        getCurrentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
-        plotted_storage: function () {
+        plottedStorage() {
             this.initChart()
-        }
+        },
     },
 
     mounted() {
         this.initChart()
     },
 
-    methods:{
+    methods: {
         // TODO: this code is very similar to VersusGraph.vue
-        initChart: function() {
-            [this.storage_name, this.storage_num] = this.plotted_storage.split('/')
+        initChart() {
+            [this.storage_name, this.storage_num] = this.plottedStorage.split('/')
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
                 this.chart.destroy()
             }
             // create and initialize chart
-            const ctx = document.getElementById(this.id)
-            this.chart = new Chart(ctx, {
+            const canvas = document.getElementById(this.id)
+            this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(24).fill(''),
                     // create N datasets with different labels/colors
-                    datasets: this.setsinfo[this.storage_name].labels_colors.map(([label, color]) => ({
-                        lineTension: 0,
-                        data: Array(24),
-                        label: label,
-                        backgroundColor: color,
-                        fill: true,
-                    })),
+                    datasets: this.setsinfo[this.storage_name].labels_colors.map(
+                        ([label, color]) => ({
+                            lineTension: 0,
+                            data: Array(24),
+                            label: label,
+                            backgroundColor: color,
+                            fill: true,
+                        })
+                    ),
                 },
-                options:{
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     defaultFontColor: '#1e1e1e',
-                    scales:{
-                        yAxes:[{
+                    scales: {
+                        yAxes: [{
                             stacked: true,
-                            ticks:{
+                            ticks: {
                                 beginAtZero: true,
                                 // by default the values go up to 120% instead
                                 // of stopping at 100%, but with max: 100 it's
                                 // always stuck at 100% and it doesn't scale
                                 // when only small values are displayed
-                                callback: function(value, index, values) {
-                                    return value + '%'
-                                }
-                            }
+                                callback(value, index, values) {
+                                    return `${value}%`
+                                },
+                            },
                         }],
                     },
-                    legend:{
+                    legend: {
                         display: true,
                         position: 'bottom',
                         labels: {
                             boxWidth: 20,
-                        }
+                        },
                     },
                     elements: {
-                        point:{
+                        point: {
                             // make the dots small, but with a big
                             // hit ratio so it's easy to hover them
                             radius: 1,
                             hitRadius: 5,
                             hoverRadius: 2,
-                        }
+                        },
                     },
-                    title:{
+                    title: {
                         display: false,
                     },
-                }
+                },
             })
             this.updateChart()
         },
-        updateChart: function() {
+        updateChart() {
             const currentStep = this.getCurrentStepBuffer
-            const data = this.chart.data
+            const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
             let startingStep
-            if (currentStep != this.prevStep+1) {
+            if (currentStep !== this.prevStep+1) {
                 startingStep = currentStep - 23  // replace all 24 values
-            }
-            else {
+            } else {
                 startingStep = currentStep  // add the latest value
             }
             // this will do 1 or 24 iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values and labels
-                Object.values(data.datasets).forEach((dataset) => dataset.data.shift())
+                Object.values(data.datasets).forEach(dataset => dataset.data.shift())
                 data.labels.shift()
                 // add the new values
                 if (step > 0) {
-                    let storage = this.getStorageCapacities(step)[this.storage_name][this.storage_num]
-                    let tot_storage = Object.values(storage).reduce(
-                        (acc, elem) => acc + elem['value'], 0  // start from 0
+                    const storage_capacities = this.getStorageCapacities(step)
+                    const storage = storage_capacities[this.storage_name][this.storage_num]
+                    const tot_storage = Object.values(storage).reduce(
+                        (acc, elem) => acc + elem.value, 0  // start from 0
                     )
-                    Object.entries(storage).map(
+                    Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
-                            let index = this.setsinfo[this.storage_name].order[key]
-                            data.datasets[index].data.push((elem['value'] * 100 / tot_storage).toFixed(4))
+                            const index = this.setsinfo[this.storage_name].order[key]
+                            const ratio = (elem.value * 100 / tot_storage).toFixed(4)
+                            data.datasets[index].data.push(ratio)
                         }
                     )
                     data.labels.push(step)
-                }
-                else {
+                } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 24 total items and is not stretched
-                    Object.values(data.datasets).forEach((dataset) => dataset.data.push(undefined))
+                    Object.values(data.datasets).forEach(dataset => dataset.data.push(undefined))
                     data.labels.push('')
                 }
             }
             this.chart.update()
             this.prevStep = currentStep
-        }
+        },
     },
 }
 </script>

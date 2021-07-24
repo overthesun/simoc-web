@@ -1,28 +1,29 @@
 <!-- Speed controls component used on the dashboard. -->
 
 <template>
-    <div id='speed-controls'>
+    <div id="speed-controls">
         <!-- Looks like: - 1x + -->
-        <span class='icon-wrapper' @click='changeSpeed(-1)' title='Decrease speed'>
-            <fa-icon class='fa-icon' :icon="['fas','minus']"/>
+        <span class="icon-wrapper" title="Decrease speed" @click="changeSpeed(-1)">
+            <fa-icon :icon="['fas','minus']" class="fa-icon" />
         </span>
         <span title="Current speed">{{speeds[speedIndex]}}x</span>
-        <span class='icon-wrapper' @click='changeSpeed(+1)' title='Increase speed'>
-            <fa-icon class='fa-icon' :icon="['fas','plus']"/>
+        <span class="icon-wrapper" title="Increase speed" @click="changeSpeed(+1)">
+            <fa-icon :icon="['fas','plus']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 export default {
-    data(){
+    data() {
         return {
             speeds: [0.25, 0.5, 1, 2, 4, 8],  // available speeds
             speedIndex: null,
         }
     },
-    beforeMount: function() {
+    beforeMount() {
         // set the initial speed to 1x
         this.speedIndex = 2
         this.changeSpeed(0)
@@ -30,24 +31,23 @@ export default {
     mounted() {
         // Handle keyboard shortcuts for +/-
         // The rest of the shortcuts are in DashboardView
-        this.keyListener = function(e) {
+        this.keyListener = e => {
             if (e.key === '+') {
                 this.changeSpeed(+1)
                 e.preventDefault()
-            }
-            else if (e.key === '-') {
+            } else if (e.key === '-') {
                 this.changeSpeed(-1)
                 e.preventDefault()
             }
         }
         window.addEventListener('keydown', this.keyListener.bind(this))
     },
-    beforeDestroy: function() {
-        window.removeEventListener('keydown', this.keyListener);
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.keyListener)
     },
-    methods:{
+    methods: {
         ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
-        changeSpeed: function(offset) {
+        changeSpeed(offset) {
             // Change the speed of the step timer.
             // offset can be -1 or +1 to use the previous/next speed in the array
             this.speedIndex = Math.max(0, Math.min(this.speeds.length-1, this.speedIndex+offset))

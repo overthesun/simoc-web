@@ -1,67 +1,78 @@
 <!--
-This component is the base component for creating the configuration wizard view. The slots within are
-used to populate the various sections with the approriate component passed in via the 'ConfigurationView' component.<template>
-The plan was that by configuring the base component in this way that the layout could be used for future features such as
-payload creator, greenhouse editor, etc for within the dashboard. With a fimiliar layout, and only the need to populate the slots with the
-approriate filler. A number of modifications would be needed to modify things like the title, and the configuration
+This component is the base component for creating the configuration wizard view.
+The slots within are used to populate the various sections with the approriate component passed in
+via the 'ConfigurationView' component.<template>
+The plan was that by configuring the base component in this way that the layout could be used
+for future features such as payload creator, greenhouse editor, etc for within the dashboard.
+With a familiar layout, and only the need to populate the slots with the approriate filler.
+A number of modifications would be needed to modify things like the title, and the configuration
 menu button being present on other unrelated configurations.
  -->
 
 <template>
-    <div class='configuration-wrapper' >
+    <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
-        <section class='wizard-wrapper' :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}">
+        <section :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}" class="wizard-wrapper">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
-            <nav v-if="getActiveConfigType === 'Guided'" class='navigation-wrapper'>
-                <slot name='navigation-section-select'></slot>
+            <nav v-if="getActiveConfigType === 'Guided'" class="navigation-wrapper">
+                <slot name="navigation-section-select" />
             </nav>
-            <main class='main main-wizard'>
-                <slot name='main-wizard-input'></slot>
+            <main class="main main-wizard">
+                <slot name="main-wizard-input" />
             </main>
-            <footer class='footer'>
-                <slot name='wizard-configuration-footer'></slot>
+            <footer class="footer">
+                <slot name="wizard-configuration-footer" />
             </footer>
         </section>
         <!-- The reference side of the wizard screen -->
-        <section class='reference-wrapper'>
+        <section class="reference-wrapper">
             <header>REFERENCE</header>
-            <!-- This is the navigation section at the top of the wizard reference. class-binding to a universal variable is used to dictate which one is set to active.
-                The universal variable is used so that things like the wizard form headers can be used to set what the active section is. Such as clicking a title and
-                the approriate reference entry appearing on the right side.
+            <!--
+              This is the navigation section at the top of the wizard reference.
+              class-binding to a universal variable is used to dictate which one is set to active.
+              The universal variable is used so that things like the wizard form headers can be
+              used to set what the active section is. Such as clicking a title and the approriate
+              reference entry appearing on the right side.
             -->
-            <nav class='configuration-options reference-options'>
-                <div class='option-item' @click="SETACTIVEREFERENCE('Reference')" :class="{'option-item-active' : 'Reference'===activeOption}">REFERENCE</div>
-                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')" :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div> Enabled Once Recommended Is Completed
+            <nav class="configuration-options reference-options">
+                <div :class="{'option-item-active': 'Reference'===activeOption}"
+                     class="option-item" @click="SETACTIVEREFERENCE('Reference')">REFERENCE</div>
+                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
+                         :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
+                         Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
-                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')" :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
-                <div class='option-item' @click="SETACTIVEREFERENCE('Layout')" :class="{'option-item-active' : 'Layout'===activeOption}">LAYOUT</div>
+                <div class='option-item' @click="SETACTIVEREFERENCE('Graphs')"
+                     :class="{'option-item-active' : 'Graphs'===activeOption}">GRAPHS</div>
+                <div class='option-item' @click="SETACTIVEREFERENCE('Layout')"
+                     :class="{'option-item-active' : 'Layout'===activeOption}">LAYOUT</div>
             </nav>
-            <main class='main main-reference'>
-                <slot name='main-wizard-reference'></slot>
+            <main class="main main-reference">
+                <slot name="main-wizard-reference" />
             </main>
-            <footer class='footer'>
-                <slot name='footer-wizard-reference'></slot>
+            <footer class="footer">
+                <slot name="footer-wizard-reference" />
             </footer>
         </section>
     </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
+
 export default {
-    computed:{
-        ...mapGetters('wizard',['getActiveConfigType','getActiveReference']),
+    computed: {
+        ...mapGetters('wizard', ['getActiveConfigType', 'getActiveReference']),
 
         // used to flag which section link is active within the reference navigation
         // uses class-binding to activate the class and underline the title
-        activeOption:function(){
+        activeOption() {
             return this.getActiveReference
-        }
+        },
     },
-    methods:{
-        ...mapMutations('wizard',['SETACTIVEREFERENCE']),
-    }
+    methods: {
+        ...mapMutations('wizard', ['SETACTIVEREFERENCE']),
+    },
 }
 </script>
 

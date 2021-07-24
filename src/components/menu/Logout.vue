@@ -1,5 +1,5 @@
 <template>
-    <button class='btn-logout' @click="logout">Log Out</button>
+    <button class="btn-logout" @click="logout">Log Out</button>
 </template>
 
 <script>
@@ -7,18 +7,18 @@ import axios from 'axios'
 
 export default {
     methods: {
-        logout: async function() {
-            if (!confirm('Do you want to log out?')) {
-                return;
+        async logout() {
+            if (!window.confirm('Do you want to log out?')) {
+                return
             }
             try {
                 axios.get('/logout')
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
             }
-            this.$router.push("entry")
+            this.$router.push('entry')
         },
-    }
+    },
 }
 </script>
 

@@ -1,7 +1,15 @@
 <template>
-    <div class='dashboard-wrapper'>
-        <div class='timeline-wrapper'>
-            <input class='timeline' type='range' min='0' max='100' v-model="value" :style="{'background-image':'linear-gradient(to right,green 0%, green ' + value + '%,lightgreen ' + value +'%,lightgreen '+ stepMax +'%,#999 ' + stepMax + '%,#999 100%)'}" v-on:input="killClock" v-on:change="updateStep">
+    <div class="dashboard-wrapper">
+        <div class="timeline-wrapper">
+            <input v-model="value"
+                   :style="{'background-image': ('linear-gradient( \
+                            to right, green 0%, \
+                            green ' + value + '%, \
+                            lightgreen ' + value +'%, \
+                            lightgreen '+ stepMax +'%, \
+                            #999 ' + stepMax + '%,#999 100%)')}"
+                   class="timeline" type="range" min="0" max="100"
+                   @input="killClock" @change="updateStep">
         </div>
     </div>
 </template>
@@ -9,50 +17,49 @@
 <script>
 
 export default {
-    data(){
-        return{
-            value:1,
-            stepMax:40
+    data() {
+        return {
+            value: 1,
+            stepMax: 40,
         }
     },
-    computed:{
+    computed: {
     },
-    methods:{
-        updateStep:function(){
-            this.clock = setTimeout(()=>{
-                this.value = parseInt(this.value) +  1
+    methods: {
+        updateStep() {
+            this.clock = setTimeout(() => {
+                this.value = parseInt(this.value, 10) + 1
 
-                if(this.value >= this.stepMax){
+                if (this.value >= this.stepMax) {
                     window.clearInterval(this.clock)
                     this.updateBuffer()
-                }else{
+                } else {
                     this.updateStep()
                 }
-            },100)
+            }, 100)
         },
-        killClock:function(){
+        killClock() {
             window.clearInterval(this.clock)
         },
-        updateBuffer:function(){
-            let bufferClock = setTimeout(()=>{
-                if(this.value < this.stepMax)
+        updateBuffer() {
+            setTimeout(() => {
+                if (this.value < this.stepMax) {
                     this.updateStep()
-                else
+                } else {
                     this.updateBuffer()
-            },100)
-
-
-        }
+                }
+            }, 100)
+        },
     },
-    mounted(){
+    mounted() {
         this.updateStep()
-        setTimeout(()=>{
-        this.stepMax = 75
-        },3000)
-        setTimeout(()=>{
-                this.stepMax = 100
-        },6000)
-    }
+        setTimeout(() => {
+            this.stepMax = 75
+        }, 3000)
+        setTimeout(() => {
+            this.stepMax = 100
+        }, 6000)
+    },
 }
 </script>
 
@@ -104,10 +111,3 @@ export default {
     }
 
 </style>
-
-
-
-
-
-
-
