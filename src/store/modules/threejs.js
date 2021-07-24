@@ -145,7 +145,6 @@ export default{
             } else {
                 let model = await buildPlace({place, amount})
                 state.assets[place] = model.clone(true)
-                console.log(model)
                 return model
             }
         },

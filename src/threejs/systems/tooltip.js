@@ -5,7 +5,7 @@ class Tooltip {
         this.camera = camera
         this.scene = scene
         this.containerId = containerId
-        
+
         this.raycaster = new THREE.Raycaster
         this.mouse = new THREE.Vector2()
         this.hoveringOver = null
@@ -17,7 +17,7 @@ class Tooltip {
 
     tick() {
         this.raycaster.setFromCamera(this.mouse, this.camera)
-        const intersects = this.raycaster.intersectObjects(this.scene.children[1].children, true)
+        const intersects = this.raycaster.intersectObjects(this.scene.children, true)
         if (intersects.length > 0) {
             let model = intersects[0]
             let key = model.object.userData.key
@@ -30,7 +30,7 @@ class Tooltip {
             this.hoverMessage = null
         }
     }
-    
+
     onMouseMove(event) {
         const container = document.getElementById(this.containerId)
         const frame = container.getBoundingClientRect()
@@ -49,7 +49,7 @@ class Tooltip {
         this.hoverMessage = key
         console.log(this.hoverMessage)
     }
-    
+
     hookup() {
         window.addEventListener('mousemove', this.onMouseMove, false)
     }

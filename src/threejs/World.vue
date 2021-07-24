@@ -7,16 +7,12 @@
 
 <script>
 import * as THREE from 'three'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import {mapGetters, mapMutations, mapActions} from 'vuex'
-import {createControls} from './systems/controls.js'
-import {createRenderer} from './systems/renderer.js'
-import {Resizer} from './systems/resizer.js'
-import {Tooltip} from './systems/tooltip.js'
+
+import {Resizer} from './systems/resizer'
+import {Tooltip} from './systems/tooltip'
 import Skybox from './systems/Skybox'
-import {createCamera} from './components/camera.js'
-import {createLights} from './components/lights.js'
-import {createScene} from './components/scene.js'
-import {buildPlace} from './components/placeholders'
 
 // Vue/ThreeJS structure ref:
 // https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
@@ -62,7 +58,6 @@ export default {
         gameConfig: {
             handler: function() {
                 this.buildScene(this.gameConfig)
-                console.log(this.scene.children)
             },
             deep: true
         },
@@ -86,22 +81,27 @@ export default {
     },
     methods: {
         ...mapMutations('threejs', ['SETLAYOUT']),
-        ...mapActions('threejs', ['GETASSET', 'CLEARCACHE']),
+        ...mapActions('threejs', ['getAsset', 'CLEARCACHE']),
 
         init() {
-            this.container = document.getElementById('scene-container')
-            this.camera = createCamera()
-            this.scene = createScene()
-            this.renderer = createRenderer()
+            this.scene = new THREE.Scene()
 
-            this.controls = createControls(this.camera, this.renderer.domElement)
-            this.container.append(this.renderer.domElement)
+            this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 1000) // fov, aspect, near, far
+            this.camera.position.set(0, 20, 30)
+
+            this.light = new THREE.DirectionalLight('white', 3)
+            this.light.position.set(10, 20, 15)
+            this.scene.add(this.light)
+
+            this.renderer = new THREE.WebGLRenderer({antialias: true})
+            this.renderer.physicallyCorrectLights = true
+            document.getElementById(this.containerId).append(this.renderer.domElement)
+
+            this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+            this.controls.enableDamping = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
             this.tooltip = new Tooltip(this.camera, this.scene, this.containerId)
-
-            this.light = createLights()
-            this.scene.add(this.light)
 
             this.buildScene(this.gameConfig)
         },
@@ -123,10 +123,6 @@ export default {
         async buildScene(config) {
             // Ignore changes that don't affect layout
             let newLayout = this.buildLayout(config)
-            // if (JSON.stringify(newLayout) === JSON.stringify(this.layout)) {
-            //     return
-            // }
-            // this.layout = newLayout
             if (JSON.stringify(newLayout) === JSON.stringify(this.getLayout)) {
                 return
             }
@@ -140,7 +136,7 @@ export default {
         buildLayout(config) {
             let layout = []
             if (Object.keys(config).includes('powerGeneration')) {
-                if (config.powerGeneration.type !== 'none') {
+                if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
                     layout.push (
                         {place: config.powerGeneration.type, amount: config.powerGeneration.amount}
                     )
@@ -175,19 +171,20 @@ export default {
         async buildHabitat(layout) {
             let models = new THREE.Group()
             let edge = 0 // tracks the 'back' of last placed model
-            layout.reverse().forEach(place => {
+            for (let i = layout.length - 1; i >= 0; i--) {
+                let place = layout[i]
                 if (place.place === 'empty') {
                     edge = edge - place.amount
                 } else {
                     // Store with a given quantity
-                    let model = await this.GETASSET(place)
+                    let model = await this.getAsset(place)
                     let bbox = new THREE.Box3().setFromObject(model)
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
                     edge = edge - bbox.max.z + bbox.min.z // Reset back edge
                     models.add(model)
                 }
-            })
+            }
             let bbox = new THREE.Box3().setFromObject(models)
             models.position.z -= bbox.max.z/2 // Center habitat on origin
             return models
