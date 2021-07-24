@@ -7,6 +7,7 @@
 
 <script>
 import * as THREE from 'three'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {createControls} from './systems/controls.js'
 import {createRenderer} from './systems/renderer.js'
 import {Resizer} from './systems/resizer.js'
@@ -17,7 +18,7 @@ import {createLights} from './components/lights.js'
 import {createScene} from './components/scene.js'
 import {buildPlace} from './components/placeholders'
 
-// Vue/ThreeJS structure ref: 
+// Vue/ThreeJS structure ref:
 // https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
 
 // File structure ref:
@@ -47,22 +48,23 @@ export default {
             light: null,
             scene: null,
             animationFrame: null,
-            models: {}, // A cache of rendered models
+            models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
             hoveringOver: null,
             hoverMessage: null,
         }
     },
+    computed: {
+        ...mapGetters('threejs', ['getLayout'])
+    },
     watch: {
-        // TODO:
-        // Individual sections (e.g. 'crewQuarters') mutate a property in gameConfig, 
-        // but that doesn't trigger this watcher. Possible solutions:
-        //   - Trigger an update from config page after every action
-        //   - Make a separate getter for crewQuarters et al, also watch them
-        //   - Add a 'modifed' flag to the store
-        gameConfig(newConfig, oldConfig) {
-            this.buildScene(newConfig)
+        gameConfig: {
+            handler: function() {
+                this.buildScene(this.gameConfig)
+                console.log(this.scene.children)
+            },
+            deep: true
         },
         isActive(newActive, oldActive) {
             if (newActive) {
@@ -83,18 +85,21 @@ export default {
         this.unhook()
     },
     methods: {
+        ...mapMutations('threejs', ['SETLAYOUT']),
+        ...mapActions('threejs', ['GETASSET', 'CLEARCACHE']),
+
         init() {
             this.container = document.getElementById('scene-container')
-            console.log(this.$refs.sceneContainer)
             this.camera = createCamera()
             this.scene = createScene()
             this.renderer = createRenderer()
 
             this.controls = createControls(this.camera, this.renderer.domElement)
             this.container.append(this.renderer.domElement)
-            
+
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
             this.tooltip = new Tooltip(this.camera, this.scene, this.containerId)
+
             this.light = createLights()
             this.scene.add(this.light)
 
@@ -110,22 +115,26 @@ export default {
         },
         render() {
             this.animationFrame = requestAnimationFrame(this.render)
-            
+
             this.tooltip.tick()
 
             this.renderer.render(this.scene, this.camera)
         },
-        buildScene(config) {
+        async buildScene(config) {
             // Ignore changes that don't affect layout
             let newLayout = this.buildLayout(config)
-            if (JSON.stringify(newLayout) === JSON.stringify(this.layout)) {
+            // if (JSON.stringify(newLayout) === JSON.stringify(this.layout)) {
+            //     return
+            // }
+            // this.layout = newLayout
+            if (JSON.stringify(newLayout) === JSON.stringify(this.getLayout)) {
                 return
             }
-            this.layout = newLayout
+            this.SETLAYOUT(newLayout)
             if (this.habitat) {
                 this.scene.remove(this.habitat)
             }
-            this.habitat = this.buildHabitat(this.layout)
+            this.habitat = await this.buildHabitat(this.getLayout)
             this.scene.add(this.habitat)
         },
         buildLayout(config) {
@@ -145,7 +154,7 @@ export default {
             }
             if (config.greenhouse.type !== 'none') {
                 pressurizedEnv.push(
-                    {place: 'connector', amount: 1}, 
+                    {place: 'connector', amount: 1},
                     {place: config.greenhouse.type, amount: config.greenhouse.amount}
                 )
             }
@@ -163,29 +172,20 @@ export default {
             )
             return layout
         },
-        buildHabitat(layout) {
+        async buildHabitat(layout) {
             let models = new THREE.Group()
             let edge = 0 // tracks the 'back' of last placed model
             layout.reverse().forEach(place => {
                 if (place.place === 'empty') {
                     edge = edge - place.amount
                 } else {
-                    let model
-                    if (!this.models[place.place]) {
-                        // Return a new Object3D centered at (0,0,0)
-                        model = buildPlace(place)
-                    } else {
-                        // TODO: Doesn't update when number of solar panels changes
-                        model = this.models[place.place].clone(true)
-                    }
-                    if (model) {
-                        this.models[place.place] = model.clone(true)
-                        let bbox = new THREE.Box3().setFromObject(model)
-                        model.position.y = -bbox.min.y // Place on ground
-                        model.position.z -= edge + bbox.min.z // Move behind last object
-                        edge = edge - bbox.max.z + bbox.min.z // Reset back edge
-                        models.add(model)
-                    }
+                    // Store with a given quantity
+                    let model = await this.GETASSET(place)
+                    let bbox = new THREE.Box3().setFromObject(model)
+                    model.position.y = -bbox.min.y // Place on ground
+                    model.position.z -= edge + bbox.min.z // Move behind last object
+                    edge = edge - bbox.max.z + bbox.min.z // Reset back edge
+                    models.add(model)
                 }
             })
             let bbox = new THREE.Box3().setFromObject(models)
@@ -216,9 +216,13 @@ export default {
     flex-grow: 1;
 }
 
-#tool-tip {
+.tooltip {
     position: absolute;
-    bottom: 0;
+    top: 100;
+    left: 100;
+    width: 90px;
+    height: 30px;
+    background-color: gray;
     z-index: 100;
 }
 </style>
