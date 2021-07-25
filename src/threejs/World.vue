@@ -1,6 +1,7 @@
 <template>
     <div id="world">
         <div id="scene-container" ref="sceneContainer" class="scene-container" />
+        <div class="tooltip-text">{{tooltipText}}</div>
         <Skybox :scene="scene" />
     </div>
 </template>
@@ -94,12 +95,16 @@ export default {
             document.getElementById(this.containerId).append(this.renderer.domElement)
 
             this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+            this.controls.maxPolarAngle = Math.PI * 0.49
             this.controls.enableDamping = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
-            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId)
+            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId, this.setTooltipText)
 
             this.buildScene(this.gameConfig)
+        },
+        setTooltipText(message) {
+            this.tooltipText = message
         },
         hookup() {
             if (this.resizer) { this.resizer.hookup() }

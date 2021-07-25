@@ -1,15 +1,15 @@
 import * as THREE from 'three'
 
 class Tooltip {
-    constructor(camera, scene, containerId) {
+    constructor(camera, scene, containerId, setTooltipText) {
         this.camera = camera
         this.scene = scene
         this.containerId = containerId
+        this.setTooltipText = setTooltipText
 
         this.raycaster = new THREE.Raycaster()
         this.mouse = new THREE.Vector2()
         this.hoveringOver = null
-        this.hoverMessage = null
 
         this.onMouseMove = this.onMouseMove.bind(this)
         this.hookup()
@@ -46,8 +46,7 @@ class Tooltip {
 
     drawHover(model) {
         const {key} = model.object.userData
-        this.hoverMessage = key
-        console.log(this.hoverMessage)
+        this.setTooltipText(key)
     }
 
     hookup() {
