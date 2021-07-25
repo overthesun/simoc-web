@@ -128,7 +128,7 @@ export default {
         SETSURVEYACTIVE(state, value) {
             state.surveyActive = value
         },
-        // show the dashboard menu when true, hide it otherwise
+        // hide survey button after it's complete
         SETSURVEYCOMPLETE(state, value) {
             state.surveyComplete = value
         },
