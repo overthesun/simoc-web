@@ -6,6 +6,8 @@ future dashboard views
     <div id="dashboard-wrapper">
         <!-- Show the dashboard menu component when getMenuActive is true. -->
         <DashboardMenu v-if="getMenuActive" />
+        <!-- Show the survey menu when click 'Feedback' on menu -->
+        <SurveyMenu v-if="getSurveyActive" />
         <TheTopBar />
         <section class="main-wrapper">
             <Main />
@@ -24,6 +26,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
+import {SurveyMenu} from '../survey'
 
 export default {
     beforeRouteLeave(to, from, next) {
@@ -54,7 +57,8 @@ export default {
         Main,
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),
+        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
+                                    'getSurveyActive']),
     },
     methods: {
         ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),

@@ -3,6 +3,8 @@
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
+        <!-- Show the survey menu when click 'Feedback' on menu -->
+        <SurveyMenu v-if="getSurveyActive" />
         <router-view>
             <!-- Wizard Jump Options, only available in Guided Configuration -->
             <template v-slot:navigation-section-select>
@@ -70,12 +72,14 @@ import axios from 'axios'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {TheTopBar} from '../components/bars'
+import {SurveyMenu} from '../components/survey'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs} from '../components/configuration'
 
 export default {
     components: {
         TheTopBar,
+        SurveyMenu,
         ConfigurationMenu,
         Presets,
         Initial,
@@ -105,7 +109,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
+        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams', 'getSurveyActive']),
         ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
                                  'getActiveConfigType', 'getActiveForm',
                                  'getFormLength', 'getTotalMissionHours',

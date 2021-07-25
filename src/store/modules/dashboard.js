@@ -50,6 +50,8 @@ export default {
         getStepsTimerID: null,
         isTimerRunning: false,
         menuActive: false,
+        surveyActive: false,
+        surveyComplete: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
@@ -57,6 +59,8 @@ export default {
     },
     getters: {
         getMenuActive: state => state.menuActive,
+        getSurveyActive: state => state.surveyActive,
+        getSurveyComplete: state => state.surveyComplete,
         getLeaveWithoutConfirmation: state => state.leaveWithoutConfirmation,
         getLoadFromSimData: state => state.loadFromSimData,
         getStepParams: state => state.parameters,
@@ -119,6 +123,14 @@ export default {
         // show the dashboard menu when true, hide it otherwise
         SETMENUACTIVE(state, value) {
             state.menuActive = value
+        },
+        // show the survey when true, hide it otherwise
+        SETSURVEYACTIVE(state, value) {
+            state.surveyActive = value
+        },
+        // show the dashboard menu when true, hide it otherwise
+        SETSURVEYCOMPLETE(state, value) {
+            state.surveyComplete = value
         },
         SETLEAVEWITHOUTCONFIRMATION(state, value) {
             state.leaveWithoutConfirmation = value

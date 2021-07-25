@@ -46,9 +46,11 @@ export default {
 }
 
 #menu-wrapper {
-    width: 480px;
-    height: 600px;
-    max-height: 600px;
+    min-width: 480px;
+    min-height: 600px;
+    // width: 480px;
+    // height: 600px;
+    // max-height: 600px;
     background-color: #1e1e1e;
     border-radius: 5px;
     z-index: 1000;
