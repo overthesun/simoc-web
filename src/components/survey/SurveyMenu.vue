@@ -4,7 +4,7 @@
             Survey
         </template>
         <template v-slot:survey>
-            <form @submit.prevent="">
+            <form ref='survey' @submit.prevent="">
                 <div class="question">
                     I am a:
                     <select ref="iama" v-model="iama" class="input-field-select half-select" required>
@@ -96,6 +96,11 @@ export default {
             console.log('survey cancelled')
         },
         handleSubmit() {
+            const {survey} = this.$refs
+            if (!survey.checkValidity()) {
+                survey.reportValidity()
+                return  // abort until the form is invalid
+            }
             this.SETSURVEYACTIVE(false)
             this.SETSURVEYCOMPLETE(true)
             console.log(`Survey submitted: I am a ${this.iama}. I'm interested in ${this.interestedIn}.`)
