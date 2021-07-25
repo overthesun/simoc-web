@@ -4,9 +4,11 @@
 import * as THREE from 'three'
 
 export default {
-    props: [
-        'scene',
-    ],
+    props: {
+        scene: {
+            type: Object,
+        },
+    },
     data() {
         return {
             loaded: false,
@@ -37,7 +39,8 @@ export default {
 
             // Add the ground
             const groundTexture = new THREE.TextureLoader().load(images.dn)
-            groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping
+            groundTexture.wrapS = THREE.RepeatWrapping
+            groundTexture.wrapT = THREE.RepeatWrapping
             groundTexture.repeat.set(1000, 1000)
             const groundGeometry = new THREE.PlaneGeometry(10000, 10000)
             const groundMaterial = new THREE.MeshStandardMaterial({map: groundTexture})

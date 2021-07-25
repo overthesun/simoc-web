@@ -47,13 +47,13 @@ module.exports = {
     chainWebpack: config => {
         // .obj Loader
         config.module
-          .rule('obj')
-          .test(/\.obj$/)
-          .use('file-loader')
-            .loader('file-loader')
-            .options({
-                name: 'static/img/[name].[hash:8].[ext]'
-            })
-            .end()
-      },
+                .rule('obj')
+                .test(/\.obj$/)
+                .use('file-loader')
+                .loader('file-loader')
+                .options({
+                    name: 'static/img/[name].[hash:8].[ext]',
+                })
+                .end()
+    },
 }

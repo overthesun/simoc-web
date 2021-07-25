@@ -7,7 +7,6 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import {GreenhouseConfig, PowerUsage} from '../graphs'
 import World from '../../threejs/World'
 
 export default {

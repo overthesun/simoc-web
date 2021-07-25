@@ -39,8 +39,8 @@ class Tooltip {
             // convert to (-1 to +1) over the scene
             const xCoord = event.clientX - frame.left
             const yCoord = event.clientY - frame.top
-            this.mouse.x = (xCoord / (frame.right - frame.left)) * 2 - 1
-            this.mouse.y = -((yCoord / (frame.bottom - frame.top)) * 2 - 1)
+            this.mouse.x = ((xCoord / (frame.right - frame.left)) * 2) - 1
+            this.mouse.y = -(((yCoord / (frame.bottom - frame.top)) * 2) - 1)
         }
     }
 

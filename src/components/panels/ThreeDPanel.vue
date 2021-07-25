@@ -2,12 +2,12 @@ This component renders a 3d view of the habitat using threeJS.
 ref: https://discoverthreejs.com/book/introduction/threejs-with-frameworks/
 
 <template>
-    <World :game-config="getConfiguration" :is-active="true"/>
+    <World :game-config="getConfiguration" :is-active="true" />
 </template>
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import World from '../../threejs/World.vue'
+import World from '../../threejs/World'
 
 export default {
     panelTitle: '3D View',

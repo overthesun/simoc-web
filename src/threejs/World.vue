@@ -8,7 +8,7 @@
 
 <script>
 import * as THREE from 'three'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 import {Resizer} from './systems/resizer'
 import {Tooltip} from './systems/tooltip'
@@ -29,9 +29,11 @@ export default {
     },
     props: {
         gameConfig: {
+            type: Object,
             default: null,
         },
         isActive: {
+            type: Boolean,
             default: true,
         },
     },
@@ -51,7 +53,7 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
-            tooltipText: "",
+            tooltipText: '',
         }
     },
     watch: {
@@ -84,7 +86,7 @@ export default {
             this.scene = new THREE.Scene()
 
             this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 1000) // fov, aspect, near, far
-            this.camera.position.set(0, 20, 30)
+            this.camera.position.set(0, 5, 30)
 
             this.directLight = new THREE.DirectionalLight('white', 3)
             this.directLight.position.set(10, 20, 15)
@@ -103,7 +105,8 @@ export default {
             this.controls.autoRotate = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
-            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId, this.setTooltipText)
+            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId,
+                                       this.setTooltipText)
 
             this.buildScene(this.gameConfig)
         },
@@ -187,12 +190,12 @@ export default {
                     model.position.z -= edge + bbox.min.z // Move behind last object
                     edge = edge - bbox.max.z + bbox.min.z // Reset back edge
 
-                    const addShadows = (model) => {
-                        if (model.children.length > 0) {
-                            model.children.forEach(child => addShadows(child))
+                    const addShadows = mod => {
+                        if (mod.children.length > 0) {
+                            mod.children.forEach(child => addShadows(child))
                         } else {
-                            model.castShadow = true
-                            model.receiveShadow = true
+                            mod.castShadow = true
+                            mod.receiveShadow = true
                         }
                     }
                     addShadows(model)
