@@ -37,6 +37,7 @@ export default {
     },
     data() {
         return {
+            frame: 0,
             containerId: 'scene-container',
             container: null,
             renderer: null,
@@ -44,7 +45,8 @@ export default {
             camera: null,
             raycaster: null,
             mouse: null,
-            light: null,
+            directLight: null,
+            ambientLight: null,
             scene: null,
             animationFrame: null,
             models: {}, // TODO: Move to store, trim extras when user runs sim
@@ -86,9 +88,10 @@ export default {
             this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 1000) // fov, aspect, near, far
             this.camera.position.set(0, 20, 30)
 
-            this.light = new THREE.DirectionalLight('white', 3)
-            this.light.position.set(10, 20, 15)
-            this.scene.add(this.light)
+            this.directLight = new THREE.DirectionalLight('white', 3)
+            this.directLight.position.set(10, 20, 15)
+            this.ambientLight = new THREE.AmbientLight('white', 1)
+            this.scene.add(this.directLight, this.ambientLight)
 
             this.renderer = new THREE.WebGLRenderer({antialias: true})
             this.renderer.physicallyCorrectLights = true
@@ -97,6 +100,7 @@ export default {
             this.controls = new OrbitControls(this.camera, this.renderer.domElement)
             this.controls.maxPolarAngle = Math.PI * 0.49
             this.controls.enableDamping = true
+            this.controls.autoRotate = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
             this.tooltip = new Tooltip(this.camera, this.scene, this.containerId, this.setTooltipText)
@@ -116,9 +120,14 @@ export default {
         },
         render() {
             this.animationFrame = requestAnimationFrame(this.render)
+            this.frame += 1
 
+            // if (this.frame % 100 === 0) {
+            //     console.log(this.controls)
+            // }
+
+            this.controls.update() // required for auto-rotate
             this.tooltip.tick()
-
             this.renderer.render(this.scene, this.camera)
         },
         async buildScene(config) {
