@@ -20,7 +20,7 @@ const buildPlace = async({place, amount}) => {
             // Find largest square, add append extras
             const square = Math.floor(Math.sqrt(amount))
             const extraPanels = amount - (square * square)
-            const extraRows = extraPanels % square
+            const extraRows = Math.floor(extraPanels / square)
             const arrayLayout = Array(square + extraRows).fill(square)
             const extraCol = extraPanels - (extraRows * square)
             arrayLayout.push(extraCol) // amount=20 => arrayLayout=[4, 4, 4, 4, 4]
