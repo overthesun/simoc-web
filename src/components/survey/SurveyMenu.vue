@@ -7,7 +7,7 @@
             <form @submit.prevent="">
                 <div class="question">
                     I am a:
-                    <select ref="iama" v-model="iama" class="half-select" required>
+                    <select ref="iama" v-model="iama" class="input-field-select half-select" required>
                         <option value="student" selected>Student</option>
                         <option value="researcher">Researcher</option>
                         <option value="hobbyist">Hobbyist</option>
@@ -15,22 +15,47 @@
                     </select>
                 </div>
                 <div v-if="iama === 'other'" class="question">
-                    <input ref="iamaOther" v-model="iamaOther" class="text-input" type="text"
-                           placeholder="please specify" required>
+                    <input ref="iamaOther" v-model="iamaOther" class="text-input input-field-text"
+                           type="text" placeholder="Specify" required>
                 </div>
                 <div class="question">
                     I'm interested in:
-                    <select ref="interestedIn" v-model="interestedIn" class="half-select" required>
+                    <select ref="interestedIn" v-model="interestedIn"
+                            class="input-field-select half-select" required>
                         <option value="fun" selected>Having fun</option>
                         <option value="learning">Learning</option>
                         <option value="testing">Testing a hypothesis</option>
                         <option value="research">Incorporating SIMOC into my research</option>
                     </select>
                 </div>
+                <div v-if="!(isWorking)" class="question">
+                    Is SIMOC working for you?
+                    <div>
+                        <input type="radio" id="yesWorking" value="yes" v-model="isWorking" required>
+                        <label for="yesWorking">Yes</label>
+                        <input type="radio" id="noWorking" value="no" v-model="isWorking">
+                        <label for="noWorking">No</label>
+                    </div>
+                </div>
+                <div v-if="isWorking === 'yes'" class="question">
+                    Great! How are your using SIMOC?
+                    <input ref="makeBetter" v-model="makeBetter" class="text-input input-field-text" type="text">
+                </div>
+                <div v-if="isWorking === 'no'" class="question">
+                    How can we improve?
+                    <input ref="howUsing" v-model="howUsing" class="text-input input-field-text" type="text">
+                </div>
+                <div class="question">
+                    <input ref="email" v-model="email" class="text-input input-field-text" type="text">
+                </div>
+                <input ref="joinList" v-model="joinList" class="" type="checkbox">
+                Join our mailing list
+                <div class="question">
+                </div>
             </form>
         </template>
         <template v-slot:menu-buttons>
-            <button @click="handleCancel">Cancel</button>
+            <button @click="handleCancel" class="btn-warning btn-logout">Cancel</button>
             <button @click="handleSubmit">Submit</button>
         </template>
     </BaseMenu>
@@ -50,6 +75,8 @@ export default {
             iamaOther: null,
             interestedIn: null,
             isWorking: null,
+            makeBetter: null,
+            howUsing: null,
             email: null,
             joinList: null,
         }
@@ -77,12 +104,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '../../sass/components/configuration-input';
+
 .question{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 300px;
+    align-items: center;
+    width: 320px;
     padding-bottom: 20px;
 }
 
@@ -92,6 +122,7 @@ export default {
 
 .text-input{
     width: 100%;
+    margin-bottom: 0;
 }
 
 .reference-link{
