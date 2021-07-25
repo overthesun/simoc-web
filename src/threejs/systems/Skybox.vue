@@ -14,7 +14,6 @@ export default {
     },
     watch: {
         scene(newScene, oldScene) {
-            console.log(newScene)
             if (!newScene || this.loaded) {
                 return
             }

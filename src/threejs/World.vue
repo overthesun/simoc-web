@@ -37,7 +37,6 @@ export default {
     },
     data() {
         return {
-            frame: 0,
             containerId: 'scene-container',
             container: null,
             renderer: null,
@@ -59,7 +58,6 @@ export default {
         gameConfig: {
             handler() {
                 this.buildScene(this.gameConfig)
-                console.log(THREE.Cache)
             },
             deep: true,
         },
@@ -90,11 +88,13 @@ export default {
 
             this.directLight = new THREE.DirectionalLight('white', 3)
             this.directLight.position.set(10, 20, 15)
+            this.directLight.castShadow = true
             this.ambientLight = new THREE.AmbientLight('white', 1)
             this.scene.add(this.directLight, this.ambientLight)
 
             this.renderer = new THREE.WebGLRenderer({antialias: true})
             this.renderer.physicallyCorrectLights = true
+            this.renderer.shadowMap.enabled = true
             document.getElementById(this.containerId).append(this.renderer.domElement)
 
             this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -120,12 +120,6 @@ export default {
         },
         render() {
             this.animationFrame = requestAnimationFrame(this.render)
-            this.frame += 1
-
-            // if (this.frame % 100 === 0) {
-            //     console.log(this.controls)
-            // }
-
             this.controls.update() // required for auto-rotate
             this.tooltip.tick()
             this.renderer.render(this.scene, this.camera)
@@ -192,6 +186,17 @@ export default {
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
                     edge = edge - bbox.max.z + bbox.min.z // Reset back edge
+
+                    const addShadows = (model) => {
+                        if (model.children.length > 0) {
+                            model.children.forEach(child => addShadows(child))
+                        } else {
+                            model.castShadow = true
+                            model.receiveShadow = true
+                        }
+                    }
+                    addShadows(model)
+
                     models.add(model)
                 }
             }
