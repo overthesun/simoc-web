@@ -8,6 +8,7 @@
 <script>
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js'
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 import {Resizer} from './systems/resizer'
@@ -47,6 +48,7 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
+            inflatable: null,
             hoveringOver: null,
             hoverMessage: null,
         }
@@ -133,6 +135,18 @@ export default {
             }
             this.habitat = await this.buildHabitat(this.getLayout)
             this.scene.add(this.habitat)
+
+            if (!this.inflatable) {
+
+                const fname = 'inflatable'
+                // eslint-disable-next-line prefer-template
+                this.inflatable = require('../assets/' + fname + '.obj')
+                const loader = new OBJLoader()
+				loader.load(this.inflatable, (obj) => {
+                    obj.scale.set(0.01, 0.01, 0.01)
+                    this.scene.add(obj)
+                })
+            }
         },
         buildLayout(config) {
             let layout = []

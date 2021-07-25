@@ -42,4 +42,18 @@ module.exports = {
     // and restart the vue server.
     // ref: https://stegriff.co.uk/upblog/how-to-change-webpack-settings-set-by-vue-cli/)
     lintOnSave: true,
+
+    // // adding a new loader: https://cli.vuejs.org/guide/webpack.html#adding-a-new-loader
+    chainWebpack: config => {
+        // .obj Loader
+        config.module
+          .rule('obj')
+          .test(/\.obj$/)
+          .use('file-loader')
+            .loader('file-loader')
+            .options({
+                name: 'static/img/[name].[hash:8].[ext]'
+            })
+            .end()
+      },
 }
