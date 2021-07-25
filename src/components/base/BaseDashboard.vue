@@ -50,6 +50,7 @@ export default {
     components: {
         TheTopBar,
         DashboardMenu,
+        SurveyMenu,
         PlayButton,
         Timeline,
         StepControls,

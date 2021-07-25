@@ -10,6 +10,9 @@
             <div id="menu-title">
                 <slot name="menu-title" />
             </div>
+            <div id="survey">
+                <slot name="survey" />
+            </div>
             <div id="menu-buttons">
                 <slot name="menu-buttons" />
             </div>
@@ -150,6 +153,13 @@ export default {
     background-color: #ff3100;
     border: none;
     margin-top: 24px;
+}
+
+#survey{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 </style>
