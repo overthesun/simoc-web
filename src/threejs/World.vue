@@ -8,12 +8,13 @@
 <script>
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js'
-import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 import {Resizer} from './systems/resizer'
 import {Tooltip} from './systems/tooltip'
 import Skybox from './systems/Skybox'
+import {getAsset} from './systems/modelLoader'
+
+// ref: https://threejs.org/docs/#api/en/loaders/Cache
 
 // Vue/ThreeJS structure ref:
 // https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
@@ -48,18 +49,14 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
-            inflatable: null,
-            hoveringOver: null,
-            hoverMessage: null,
+            tooltipText: "",
         }
-    },
-    computed: {
-        ...mapGetters('threejs', ['getLayout']),
     },
     watch: {
         gameConfig: {
             handler() {
                 this.buildScene(this.gameConfig)
+                console.log(THREE.Cache)
             },
             deep: true,
         },
@@ -80,12 +77,8 @@ export default {
     beforeDestroy() {
         cancelAnimationFrame(this.animationFrame)
         this.unhook()
-        this.CLEARCACHE()
     },
     methods: {
-        ...mapMutations('threejs', ['SETLAYOUT']),
-        ...mapActions('threejs', ['getAsset', 'CLEARCACHE']),
-
         init() {
             this.scene = new THREE.Scene()
 
@@ -126,27 +119,15 @@ export default {
         async buildScene(config) {
             // Ignore changes that don't affect layout
             const newLayout = this.buildLayout(config)
-            if (JSON.stringify(newLayout) === JSON.stringify(this.getLayout)) {
+            if (JSON.stringify(newLayout) === JSON.stringify(this.layout)) {
                 return
             }
-            this.SETLAYOUT(newLayout)
+            this.layout = newLayout
             if (this.habitat) {
                 this.scene.remove(this.habitat)
             }
-            this.habitat = await this.buildHabitat(this.getLayout)
+            this.habitat = await this.buildHabitat(this.layout)
             this.scene.add(this.habitat)
-
-            if (!this.inflatable) {
-
-                const fname = 'inflatable'
-                // eslint-disable-next-line prefer-template
-                this.inflatable = require('../assets/' + fname + '.obj')
-                const loader = new OBJLoader()
-				loader.load(this.inflatable, (obj) => {
-                    obj.scale.set(0.01, 0.01, 0.01)
-                    this.scene.add(obj)
-                })
-            }
         },
         buildLayout(config) {
             let layout = []
@@ -179,7 +160,7 @@ export default {
             // 1 empty & storage
             layout.push(
                 {place: 'empty', amount: 1},
-                {place: 'storage', amount: 1}
+                {place: 'inflatable', amount: 1}
             )
             return layout
         },
@@ -192,7 +173,7 @@ export default {
                     edge -= place.amount
                 } else {
                     // Store with a given quantity
-                    const model = await this.getAsset(place)
+                    const model = await getAsset(place)
                     const bbox = new THREE.Box3().setFromObject(model)
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
