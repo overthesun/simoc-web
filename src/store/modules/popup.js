@@ -26,7 +26,8 @@ export default {
             commit('SETPOPUPACTIVE', true)
         },
         popupConfirm({commit}, payload) {
-            const {message, confirmCallback} = payload
+            const {message, confirmCallback, keepTimerPaused} = payload
+            // TODO: activate keepTimerPaused using functions from survey PR
             commit('SETPOPUPMESSAGE', message)
             commit('SETCONFIRMCALLBACK', confirmCallback)
             commit('SETPOPUPACTIVE', true)

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -51,6 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
+        ...mapActions('popup', ['popupConfirm']),
 
         stringFormatter: StringFormatter,
 
@@ -59,15 +60,18 @@ export default {
         },
 
         handleAgent(section, agent) {
-            if (!this.editorValid) {
-                // If user doesn't confirm, return without changing screens
-                const msg = 'The current agent configuration is invalid. Revert changes?'
-                if (!window.confirm(msg)) {
-                    return
-                }
+            const revert = () => {
+                this.SETACTIVESECTION(section)
+                this.SETACTIVEAGENT(agent)
             }
-            this.SETACTIVESECTION(section)
-            this.SETACTIVEAGENT(agent)
+            if (!this.editorValid) {
+                this.popupConfirm({
+                    message: 'The current agent configuration is invalid. Revert changes?',
+                    confirmCallback: () => revert()
+                })
+            } else {
+                revert()
+            }
         },
 
         handleAddAgent(section) {
@@ -75,9 +79,10 @@ export default {
         },
 
         handleRemoveAgent(section, agent) {
-            if (window.confirm(`Are you sure you want to remove '${agent}'?`)) {
-                this.REMOVEAGENT({section: section, agent: agent})
-            }
+            this.popupConfirm({
+                message: `Are you sure you want to remove '${agent}'?`,
+                confirmCallback: () => this.REMOVEAGENT({section: section, agent: agent}),
+            })
         },
     },
 }

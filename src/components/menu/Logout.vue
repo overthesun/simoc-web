@@ -4,19 +4,24 @@
 
 <script>
 import axios from 'axios'
+import {mapActions} from 'vuex'
 
 export default {
     methods: {
+        ...mapActions('popup', ['popupConfirm']),
+
         async logout() {
-            if (!window.confirm('Do you want to log out?')) {
-                return
-            }
-            try {
-                axios.get('/logout')
-            } catch (error) {
-                console.log(error)
-            }
-            this.$router.push('entry')
+            this.popupConfirm({
+                message: 'Do you want to log out?',
+                confirmCallback: () => {
+                    try {
+                        axios.get('/logout')
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    this.$router.push('entry')
+                },
+            })
         },
     },
 }

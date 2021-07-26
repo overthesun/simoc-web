@@ -117,14 +117,22 @@ export default {
             // this is called either when the user selects "[Custom]" or
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
-            if (ask_confirm && !window.confirm('Reset changes and reload the custom preset?')) {
-                return
+            const loadPreset = () => {
+                const config = localStorage.getItem('custom-config')
+                if (config) {
+                    this.SETCONFIGURATION(JSON.parse(config))
+                } else {
+                    this.popupAlert('No Custom preset found. Use the Save button to save one.')
+                }
             }
-            const config = localStorage.getItem('custom-config')
-            if (config) {
-                this.SETCONFIGURATION(JSON.parse(config))
+
+            if (ask_confirm) {
+                this.popupConfirm({
+                    message: 'Reset changes and reload the custom preset?',
+                    confirmCallback: () => loadPreset()
+                })
             } else {
-                this.popupAlert('No Custom preset found. Use the Save button to save one.')
+                loadPreset()
             }
         },
     },
