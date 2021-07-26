@@ -51,9 +51,6 @@ export default {
 #menu-wrapper {
     min-width: 480px;
     min-height: 600px;
-    // width: 480px;
-    // height: 600px;
-    // max-height: 600px;
     background-color: #1e1e1e;
     border-radius: 5px;
     z-index: 1000;
@@ -153,13 +150,6 @@ export default {
     background-color: #ff3100;
     border: none;
     margin-top: 24px;
-}
-
-#survey{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 </style>
