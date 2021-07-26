@@ -49,6 +49,7 @@ export default {
         timerID: null,
         getStepsTimerID: null,
         isTimerRunning: false,
+        timerWasRunning: false,
         menuActive: false,
         surveyActive: false,
         surveyComplete: false,
@@ -85,6 +86,7 @@ export default {
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
+        getTimerWasRunning: state => state.timerWasRunning,
         getGameConfig: state => state.gameConfig,
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
@@ -185,6 +187,10 @@ export default {
         // Is the step_timer already been created and running initiall?
         SETISTIMERRUNNING(state, value) {
             state.isTimerRunning = value
+        },
+        // Was the timer running before the menu(s) were opened?
+        SETTIMERWASRUNNING(state, value) {
+            state.timerWasRunning = value
         },
         SETGAMEID(state, value) {
             state.parameters.game_id = value

@@ -75,6 +75,7 @@ export default {
     },
     data() {
         return {
+            timerWasRunning: null, // status of game timer
             iama: null,
             iamaOther: null,
             interestedIn: null,
@@ -86,10 +87,17 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getSurveyComplete']),
+        ...mapGetters('dashboard', ['getSurveyComplete', 'getTimerWasRunning']),
+    },
+    beforeDestroy() {
+        if (this.getTimerWasRunning) {
+            this.STARTTIMER()
+            this.SETTIMERWASRUNNING(null)
+        }
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSURVEYACTIVE', 'SETSURVEYCOMPLETE']),
+        ...mapMutations('dashboard', ['SETSURVEYACTIVE', 'SETSURVEYCOMPLETE',
+                                      'STARTTIMER', 'SETTIMERWASRUNNING']),
 
         setIama(val) {
             console.log(`I am a ${val.target.value}.`)

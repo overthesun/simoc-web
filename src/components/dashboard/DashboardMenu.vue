@@ -13,7 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
-            <button v-if="!(getSurveyComplete)" @click="SETSURVEYACTIVE(true)">Give Feedback</button>
+            <button v-if="!(getSurveyComplete)" @click="toSurvey">Give Feedback</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -31,31 +31,35 @@ export default {
     },
     data() {
         return {
-            timerWasRunning: null,  // the status of timer before opening the menu
+            keepTimerPaused: null,  // the status of timer before opening the menu
         }
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels',
-                                    'getSimulationData', 'getSurveyComplete']),
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getTimerWasRunning',
+                                    'getActivePanels', 'getSimulationData',
+                                    'getSurveyComplete']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
-        this.timerWasRunning = this.getIsTimerRunning
-        this.PAUSETIMER()
+        if (this.getIsTimerRunning) {
+            this.PAUSETIMER()
+            this.SETTIMERWASRUNNING(true)
+        }
     },
-    // Called when the menu is closed, resumes the timer if it was running
+    // If timer was running & go back to game, restart. If going to survey, keep paused.
     beforeDestroy() {
-        if (this.timerWasRunning) {
+        if (this.getTimerWasRunning && !this.keepTimerPaused) {
             this.STARTTIMER()
+            this.SETTIMERWASRUNNING(null)
         }
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION',
-                                      'SETSURVEYACTIVE']),
+                                      'SETSURVEYACTIVE', 'SETTIMERWASRUNNING']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
@@ -120,6 +124,12 @@ export default {
             // rely on DashboardView.beforeDestroy to stop the sim
             this.$router.push('menu')
         },
+        // If the timer was running and is paused by menu, it should remain paused when
+        // switching to the survey. 
+        toSurvey() {
+            this.keepTimerPaused = true
+            this.SETSURVEYACTIVE(true)
+        }
     },
 }
 </script>
