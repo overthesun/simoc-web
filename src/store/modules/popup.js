@@ -26,7 +26,6 @@ export default {
             commit('SETPOPUPACTIVE', true)
         },
         popupConfirm({commit}, payload) {
-            console.log("confirming")
             const {message, confirmCallback} = payload
             commit('SETPOPUPMESSAGE', message)
             commit('SETCONFIRMCALLBACK', confirmCallback)

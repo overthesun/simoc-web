@@ -1,10 +1,13 @@
 <template>
   <div v-if="getPopupActive" class="popup">
-    <div id="popupShadow" />
-    <div id="popupWindow">
-      <p>{{getPopupMessage}}</p>
-      <button @click="handlePrimary">Ok</button>
-      <button :v-if="getConfirmCallback" @click="handleSecondary">Cancel</button>
+    <div id="main-menu-wrapper" />
+    <div id="popup-window">
+      <p id="popup-message">{{getPopupMessage}}</p>
+      <div id="menu-buttons">
+        <button @click="handlePrimary">Ok</button>
+        <button v-if="getConfirmCallback" @click="handleSecondary"
+                class="btn-warning">Cancel</button>
+      </div>
     </div>
   </div>
 </template>
@@ -40,32 +43,35 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import '../../sass/components/menu';
+
 #popup {
   position: absolute;
   height: 100vh;
   width: 100vw;
 }
 
-#popupShadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(100, 100, 100, 0.4);
-  z-index: 1001;
-}
-
-#popupWindow {
+#popup-window {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 100px;
-  margin-top: -50px;
-  width: 200px;
-  margin-left: -100px;
-  background-color: white;
-  z-index: 1002
+  width: 300px;
+  min-height: 200px;
+  margin-left: -150px;
+  margin-top: -100px;
+  background-color: #1e1e1e;
+  border-radius: 5px;
+  z-index: 1000;
+  padding: 16px;
+  box-sizing: border-box;
 }
+
+#popup-message {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 </style>
