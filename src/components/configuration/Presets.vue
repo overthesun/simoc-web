@@ -110,7 +110,7 @@ export default {
                         return
                     }
                     this.popupAlert('Custom preset saved.')
-                }
+                },
             })
         },
         loadFromLocalStorage(ask_confirm) {
@@ -129,7 +129,7 @@ export default {
             if (ask_confirm) {
                 this.popupConfirm({
                     message: 'Reset changes and reload the custom preset?',
-                    confirmCallback: () => loadPreset()
+                    confirmCallback: () => loadPreset(),
                 })
             } else {
                 loadPreset()

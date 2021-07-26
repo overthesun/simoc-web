@@ -51,7 +51,7 @@ export default {
         resetConfig() {
             this.popupConfirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => this.SETRESETCONFIG(true)
+                confirmCallback: () => this.SETRESETCONFIG(true),
             })
         },
     },

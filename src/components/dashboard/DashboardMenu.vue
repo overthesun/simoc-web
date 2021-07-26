@@ -101,7 +101,7 @@ export default {
                     this.SETLEAVEWITHOUTCONFIRMATION(true)
                     // rely on DashboardView.beforeDestroy to stop the sim
                     this.$router.push('entry')
-                }
+                },
             })
         },
 
@@ -119,7 +119,7 @@ export default {
                     this.SETLEAVEWITHOUTCONFIRMATION(true)
                     // rely on DashboardView.beforeDestroy to stop the sim
                     this.$router.push('menu')
-                }
+                },
             })
         },
     },

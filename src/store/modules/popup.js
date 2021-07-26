@@ -7,7 +7,7 @@ export default {
     getters: {
         getPopupActive: state => state.popupActive,
         getPopupMessage: state => state.popupMessage,
-        getConfirmCallback: state => state.confirmCallback
+        getConfirmCallback: state => state.confirmCallback,
     },
     mutations: {
         SETPOPUPACTIVE(state, value) {
@@ -18,16 +18,16 @@ export default {
         },
         SETCONFIRMCALLBACK(state, value) {
             state.confirmCallback = value
-        }
         },
+    },
     actions: {
         popupAlert({commit}, message) {
             commit('SETPOPUPMESSAGE', message)
             commit('SETPOPUPACTIVE', true)
         },
         popupConfirm({commit}, payload) {
-            const {message, confirmCallback, keepTimerPaused} = payload
-            // TODO: activate keepTimerPaused using functions from survey PR
+            const {message, confirmCallback} = payload
+            // TODO: add 'keepTimerPaused' arg for using functions from survey PR
             commit('SETPOPUPMESSAGE', message)
             commit('SETCONFIRMCALLBACK', confirmCallback)
             commit('SETPOPUPACTIVE', true)
@@ -35,5 +35,5 @@ export default {
         executeCallback({state}) {
             state.confirmCallback()
         },
-    }
+    },
 }

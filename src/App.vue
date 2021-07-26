@@ -15,9 +15,9 @@
 import {Popup} from './components/menu'
 
 export default {
-  components: {
-    Popup,
-  }
+    components: {
+        Popup,
+    },
 }
 </script>
 

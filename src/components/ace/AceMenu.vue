@@ -51,7 +51,7 @@ export default {
                         agent_desc: this.getDefaultAgentDesc,
                         isDefault: false,
                     })
-                }
+                },
             })
         },
     },

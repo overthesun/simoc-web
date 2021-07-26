@@ -67,7 +67,7 @@ export default {
             if (!this.editorValid) {
                 this.popupConfirm({
                     message: 'The current agent configuration is invalid. Revert changes?',
-                    confirmCallback: () => revert()
+                    confirmCallback: () => revert(),
                 })
             } else {
                 revert()

@@ -1,45 +1,45 @@
 <template>
-  <div v-if="getPopupActive" class="popup">
-    <div id="main-menu-wrapper" />
-    <div id="popup-window">
-      <p id="popup-message">{{getPopupMessage}}</p>
-      <div id="menu-buttons">
-        <button @click="handlePrimary">Ok</button>
-        <button v-if="getConfirmCallback" @click="handleSecondary"
-                class="btn-warning">Cancel</button>
-      </div>
+    <div v-if="getPopupActive" class="popup">
+        <div id="main-menu-wrapper" />
+        <div id="popup-window">
+            <p id="popup-message">{{getPopupMessage}}</p>
+            <div id="menu-buttons">
+                <button @click="handlePrimary">Ok</button>
+                <button v-if="getConfirmCallback" class="btn-warning"
+                        @click="handleSecondary">Cancel</button>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
-  computed: {
-    ...mapGetters('popup', ['getPopupActive', 'getPopupMessage', 'getConfirmCallback'])
-  },
-  methods: {
-    ...mapMutations('popup', ['SETPOPUPACTIVE', 'SETPOPUPMESSAGE', 'SETCONFIRMCALLBACK']),
-    ...mapActions('popup', ['executeCallback']),
+    computed: {
+        ...mapGetters('popup', ['getPopupActive', 'getPopupMessage', 'getConfirmCallback']),
+    },
+    methods: {
+        ...mapMutations('popup', ['SETPOPUPACTIVE', 'SETPOPUPMESSAGE', 'SETCONFIRMCALLBACK']),
+        ...mapActions('popup', ['executeCallback']),
 
-    handlePrimary() {
-      this.SETPOPUPACTIVE(false)
-      if (this.getConfirmCallback) {
-        this.executeCallback()
-      }
-      this.cleanup()
+        handlePrimary() {
+            this.SETPOPUPACTIVE(false)
+            if (this.getConfirmCallback) {
+                this.executeCallback()
+            }
+            this.cleanup()
+        },
+        handleSecondary() {
+            this.cleanup()
+        },
+        cleanup() {
+            this.SETPOPUPACTIVE(false)
+            this.SETPOPUPMESSAGE(false)
+            this.SETCONFIRMCALLBACK(null)
+        },
     },
-    handleSecondary() {
-      this.cleanup()
-    },
-    cleanup() {
-      this.SETPOPUPACTIVE(false)
-      this.SETPOPUPMESSAGE(false)
-      this.SETCONFIRMCALLBACK(null)
-    },
-  },
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
