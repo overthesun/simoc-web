@@ -6,6 +6,7 @@ import * as THREE from 'three'
 export default {
     props: {
         scene: {
+            default: null,
             type: Object,
         },
     },
@@ -24,14 +25,16 @@ export default {
         },
     },
     methods: {
-        loadSkybox() {
+        async loadSkybox() {
             const angles = ['ft', 'bk', 'up', 'dn', 'rt', 'lf']
             const images = {}
-            angles.forEach(angle => {
+            // ref: https://stackoverflow.com/a/37576787
+            await Promise.all(angles.map(async (angle) => {
                 // image source: https://opengameart.org/content/mayhems-skyboxes-more
                 // ref: (acdcjunior's answer) https://stackoverflow.com/questions/47313165/how-to-reference-static-assets-within-vue-javascript
-                images[angle] = require(`../../assets/h2s_${angle}.jpg`)
-            })
+                const image = await import('../../assets/h2s_' + angle + '.jpg')
+                images[angle] = image.default
+            }))
 
             // Add the skybox
             this.scene.background = new THREE.CubeTextureLoader()

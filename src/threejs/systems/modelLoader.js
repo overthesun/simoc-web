@@ -104,9 +104,9 @@ const buildPlace = async({place, amount}) => {
         case 'inflatable': {
             const fname = 'inflatable'
             // eslint-disable-next-line prefer-template
-            const inflatable = require('../../assets/' + fname + '.obj')
+            const inflatable = await import('../../assets/' + fname + '.obj')
             const loader = new OBJLoader()
-            const model = await loader.loadAsync(inflatable)
+            const model = await loader.loadAsync(inflatable.default)
             model.scale.set(0.005, 0.005, 0.005)
             model.children[0].userData.key = 'inflatable'
             return model
