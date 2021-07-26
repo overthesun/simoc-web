@@ -26,7 +26,6 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
-import {SurveyMenu} from '../survey'
 
 export default {
     beforeRouteLeave(to, from, next) {
@@ -50,7 +49,7 @@ export default {
     components: {
         TheTopBar,
         DashboardMenu,
-        SurveyMenu,
+        SurveyMenu: () => import('../survey/SurveyMenu'),
         PlayButton,
         Timeline,
         StepControls,
