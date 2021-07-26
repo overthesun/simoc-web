@@ -86,6 +86,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
+        ...mapActions('popup', ['popupAlert', 'popupConfirm']),
 
         updateConfig(name) {
             // don't set [custom] if the user picks a preset
@@ -98,16 +99,19 @@ export default {
         },
         saveToLocalStorage() {
             // save custom preset to local storage
-            if (window.confirm('Save the current configuration as a custom preset?')) {
-                try {
-                    const config = JSON.stringify(this.getConfiguration)
-                    localStorage.setItem('custom-config', config)
-                } catch (error) {
-                    alert(`An error occurred while saving the configuration: ${error}`)
-                    return
+            this.popupConfirm({
+                message: 'Save the current configuration as a custom preset?',
+                confirmCallback: () => {
+                    try {
+                        const config = JSON.stringify(this.getConfiguration)
+                        localStorage.setItem('custom-config', config)
+                    } catch (error) {
+                        this.popupAlert(`An error occurred while saving the configuration: ${error}`)
+                        return
+                    }
+                    this.popupAlert('Custom preset saved.')
                 }
-                alert('Custom preset saved.')
-            }
+            })
         },
         loadFromLocalStorage(ask_confirm) {
             // this is called either when the user selects "[Custom]" or
@@ -120,7 +124,7 @@ export default {
             if (config) {
                 this.SETCONFIGURATION(JSON.parse(config))
             } else {
-                alert('No Custom preset found. Use the Save button to save one.')
+                this.popupAlert('No Custom preset found. Use the Save button to save one.')
             }
         },
     },

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 
 export default {
     props: {
@@ -14,6 +15,8 @@ export default {
         buttonText: {type: String, default: 'Upload Configuration'},
     },
     methods: {
+        ...mapActions('popup', ['popupAlert']),
+
         uploadConfig() {
             this.$refs.configInputFile.click()
         },
@@ -40,7 +43,7 @@ export default {
                     this.handleFile(parsed)
                 })
             } catch (e) {
-                alert('An error occurred while reading the file.')
+                this.popupAlert('An error occurred while reading the file.')
                 console.warn(e.message)
             }
         },

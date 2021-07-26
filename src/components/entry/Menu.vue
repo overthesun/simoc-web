@@ -49,6 +49,7 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
+        ...mapActions('popup', ['popupAlert']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
@@ -82,7 +83,7 @@ export default {
                 this.SETBUFFERMAX(json_data.steps)
             } catch (error) {
                 console.error(error)  // report full error in the console
-                alert('An error occurred while reading the file.')
+                this.popupAlert('An error occurred while reading the file.')
                 return
             }
             this.SETLOADFROMSIMDATA(true)

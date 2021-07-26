@@ -57,9 +57,9 @@ export default {
   top: 50%;
   left: 50%;
   width: 300px;
-  min-height: 200px;
+  min-height: 150px;
   margin-left: -150px;
-  margin-top: -100px;
+  margin-top: -75px;
   background-color: #1e1e1e;
   border-radius: 5px;
   z-index: 1000;
