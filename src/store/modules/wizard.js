@@ -325,6 +325,7 @@ export default {
         // Updates the plant at the index with the new values
         UPDATEPLANTSPECIES: (state, value) => {
             const {index, plant} = value
+            plant.amount = parseInt(plant.amount, 10)
             state.configuration.plantSpecies[index] = plant
         },
         // Removes the plant at the index
