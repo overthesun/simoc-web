@@ -25,11 +25,7 @@ module.exports = {
     },
     css: {
         loaderOptions: {
-            sass: {
-                data: `
-
-                `,
-            },
+            sass: {},
         },
     },
     // NOTE ON LINTER

@@ -21,7 +21,7 @@
     "socket.io-client": "^3.0.4",
     "vue": "^3.1.5",
     "vue-gtag-next": "^1.14.0",
-    "vue-router": "^3.0.3",
+    "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
@@ -29,14 +29,15 @@
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.13",
     "@vue/cli-service": "^4.5.13",
-    "@vue/compiler-sfc": "^3.0.0-beta.1",
+    "@vue/compiler-sfc": "^3.1.5",
     "@vue/eslint-config-airbnb": "^5.3.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-formatter-summary": "^1.1.0",
-    "eslint-plugin-vue": "^7.0.0-alpha.0",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0"
+    "eslint-plugin-vue": "^7.14.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^10.2.0",
+    "webpack": "^4.44.2"
   },
   "postcss": {
     "plugins": {
