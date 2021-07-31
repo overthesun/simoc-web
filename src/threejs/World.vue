@@ -101,6 +101,7 @@ export default {
 
             this.controls = new OrbitControls(this.camera, this.renderer.domElement)
             this.controls.maxPolarAngle = Math.PI * 0.49
+            this.controls.maxDistance = 200
             this.controls.enableDamping = true
             this.controls.autoRotate = true
 
