@@ -4,10 +4,10 @@
             Survey
         </template>
         <template v-slot:survey>
-            <form v-show="!(getSurveyComplete)" ref='survey' name='survey' @submit.prevent="">
+            <form v-show="!(getSurveyComplete)" ref="survey" name="survey" @submit.prevent="">
                 <div class="question">
                     I am a:
-                    <select ref="iama" name="iama" v-model="iama" class="input-field-select half-select" required>
+                    <select ref="iama" v-model="iama" name="iama" class="input-field-select half-select" required>
                         <option value="classroom_instructor" selected>Classroom Instructor</option>
                         <option value="student_k-12">Student (K-12)</option>
                         <option value="citizen_scientist">Citizen Scientist</option>
@@ -20,12 +20,12 @@
                     </select>
                 </div>
                 <div v-if="iama === 'other'" class="question">
-                    <input ref="iamaOther" name="iamaOther" v-model="iamaOther" class="text-input input-field-text"
+                    <input ref="iamaOther" v-model="iamaOther" name="iamaOther" class="text-input input-field-text"
                            type="text" placeholder="Specify" required>
                 </div>
                 <div class="question">
                     I'm interested in:
-                    <select ref="interestedIn" name="interestedIn" v-model="interestedIn"
+                    <select ref="interestedIn" v-model="interestedIn" name="interestedIn"
                             class="input-field-select half-select" required>
                         <option value="fun" selected>Having fun</option>
                         <option value="learning">Learning about off-Earth human habitation</option>
@@ -37,32 +37,37 @@
                 <div class="question">
                     Is SIMOC working for you?
                     <div>
-                        <input type="radio" name="isWorking" value="yes" v-model="isWorking" required>
+                        <input v-model="isWorking" type="radio" value="yes" name="isWorking" required>
                         <label for="yesWorking">Yes</label>
-                        <input type="radio" name="isWorking" value="no" v-model="isWorking">
+                        <input v-model="isWorking" type="radio" value="no" name="isWorking">
                         <label for="noWorking">No</label>
                     </div>
                 </div>
                 <div v-if="isWorking === 'yes'" class="question">
                     Great! How are your using SIMOC?
-                    <input ref="howUsing" name="howUsing" v-model="howUsing" class="text-input input-field-text" type="text">
+                    <input ref="howUsing" v-model="howUsing" name="howUsing" class="text-input input-field-text"
+                           type="text">
                 </div>
                 <div v-if="isWorking === 'no'" class="question">
                     How can we improve?
-                    <input ref="makeBetter" name="makeBetter" v-model="makeBetter" class="text-input input-field-text" type="text">
+                    <input ref="makeBetter" v-model="makeBetter" name="makeBetter" class="text-input input-field-text"
+                           type="text">
                 </div>
                 <div class="question">
-                    <input ref="email" name="email" v-model="email" class="text-input input-field-text" type="text"
+                    <input ref="email" v-model="email" name="email" class="text-input input-field-text" type="text"
                            placeholder="Email (optional)">
                 </div>
-                <input ref="joinList" name="joinList" v-model="joinList" class="" type="checkbox">
+                <input ref="joinList" v-model="joinList" name="joinList" class="" type="checkbox">
                 Join our mailing list
             </form>
         </template>
         <template v-slot:menu-buttons>
-            <button @click="handleCancel" class="btn-warning btn-logout"
-                    v-show="!(getSurveyComplete)" >Cancel</button>
-            <button @click="handleSubmit" v-show="!(getSurveyComplete)">Submit</button>
+            <button v-show="!(getSurveyComplete)" class="btn-warning btn-logout" @click="handleCancel">
+                Cancel
+            </button>
+            <button v-show="!(getSurveyComplete)" @click="handleSubmit">
+                Submit
+            </button>
             <div v-show="getSurveyComplete" class="leaving-message">
                 Survey, received, thank you.
             </div>
@@ -124,7 +129,6 @@ export default {
                 this.SETSURVEYACTIVE(false)
                 this.SETSURVEYCOMPLETE(false) // Use for testing
             }, 1500)
-            console.log(`Survey submitted: I am a ${this.iama}. I'm interested in ${this.interestedIn}.`)
 
             // Submit form to google api, add to sheets
             // responses: https://docs.google.com/spreadsheets/d/1RQo4gaQN4suIcTw1qgBFzse7TT3lrohb6m6Va_h1xMA/edit?usp=sharing
@@ -132,9 +136,9 @@ export default {
             //  * Each field requires a 'name' attribute
             //  * Each name must match a column in the google sheet
             const scriptURL = 'https://script.google.com/macros/s/AKfycbySWq6Er3wTxmfw1IftblHZKf3m3z1xRanjwFxp9pDod_Do1eW124S41NXfWUq63FlL/exec'
-            fetch(scriptURL, { method: 'POST', body: new FormData(survey)})
-                .then(response => console.log('Success!', response))
-                .catch(error => console.error('Error!', error.message))
+            fetch(scriptURL, {method: 'POST', body: new FormData(survey)})
+                    .then(response => console.log('Success!', response))
+                    .catch(error => console.error('Error!', error.message))
         },
     },
 }
