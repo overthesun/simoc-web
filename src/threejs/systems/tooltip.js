@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { StringFormatter } from '../../javascript/utils'
 
 class Tooltip {
     constructor(camera, scene, containerId, setTooltipText) {
@@ -46,7 +47,7 @@ class Tooltip {
 
     drawHover(model) {
         const {key} = model.object.userData
-        this.setTooltipText(key)
+        this.setTooltipText(`Mars habitat ${StringFormatter(key)}.`)
     }
 
     hookup() {
