@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { StringFormatter } from '../../javascript/utils'
 
+const _IGNORE = ['ground']
+
 class Tooltip {
     constructor(camera, scene, containerId, setTooltipText) {
         this.camera = camera
@@ -19,16 +21,15 @@ class Tooltip {
     tick() {
         this.raycaster.setFromCamera(this.mouse, this.camera)
         const intersects = this.raycaster.intersectObjects(this.scene.children, true)
-        if (intersects.length > 0) {
-            const model = intersects[0]
-            const {key} = model.object.userData
+        const key = (intersects.length > 0) ? intersects[0].object.userData.key : null
+        if (key && !_IGNORE.includes(key)) {
             if (this.hoveringOver !== key) {
-                this.hoveringOver = model.object.userData.key
-                this.drawHover(model)
+                this.hoveringOver = key
+                this.drawHover(intersects[0])
             }
-        } else if (this.hoveringOver) {
+        } else {
             this.hoveringOver = null
-            this.hoverMessage = null
+            this.setTooltipText(null)
         }
     }
 

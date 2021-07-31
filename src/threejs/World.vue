@@ -1,7 +1,14 @@
 <template>
     <div id="world">
-        <div id="scene-container" ref="sceneContainer" class="scene-container" />
-        <div class="tooltip-text">{{tooltipText}}</div>
+        <div id="scene-container" ref="sceneContainer" class="scene-container">
+            <div class="rotation">
+                Auto-rotate
+                <input type="checkbox" v-model="rotating" />
+            </div>
+            <div class="tooltip" v-show="tooltipText">
+                <div class="tooltip-text">{{tooltipText}}</div>
+            </div>
+        </div>
         <Skybox :scene="scene" />
     </div>
 </template>
@@ -44,6 +51,7 @@ export default {
             renderer: null,
             controls: null,
             camera: null,
+            rotating: true,
             raycaster: null,
             mouse: null,
             directLight: null,
@@ -53,7 +61,7 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
-            tooltipText: '',
+            tooltipText: null,
         }
     },
     watch: {
@@ -70,6 +78,9 @@ export default {
                 this.unhook()
             }
         },
+        rotating(newVal) {
+            this.controls.autoRotate = newVal
+        }
     },
     mounted() {
         this.init()
@@ -234,11 +245,26 @@ export default {
 
 .tooltip {
     position: absolute;
-    top: 100;
-    left: 100;
-    width: 90px;
-    height: 30px;
-    background-color: gray;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    margin: 4px;
+    padding: 4px;
+    background-color: #1e1e1eaa;
     z-index: 100;
+}
+
+.rotation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    margin: 4px;
+    padding: 4px;
+    background-color: #1e1e1eaa;
+    z-index: 100;
+
 }
 </style>
