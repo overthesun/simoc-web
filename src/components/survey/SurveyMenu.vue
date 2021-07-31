@@ -4,7 +4,7 @@
             Survey
         </template>
         <template v-slot:survey>
-            <form v-show="!(getSurveyComplete)" ref='survey' @submit.prevent="">
+            <form v-show="!(getSurveyComplete)" ref='survey' name='survey' @submit.prevent="">
                 <div class="question">
                     I am a:
                     <select ref="iama" name="iama" v-model="iama" class="input-field-select half-select" required>
@@ -20,12 +20,12 @@
                     </select>
                 </div>
                 <div v-if="iama === 'other'" class="question">
-                    <input ref="iamaOther" v-model="iamaOther" class="text-input input-field-text"
+                    <input ref="iamaOther" name="iamaOther" v-model="iamaOther" class="text-input input-field-text"
                            type="text" placeholder="Specify" required>
                 </div>
                 <div class="question">
                     I'm interested in:
-                    <select ref="interestedIn" v-model="interestedIn"
+                    <select ref="interestedIn" name="interestedIn" v-model="interestedIn"
                             class="input-field-select half-select" required>
                         <option value="fun" selected>Having fun</option>
                         <option value="learning">Learning about off-Earth human habitation</option>
@@ -37,25 +37,25 @@
                 <div class="question">
                     Is SIMOC working for you?
                     <div>
-                        <input type="radio" id="yesWorking" value="yes" v-model="isWorking" required>
+                        <input type="radio" name="isWorking" value="yes" v-model="isWorking" required>
                         <label for="yesWorking">Yes</label>
-                        <input type="radio" id="noWorking" value="no" v-model="isWorking">
+                        <input type="radio" name="isWorking" value="no" v-model="isWorking">
                         <label for="noWorking">No</label>
                     </div>
                 </div>
                 <div v-if="isWorking === 'yes'" class="question">
                     Great! How are your using SIMOC?
-                    <input ref="makeBetter" v-model="makeBetter" class="text-input input-field-text" type="text">
+                    <input ref="howUsing" name="howUsing" v-model="howUsing" class="text-input input-field-text" type="text">
                 </div>
                 <div v-if="isWorking === 'no'" class="question">
                     How can we improve?
-                    <input ref="howUsing" v-model="howUsing" class="text-input input-field-text" type="text">
+                    <input ref="makeBetter" name="makeBetter" v-model="makeBetter" class="text-input input-field-text" type="text">
                 </div>
                 <div class="question">
-                    <input ref="email" v-model="email" class="text-input input-field-text" type="text"
+                    <input ref="email" name="email" v-model="email" class="text-input input-field-text" type="text"
                            placeholder="Email (optional)">
                 </div>
-                <input ref="joinList" v-model="joinList" class="" type="checkbox">
+                <input ref="joinList" name="joinList" v-model="joinList" class="" type="checkbox">
                 Join our mailing list
             </form>
         </template>
@@ -120,8 +120,21 @@ export default {
                 return  // abort until the form is invalid
             }
             this.SETSURVEYCOMPLETE(true)
-            setTimeout(() => this.SETSURVEYACTIVE(false), 1500)
+            setTimeout(() => {
+                this.SETSURVEYACTIVE(false)
+                this.SETSURVEYCOMPLETE(false) // Use for testing
+            }, 1500)
             console.log(`Survey submitted: I am a ${this.iama}. I'm interested in ${this.interestedIn}.`)
+
+            // Submit form to google api, add to sheets
+            // responses: https://docs.google.com/spreadsheets/d/1RQo4gaQN4suIcTw1qgBFzse7TT3lrohb6m6Va_h1xMA/edit?usp=sharing
+            // ref: https://dev.to/omerlahav/submit-a-form-to-a-google-spreadsheet-1bia
+            //  * Each field requires a 'name' attribute
+            //  * Each name must match a column in the google sheet
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbySWq6Er3wTxmfw1IftblHZKf3m3z1xRanjwFxp9pDod_Do1eW124S41NXfWUq63FlL/exec'
+            fetch(scriptURL, { method: 'POST', body: new FormData(survey)})
+                .then(response => console.log('Success!', response))
+                .catch(error => console.error('Error!', error.message))
         },
     },
 }
