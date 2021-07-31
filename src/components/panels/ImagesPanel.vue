@@ -8,7 +8,7 @@
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
-    panelTitle: 'Habitat View',
+    panelTitle: 'Habitat View (Old)',
     data() {
         return {}
     },

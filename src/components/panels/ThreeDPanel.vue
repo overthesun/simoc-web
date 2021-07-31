@@ -10,7 +10,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import World from '../../threejs/World'
 
 export default {
-    panelTitle: '3D View',
+    panelTitle: 'Habitat View',
     components: {
         World: World,
     },
