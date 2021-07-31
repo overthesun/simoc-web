@@ -176,7 +176,7 @@ export default {
     .panel-menu-options {
         position: absolute;
         right: 0;
-        z-index: 10;
+        z-index: 1000;
         background-color: #1e1e1e;
         min-width: 150px;
     }
