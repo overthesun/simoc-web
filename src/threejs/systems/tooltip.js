@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { StringFormatter } from '../../javascript/utils'
+import {StringFormatter} from '../../javascript/utils'
 
-const _IGNORE = ['ground']
+const IGNORE_MODELS = ['ground']
 
 class Tooltip {
     constructor(camera, scene, containerId, setTooltipText) {
@@ -22,7 +22,7 @@ class Tooltip {
         this.raycaster.setFromCamera(this.mouse, this.camera)
         const intersects = this.raycaster.intersectObjects(this.scene.children, true)
         const key = (intersects.length > 0) ? intersects[0].object.userData.key : null
-        if (key && !_IGNORE.includes(key)) {
+        if (key && !IGNORE_MODELS.includes(key)) {
             if (this.hoveringOver !== key) {
                 this.hoveringOver = key
                 this.drawHover(intersects[0])

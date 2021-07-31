@@ -3,9 +3,9 @@
         <div id="scene-container" ref="sceneContainer" class="scene-container">
             <div class="rotation">
                 Auto-rotate
-                <input type="checkbox" v-model="rotating" />
+                <input v-model="rotating" type="checkbox">
             </div>
-            <div class="tooltip" v-show="tooltipText">
+            <div v-show="tooltipText" class="tooltip">
                 <div class="tooltip-text">{{tooltipText}}</div>
             </div>
         </div>
@@ -80,7 +80,7 @@ export default {
         },
         rotating(newVal) {
             this.controls.autoRotate = newVal
-        }
+        },
     },
     mounted() {
         this.init()
@@ -188,15 +188,21 @@ export default {
             return layout
         },
         async buildHabitat(layout) {
-            const models = new THREE.Group()
+            const models = {}
+            await Promise.all(layout.map(async place => {
+                if (place.place !== 'empty') {
+                    models[place.place] = await getAsset(place)
+                }
+            }))
+
+            const habitat = new THREE.Group()
             let edge = 0 // tracks the 'back' of last placed model
             for (let i = layout.length - 1; i >= 0; i--) {
                 const place = layout[i]
                 if (place.place === 'empty') {
                     edge -= place.amount
                 } else {
-                    // Store with a given quantity
-                    const model = await getAsset(place)
+                    const model = models[place.place]
                     const bbox = new THREE.Box3().setFromObject(model)
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
@@ -212,12 +218,12 @@ export default {
                     }
                     addShadows(model)
 
-                    models.add(model)
+                    habitat.add(model)
                 }
             }
-            const bbox = new THREE.Box3().setFromObject(models)
-            models.position.z -= bbox.max.z/2 // Center habitat on origin
-            return models
+            const bbox = new THREE.Box3().setFromObject(habitat)
+            habitat.position.z -= bbox.max.z/2 // Center habitat on origin
+            return habitat
         },
     },
 }
@@ -253,6 +259,7 @@ export default {
     padding: 4px;
     background-color: #1e1e1eaa;
     z-index: 100;
+    user-select: none;
 }
 
 .rotation {
