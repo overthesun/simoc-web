@@ -7,10 +7,15 @@
             <form v-show="!(getSurveyComplete)" ref='survey' @submit.prevent="">
                 <div class="question">
                     I am a:
-                    <select ref="iama" v-model="iama" class="input-field-select half-select" required>
-                        <option value="student" selected>Student</option>
-                        <option value="researcher">Researcher</option>
-                        <option value="hobbyist">Hobbyist</option>
+                    <select ref="iama" name="iama" v-model="iama" class="input-field-select half-select" required>
+                        <option value="classroom_instructor" selected>Classroom Instructor</option>
+                        <option value="student_k-12">Student (K-12)</option>
+                        <option value="citizen_scientist">Citizen Scientist</option>
+                        <option value="university_researcher">University researcher</option>
+                        <option value="professional_researcher">Professional researcher</option>
+                        <option value="space_exploration_enthusiast">Space exploration enthusiast</option>
+                        <option value="analog_astronaut">Analog Astronaut</option>
+                        <option value="curious_passer-by">Curious passer-by</option>
                         <option value="other">Other</option>
                     </select>
                 </div>
@@ -23,9 +28,10 @@
                     <select ref="interestedIn" v-model="interestedIn"
                             class="input-field-select half-select" required>
                         <option value="fun" selected>Having fun</option>
-                        <option value="learning">Learning</option>
+                        <option value="learning">Learning about off-Earth human habitation</option>
                         <option value="testing">Testing a hypothesis</option>
                         <option value="research">Incorporating SIMOC into my research</option>
+                        <option value="playing">Playing space-related video games</option>
                     </select>
                 </div>
                 <div class="question">
