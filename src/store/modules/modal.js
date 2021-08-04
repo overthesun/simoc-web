@@ -1,39 +1,93 @@
+const getParams = () => ({
+    logo: false,
+    title: '',
+    message: '',
+    survey: false,
+    join: false,
+    buttons: [],
+    onLoad: null,
+    onUnload: null,
+})
+
+const getButton = () => ({
+    text: '',
+    color: null,
+    callback: () => {},
+})
+
 export default {
     state: {
         modalActive: false,
-        modalMessage: null,
-        confirmCallback: null,
+        modalParams: {},
     },
     getters: {
         getModalActive: state => state.modalActive,
-        getModalMessage: state => state.modalMessage,
-        getConfirmCallback: state => state.confirmCallback,
+        getModalParams: state => state.modalParams,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
             state.modalActive = value
         },
-        SETMODALMESSAGE(state, value) {
-            state.modalMessage = value
+        SETMODALPARAMS(state, payload) {
+            // Start with a blank list of params that the ModalWindow component can take.
+            // Go through each argument in payload. If it's on the list, use its value.
+            const params = getParams()
+            const used = []
+            const unused = []
+            Object.keys(payload).forEach(arg => {
+                // Buttons are validated in the same way
+                if (arg === 'buttons') {
+                    const buttons = []
+                    payload.buttons.forEach(button => {
+                        const newButton = getButton()
+                        Object.keys(button).forEach(key => {
+                            if (key in newButton) {
+                                newButton[key] = button[key]
+                            }
+                        })
+                        buttons.push(newButton)
+                    })
+                    if (buttons.length > 0) {
+                        params.buttons = buttons
+                        used.push(arg)
+                    } else {
+                        unused.push(arg)
+                    }
+                } else if (arg in params) {
+                    params[arg] = payload[arg]
+                    used.push(arg)
+                } else {
+                    unused.push(arg)
+                }
+            })
+            if (used.length === 0) {
+                console.log('No recognized params for modal')
+            } else {
+                state.modalParams = params
+            }
         },
-        SETCONFIRMCALLBACK(state, value) {
-            state.confirmCallback = value
+        RESETMODALPARAMS(state) {
+            state.params = getParams()
         },
     },
     actions: {
         modalAlert({commit}, message) {
-            commit('SETMODALMESSAGE', message)
-            commit('SETMODALACTIVE', true)
+            commit('SETMODALPARAMS', {
+                type: 'alert',
+                message: message,
+                buttons: [{text: 'Ok'}],
+            })
         },
         modalConfirm({commit}, payload) {
             const {message, confirmCallback} = payload
-            // TODO: add 'keepTimerPaused' arg for using functions from survey PR
-            commit('SETMODALMESSAGE', message)
-            commit('SETCONFIRMCALLBACK', confirmCallback)
-            commit('SETMODALACTIVE', true)
-        },
-        executeCallback({state}) {
-            state.confirmCallback()
+            commit('SETMODALPARAMS', {
+                type: 'confirm',
+                message: message,
+                buttons: [
+                    {text: 'Ok', callback: confirmCallback},
+                    {text: 'Cancel', color: 'warning'},
+                ],
+            })
         },
     },
 }

@@ -2,11 +2,10 @@
     <div v-if="getModalActive" class="modal">
         <div id="main-menu-wrapper" />
         <div id="modal-window">
-            <p id="modal-message">{{getModalMessage}}</p>
-            <div id="menu-buttons">
-                <button @click="handlePrimary">Ok</button>
-                <button v-if="getConfirmCallback" class="btn-warning"
-                        @click="handleSecondary">Cancel</button>
+            <p v-show="message !== ''" id="modal-message">{{message}}</p>
+            <div v-for="button in buttons" id="menu-buttons" :key="button.text">
+                <button :class="{'btn-warning': button.color === 'warning'}"
+                        @click="handleClick(button.callback)">{{button.text}}</button>
             </div>
         </div>
     </div>
@@ -16,27 +15,40 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
+    data() {
+        return {
+            logo: false,
+            title: '',
+            message: '',
+            survey: false,
+            join: false,
+            buttons: [],
+            onLoad: null,
+            onUnload: null,
+        }
+    },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalMessage', 'getConfirmCallback']),
+        ...mapGetters('modal', ['getModalActive', 'getModalParams']),
+    },
+    watch: {
+        getModalParams(newParams) {
+            this.SETMODALACTIVE(true)
+            Object.keys(newParams).forEach(param => {
+                this[param] = newParams[param]
+            })
+        },
     },
     methods: {
-        ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALMESSAGE', 'SETCONFIRMCALLBACK']),
-        ...mapActions('modal', ['executeCallback']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS']),
 
-        handlePrimary() {
-            this.SETMODALACTIVE(false)
-            if (this.getConfirmCallback) {
-                this.executeCallback()
-            }
+        async handleClick(callback) {
+            callback()
             this.cleanup()
         },
-        handleSecondary() {
-            this.cleanup()
-        },
+
         cleanup() {
             this.SETMODALACTIVE(false)
-            this.SETMODALMESSAGE(false)
-            this.SETCONFIRMCALLBACK(null)
+            this.RESETMODALPARAMS()
         },
     },
 }
