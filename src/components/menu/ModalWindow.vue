@@ -2,8 +2,13 @@
     <div v-if="getModalActive" class="modal">
         <div id="main-menu-wrapper" />
         <div id="modal-window">
-            <p v-show="message !== ''" id="modal-message">{{message}}</p>
-            <div v-for="button in buttons" id="menu-buttons" :key="button.text">
+            <header v-show="params.logo">
+                <img src="../../assets/simoc-logo.svg" class="simoc-logo">
+                <span class="simoc-logo-title">SIMOC</span>
+            </header>
+            <div v-show="params.title" id="menu-title">{{params.title}}</div>
+            <p v-show="params.message" id="modal-message">{{params.message}}</p>
+            <div v-for="button in params.buttons" id="menu-buttons" :key="button.text">
                 <button :class="{'btn-warning': button.color === 'warning'}"
                         @click="handleClick(button.callback)">{{button.text}}</button>
             </div>
@@ -17,25 +22,19 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     data() {
         return {
-            logo: false,
-            title: '',
-            message: '',
-            survey: false,
-            join: false,
-            buttons: [],
-            onLoad: null,
-            onUnload: null,
+            params: {},
         }
     },
     computed: {
         ...mapGetters('modal', ['getModalActive', 'getModalParams']),
     },
     watch: {
-        getModalParams(newParams) {
-            this.SETMODALACTIVE(true)
-            Object.keys(newParams).forEach(param => {
-                this[param] = newParams[param]
-            })
+        getModalParams: {
+            handler(newParams) {
+                this.SETMODALACTIVE(true)
+                this.params = newParams
+            },
+            deep: true,
         },
     },
     methods: {

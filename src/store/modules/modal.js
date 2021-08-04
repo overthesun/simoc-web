@@ -1,7 +1,7 @@
 const getParams = () => ({
     logo: false,
-    title: '',
-    message: '',
+    title: null,
+    message: null,
     survey: false,
     join: false,
     buttons: [],
@@ -35,7 +35,8 @@ export default {
             const used = []
             const unused = []
             Object.keys(payload).forEach(arg => {
-                // Buttons are validated in the same way
+                // Validate buttons the same way. In particular, button.callback() is always called,
+                // so it should be sent to an empty function if left blank.
                 if (arg === 'buttons') {
                     const buttons = []
                     payload.buttons.forEach(button => {
