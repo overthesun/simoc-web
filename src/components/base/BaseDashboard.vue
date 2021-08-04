@@ -37,7 +37,7 @@ export default {
             next()  // proceed without asking questions
         } else {
             // ask for confirmation before leaving the dashboard
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Terminate simulation and leave?  All unsaved data will be lost.',
                 confirmCallback: () => next()
             })
@@ -57,7 +57,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),
-        ...mapActions('popup', ['popupConfirm']),
+        ...mapActions('modal', ['modalConfirm']),
     },
 }
 </script>

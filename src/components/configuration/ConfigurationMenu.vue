@@ -44,12 +44,12 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        ...mapActions('popup', ['popupConfirm']),
+        ...mapActions('modal', ['modalConfirm']),
         handleUpload(json_config) {
             this.SETCONFIGURATION(json_config)
         },
         resetConfig() {
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Reset the current configuration?',
                 confirmCallback: () => this.SETRESETCONFIG(true),
             })

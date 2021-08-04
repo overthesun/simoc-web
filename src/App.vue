@@ -4,7 +4,7 @@
             <img src="./assets/orientation.svg" class="orientation-logo">
         </div>
         <div class="normal orientation-landscape">
-            <Popup />
+            <ModalWindow />
             <router-view />
         </div>
     </div>
@@ -12,11 +12,11 @@
 
 
 <script>
-import {Popup} from './components/menu'
+import {ModalWindow} from './components/menu'
 
 export default {
     components: {
-        Popup,
+        ModalWindow,
     },
 }
 </script>

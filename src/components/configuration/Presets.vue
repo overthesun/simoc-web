@@ -86,7 +86,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
-        ...mapActions('popup', ['popupAlert', 'popupConfirm']),
+        ...mapActions('modal', ['modalAlert', 'modalConfirm']),
 
         updateConfig(name) {
             // don't set [custom] if the user picks a preset
@@ -99,18 +99,19 @@ export default {
         },
         saveToLocalStorage() {
             // save custom preset to local storage
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Save the current configuration as a custom preset?',
                 confirmCallback: () => {
                     try {
                         const config = JSON.stringify(this.getConfiguration)
                         localStorage.setItem('custom-config', config)
                         this.$nextTick(() => {
-                            this.popupAlert('Custom preset saved.')
+                            this.modalAlert('Custom preset saved.')
                         })
                     } catch (error) {
                         this.$nextTick(() => {
-                            this.popupAlert(`An error occurred while saving the configuration: ${error}`)
+                            this.modalAlert(`An error occurred while saving the configuration:
+                                            ${error}`)
                         })
                     }
                 },
@@ -125,12 +126,12 @@ export default {
                 if (config) {
                     this.SETCONFIGURATION(JSON.parse(config))
                 } else {
-                    this.popupAlert('No Custom preset found. Use the Save button to save one.')
+                    this.modalAlert('No Custom preset found. Use the Save button to save one.')
                 }
             }
 
             if (ask_confirm) {
-                this.popupConfirm({
+                this.modalConfirm({
                     message: 'Reset changes and reload the custom preset?',
                     confirmCallback: () => loadPreset(),
                 })

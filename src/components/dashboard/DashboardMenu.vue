@@ -53,7 +53,7 @@ export default {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
-        ...mapActions('popup', ['popupConfirm']),
+        ...mapActions('modal', ['modalConfirm']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
@@ -88,7 +88,7 @@ export default {
         },
         // Logout button route
         async logout() {
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Stop the current simulation and log out?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
@@ -107,7 +107,7 @@ export default {
 
         // New Simulation button
         toConfiguration() {
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Stop the current simulation and configure a new one?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart

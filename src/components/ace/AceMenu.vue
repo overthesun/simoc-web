@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
-        ...mapActions('popup', ['popupConfirm']),
+        ...mapActions('modal', ['modalConfirm']),
 
         handleUpload(file) {
             this.SETAGENTDESC({
@@ -44,7 +44,7 @@ export default {
             })
         },
         resetConfig() {
-            this.popupConfirm({
+            this.modalConfirm({
                 message: 'Reset the current configuration to the SIMOC default?',
                 confirmCallback: () => {
                     this.SETAGENTDESC({

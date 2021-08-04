@@ -1,36 +1,36 @@
 export default {
     state: {
-        popupActive: false,
-        popupMessage: null,
+        modalActive: false,
+        modalMessage: null,
         confirmCallback: null,
     },
     getters: {
-        getPopupActive: state => state.popupActive,
-        getPopupMessage: state => state.popupMessage,
+        getModalActive: state => state.modalActive,
+        getModalMessage: state => state.modalMessage,
         getConfirmCallback: state => state.confirmCallback,
     },
     mutations: {
-        SETPOPUPACTIVE(state, value) {
-            state.popupActive = value
+        SETMODALACTIVE(state, value) {
+            state.modalActive = value
         },
-        SETPOPUPMESSAGE(state, value) {
-            state.popupMessage = value
+        SETMODALMESSAGE(state, value) {
+            state.modalMessage = value
         },
         SETCONFIRMCALLBACK(state, value) {
             state.confirmCallback = value
         },
     },
     actions: {
-        popupAlert({commit}, message) {
-            commit('SETPOPUPMESSAGE', message)
-            commit('SETPOPUPACTIVE', true)
+        modalAlert({commit}, message) {
+            commit('SETMODALMESSAGE', message)
+            commit('SETMODALACTIVE', true)
         },
-        popupConfirm({commit}, payload) {
+        modalConfirm({commit}, payload) {
             const {message, confirmCallback} = payload
             // TODO: add 'keepTimerPaused' arg for using functions from survey PR
-            commit('SETPOPUPMESSAGE', message)
+            commit('SETMODALMESSAGE', message)
             commit('SETCONFIRMCALLBACK', confirmCallback)
-            commit('SETPOPUPACTIVE', true)
+            commit('SETMODALACTIVE', true)
         },
         executeCallback({state}) {
             state.confirmCallback()

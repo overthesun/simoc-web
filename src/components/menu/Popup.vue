@@ -1,8 +1,8 @@
 <template>
-    <div v-if="getPopupActive" class="popup">
+    <div v-if="getModalActive" class="modal">
         <div id="main-menu-wrapper" />
-        <div id="popup-window">
-            <p id="popup-message">{{getPopupMessage}}</p>
+        <div id="modal-window">
+            <p id="modal-message">{{getModalMessage}}</p>
             <div id="menu-buttons">
                 <button @click="handlePrimary">Ok</button>
                 <button v-if="getConfirmCallback" class="btn-warning"
@@ -17,14 +17,14 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 export default {
     computed: {
-        ...mapGetters('popup', ['getPopupActive', 'getPopupMessage', 'getConfirmCallback']),
+        ...mapGetters('modal', ['getModalActive', 'getModalMessage', 'getConfirmCallback']),
     },
     methods: {
-        ...mapMutations('popup', ['SETPOPUPACTIVE', 'SETPOPUPMESSAGE', 'SETCONFIRMCALLBACK']),
-        ...mapActions('popup', ['executeCallback']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALMESSAGE', 'SETCONFIRMCALLBACK']),
+        ...mapActions('modal', ['executeCallback']),
 
         handlePrimary() {
-            this.SETPOPUPACTIVE(false)
+            this.SETMODALACTIVE(false)
             if (this.getConfirmCallback) {
                 this.executeCallback()
             }
@@ -34,8 +34,8 @@ export default {
             this.cleanup()
         },
         cleanup() {
-            this.SETPOPUPACTIVE(false)
-            this.SETPOPUPMESSAGE(false)
+            this.SETMODALACTIVE(false)
+            this.SETMODALMESSAGE(false)
             this.SETCONFIRMCALLBACK(null)
         },
     },
@@ -46,13 +46,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../sass/components/menu';
 
-#popup {
+#modal {
   position: absolute;
   height: 100vh;
   width: 100vw;
 }
 
-#popup-window {
+#modal-window {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -67,7 +67,7 @@ export default {
   box-sizing: border-box;
 }
 
-#popup-message {
+#modal-message {
   width: 100%;
   display: flex;
   flex-direction: column;
