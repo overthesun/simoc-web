@@ -39,8 +39,7 @@ export default {
             // ask for confirmation before leaving the dashboard
             this.popupConfirm({
                 message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                confirmCallback: () => next(),
-                keepTimerPaused: true,
+                confirmCallback: () => next()
             })
         }
     },

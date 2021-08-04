@@ -81,7 +81,7 @@ export default {
         handleRemoveAgent(section, agent) {
             this.popupConfirm({
                 message: `Are you sure you want to remove '${agent}'?`,
-                confirmCallback: () => this.REMOVEAGENT({section: section, agent: agent}),
+                confirmCallback: () => this.REMOVEAGENT({section, agent}),
             })
         },
     },
