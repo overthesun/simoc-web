@@ -19,10 +19,12 @@ export default {
     state: {
         modalActive: false,
         modalParams: {},
+        surveyComplete: false,
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
+        getSurveyComplete: state => state.surveyComplete,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -70,6 +72,9 @@ export default {
         RESETMODALPARAMS(state) {
             state.params = getParams()
         },
+        SETSURVEYCOMPLETE(state, value) {
+            state.surveyComplete = value
+        },
     },
     actions: {
         modalAlert({commit}, message) {
@@ -90,5 +95,10 @@ export default {
                 ],
             })
         },
+        modalSurvey({commit}) {
+            commit('SETMODALPARAMS', {
+                survey: true,
+            })
+        }
     },
 }

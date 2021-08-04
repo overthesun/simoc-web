@@ -12,14 +12,21 @@
                 <button :class="{'btn-warning': button.color === 'warning'}"
                         @click="handleClick(button.callback)">{{button.text}}</button>
             </div>
+            <div v-show="params.survey">
+                <Survey :cleanup="cleanup" />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
+import Survey from './Survey'
 
 export default {
+    components: {
+        Survey,
+    },
     data() {
         return {
             params: {},
