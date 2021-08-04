@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -35,6 +35,7 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
+        ...mapActions('popup', ['popupConfirm']),
 
         handleUpload(file) {
             this.SETAGENTDESC({
@@ -43,12 +44,15 @@ export default {
             })
         },
         resetConfig() {
-            if (window.confirm('Reset the current configuration to the SIMOC default?')) {
-                this.SETAGENTDESC({
-                    agent_desc: this.getDefaultAgentDesc,
-                    isDefault: false,
-                })
-            }
+            this.popupConfirm({
+                message: 'Reset the current configuration to the SIMOC default?',
+                confirmCallback: () => {
+                    this.SETAGENTDESC({
+                        agent_desc: this.getDefaultAgentDesc,
+                        isDefault: false,
+                    })
+                },
+            })
         },
     },
 }

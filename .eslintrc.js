@@ -121,7 +121,7 @@ module.exports = {
         'array-callback-return': 'error',
         // TODO: set these 2 back to 'error' once we have proper popups
         'no-console': 'off',
-        'no-alert': 'off',
+        'no-alert': 'error',
         'no-floating-decimal': 'error',
         'no-prototype-builtins': 'error',
         'no-restricted-globals': 'error',
