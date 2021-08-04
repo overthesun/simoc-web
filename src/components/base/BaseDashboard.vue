@@ -39,7 +39,7 @@ export default {
             // ask for confirmation before leaving the dashboard
             this.modalConfirm({
                 message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                confirmCallback: () => next()
+                confirmCallback: () => next(),
             })
         }
     },
@@ -52,11 +52,31 @@ export default {
         SpeedControls,
         Main,
     },
+    data() {
+        return {
+            pausedForModal: false,
+        }
+    },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),
+        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
+                                    'getIsTimerRunning']),
+        ...mapGetters('modal', ['getModalActive']),
+    },
+    watch: {
+        // If a modal opens while the timer is on,
+        // pause it, then start it again after modal closes.
+        getModalActive(newActive, oldActive) {
+            if (oldActive === false && this.getIsTimerRunning === true) {
+                this.PAUSETIMER()
+                this.pausedForModal = true
+            } else if (newActive === false && this.pausedForModal) {
+                this.STARTTIMER()
+                this.pausedForModal = false
+            }
+        },
     },
     methods: {
-        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),
+        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
         ...mapActions('modal', ['modalConfirm']),
     },
 }
