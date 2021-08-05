@@ -1,3 +1,12 @@
+- Contains all logic for constructing and displaying modals
+- Watches 'modalParams' from store/modal, uses it to show/hide relevant sections
+- Manages 'modalActive' status and resets modalParams on close
+
+TODO:
+- Switching from one modal to another currently requires the use of .$nextTick()
+  in the callback; would like this to be done automatically. The .$nextTick() method
+  is not available outside of a Vue component, so it can't be done in a store.
+
 <template>
     <div v-if="getModalActive" class="modal">
         <div id="main-menu-wrapper" />

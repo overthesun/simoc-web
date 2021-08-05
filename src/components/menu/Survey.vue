@@ -76,7 +76,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     props: {
         cleanup: {
-            type: Object,
+            type: Function,
             default: null,
         },
     },

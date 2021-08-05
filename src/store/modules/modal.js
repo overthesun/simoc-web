@@ -1,3 +1,23 @@
+/*
+This store contains data & functions related to the ModalWindow component
+which are used by other components.
+
+The main tasks of the store are:
+1. Package the modal into useful FUNCTIONS: modalMenu, modalAlert, modalConfirm.
+   These are placed in the store so any component in the application can access
+   them without having to pass props through every level.
+
+2. VALIDATE arguments to these functions. <ModalWindow /> updates when modalParams
+   is changed, so this effectively prevents any activity by that component unless
+   there is a valid input.
+
+3. Set/store the modalParams variable. This is effectively the 'arguments' passed
+   to the ModalWindow component.
+
+4. Store the modalActive variable. This is set by ModalWindow but used by other
+   components, e.g. by BaseDashboard to pause the timer when modal is open.
+*/
+
 const getParams = () => ({
     logo: false,
     title: null,
@@ -10,6 +30,7 @@ const getParams = () => ({
 })
 
 const getButton = () => ({
+    type: null,
     text: '',
     color: null,
     callback: () => {},
@@ -38,7 +59,7 @@ export default {
             const unused = []
             Object.keys(payload).forEach(arg => {
                 // Validate buttons the same way. In particular, button.callback() is always called,
-                // so it should be sent to an empty function if left blank.
+                // so it should be set to an empty function if no callback is provided.
                 if (arg === 'buttons') {
                     const buttons = []
                     payload.buttons.forEach(button => {
@@ -77,6 +98,9 @@ export default {
         },
     },
     actions: {
+        modalMenu({commit}, message) {
+            commit('SETMODALPARAMS', message)
+        },
         modalAlert({commit}, message) {
             commit('SETMODALPARAMS', {
                 type: 'alert',
@@ -99,6 +123,6 @@ export default {
             commit('SETMODALPARAMS', {
                 survey: true,
             })
-        }
+        },
     },
 }
