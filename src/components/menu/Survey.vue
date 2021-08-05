@@ -56,8 +56,8 @@
             <input ref="joinList" v-model="joinList" name="joinList" class="" type="checkbox">
             Join our mailing list
         </form>
-        <div>
-            <button v-show="!(getSurveyComplete)" class="btn-warning btn-logout" @click="handleCancel">
+        <div id="menu-buttons">
+            <button v-show="!(getSurveyComplete)" class="btn-warning" @click="handleCancel">
                 Cancel
             </button>
             <button v-show="!(getSurveyComplete)" @click="handleSubmit">
@@ -159,6 +159,10 @@ export default {
     &:visited{
         color: lightgreen;
     }
+}
+
+form{
+    margin-bottom: 32px;
 }
 
 </style>

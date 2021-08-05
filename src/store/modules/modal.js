@@ -121,6 +121,8 @@ export default {
         },
         modalSurvey({commit}) {
             commit('SETMODALPARAMS', {
+                logo: true,
+                title: 'Survey',
                 survey: true,
             })
         },
