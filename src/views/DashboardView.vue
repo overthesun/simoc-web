@@ -102,7 +102,7 @@ export default {
         window.addEventListener('keydown', this.keyListener)
     },
 
-    beforeDestroy() {
+    beforeUnmount() {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
         this.STOPTIMER()   // stop the step timer

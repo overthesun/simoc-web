@@ -4,10 +4,10 @@ use some of these features.
  -->
 <template>
     <BaseMenu>
-        <template v-slot:menu-title>
+        <template #menu-title>
             Dashboard Menu
         </template>
-        <template v-slot:menu-buttons>
+        <template #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <button @click="stopSimulation">Stop Simulation</button>
             <button @click="downloadSimData">Download Simulation Data</button>
@@ -44,7 +44,7 @@ export default {
         this.PAUSETIMER()
     },
     // Called when the menu is closed, resumes the timer if it was running
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.timerWasRunning) {
             this.STARTTIMER()
         }

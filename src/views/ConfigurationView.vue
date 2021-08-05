@@ -5,7 +5,7 @@
         <ConfigurationMenu v-if="getMenuActive" />
         <router-view>
             <!-- Wizard Jump Options, only available in Guided Configuration -->
-            <template v-slot:navigation-section-select>
+            <template #navigation-section-select>
                 <!-- Set the activeForm index if the user changes the value to something other than selected -->
                 <select class="section-select" @change="setActiveForm">
                     <option selected disabled>Jump To Section</option>
@@ -16,7 +16,7 @@
                     <option :selected="formIndex === 4" value="4">Finalize</option>
                 </select>
             </template>
-            <template v-slot:main-wizard-input>
+            <template #main-wizard-input>
                 <form ref="form" class="form-wrapper" @submit.prevent="">
                     <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
                     <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
@@ -36,7 +36,7 @@
                     </section>
                 </form>
             </template>
-            <template v-slot:wizard-configuration-footer>
+            <template #wizard-configuration-footer>
                 <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
                 <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
                     <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
@@ -51,15 +51,15 @@
                 </nav>
             </template>
 
-            <template v-slot:main-wizard-reference>
+            <template #main-wizard-reference>
+                <!-- Display the component with the name stored in the variable-->
                 <keep-alive>
-                    <!-- Display the component with the name stored in the variable-->
                     <component :is="getActiveReference" />
                 </keep-alive>
                 <!--<Reference/>-->
                 <!--<GreenhouseDoughnut/>-->
             </template>
-            <template v-slot:footer-wizard-reference />
+            <template #footer-wizard-reference />
         </router-view>
     </div>
 

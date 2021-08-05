@@ -9,8 +9,8 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 <template>
     <div class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))" :key="index">
-            <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
-            <template v-slot:panel-menu>
+            <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
+            <template #panel-menu>
                 <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
@@ -38,7 +38,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                     </div>
                 </div>
             </template>
-            <template v-slot:panel-content>
+            <template #panel-content>
                 <component :is="panelName" :canvas-number="index"
                            :panel-index="index" :panel-section="panelSection"
                            @panel-section-changed="updatePanelSection" />
