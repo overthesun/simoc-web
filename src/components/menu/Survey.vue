@@ -132,12 +132,14 @@ export default {
                 this.SETSURVEYCOMPLETE(false) // Use for testing
             }, 1500)
 
+            console.log(new FormData(survey))
+
             // Submit form to google api, add to sheets
             // responses: https://docs.google.com/spreadsheets/d/1RQo4gaQN4suIcTw1qgBFzse7TT3lrohb6m6Va_h1xMA/edit?usp=sharing
             // ref: https://dev.to/omerlahav/submit-a-form-to-a-google-spreadsheet-1bia
-            //  * Each field requires a 'name' attribute
-            //  * Each name must match a column in the google sheet
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbySWq6Er3wTxmfw1IftblHZKf3m3z1xRanjwFxp9pDod_Do1eW124S41NXfWUq63FlL/exec'
+            //  * Each field requires a 'name' attribute to match a column in the google sheet
+            //  * The google script sends an email with the response to 'contact@simoc.space'
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzKl5p9W99ku8IMNeHwqEsTwp123CGzDtAp2VihQc8H6VBm8faroVyt0FqQjeNSP3rK/exec'
 
             // TODO: use a loading cursor while it submits
             fetch(scriptURL, {method: 'POST', body: new FormData(survey)})
