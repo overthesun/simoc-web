@@ -36,7 +36,7 @@ export default createRouter({
             ],
         },
         {
-            path: 'menuconfig',
+            path: '/menuconfig',
             name: 'menuconfig',
             component: EntryMenuConfig,
         },
