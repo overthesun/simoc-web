@@ -65,18 +65,16 @@
                 address. We welcome your feedback and engagement of the growing, always improving
                 SIMOC simulation.
             </div>
-        </form>
-        <div id="menu-buttons">
-            <button v-show="!(getSurveyComplete)" class="btn-warning" @click="handleCancel">
-                Cancel
-            </button>
-            <button v-show="!(getSurveyComplete)" @click="handleSubmit">
-                Submit
-            </button>
-            <div v-show="getSurveyComplete" class="leaving-message">
-                Survey, received, thank you.
+            <div id="menu-buttons">
+                <button v-show="!(getSurveyComplete)" class="btn-warning" @click="handleCancel">
+                    Cancel
+                </button>
+                <button v-show="!(getSurveyComplete)" @click="handleSubmit">
+                    Submit
+                </button>
             </div>
-        </div>
+        </form>
+        <div v-show="getSurveyComplete" class="submit-message">{{onSubmitMessage}}</div>
     </div>
 </template>
 
@@ -94,6 +92,7 @@ export default {
         return {
             timerWasRunning: null, // status of game timer
             showMailInfo: false,
+            onSubmitMessage: 'Submitting feedback...',
 
             // Survey fields
             iama: null,
@@ -120,31 +119,37 @@ export default {
             this.cleanup()
         },
 
-        handleSubmit() {
+        async handleSubmit() {
             const {survey} = this.$refs
             if (!survey.checkValidity()) {
                 survey.reportValidity()
                 return  // abort until the form is invalid
             }
+            // Remove the survey form, show the message instead
+            this.onSubmitMessage = 'Submitting feedback...'
             this.SETSURVEYCOMPLETE(true)
-            setTimeout(() => {
-                this.cleanup()
-                this.SETSURVEYCOMPLETE(false) // Use for testing
-            }, 1500)
 
-            console.log(new FormData(survey))
-
-            // Submit form to google api, add to sheets
+            // Submit form to google api, add to sheets.
+            // Each field requires a 'name' attribute to match a column in the google sheet.
+            // The google script sends an email with the response to 'contact@simoc.space'.
             // responses: https://docs.google.com/spreadsheets/d/1RQo4gaQN4suIcTw1qgBFzse7TT3lrohb6m6Va_h1xMA/edit?usp=sharing
             // ref: https://dev.to/omerlahav/submit-a-form-to-a-google-spreadsheet-1bia
-            //  * Each field requires a 'name' attribute to match a column in the google sheet
-            //  * The google script sends an email with the response to 'contact@simoc.space'
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzKl5p9W99ku8IMNeHwqEsTwp123CGzDtAp2VihQc8H6VBm8faroVyt0FqQjeNSP3rK/exec'
-
-            // TODO: use a loading cursor while it submits
             fetch(scriptURL, {method: 'POST', body: new FormData(survey)})
-                    .then(response => console.log('Success!', response))
-                    .catch(error => console.error('Error!', error.message))
+                    .then(response => {
+                        this.onSubmitMessage = 'Submitted feedback successfully.'
+                        setTimeout(() => {
+                            this.cleanup()
+                        }, 1000)
+                    })
+                    .catch(error => {
+                        this.onSubmitMessage =
+                            'There was a problem submitting feedback. Please try again later.'
+                        setTimeout(() => {
+                            this.cleanup()
+                            this.SETSURVEYCOMPLETE(false)
+                        }, 1000)
+                    })
         },
     },
 }
@@ -181,8 +186,8 @@ export default {
     }
 }
 
-form{
-    margin-bottom: 32px;
+#menu-buttons{
+    margin-top: 32px;
 }
 
 </style>
