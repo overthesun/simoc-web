@@ -97,7 +97,7 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
 #menu-wrapper {
     width: 480px;
     min-height: 150px;
-    max-height: 600px;
+    max-height: 90vh;
     background-color: #1e1e1e;
     border-radius: 5px;
     z-index: 1000;
