@@ -1,16 +1,11 @@
 - Contains all logic for constructing and displaying modals
 - Watches 'modalParams' from store/modal, uses it to show/hide relevant sections
 - Manages 'modalActive' status and resets modalParams on close
-
-TODO:
-- Switching from one modal to another currently requires the use of .$nextTick()
-  in the callback; would like this to be done automatically. The .$nextTick() method
-  is not available outside of a Vue component, so it can't be done in a store.
+- If one modal closes while another is opening, 'cleaningUp' moves opening to nextTick
 
 <template>
-    <div v-if="getModalActive" class="modal">
-        <div id="main-menu-wrapper" />
-        <div id="modal-window">
+    <div v-if="getModalActive" id="main-menu-wrapper" @click.self="cleanup">
+        <div id="menu-wrapper">
             <header v-show="params.logo">
                 <img src="../../assets/simoc-logo.svg" class="simoc-logo">
                 <span class="simoc-logo-title">SIMOC</span>
@@ -39,6 +34,7 @@ export default {
     data() {
         return {
             params: {},
+            cleaningUp: false,
         }
     },
     computed: {
@@ -46,9 +42,17 @@ export default {
     },
     watch: {
         getModalParams: {
-            handler(newParams) {
-                this.SETMODALACTIVE(true)
-                this.params = newParams
+            handler(updatedParams) {
+                const setModal = (newParams) => {
+                    this.SETMODALACTIVE(true)
+                    this.params = newParams
+                }
+                // Let the current menu finish the cleanup() cycle before creating the new one
+                if (this.cleaningUp) {
+                    this.$nextTick(() => setModal(updatedParams))
+                } else {
+                    setModal(updatedParams)
+                }
             },
             deep: true,
         },
@@ -64,6 +68,11 @@ export default {
         cleanup() {
             this.SETMODALACTIVE(false)
             this.RESETMODALPARAMS()
+            
+            this.cleaningUp = true
+            this.$nextTick(() => {
+                this.cleaningUp = false
+            })
         },
     },
 }

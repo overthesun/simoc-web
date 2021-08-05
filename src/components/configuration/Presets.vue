@@ -105,14 +105,9 @@ export default {
                     try {
                         const config = JSON.stringify(this.getConfiguration)
                         localStorage.setItem('custom-config', config)
-                        this.$nextTick(() => {
-                            this.modalAlert('Custom preset saved.')
-                        })
-                    } catch (error) {
-                        this.$nextTick(() => {
-                            this.modalAlert(`An error occurred while saving the configuration:
-                                            ${error}`)
-                        })
+                        this.modalAlert('Custom preset saved.')
+                    } catch (e) {
+                        this.modalAlert(`An error occurred while saving the configuration: ${e}`)
                     }
                 },
             })
