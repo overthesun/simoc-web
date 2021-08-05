@@ -40,6 +40,11 @@ export default {
     state: {
         modalActive: false,
         modalParams: {},
+
+        // TODO: surveyComplete works on a session-by-session basis, so a logged-in user
+        // will see the option every time they re-open the site. A more complete solution
+        // is to record it in the user database, and move this variable to the top-level store
+        // next to gameId.
         surveyComplete: false,
     },
     getters: {

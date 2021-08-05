@@ -11,6 +11,7 @@
                 file-name="simoc-config.json" />
             <UploadConfig :handle-file="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
+            <button v-show="!getSurveyComplete" @click="modalSurvey">Give Feedback</button>
             <Logout />
         </template>
     </BaseMenu>
@@ -30,6 +31,7 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
+        ...mapGetters('modal', ['getSurveyComplete']),
 
         isValid() {
             const {form} = this.$parent.$refs
@@ -44,7 +46,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        ...mapActions('modal', ['modalConfirm']),
+        ...mapActions('modal', ['modalConfirm', 'modalSurvey']),
         handleUpload(json_config) {
             this.SETCONFIGURATION(json_config)
         },

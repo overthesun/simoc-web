@@ -13,6 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
+            <button v-show="!getSurveyComplete" @click="modalSurvey">Give Feedback</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -37,6 +38,8 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
         ...mapGetters(['getGameID']),
+        ...mapGetters('modal', ['getSurveyComplete']),
+
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
@@ -53,7 +56,7 @@ export default {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
-        ...mapActions('modal', ['modalConfirm']),
+        ...mapActions('modal', ['modalConfirm', 'modalSurvey']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {

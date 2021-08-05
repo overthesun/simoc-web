@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div v-if="isWorking === 'yes'" class="question">
-                Great! How are your using SIMOC?
+                How are you using SIMOC?
                 <input ref="howUsing" v-model="howUsing" name="howUsing" class="text-input input-field-text"
                        type="text">
             </div>
