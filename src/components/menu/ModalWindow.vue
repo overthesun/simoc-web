@@ -45,7 +45,7 @@ export default {
     watch: {
         getModalParams: {
             handler(updatedParams) {
-                const setModal = (newParams) => {
+                const setModal = newParams => {
                     this.SETMODALACTIVE(true)
                     this.params = newParams
                 }
