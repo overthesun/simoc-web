@@ -55,6 +55,16 @@
             </div>
             <input ref="joinList" v-model="joinList" name="joinList" class="" type="checkbox">
             Join our mailing list
+            <a class="reference-link" href="#" @click="toggleMailInfo">
+                <fa-icon :icon="['fas','info-circle']" />
+            </a>
+            <div v-show="showMailInfo" class="question">
+                We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC
+                and give you occasional opportunities to try beta releases before they go live. The
+                volume is low, just a handful per year. We will never share nor sell your email
+                address. We welcome your feedback and engagement of the growing, always improving
+                SIMOC simulation.
+            </div>
         </form>
         <div id="menu-buttons">
             <button v-show="!(getSurveyComplete)" class="btn-warning" @click="handleCancel">
@@ -83,6 +93,9 @@ export default {
     data() {
         return {
             timerWasRunning: null, // status of game timer
+            showMailInfo: false,
+
+            // Survey fields
             iama: null,
             iamaOther: null,
             interestedIn: null,
@@ -99,9 +112,14 @@ export default {
     methods: {
         ...mapMutations('modal', ['SETSURVEYCOMPLETE']),
 
+        toggleMailInfo() {
+            this.showMailInfo = !this.showMailInfo
+        },
+
         handleCancel() {
             this.cleanup()
         },
+
         handleSubmit() {
             const {survey} = this.$refs
             if (!survey.checkValidity()) {
