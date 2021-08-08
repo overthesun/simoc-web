@@ -48,13 +48,13 @@
             <template #entry-button>
                 <div :class="{'btn-wrapper-active': activeOption==='login'}"
                      class="btn-wrapper btn-wrapper-login">
-                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
+                    <button v-if="activeGuestLogin" form="register-form" class="btn-normal"
                             @click="guestLogin">SIGN IN AS GUEST</button>
-                    <button v-else form="login-form" class="btn-warning">SIGN IN</button>
+                    <button v-else form="login-form" class="btn-normal">SIGN IN</button>
                 </div>
                 <div :class="{'btn-wrapper-active': activeOption==='register'}"
                      class="btn-wrapper btn-wrapper-register">
-                    <button form="register-form" class="btn-warning">SIGN UP</button>
+                    <button form="register-form" class="btn-normal">SIGN UP</button>
                 </div>
             </template>
             <!--<template v-slot:entry-footer>

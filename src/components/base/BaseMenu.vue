@@ -109,7 +109,7 @@ export default {
     flex-direction: column;
 }
 
-#menu-buttons button {
+::v-deep(#menu-buttons button) {
     width: 256px;
     height: 48px;
     min-height: 48px;
@@ -128,7 +128,7 @@ export default {
     }
 }
 
-#menu-buttons .btn-disabled {
+::v-deep(#menu-buttons .btn-disabled) {
     color: #999 !important;
     background-color: transparent;
     border: 1px solid #999;
@@ -137,13 +137,13 @@ export default {
     }
 }
 
-#menu-buttons .btn-outline-warning {
+::v-deep(#menu-buttons .btn-outline-warning) {
     color: #eee;
     background-color: transparent;
     border: 2px solid #ff3100;
 }
 
-#menu-buttons .btn-logout {
+::v-deep(#menu-buttons .btn-logout) {
     color: #eee;
     background-color: #ff3100;
     border: none;

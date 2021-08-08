@@ -47,7 +47,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <button class="btn-warning" @click="toLogin">PROCEED</button>
+                <button class="btn-normal" @click="toLogin">PROCEED</button>
             </template>
         </BaseEntry>
     </div>

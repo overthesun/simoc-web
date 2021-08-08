@@ -120,7 +120,7 @@ export default {
         margin-bottom: 48px;
     }
 
-    .option-item{
+    ::v-deep(.option-item) {
         box-sizing:border-box;
         margin: 0px 16px;
         font-weight: 600;
@@ -164,7 +164,7 @@ export default {
     }
 
 
-    .link{
+    ::v-deep(.link) {
         text-decoration: underline;
         &:visited,&{
             color:lightgreen;
@@ -186,7 +186,7 @@ export default {
         align-items:center;
     }
 
-    .btn-normal{
+    ::v-deep(.btn-normal) {
         width: 256px;
         height: 48px;
         min-height: 48px;
@@ -208,7 +208,7 @@ export default {
         }
     }
 
-    .btn-warning{
+    ::v-deep(.btn-warning) {
         margin-top:auto;
         width: 256px;
         height: 48px;
@@ -218,9 +218,8 @@ export default {
         padding: 12px 16px;
         font-size: 16px;
         font-weight: 600;
-        background-color: #0099ee;
+        background-color: #ff3100;
         border:none;
-        //border: 2px solid #eee;
         color: #eee;
 
         &:hover{
