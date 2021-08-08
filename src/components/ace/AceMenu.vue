@@ -12,7 +12,7 @@
                 button-text="Download Agent File" />
             <UploadConfig :handle-file="handleUpload" button-text="Upload Agent File" />
             <button @click="resetConfig">Reset Agent File</button>
-            <button v-show="!getSurveyComplete" @click="modalSurvey">Give Feedback</button>
+            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <Logout name="logout" />
         </template>
     </BaseMenu>
@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
-        ...mapActions('modal', ['modalConfirm', 'modalSurvey']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
 
         handleUpload(file) {
             this.SETAGENTDESC({
@@ -46,7 +46,7 @@ export default {
             })
         },
         resetConfig() {
-            this.modalConfirm({
+            this.confirm({
                 message: 'Reset the current configuration to the SIMOC default?',
                 confirmCallback: () => {
                     this.SETAGENTDESC({

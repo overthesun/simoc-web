@@ -8,10 +8,10 @@ import {mapActions} from 'vuex'
 
 export default {
     methods: {
-        ...mapActions('modal', ['modalConfirm']),
+        ...mapActions('modal', ['confirm']),
 
         async logout() {
-            this.modalConfirm({
+            this.confirm({
                 message: 'Do you want to log out?',
                 confirmCallback: () => {
                     try {

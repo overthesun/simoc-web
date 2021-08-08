@@ -11,7 +11,7 @@
                 file-name="simoc-config.json" />
             <UploadConfig :handle-file="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
-            <button v-show="!getSurveyComplete" @click="modalSurvey">Give Feedback</button>
+            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <Logout />
         </template>
     </BaseMenu>
@@ -46,12 +46,12 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETRESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        ...mapActions('modal', ['modalConfirm', 'modalSurvey']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
         handleUpload(json_config) {
             this.SETCONFIGURATION(json_config)
         },
         resetConfig() {
-            this.modalConfirm({
+            this.confirm({
                 message: 'Reset the current configuration?',
                 confirmCallback: () => this.SETRESETCONFIG(true),
             })

@@ -3,7 +3,7 @@ This store contains data & functions related to the ModalWindow component
 which are used by other components.
 
 The main tasks of the store are:
-1. Package the modal into useful FUNCTIONS: modalMenu, modalAlert, modalConfirm.
+1. Package the modal into useful FUNCTIONS: modalMenu, alert, confirm.
    These are placed in the store so any component in the application can access
    them without having to pass props through every level.
 
@@ -103,17 +103,17 @@ export default {
         },
     },
     actions: {
-        modalMenu({commit}, message) {
+        showMenu({commit}, message) {
             commit('SETMODALPARAMS', message)
         },
-        modalAlert({commit}, message) {
+        alert({commit}, message) {
             commit('SETMODALPARAMS', {
                 type: 'alert',
                 message: message,
                 buttons: [{text: 'Ok'}],
             })
         },
-        modalConfirm({commit}, payload) {
+        confirm({commit}, payload) {
             const {message, confirmCallback} = payload
             commit('SETMODALPARAMS', {
                 type: 'confirm',
@@ -124,7 +124,7 @@ export default {
                 ],
             })
         },
-        modalSurvey({commit}) {
+        showSurvey({commit}) {
             commit('SETMODALPARAMS', {
                 logo: true,
                 title: 'Survey',

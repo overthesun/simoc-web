@@ -14,13 +14,13 @@ export default {
         buttonText: {type: String, default: 'Download Configuration'},
     },
     methods: {
-        ...mapActions('modal', ['modalAlert']),
+        ...mapActions('modal', ['alert']),
 
         handleClick() {
             // abort if parent declares invalid
             if (!this.isValid) {
                 if (this.alertUserOnInvalid) {
-                    this.modalAlert('Current form invalid')
+                    this.alert('Current form invalid')
                 }
                 return
             }

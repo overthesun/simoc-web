@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
-        ...mapActions('modal', ['modalConfirm']),
+        ...mapActions('modal', ['confirm']),
 
         stringFormatter: StringFormatter,
 
@@ -65,7 +65,7 @@ export default {
                 this.SETACTIVEAGENT(agent)
             }
             if (!this.editorValid) {
-                this.modalConfirm({
+                this.confirm({
                     message: 'The current agent configuration is invalid. Revert changes?',
                     confirmCallback: () => revert(),
                 })
@@ -79,7 +79,7 @@ export default {
         },
 
         handleRemoveAgent(section, agent) {
-            this.modalConfirm({
+            this.confirm({
                 message: `Are you sure you want to remove '${agent}'?`,
                 confirmCallback: () => this.REMOVEAGENT({section, agent}),
             })
