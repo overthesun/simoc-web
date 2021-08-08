@@ -1,9 +1,10 @@
 <template>
     <div>
-        <form v-show="!(getSurveyComplete)" ref="survey" name="survey" @submit.prevent="">
+        <form v-show="!getSurveyComplete" ref="survey" name="survey" @submit.prevent="">
+            <!-- Google Sheets requires each form element to have a name attribute -->
             <div class="question">
                 I am a:
-                <select ref="iama" v-model="iama" name="iama" class="input-field-select half-select" required>
+                <select v-model="iama" name="iama" class="input-field-select half-select" required>
                     <option value="classroom_instructor" selected>Classroom Instructor</option>
                     <option value="student_k-12">Student (K-12)</option>
                     <option value="citizen_scientist">Citizen Scientist</option>
@@ -16,12 +17,12 @@
                 </select>
             </div>
             <div v-if="iama === 'other'" class="question">
-                <input ref="iamaOther" v-model="iamaOther" name="iamaOther" class="text-input input-field-text"
+                <input v-model="iamaOther" name="iamaOther" class="text-input input-field-text"
                        type="text" placeholder="Specify" required>
             </div>
             <div class="question">
                 I'm interested in:
-                <select ref="interestedIn" v-model="interestedIn" name="interestedIn"
+                <select v-model="interestedIn" name="interestedIn"
                         class="input-field-select half-select" required>
                     <option value="fun" selected>Having fun</option>
                     <option value="learning">Learning about off-Earth human habitation</option>
@@ -41,24 +42,24 @@
             </div>
             <div v-if="isWorking === 'yes'" class="question">
                 How are you using SIMOC?
-                <input ref="howUsing" v-model="howUsing" name="howUsing" class="text-input input-field-text"
+                <input v-model="howUsing" name="howUsing" class="text-input input-field-text"
                        type="text">
             </div>
             <div v-if="isWorking === 'no'" class="question">
                 How can we improve?
-                <input ref="makeBetter" v-model="makeBetter" name="makeBetter" class="text-input input-field-text"
+                <input v-model="makeBetter" name="makeBetter" class="text-input input-field-text"
                        type="text">
             </div>
             <div class="question">
-                <input ref="email" v-model="email" name="email" class="text-input input-field-text" type="text"
-                       placeholder="Email (optional)">
+                <input v-model="email" name="email" class="text-input input-field-text" type="text"
+                       pattern="^[^@\s]+@[^.\s]+\.\w+$" placeholder="Email (optional)">
             </div>
-            <input ref="joinList" v-model="joinList" name="joinList" class="" type="checkbox">
+            <input v-model="joinList" name="joinList" type="checkbox">
             Join our mailing list
-            <a class="reference-link" href="#" @click="toggleMailInfo">
+            <a class="reference-link" href="#" @click="toggleMLInfo">
                 <fa-icon :icon="['fas','info-circle']" />
             </a>
-            <div v-show="showMailInfo" class="question">
+            <div v-show="showMLInfo" class="question">
                 We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC
                 and give you occasional opportunities to try beta releases before they go live. The
                 volume is low, just a handful per year. We will never share nor sell your email
@@ -66,10 +67,10 @@
                 SIMOC simulation.
             </div>
             <div id="menu-buttons">
-                <button v-show="!(getSurveyComplete)" class="btn-warning" @click="handleCancel">
+                <button v-show="!getSurveyComplete" class="btn-warning" @click="handleCancel">
                     Cancel
                 </button>
-                <button v-show="!(getSurveyComplete)" @click="handleSubmit">
+                <button v-show="!getSurveyComplete" @click="handleSubmit">
                     Submit
                 </button>
             </div>
@@ -90,9 +91,8 @@ export default {
     },
     data() {
         return {
-            timerWasRunning: null, // status of game timer
-            showMailInfo: false,
-            onSubmitMessage: 'Submitting feedback...',
+            showMLInfo: false,
+            onSubmitMessage: null,  // show this at the bottom while submitting
 
             // Survey fields
             iama: null,
@@ -111,8 +111,8 @@ export default {
     methods: {
         ...mapMutations('modal', ['SETSURVEYCOMPLETE']),
 
-        toggleMailInfo() {
-            this.showMailInfo = !this.showMailInfo
+        toggleMLInfo() {
+            this.showMLInfo = !this.showMLInfo
         },
 
         handleCancel() {
@@ -123,7 +123,7 @@ export default {
             const {survey} = this.$refs
             if (!survey.checkValidity()) {
                 survey.reportValidity()
-                return  // abort until the form is invalid
+                return  // abort until the form is valid
             }
             // Remove the survey form, show the message instead
             this.onSubmitMessage = 'Submitting feedback...'
@@ -145,6 +145,8 @@ export default {
                     .catch(error => {
                         this.onSubmitMessage =
                             'There was a problem submitting feedback. Please try again later.'
+
+                        // TODO: Close the window immediately, show pop-up in corner when complete
                         setTimeout(() => {
                             this.cleanup()
                             this.SETSURVEYCOMPLETE(false)
