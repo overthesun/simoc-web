@@ -3,7 +3,7 @@ This store contains data & functions related to the ModalWindow component
 which are used by other components.
 
 The main tasks of the store are:
-1. Package the modal into useful FUNCTIONS: modalMenu, alert, confirm.
+1. Package the modal into useful FUNCTIONS: alert, confirm, showMenu, showSurvey.
    These are placed in the store so any component in the application can access
    them without having to pass props through every level.
 
