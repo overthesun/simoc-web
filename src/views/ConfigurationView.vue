@@ -149,7 +149,7 @@ export default {
                                       'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        ...mapActions('popup', ['popupAlert']),
+        ...mapActions('modal', ['alert']),
 
 
         toggleMenu() {
@@ -176,10 +176,10 @@ export default {
         handleAxiosError(error) {
             console.error(error)
             if (error.response && error.response.status === 401) {
-                this.popupAlert('Please log in again to continue.')
+                this.alert('Please log in again to continue.')
                 this.$router.push('entry')
             } else {
-                this.popupAlert(error)
+                this.alert(error)
             }
         },
 
@@ -256,7 +256,7 @@ export default {
                 configParams = {step_num: this.getTotalMissionHours,
                                 game_config: this.getFormattedConfiguration}
             } catch (err_msg) {
-                this.popupAlert(err_msg)
+                this.alert(err_msg)
                 return  // abort if there are any errors
             }
             try {

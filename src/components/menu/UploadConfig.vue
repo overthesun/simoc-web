@@ -15,7 +15,7 @@ export default {
         buttonText: {type: String, default: 'Upload Configuration'},
     },
     methods: {
-        ...mapActions('popup', ['popupAlert']),
+        ...mapActions('modal', ['alert']),
 
         uploadConfig() {
             this.$refs.configInputFile.click()
@@ -43,7 +43,7 @@ export default {
                     this.handleFile(parsed)
                 })
             } catch (e) {
-                this.popupAlert('An error occurred while reading the file.')
+                this.alert('An error occurred while reading the file.')
                 console.warn(e.message)
             }
         },

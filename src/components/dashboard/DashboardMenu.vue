@@ -13,6 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
+            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -37,6 +38,8 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
         ...mapGetters(['getGameID']),
+        ...mapGetters('modal', ['getSurveyComplete']),
+
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
@@ -53,7 +56,7 @@ export default {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
-        ...mapActions('popup', ['popupConfirm']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
@@ -88,7 +91,7 @@ export default {
         },
         // Logout button route
         async logout() {
-            this.popupConfirm({
+            this.confirm({
                 message: 'Stop the current simulation and log out?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
@@ -107,7 +110,7 @@ export default {
 
         // New Simulation button
         toConfiguration() {
-            this.popupConfirm({
+            this.confirm({
                 message: 'Stop the current simulation and configure a new one?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
