@@ -1,7 +1,8 @@
-- Contains all logic for constructing and displaying modals
-- Watches 'modalParams' from store/modal, uses it to show/hide relevant sections
-- Manages 'modalActive' status and resets modalParams on close
-- If one modal closes while another is opening, 'cleaningUp' moves opening to nextTick
+This component is to show various popups and menus 'in front of' the app.
+
+These were formerly different components in each section (config, dashboard, ace),
+and it was thought simpler to have just a single component, and share functions
+to activate and populate it.
 
 <template>
     <div v-if="getModalActive" id="main-menu-wrapper" @click.self="cleanup">
@@ -14,9 +15,10 @@
             <div id="menu-content">
                 <p v-show="params.message" id="modal-message">{{params.message}}</p>
                 <div v-for="button in params.buttons" id="menu-buttons" :key="button.text">
-                    <button :class="{'btn-warning': button.color === 'warning'}"
+                    <button :class="{'btn-warning': button.type === 'warning'}"
                             @click="handleClick(button.callback)">{{button.text}}</button>
                 </div>
+                <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
                     <Survey :cleanup="cleanup" />
                 </div>
@@ -35,26 +37,23 @@ export default {
     },
     data() {
         return {
+            // Copied from store/modal by watcher below. Used to generate modal layout.
             params: {},
-            cleaningUp: false,
         }
     },
     computed: {
         ...mapGetters('modal', ['getModalActive', 'getModalParams']),
     },
     watch: {
+        // Watch params in store/modal, use to show/hide the menu and determine layout
         getModalParams: {
             handler(updatedParams) {
                 const setModal = newParams => {
                     this.SETMODALACTIVE(true)
                     this.params = newParams
                 }
-                // Let the current menu finish the cleanup() cycle before creating the new one
-                if (this.cleaningUp) {
-                    this.$nextTick(() => setModal(updatedParams))
-                } else {
-                    setModal(updatedParams)
-                }
+                // If modal is active, let it finish the cleanup() cycle before creating the new one
+                this.$nextTick(() => setModal(updatedParams))
             },
             deep: true,
         },
@@ -70,11 +69,6 @@ export default {
         cleanup() {
             this.SETMODALACTIVE(false)
             this.RESETMODALPARAMS()
-
-            this.cleaningUp = true
-            this.$nextTick(() => {
-                this.cleaningUp = false
-            })
         },
     },
 }

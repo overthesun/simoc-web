@@ -32,7 +32,6 @@ const getParams = () => ({
 const getButton = () => ({
     type: null,
     text: '',
-    color: null,
     callback: () => {},
 })
 
@@ -120,7 +119,7 @@ export default {
                 message: message,
                 buttons: [
                     {text: 'Ok', callback: confirmCallback},
-                    {text: 'Cancel', color: 'warning'},
+                    {text: 'Cancel', type: 'warning'},
                 ],
             })
         },
