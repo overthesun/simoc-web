@@ -46,11 +46,15 @@ export default {
         // is to record it in the user database, and move this variable to the top-level store
         // next to gameId.
         surveyComplete: false,
+
+        // Prompt user to take the survey once, the first time they navigate back from the dashboard.
+        surveyWasPrompted: false,
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyComplete: state => state.surveyComplete,
+        getSurveyWasPrompted: state => state.surveyWasPrompted
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -90,6 +94,9 @@ export default {
         SETSURVEYCOMPLETE(state, value) {
             state.surveyComplete = value
         },
+        SETSURVEYWASPROMPTED(state, value) {
+            state.surveyWasPrompted = value
+        },
     },
     actions: {
         // Show top-level navigation. Typically used by menu icon in nav bar.
@@ -117,11 +124,16 @@ export default {
             })
         },
         // Show the user survey. Typically used by a 'Give Feedback' button.
-        showSurvey({commit}) {
+        showSurvey({commit}, payload) {
+            const {prompt, onUnload} = payload
+            if (prompt) {
+                commit('SETSURVEYWASPROMPTED', true)
+            }
             commit('SETMODALPARAMS', {
                 logo: true,
                 title: 'Survey',
                 survey: true,
+                onUnload: onUnload ? onUnload : null,
             })
         },
     },

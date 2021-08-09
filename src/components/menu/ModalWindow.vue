@@ -72,6 +72,9 @@ export default {
         },
 
         cleanup() {
+            if (this.params.onUnload) {
+                this.params.onUnload()
+            }
             this.SETMODALACTIVE(false)
             this.RESETMODALPARAMS()
         },

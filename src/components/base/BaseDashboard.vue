@@ -37,10 +37,17 @@ export default {
             next()  // proceed without asking questions
         } else {
             // ask for confirmation before leaving the dashboard
-            this.confirm({
-                message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                confirmCallback: () => next(),
-            })
+            const confirmExit = () => {
+                this.confirm({
+                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                    confirmCallback: () => next(),
+                })
+            }
+            if (!this.getSurveyWasPrompted) {
+                this.showSurvey({prompt: true, onUnload: confirmExit})
+            } else {
+                confirmExit()
+            }
         }
     },
     components: {
@@ -60,7 +67,7 @@ export default {
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
                                     'getIsTimerRunning']),
-        ...mapGetters('modal', ['getModalActive']),
+        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
     },
     watch: {
         // If a modal opens while the timer is on,
@@ -77,7 +84,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
-        ...mapActions('modal', ['confirm']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
     },
 }
 </script>
