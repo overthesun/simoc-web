@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form v-show="!getSurveyComplete" ref="survey" name="survey" @submit.prevent="">
+        <form v-show="!surveyComplete" ref="survey" name="survey" @submit.prevent="">
             <!-- Google Sheets requires each form element to have a name attribute -->
             <div class="question">
                 I am a:
@@ -61,15 +61,15 @@
                 <fa-icon :icon="['fas','info-circle']" />
             </a>
             <div id="menu-buttons" class="buttons-horiz">
-                <button v-show="!getSurveyComplete" class="btn-warning" @click="handleCancel">
+                <button class="btn-warning" @click="handleCancel">
                     Cancel
                 </button>
-                <button v-show="!getSurveyComplete" @click="handleSubmit">
+                <button @click="handleSubmit">
                     Submit
                 </button>
             </div>
         </form>
-        <div v-show="getSurveyComplete" class="submit-message">{{onSubmitMessage}}</div>
+        <div v-show="surveyComplete" class="submit-message">{{onSubmitMessage}}</div>
     </div>
 </template>
 
@@ -89,6 +89,7 @@ export default {
             // eslint-disable-next-line vue/max-len
             MLHelpText: 'We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC and give you occasional opportunities to try beta releases before they go live. The volume is low, just a handful per year. We will never share nor sell your email address. We welcome your feedback and engagement of the growing, always improving SIMOC simulation.',
             onSubmitMessage: null,  // show this at the bottom while submitting
+            surveyComplete: false,  // controls whether to show form or onSubmitMessage
 
             // Survey fields
             iama: null,
@@ -101,12 +102,7 @@ export default {
             joinList: null,
         }
     },
-    computed: {
-        ...mapGetters('modal', ['getSurveyComplete']),
-    },
     methods: {
-        ...mapMutations('modal', ['SETSURVEYCOMPLETE']),
-
         handleCancel() {
             this.cleanup()
         },
@@ -119,7 +115,7 @@ export default {
             }
             // Remove the survey form, show the message instead
             this.onSubmitMessage = 'Submitting feedback...'
-            this.SETSURVEYCOMPLETE(true)
+            this.surveyComplete = true
 
             // Submit form to google api, add to sheets.
             // Each field requires a 'name' attribute to match a column in the google sheet.
@@ -128,6 +124,7 @@ export default {
             // ref: https://dev.to/omerlahav/submit-a-form-to-a-google-spreadsheet-1bia
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzKl5p9W99ku8IMNeHwqEsTwp123CGzDtAp2VihQc8H6VBm8faroVyt0FqQjeNSP3rK/exec'
             fetch(scriptURL, {method: 'POST', body: new FormData(survey)})
+                    // TODO: Close the window immediately, show pop-up in corner when complete
                     .then(response => {
                         this.onSubmitMessage = 'Submitted feedback successfully.'
                         setTimeout(() => {
@@ -137,11 +134,8 @@ export default {
                     .catch(error => {
                         this.onSubmitMessage =
                             'There was a problem submitting feedback. Please try again later.'
-
-                        // TODO: Close the window immediately, show pop-up in corner when complete
                         setTimeout(() => {
                             this.cleanup()
-                            this.SETSURVEYCOMPLETE(false)
                         }, 1000)
                     })
         },

@@ -36,13 +36,14 @@ export default {
             this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
             next()  // proceed without asking questions
         } else {
-            // ask for confirmation before leaving the dashboard
+            // Make user to confirm before exiting.
             const confirmExit = () => {
                 this.confirm({
                     message: 'Terminate simulation and leave?  All unsaved data will be lost.',
                     confirmCallback: () => next(),
                 })
             }
+            // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.getSurveyWasPrompted) {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
