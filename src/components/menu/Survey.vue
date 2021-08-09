@@ -5,7 +5,8 @@
             <div class="question">
                 I am a:
                 <select v-model="iama" name="iama" class="input-field-select half-select" required>
-                    <option value="classroom_instructor" selected>Classroom Instructor</option>
+                    <option value="null" hidden disabled>Occupation</option>
+                    <option value="classroom_instructor">Classroom Instructor</option>
                     <option value="student_k-12">Student (K-12)</option>
                     <option value="citizen_scientist">Citizen Scientist</option>
                     <option value="university_researcher">University researcher</option>
@@ -24,7 +25,8 @@
                 I'm interested in:
                 <select v-model="interestedIn" name="interestedIn"
                         class="input-field-select half-select" required>
-                    <option value="fun" selected>Having fun</option>
+                    <option value="null" hidden disabled>Activity</option>
+                    <option value="fun">Having fun</option>
                     <option value="learning">Learning about off-Earth human habitation</option>
                     <option value="testing">Testing a hypothesis</option>
                     <option value="research">Incorporating SIMOC into my research</option>
@@ -40,15 +42,14 @@
                     <label for="noWorking">No</label>
                 </div>
             </div>
-            <div v-if="isWorking === 'yes'" class="question">
+            <div v-if="isWorking === 'yes'" class="question-multiline">
                 How are you using SIMOC?
-                <input v-model="howUsing" name="howUsing" class="text-input input-field-text"
-                       type="text">
+                <textarea v-model="howUsing" name="howUsing" class="text-area input-field-text" />
             </div>
-            <div v-if="isWorking === 'no'" class="question">
+            <div v-if="isWorking === 'no'" class="question-multiline">
                 How can we improve?
-                <input v-model="makeBetter" name="makeBetter" class="text-input input-field-text"
-                       type="text">
+                <textarea v-model="makeBetter" name="makeBetter"
+                          class="text-area input-field-text" />
             </div>
             <div class="question">
                 <input v-model="email" name="email" class="text-input input-field-text" type="text"
@@ -56,16 +57,9 @@
             </div>
             <input v-model="joinList" name="joinList" type="checkbox">
             Join our mailing list
-            <a class="reference-link" href="#" @click="toggleMLInfo">
+            <a class="input-title" href="#" :title="MLHelpText">
                 <fa-icon :icon="['fas','info-circle']" />
             </a>
-            <div v-show="showMLInfo" class="question">
-                We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC
-                and give you occasional opportunities to try beta releases before they go live. The
-                volume is low, just a handful per year. We will never share nor sell your email
-                address. We welcome your feedback and engagement of the growing, always improving
-                SIMOC simulation.
-            </div>
             <div id="menu-buttons">
                 <button v-show="!getSurveyComplete" class="btn-warning" @click="handleCancel">
                     Cancel
@@ -91,14 +85,16 @@ export default {
     },
     data() {
         return {
-            showMLInfo: false,
+            // Display this as tooltip when hovering on the info icon next to 'join our mailing list'
+            // eslint-disable-next-line vue/max-len
+            MLHelpText: 'We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC and give you occasional opportunities to try beta releases before they go live. The volume is low, just a handful per year. We will never share nor sell your email address. We welcome your feedback and engagement of the growing, always improving SIMOC simulation.',
             onSubmitMessage: null,  // show this at the bottom while submitting
 
             // Survey fields
             iama: null,
             iamaOther: null,
             interestedIn: null,
-            isWorking: null,
+            isWorking: 'yes',
             makeBetter: null,
             howUsing: null,
             email: null,
@@ -110,10 +106,6 @@ export default {
     },
     methods: {
         ...mapMutations('modal', ['SETSURVEYCOMPLETE']),
-
-        toggleMLInfo() {
-            this.showMLInfo = !this.showMLInfo
-        },
 
         handleCancel() {
             this.cleanup()
@@ -167,6 +159,12 @@ export default {
     align-items: center;
     width: 320px;
     padding-bottom: 20px;
+
+    &-multiline {
+        text-align: left;
+        max-width: 320px;
+        padding-bottom: 20px;
+    }
 }
 
 .half-select{
@@ -178,14 +176,11 @@ export default {
     margin-bottom: 0;
 }
 
-.reference-link{
-    text-decoration: none;
-    color: lightgreen;
-    font-weight: 600;
-
-    &:visited{
-        color: lightgreen;
-    }
+.text-area{
+    width: 100%;
+    margin-bottom: 0;
+    font-family: inherit;
+    height: auto;
 }
 
 #menu-buttons{
