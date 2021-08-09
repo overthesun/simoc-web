@@ -232,7 +232,7 @@ export default {
         },
 
         confirmBeforeLeaving(event) {
-            // Use standard browser popup to ask the user before leaving
+            // Use standard browser modal to ask the user before leaving
             event.preventDefault()
             event.returnValue = 'All unsaved data will be lost.'
             return 'All unsaved data will be lost.'

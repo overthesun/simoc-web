@@ -86,6 +86,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
+        ...mapActions('modal', ['alert', 'confirm']),
 
         updateConfig(name) {
             // don't set [custom] if the user picks a preset
@@ -98,29 +99,39 @@ export default {
         },
         saveToLocalStorage() {
             // save custom preset to local storage
-            if (window.confirm('Save the current configuration as a custom preset?')) {
-                try {
-                    const config = JSON.stringify(this.getConfiguration)
-                    localStorage.setItem('custom-config', config)
-                } catch (error) {
-                    alert(`An error occurred while saving the configuration: ${error}`)
-                    return
-                }
-                alert('Custom preset saved.')
-            }
+            this.confirm({
+                message: 'Save the current configuration as a custom preset?',
+                confirmCallback: () => {
+                    try {
+                        const config = JSON.stringify(this.getConfiguration)
+                        localStorage.setItem('custom-config', config)
+                        this.alert('Custom preset saved.')
+                    } catch (e) {
+                        this.alert(`An error occurred while saving the configuration: ${e}`)
+                    }
+                },
+            })
         },
         loadFromLocalStorage(ask_confirm) {
             // this is called either when the user selects "[Custom]" or
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
-            if (ask_confirm && !window.confirm('Reset changes and reload the custom preset?')) {
-                return
+            const loadPreset = () => {
+                const config = localStorage.getItem('custom-config')
+                if (config) {
+                    this.SETCONFIGURATION(JSON.parse(config))
+                } else {
+                    this.alert('No Custom preset found. Use the Save button to save one.')
+                }
             }
-            const config = localStorage.getItem('custom-config')
-            if (config) {
-                this.SETCONFIGURATION(JSON.parse(config))
+
+            if (ask_confirm) {
+                this.confirm({
+                    message: 'Reset changes and reload the custom preset?',
+                    confirmCallback: () => loadPreset(),
+                })
             } else {
-                alert('No Custom preset found. Use the Save button to save one.')
+                loadPreset()
             }
         },
     },

@@ -12,13 +12,14 @@
                 button-text="Download Agent File" />
             <UploadConfig :handle-file="handleUpload" button-text="Upload Agent File" />
             <button @click="resetConfig">Reset Agent File</button>
+            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <Logout name="logout" />
         </template>
     </BaseMenu>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -32,9 +33,11 @@ export default {
     computed: {
         ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc',
                               'getActiveAgentDesc', 'getEditorValid']),
+        ...mapGetters('modal', ['getSurveyComplete']),
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
 
         handleUpload(file) {
             this.SETAGENTDESC({
@@ -43,12 +46,15 @@ export default {
             })
         },
         resetConfig() {
-            if (window.confirm('Reset the current configuration to the SIMOC default?')) {
-                this.SETAGENTDESC({
-                    agent_desc: this.getDefaultAgentDesc,
-                    isDefault: false,
-                })
-            }
+            this.confirm({
+                message: 'Reset the current configuration to the SIMOC default?',
+                confirmCallback: () => {
+                    this.SETAGENTDESC({
+                        agent_desc: this.getDefaultAgentDesc,
+                        isDefault: false,
+                    })
+                },
+            })
         },
     },
 }

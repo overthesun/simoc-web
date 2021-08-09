@@ -13,6 +13,7 @@ use some of these features.
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
+            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
     </BaseMenu>
@@ -21,7 +22,7 @@ use some of these features.
 
 <script>
 import axios from 'axios'
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
 
 export default {
@@ -37,6 +38,8 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
         ...mapGetters(['getGameID']),
+        ...mapGetters('modal', ['getSurveyComplete']),
+
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
@@ -53,6 +56,7 @@ export default {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
@@ -87,35 +91,39 @@ export default {
         },
         // Logout button route
         async logout() {
-            if (!window.confirm('Stop the current simulation and log out?')) {
-                return
-            }
-            this.timerWasRunning = false  // make sure the timer doesn't restart
-            try {
-                axios.get('/logout')
-            } catch (error) {
-                console.log(error)
-            }
-            // the user already confirmed, don't ask twice
-            this.SETLEAVEWITHOUTCONFIRMATION(true)
-            // rely on DashboardView.beforeDestroy to stop the sim
-            this.$router.push('entry')
+            this.confirm({
+                message: 'Stop the current simulation and log out?',
+                confirmCallback: () => {
+                    this.timerWasRunning = false  // make sure the timer doesn't restart
+                    try {
+                        axios.get('/logout')
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    // the user already confirmed, don't ask twice
+                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    // rely on DashboardView.beforeDestroy to stop the sim
+                    this.$router.push('entry')
+                },
+            })
         },
 
         // New Simulation button
         toConfiguration() {
-            if (!window.confirm('Stop the current simulation and configure a new one?')) {
-                return
-            }
-            this.timerWasRunning = false  // make sure the timer doesn't restart
-            // menuconfig is currently skipped, we default on Custom config
-            // this.$router.push("menuconfig")
-            this.SETACTIVECONFIGTYPE('Custom')
+            this.confirm({
+                message: 'Stop the current simulation and configure a new one?',
+                confirmCallback: () => {
+                    this.timerWasRunning = false  // make sure the timer doesn't restart
+                    // menuconfig is currently skipped, we default on Custom config
+                    // this.$router.push("menuconfig")
+                    this.SETACTIVECONFIGTYPE('Custom')
 
-            // the user already confirmed, don't ask twice
-            this.SETLEAVEWITHOUTCONFIRMATION(true)
-            // rely on DashboardView.beforeDestroy to stop the sim
-            this.$router.push('menu')
+                    // the user already confirmed, don't ask twice
+                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    // rely on DashboardView.beforeDestroy to stop the sim
+                    this.$router.push('menu')
+                },
+            })
         },
     },
 }

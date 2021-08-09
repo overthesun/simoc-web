@@ -4,6 +4,7 @@
             <img src="./assets/orientation.svg" class="orientation-logo">
         </div>
         <div class="normal orientation-landscape">
+            <ModalWindow />
             <router-view />
         </div>
     </div>
@@ -11,8 +12,12 @@
 
 
 <script>
-export default {
+import {ModalWindow} from './components/menu'
 
+export default {
+    components: {
+        ModalWindow,
+    },
 }
 </script>
 

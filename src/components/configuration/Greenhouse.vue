@@ -31,7 +31,8 @@
                     <option value="" selected hidden disabled>Species</option>
                     <option v-for="(name,k) in plantValue" :key="k" :value="name">{{plantFormatted[k]}}</option>
                 </select>
-                <label><input ref="plant_inputs" v-model="plantSpecies[index].amount" :min="0" :max="plantMax[index]"
+                <label><input ref="plant_inputs" v-model.number="plantSpecies[index].amount"
+                              :min="0" :max="plantMax[index]"
                               class="input-field-number" type="number" pattern="^\d+$"
                               placeholder="Quantity" @input="updatePlantSpecies(index)"> m³</label>
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
@@ -224,56 +225,71 @@ export default {
                 greenhouse_large: 5610,
                 greenhouse_sam: 494,
             }[this.greenhouse.type]
-            // make sure that the amount doesn't overflow the greenhouse_size:
-            // calculate the available space by subtracting the amount of the
-            // previous plants from the greenhouse size and using that as max
-            let max_amount = greenhouse_size
+            // calculate the used and free space, then set the max space that can
+            // be used by each plant in order not to overflow the greenhouse size
+            const used_space = plantSpecies.reduce(
+                ((tot, p) => (p.amount ? tot+p.amount : tot)),  // don't add empty strings/null/NaN
+                0  // start from 0 to avoid empty strings at the beginning
+            )
+            const free_space = greenhouse_size - used_space
+            // calculate the max value for each plant, keeping in mind that the free space
+            // might be negative if the user entered an invalid value -- in that case
+            // constrain the max between the original amount and the greenhouse size
             plantSpecies.forEach((plant, i) => {
-                this.plantMax[i] = Math.max(0, max_amount)
-                max_amount -= plant.amount
+                this.plantMax[i] = Math.min(
+                    (free_space+plant.amount < 0) ? plant.amount : free_space+plant.amount,
+                    greenhouse_size
+                )
             })
 
+            // when a new plant is added this method is called before creating the ref
+            // on the select, so we need to wait the next tick to access its plant_select
             this.$nextTick(() => {
-                // when a new plant is added this watcher is called before creating the ref
-                // on the select, so we need to wait the next tick to access its plant_selects
-                plantSpecies.forEach((plant, i) => {
-                    // check that the plant type is '' or one from the list of valid plants
-                    const plant_type_is_valid = (plant.type === '' ||
-                                                 this.plantValue.includes(plant.type))
-                    this.$refs.plant_selects[i].setCustomValidity(
-                        plant_type_is_valid ? '' : 'Please select a valid plant type.'
+                // validate plant types and amounts
+                plantSpecies.some((plant, i) => {
+                    // return true to report the error immediately and stop and
+                    // false to keep checking (only the last error will be reported)
+                    const plant_type = this.$refs.plant_selects[i]
+                    const plant_amount = this.$refs.plant_inputs[i]
+                    // check if the plant is set but not in the list, or has an amount but no type
+                    const plant_type_is_invalid = (
+                        (plant.type && !this.plantValue.includes(plant.type)) ||
+                        (!plant.type && plant.amount > 0)
                     )
-                    if (!plant_type_is_valid) {
-                        this.$refs.plant_selects[i].reportValidity()
-                        return  // if the plant is invalid don't even bother checking the rest
-                    }
-                    // if the plant quantity is > 0, the plant type must be specified
-                    const plant_type_is_invalid = (plant.type === '' && plant.amount > 0)
-                    this.$refs.plant_inputs[i].setCustomValidity(
+                    plant_type.setCustomValidity(
                         plant_type_is_invalid ? 'Please select a valid plant type.' : ''
                     )
                     if (plant_type_is_invalid) {
-                        this.$refs.plant_inputs[i].reportValidity()
-                        return  // wait for the user to select a valid type before complaining about the value
+                        plant_type.reportValidity()
+                        return true
                     }
                     // we got a valid type, check that the gh is selected if the amount is >0
                     const needs_greenhouse = (plant.amount > 0 && greenhouse.type === 'none')
-                    this.$refs.plant_inputs[i].setCustomValidity(
-                        needs_greenhouse ? 'Please select a greenhouse type.' : ''
+                    plant_amount.setCustomValidity(
+                        needs_greenhouse ? 'Please select a greenhouse type first.' : ''
                     )
                     if (needs_greenhouse) {
-                        this.$refs.plant_inputs[i].reportValidity()
-                        return  // wait for the user to select a valid type before complaining about the value
+                        plant_amount.reportValidity()
+                        return true
                     }
-                    // when we have valid greenhouse type, plant type, and an amount > 0,
+                    // check if the plant amount is valid (e.g. the min/max value)
+                    if (!plant_amount.checkValidity()) {
+                        plant_amount.reportValidity()
+                        return true
+                    }
+                    // when we have valid greenhouse type, plant type, and a valid amount,
                     // check if it fits in the greenhouse
                     let msg = ''
-                    if (max_amount < 0) {
-                        msg = (`The total amount (${-max_amount + greenhouse_size} m³) exceeds ` +
-                               `the greenhouse size (${greenhouse_size} m³) by ${-max_amount} m³.`)
+                    if (free_space < 0) {
+                        msg = (`The total amount (${used_space} m³) exceeds ` +
+                               `the greenhouse size (${greenhouse_size} m³) by ${-free_space} m³.`)
                     }
-                    this.$refs.plant_inputs[i].setCustomValidity(msg)
-                    this.$refs.plant_inputs[i].reportValidity()
+                    plant_amount.setCustomValidity(msg)
+                    plant_amount.reportValidity()
+                    // this error has lower priority than the ones that effect the individual
+                    // fields, so keep checking the other fields first -- if everything else
+                    // looks ok, this error will be reported last on the last field
+                    return false
                 })
             })
             this.plantSpecies = plantSpecies
