@@ -19,7 +19,6 @@ The main tasks of the store are:
 */
 
 const getParams = () => ({
-    type: null,
     logo: false,
     title: null,
     message: null,
@@ -60,29 +59,40 @@ export default {
             // Start with a blank list of params that the ModalWindow component can take.
             // Go through each argument in payload. If it's on the list, use its value.
             const params = getParams()
+            const used = []
+            const unused = []
             Object.keys(payload).forEach(arg => {
-                if (!(arg in params)) {
-                    throw new Error(`invalid parameter passed to modal: ${arg}`)
-                }
                 // Validate buttons the same way. In particular, button.callback() is always called,
                 // so it should be set to an empty function if no callback is provided.
                 if (arg === 'buttons') {
                     const buttons = []
                     payload.buttons.forEach(button => {
                         const newButton = getButton()
-                        Object.entries(button).forEach(([key, value]) => {
+                        Object.keys(button).forEach(key => {
                             if (key in newButton) {
-                                newButton[key] = value
+                                newButton[key] = button[key]
                             }
                         })
                         buttons.push(newButton)
                     })
-                    params.buttons = buttons
-                } else {
+                    if (buttons.length > 0) {
+                        params.buttons = buttons
+                        used.push(arg)
+                    } else {
+                        unused.push(arg)
+                    }
+                } else if (arg in params) {
                     params[arg] = payload[arg]
+                    used.push(arg)
+                } else {
+                    unused.push(arg)
                 }
             })
-            state.modalParams = params
+            if (used.length === 0) {
+                console.log('No recognized params for modal')
+            } else {
+                state.modalParams = params
+            }
         },
         RESETMODALPARAMS(state) {
             state.params = getParams()
@@ -92,11 +102,9 @@ export default {
         },
     },
     actions: {
-        // Show top-level navigation. Typically used by menu icon in nav bar.
         showMenu({commit}, message) {
             commit('SETMODALPARAMS', message)
         },
-        // Show a text message with 'ok' button.
         alert({commit}, message) {
             commit('SETMODALPARAMS', {
                 type: 'alert',
@@ -104,7 +112,6 @@ export default {
                 buttons: [{text: 'Ok'}],
             })
         },
-        // Show text with ok / cancel buttons, execute a callback function if user clicks 'ok'
         confirm({commit}, payload) {
             const {message, confirmCallback} = payload
             commit('SETMODALPARAMS', {
@@ -116,7 +123,6 @@ export default {
                 ],
             })
         },
-        // Show the user survey. Typically used by a 'Give Feedback' button.
         showSurvey({commit}) {
             commit('SETMODALPARAMS', {
                 logo: true,
