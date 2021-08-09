@@ -60,7 +60,7 @@
             <a class="input-title" href="#" :title="MLHelpText">
                 <fa-icon :icon="['fas','info-circle']" />
             </a>
-            <div id="menu-buttons">
+            <div id="menu-buttons" class="buttons-horiz">
                 <button v-show="!getSurveyComplete" class="btn-warning" @click="handleCancel">
                     Cancel
                 </button>
