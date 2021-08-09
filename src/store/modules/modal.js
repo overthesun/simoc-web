@@ -47,14 +47,14 @@ export default {
         // next to gameId.
         surveyComplete: false,
 
-        // Prompt user to take the survey once, the first time they navigate back from the dashboard.
+        // Prompt user to take survey once, the first time they navigate back from the dashboard.
         surveyWasPrompted: false,
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyComplete: state => state.surveyComplete,
-        getSurveyWasPrompted: state => state.surveyWasPrompted
+        getSurveyWasPrompted: state => state.surveyWasPrompted,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -133,7 +133,7 @@ export default {
                 logo: true,
                 title: 'Survey',
                 survey: true,
-                onUnload: onUnload ? onUnload : null,
+                onUnload: onUnload,
             })
         },
     },

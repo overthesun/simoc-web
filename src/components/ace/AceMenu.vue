@@ -12,7 +12,6 @@
                 button-text="Download Agent File" />
             <UploadConfig :handle-file="handleUpload" button-text="Upload Agent File" />
             <button @click="resetConfig">Reset Agent File</button>
-            <button v-show="!getSurveyComplete" @click="showSurvey">Give Feedback</button>
             <Logout name="logout" />
         </template>
     </BaseMenu>
@@ -33,11 +32,10 @@ export default {
     computed: {
         ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc',
                               'getActiveAgentDesc', 'getEditorValid']),
-        ...mapGetters('modal', ['getSurveyComplete']),
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
-        ...mapActions('modal', ['confirm', 'showSurvey']),
+        ...mapActions('modal', ['confirm']),
 
         handleUpload(file) {
             this.SETAGENTDESC({

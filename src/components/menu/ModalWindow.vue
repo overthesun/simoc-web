@@ -87,6 +87,8 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
 
 #main-menu-wrapper {
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 200;
     height: 100vh;
     width: 100vw;

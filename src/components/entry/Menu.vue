@@ -10,6 +10,7 @@
             <template v-slot:entry-main>
                 <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
@@ -49,7 +50,7 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
-        ...mapActions('modal', ['alert']),
+        ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
