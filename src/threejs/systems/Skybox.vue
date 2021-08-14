@@ -32,7 +32,7 @@ export default {
             await Promise.all(angles.map(async angle => {
                 // image source: https://opengameart.org/content/mayhems-skyboxes-more
                 // ref: (acdcjunior's answer) https://stackoverflow.com/questions/47313165/how-to-reference-static-assets-within-vue-javascript
-                const image = await import('../../assets/h2s_' + angle + '.jpg')
+                const image = await import('../../assets/skybox/h2s_' + angle + '.jpg')
                 images[angle] = image.default
             }))
 
