@@ -3,6 +3,7 @@
 node_modules
 /dist
 src/assets/simdata/
+src/assets/models/
 
 # local env files
 .env.local
