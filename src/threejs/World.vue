@@ -5,9 +5,8 @@
                 Auto-rotate
                 <input v-model="rotating" type="checkbox">
             </div>
-            <div v-show="tooltipText" class="tooltip">
-                <div class="tooltip-text">{{tooltipText}}</div>
-            </div>
+            <Tooltip :is-active="isActive" :camera="camera" :scene="scene"
+                     :container-id="containerId" />
         </div>
         <Skybox :scene="scene" />
     </div>
@@ -18,8 +17,9 @@ import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 import {Resizer} from './systems/resizer'
-import {Tooltip} from './systems/tooltip'
+// import {Tooltip} from './systems/tooltip'
 import Skybox from './systems/Skybox'
+import Tooltip from './systems/Tooltip.vue'
 import {getAsset} from './systems/modelLoader'
 
 // ref: https://threejs.org/docs/#api/en/loaders/Cache
@@ -33,6 +33,7 @@ import {getAsset} from './systems/modelLoader'
 export default {
     components: {
         Skybox,
+        Tooltip,
     },
     props: {
         gameConfig: {
@@ -61,7 +62,6 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
-            tooltipText: null,
         }
     },
     watch: {
@@ -117,26 +117,18 @@ export default {
             this.controls.autoRotate = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
-            this.tooltip = new Tooltip(this.camera, this.scene, this.containerId,
-                                       this.setTooltipText)
 
             this.buildScene(this.gameConfig)
         },
-        setTooltipText(message) {
-            this.tooltipText = message
-        },
         hookup() {
             if (this.resizer) { this.resizer.hookup() }
-            if (this.tooltip) { this.tooltip.hookup() }
         },
         unhook() {
             if (this.resizer) { this.resizer.unhook() }
-            if (this.tooltip) { this.tooltip.unhook() }
         },
         render() {
             this.animationFrame = requestAnimationFrame(this.render)
             this.controls.update() // required for auto-rotate
-            this.tooltip.tick()
             this.renderer.render(this.scene, this.camera)
         },
         async buildScene(config) {
@@ -247,19 +239,6 @@ export default {
     overflow: hidden;
     z-index: 10;
     flex-grow: 1;
-}
-
-.tooltip {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: auto;
-    height: auto;
-    margin: 4px;
-    padding: 4px;
-    background-color: #1e1e1eaa;
-    z-index: 100;
-    user-select: none;
 }
 
 .rotation {
