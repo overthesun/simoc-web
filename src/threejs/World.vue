@@ -20,7 +20,7 @@ import {Resizer} from './systems/resizer'
 // import {Tooltip} from './systems/tooltip'
 import Skybox from './systems/Skybox'
 import Tooltip from './systems/Tooltip.vue'
-import {getAsset} from './systems/modelLoader'
+import Loader from './systems/loader'
 
 // ref: https://threejs.org/docs/#api/en/loaders/Cache
 
@@ -62,6 +62,13 @@ export default {
             models: {}, // TODO: Move to store, trim extras when user runs sim
             layout: [], // A grid showing relative positions of active places
             habitat: null, // A 3D object of all active places rendered according to layout
+            loader: null,
+            settings: {
+                shadows: false,
+                transparency: false,
+                rotate: false,
+                antialias: false,
+            },
         }
     },
     watch: {
@@ -101,13 +108,17 @@ export default {
 
             this.directLight = new THREE.DirectionalLight('white', 3)
             this.directLight.position.set(10, 20, 15)
-            this.directLight.castShadow = true
+            if (this.settings.shadows) {
+                this.directLight.castShadow = true
+            }
             this.ambientLight = new THREE.AmbientLight('white', 1)
             this.scene.add(this.directLight, this.ambientLight)
 
-            this.renderer = new THREE.WebGLRenderer({antialias: true})
+            this.renderer = new THREE.WebGLRenderer({antialias: this.settings.antialias})
             this.renderer.physicallyCorrectLights = true
-            this.renderer.shadowMap.enabled = true
+            if (this.settings.shadows) {
+                this.renderer.shadowMap.enabled = true
+            }
             document.getElementById(this.containerId).append(this.renderer.domElement)
 
             this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -117,6 +128,8 @@ export default {
             this.controls.autoRotate = true
 
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
+
+            this.loader = new Loader(this.settings)
 
             this.buildScene(this.gameConfig)
         },
@@ -161,54 +174,40 @@ export default {
             }
             if (config.greenhouse.type !== 'none') {
                 pressurizedEnv.push(
-                    {place: 'connector', amount: 1},
                     {place: config.greenhouse.type, amount: config.greenhouse.amount}
                 )
             }
             if (pressurizedEnv.length > 0) { // If there are buildings, add airlock at the front
                 pressurizedEnv.unshift(
-                    {place: 'empty', amount: 1},
-                    {place: 'airlock', amount: 1}
+                    {place: 'empty', amount: 5},
+                    {place: 'steps', amount: 1},
+                    {place: 'airlock', amount: 1},
                 )
                 layout = layout.concat(pressurizedEnv)
             }
-            // 1 empty & storage
-            layout.push(
-                {place: 'empty', amount: 1},
-                {place: 'inflatable', amount: 1}
-            )
+
             return layout
         },
         async buildHabitat(layout) {
             const models = {}
-            await Promise.all(layout.map(async place => {
-                if (place.place !== 'empty') {
-                    models[place.place] = await getAsset(place)
+            await Promise.all(layout.map(async item => {
+                if (item.place !== 'empty') {
+                    models[item.place] = await this.loader.load(item)
                 }
             }))
 
             const habitat = new THREE.Group()
             let edge = 0 // tracks the 'back' of last placed model
             for (let i = layout.length - 1; i >= 0; i--) {
-                const place = layout[i]
-                if (place.place === 'empty') {
-                    edge -= place.amount
+                const item = layout[i]
+                if (item.place === 'empty') {
+                    edge -= item.amount
                 } else {
-                    const model = models[place.place]
+                    const model = models[item.place]
                     const bbox = new THREE.Box3().setFromObject(model)
                     model.position.y = -bbox.min.y // Place on ground
                     model.position.z -= edge + bbox.min.z // Move behind last object
                     edge = edge - bbox.max.z + bbox.min.z // Reset back edge
-
-                    const addShadows = mod => {
-                        if (mod.children.length > 0) {
-                            mod.children.forEach(child => addShadows(child))
-                        } else {
-                            mod.castShadow = true
-                            mod.receiveShadow = true
-                        }
-                    }
-                    addShadows(model)
 
                     habitat.add(model)
                 }

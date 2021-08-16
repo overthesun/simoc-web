@@ -47,8 +47,8 @@ module.exports = {
     chainWebpack: config => {
         // .obj Loader
         config.module
-                .rule('obj')
-                .test(/\.obj$/)
+                .rule('glb')
+                .test(/\.glb$/)
                 .use('file-loader')
                 .loader('file-loader')
                 .options({
