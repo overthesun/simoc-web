@@ -30,6 +30,10 @@ export default {
             default: null,
             type: String,
         },
+        addTick: {
+            default: null,
+            type: Function,
+        }
     },
     data() {
         return {
@@ -37,6 +41,7 @@ export default {
             mouse: null,
             hoveringOver: null,
             tooltipText: null,
+            addedToRenderer: false,
         }
     },
     watch: {
@@ -46,30 +51,26 @@ export default {
             } else {
                 this.unhook()
             }
+        },
+        addTick(newTick) {
+            console.log(newTick)
         }
     },
     mounted() {
         this.raycaster = new THREE.Raycaster()
         this.mouse = new THREE.Vector2()
         this.hookup()
+        this.tick = this.tick.bind(this)
+        // this.renderer.addTick({name: 'tooltip', tick: this.tick})
     },
     beforeDestroy() {
         this.unhook()
     },
-    methods: {
-        onMouseMove(event) {
-            // Update mouse position
-            const container = document.getElementById(this.containerId)
-            const frame = container.getBoundingClientRect()
-            if (event.clientX > frame.left && event.clientX < frame.right &&
-                event.clientY > frame.top && event.clientY < frame.bottom) {
-                // convert to (-1 to +1) over the scene
-                const xCoord = event.clientX - frame.left
-                const yCoord = event.clientY - frame.top
-                this.mouse.x = ((xCoord / (frame.right - frame.left)) * 2) - 1
-                this.mouse.y = -(((yCoord / (frame.bottom - frame.top)) * 2) - 1)
-            }
 
+
+    methods: {
+
+        tick() {
             // Check what the mouse is intersecting
             this.raycaster.setFromCamera(this.mouse, this.camera)
             const intersects = this.raycaster.intersectObjects(this.scene.children, true)
@@ -82,6 +83,20 @@ export default {
             } else {
                 this.hoveringOver = null
                 this.tooltipText = null
+            }
+        },
+
+        onMouseMove(event) {
+            // Update mouse position
+            const container = document.getElementById(this.containerId)
+            const frame = container.getBoundingClientRect()
+            if (event.clientX > frame.left && event.clientX < frame.right &&
+                event.clientY > frame.top && event.clientY < frame.bottom) {
+                // convert to (-1 to +1) over the scene
+                const xCoord = event.clientX - frame.left
+                const yCoord = event.clientY - frame.top
+                this.mouse.x = ((xCoord / (frame.right - frame.left)) * 2) - 1
+                this.mouse.y = -(((yCoord / (frame.bottom - frame.top)) * 2) - 1)
             }
         },
 

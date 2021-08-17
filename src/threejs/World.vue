@@ -6,7 +6,7 @@
                 <input v-model="rotating" type="checkbox">
             </div>
             <Tooltip :is-active="isActive" :camera="camera" :scene="scene"
-                     :container-id="containerId" />
+                     :container-id="containerId" :add-tick="addTick" />
         </div>
         <Skybox :scene="scene" />
     </div>
@@ -17,6 +17,7 @@ import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 import {Resizer} from './systems/resizer'
+import Renderer from './systems/renderer'
 // import {Tooltip} from './systems/tooltip'
 import Skybox from './systems/Skybox'
 import Tooltip from './systems/Tooltip.vue'
@@ -69,6 +70,7 @@ export default {
                 rotate: false,
                 antialias: false,
             },
+            addTick: null,
         }
     },
     watch: {
@@ -90,10 +92,11 @@ export default {
         },
     },
     mounted() {
-        this.init()
-        this.render()
         this.hookup = this.hookup.bind(this)
         this.unhook = this.unhook.bind(this)
+
+        this.init()
+        this.renderer.tick()
     },
     beforeDestroy() {
         cancelAnimationFrame(this.animationFrame)
@@ -114,20 +117,16 @@ export default {
             this.ambientLight = new THREE.AmbientLight('white', 1)
             this.scene.add(this.directLight, this.ambientLight)
 
-            this.renderer = new THREE.WebGLRenderer({antialias: this.settings.antialias})
-            this.renderer.physicallyCorrectLights = true
-            if (this.settings.shadows) {
-                this.renderer.shadowMap.enabled = true
-            }
-            document.getElementById(this.containerId).append(this.renderer.domElement)
+            this.renderer = new Renderer(this.containerId, this.scene, this.camera, this.settings)
+            this.addTick = (obj) => this.renderer.addTick(obj)
 
-            this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+            this.controls = new OrbitControls(this.camera, this.renderer.renderer.domElement)
             this.controls.maxPolarAngle = Math.PI * 0.49
             this.controls.maxDistance = 200
             this.controls.enableDamping = true
             this.controls.autoRotate = true
 
-            this.resizer = new Resizer(this.camera, this.renderer, this.containerId)
+            this.resizer = new Resizer(this.camera, this.renderer.renderer, this.containerId)
 
             this.loader = new Loader(this.settings)
 
@@ -138,11 +137,6 @@ export default {
         },
         unhook() {
             if (this.resizer) { this.resizer.unhook() }
-        },
-        render() {
-            this.animationFrame = requestAnimationFrame(this.render)
-            this.controls.update() // required for auto-rotate
-            this.renderer.render(this.scene, this.camera)
         },
         async buildScene(config) {
             // Ignore changes that don't affect layout
