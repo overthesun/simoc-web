@@ -14,9 +14,14 @@ to activate and populate it.
             <div v-show="params.title" id="menu-title">{{params.title}}</div>
             <div id="menu-content">
                 <p v-show="params.message" id="modal-message">{{params.message}}</p>
-                <div v-for="button in params.buttons" id="menu-buttons" :key="button.text">
-                    <button :class="{'btn-warning': button.type === 'warning'}"
-                            @click="handleClick(button.callback)">{{button.text}}</button>
+                <div id="menu-buttons" :class="{'buttons-horiz': params.type === 'confirm'}">
+                    <button
+                        v-for="button in params.buttons"
+                        :key="button.text"
+                        :class="{'btn-warning': button.type === 'warning'}"
+                        @click="handleClick(button.callback)">
+                        {{button.text}}
+                    </button>
                 </div>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
@@ -67,6 +72,9 @@ export default {
         },
 
         cleanup() {
+            if (this.params.onUnload) {
+                this.params.onUnload()
+            }
             this.SETMODALACTIVE(false)
             this.RESETMODALPARAMS()
         },
@@ -79,6 +87,8 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
 
 #main-menu-wrapper {
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 200;
     height: 100vh;
     width: 100vw;
@@ -158,6 +168,11 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
     flex-direction: column;
 }
 
+#menu-buttons.buttons-horiz {
+    flex-direction: row;
+    justify-content: center;
+}
+
 #menu-buttons button {
     width: 256px;
     height: 48px;
@@ -175,6 +190,12 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
     &:focus {
         outline: none;
     }
+}
+
+#menu-buttons.buttons-horiz button {
+    width: 128px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #menu-buttons .btn-logout {

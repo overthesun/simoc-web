@@ -1,11 +1,12 @@
 <template>
     <div>
-        <form v-show="!getSurveyComplete" ref="survey" name="survey" @submit.prevent="">
+        <form v-show="!surveyComplete" ref="survey" name="survey" @submit.prevent="">
             <!-- Google Sheets requires each form element to have a name attribute -->
             <div class="question">
                 I am a:
                 <select v-model="iama" name="iama" class="input-field-select half-select" required>
-                    <option value="classroom_instructor" selected>Classroom Instructor</option>
+                    <option value="null" hidden disabled>Occupation</option>
+                    <option value="classroom_instructor">Classroom Instructor</option>
                     <option value="student_k-12">Student (K-12)</option>
                     <option value="citizen_scientist">Citizen Scientist</option>
                     <option value="university_researcher">University researcher</option>
@@ -24,7 +25,8 @@
                 I'm interested in:
                 <select v-model="interestedIn" name="interestedIn"
                         class="input-field-select half-select" required>
-                    <option value="fun" selected>Having fun</option>
+                    <option value="null" hidden disabled>Activity</option>
+                    <option value="fun">Having fun</option>
                     <option value="learning">Learning about off-Earth human habitation</option>
                     <option value="testing">Testing a hypothesis</option>
                     <option value="research">Incorporating SIMOC into my research</option>
@@ -40,15 +42,14 @@
                     <label for="noWorking">No</label>
                 </div>
             </div>
-            <div v-if="isWorking === 'yes'" class="question">
+            <div v-if="isWorking === 'yes'" class="question-multiline">
                 How are you using SIMOC?
-                <input v-model="howUsing" name="howUsing" class="text-input input-field-text"
-                       type="text">
+                <textarea v-model="howUsing" name="howUsing" class="text-area input-field-text" />
             </div>
-            <div v-if="isWorking === 'no'" class="question">
+            <div v-if="isWorking === 'no'" class="question-multiline">
                 How can we improve?
-                <input v-model="makeBetter" name="makeBetter" class="text-input input-field-text"
-                       type="text">
+                <textarea v-model="makeBetter" name="makeBetter"
+                          class="text-area input-field-text" />
             </div>
             <div class="question">
                 <input v-model="email" name="email" class="text-input input-field-text" type="text"
@@ -56,26 +57,19 @@
             </div>
             <input v-model="joinList" name="joinList" type="checkbox">
             Join our mailing list
-            <a class="reference-link" href="#" @click="toggleMLInfo">
+            <a class="input-title" href="#" :title="MLHelpText">
                 <fa-icon :icon="['fas','info-circle']" />
             </a>
-            <div v-show="showMLInfo" class="question">
-                We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC
-                and give you occasional opportunities to try beta releases before they go live. The
-                volume is low, just a handful per year. We will never share nor sell your email
-                address. We welcome your feedback and engagement of the growing, always improving
-                SIMOC simulation.
-            </div>
-            <div id="menu-buttons">
-                <button v-show="!getSurveyComplete" class="btn-warning" @click="handleCancel">
+            <div id="menu-buttons" class="buttons-horiz">
+                <button class="btn-warning" @click="handleCancel">
                     Cancel
                 </button>
-                <button v-show="!getSurveyComplete" @click="handleSubmit">
+                <button @click="handleSubmit">
                     Submit
                 </button>
             </div>
         </form>
-        <div v-show="getSurveyComplete" class="submit-message">{{onSubmitMessage}}</div>
+        <div v-show="surveyComplete" class="submit-message">{{onSubmitMessage}}</div>
     </div>
 </template>
 
@@ -91,30 +85,24 @@ export default {
     },
     data() {
         return {
-            showMLInfo: false,
+            // Display this as tooltip when hovering on the info icon next to 'join our mailing list'
+            // eslint-disable-next-line vue/max-len
+            MLHelpText: 'We invite you to our SIMOC Users email list. We will notify you of updates to SIMOC and give you occasional opportunities to try beta releases before they go live. The volume is low, just a handful per year. We will never share nor sell your email address. We welcome your feedback and engagement of the growing, always improving SIMOC simulation.',
             onSubmitMessage: null,  // show this at the bottom while submitting
+            surveyComplete: false,  // controls whether to show form or onSubmitMessage
 
             // Survey fields
             iama: null,
             iamaOther: null,
             interestedIn: null,
-            isWorking: null,
+            isWorking: 'yes',
             makeBetter: null,
             howUsing: null,
             email: null,
             joinList: null,
         }
     },
-    computed: {
-        ...mapGetters('modal', ['getSurveyComplete']),
-    },
     methods: {
-        ...mapMutations('modal', ['SETSURVEYCOMPLETE']),
-
-        toggleMLInfo() {
-            this.showMLInfo = !this.showMLInfo
-        },
-
         handleCancel() {
             this.cleanup()
         },
@@ -127,7 +115,7 @@ export default {
             }
             // Remove the survey form, show the message instead
             this.onSubmitMessage = 'Submitting feedback...'
-            this.SETSURVEYCOMPLETE(true)
+            this.surveyComplete = true
 
             // Submit form to google api, add to sheets.
             // Each field requires a 'name' attribute to match a column in the google sheet.
@@ -136,6 +124,7 @@ export default {
             // ref: https://dev.to/omerlahav/submit-a-form-to-a-google-spreadsheet-1bia
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzKl5p9W99ku8IMNeHwqEsTwp123CGzDtAp2VihQc8H6VBm8faroVyt0FqQjeNSP3rK/exec'
             fetch(scriptURL, {method: 'POST', body: new FormData(survey)})
+                    // TODO: Close the window immediately, show pop-up in corner when complete
                     .then(response => {
                         this.onSubmitMessage = 'Submitted feedback successfully.'
                         setTimeout(() => {
@@ -145,11 +134,8 @@ export default {
                     .catch(error => {
                         this.onSubmitMessage =
                             'There was a problem submitting feedback. Please try again later.'
-
-                        // TODO: Close the window immediately, show pop-up in corner when complete
                         setTimeout(() => {
                             this.cleanup()
-                            this.SETSURVEYCOMPLETE(false)
                         }, 1000)
                     })
         },
@@ -167,6 +153,12 @@ export default {
     align-items: center;
     width: 320px;
     padding-bottom: 20px;
+
+    &-multiline {
+        text-align: left;
+        max-width: 320px;
+        padding-bottom: 20px;
+    }
 }
 
 .half-select{
@@ -178,14 +170,11 @@ export default {
     margin-bottom: 0;
 }
 
-.reference-link{
-    text-decoration: none;
-    color: lightgreen;
-    font-weight: 600;
-
-    &:visited{
-        color: lightgreen;
-    }
+.text-area{
+    width: 100%;
+    margin-bottom: 0;
+    font-family: inherit;
+    height: auto;
 }
 
 #menu-buttons{

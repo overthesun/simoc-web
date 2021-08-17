@@ -41,16 +41,13 @@ export default {
         modalActive: false,
         modalParams: {},
 
-        // TODO: surveyComplete works on a session-by-session basis, so a logged-in user
-        // will see the option every time they re-open the site. A more complete solution
-        // is to record it in the user database, and move this variable to the top-level store
-        // next to gameId.
-        surveyComplete: false,
+        // Prompt user to take survey once, the first time they navigate back from the dashboard.
+        surveyWasPrompted: false,
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
-        getSurveyComplete: state => state.surveyComplete,
+        getSurveyWasPrompted: state => state.surveyWasPrompted,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -87,8 +84,8 @@ export default {
         RESETMODALPARAMS(state) {
             state.params = getParams()
         },
-        SETSURVEYCOMPLETE(state, value) {
-            state.surveyComplete = value
+        SETSURVEYWASPROMPTED(state, value) {
+            state.surveyWasPrompted = value
         },
     },
     actions: {
@@ -111,17 +108,22 @@ export default {
                 type: 'confirm',
                 message: message,
                 buttons: [
-                    {text: 'Ok', callback: confirmCallback},
                     {text: 'Cancel', type: 'warning'},
+                    {text: 'Ok', callback: confirmCallback},
                 ],
             })
         },
         // Show the user survey. Typically used by a 'Give Feedback' button.
-        showSurvey({commit}) {
+        showSurvey({commit}, payload) {
+            const {prompt, onUnload} = payload
+            if (prompt) {
+                commit('SETSURVEYWASPROMPTED', true)
+            }
             commit('SETMODALPARAMS', {
                 logo: true,
                 title: 'Survey',
                 survey: true,
+                onUnload: onUnload,
             })
         },
     },
