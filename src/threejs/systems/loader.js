@@ -118,7 +118,6 @@ class Loader {
 
         // Build an array of clones
         const solar_array = new THREE.Group()
-        console.log(layout)
         layout.forEach((col, i) => {
             for (let j = col; j > 0; j--) {
                 const panelModel = model.clone()

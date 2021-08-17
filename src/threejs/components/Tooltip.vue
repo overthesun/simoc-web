@@ -1,12 +1,11 @@
 <template>
-    <div v-show="tooltipText && isActive" class="tooltip">
+    <div v-show="tooltipText" ref="tooltip" class="tooltip">
         <div>{{tooltipText}}</div>
     </div>
 </template>
 
 <script>
 import * as THREE from 'three'
-// import _ from 'lodash'
 
 import {StringFormatter} from '../../javascript/utils'
 
@@ -14,10 +13,6 @@ const IGNORE_MODELS = ['ground']
 
 export default {
     props: {
-        isActive: {
-            default: false,
-            type: Boolean,
-        },
         camera: {
             default: null,
             type: Object,
@@ -33,7 +28,11 @@ export default {
         addTick: {
             default: null,
             type: Function,
-        }
+        },
+        addHookup: {
+            default: null,
+            type: Function,
+        },
     },
     data() {
         return {
@@ -41,44 +40,41 @@ export default {
             mouse: null,
             hoveringOver: null,
             tooltipText: null,
-            addedToRenderer: false,
-        }
-    },
-    watch: {
-        isActive(newActive) {
-            if (newActive) {
-                this.hookup()
-            } else {
-                this.unhook()
-            }
-        },
-        addTick(newTick) {
-            console.log(newTick)
         }
     },
     mounted() {
         this.raycaster = new THREE.Raycaster()
         this.mouse = new THREE.Vector2()
         this.hookup()
+
         this.tick = this.tick.bind(this)
-        // this.renderer.addTick({name: 'tooltip', tick: this.tick})
-    },
-    beforeDestroy() {
-        this.unhook()
-    },
+        this.addTick({name: 'tooltip', tick: this.tick})
 
-
+        this.hookup = this.hookup.bind(this)
+        this.unhook = this.unhook.bind(this)
+        this.addHookup({
+            name: 'tooltip',
+            hookup: this.hookup,
+            unhook: this.unhook,
+        })
+    },
     methods: {
+        hookup() {
+            window.addEventListener('mousemove', this.onMouseMove, false)
+        },
+        unhook() {
+            window.removeEventListener('mousemove', this.onMouseMove, false)
+        },
 
+        // Check for intersections between mouse position and models in scene
         tick() {
-            // Check what the mouse is intersecting
             this.raycaster.setFromCamera(this.mouse, this.camera)
             const intersects = this.raycaster.intersectObjects(this.scene.children, true)
             const key = (intersects.length > 0) ? intersects[0].object.userData.key : null
             if (key && !IGNORE_MODELS.includes(key)) {
                 if (this.hoveringOver !== key) {
                     this.hoveringOver = key
-                    this.tooltipText = `Mars habitat ${StringFormatter(key)}.`
+                    this.tooltipText = StringFormatter(key)
                 }
             } else {
                 this.hoveringOver = null
@@ -86,8 +82,8 @@ export default {
             }
         },
 
+        // Update mouse position
         onMouseMove(event) {
-            // Update mouse position
             const container = document.getElementById(this.containerId)
             const frame = container.getBoundingClientRect()
             if (event.clientX > frame.left && event.clientX < frame.right &&
@@ -98,13 +94,6 @@ export default {
                 this.mouse.x = ((xCoord / (frame.right - frame.left)) * 2) - 1
                 this.mouse.y = -(((yCoord / (frame.bottom - frame.top)) * 2) - 1)
             }
-        },
-
-        hookup() {
-            window.addEventListener('mousemove', this.onMouseMove, false)
-        },
-        unhook() {
-            window.removeEventListener('mousemove', this.onMouseMove, false)
         },
     },
 }

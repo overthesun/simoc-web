@@ -4,6 +4,7 @@ node_modules
 /dist
 src/assets/simdata/
 src/assets/models/
+src/assets/skybox/
 
 # local env files
 .env.local

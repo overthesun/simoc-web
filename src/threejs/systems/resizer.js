@@ -1,10 +1,17 @@
 class Resizer {
-    constructor(camera, renderer, containerId) {
+    constructor(camera, renderer, containerId, addHookup) {
         this.containerId = containerId
         this.camera = camera
         this.renderer = renderer
         this.setSize()
-        this.hookup()
+
+        this.hookup = this.hookup.bind(this)
+        this.unhook = this.unhook.bind(this)
+        addHookup({
+            name: 'resizer',
+            hookup: this.hookup,
+            unhook: this.unhook,
+        })
     }
 
     setSize() {
@@ -27,4 +34,4 @@ class Resizer {
     }
 }
 
-export {Resizer}
+export default Resizer

@@ -1,12 +1,12 @@
 <template>
     <div id="world">
         <div id="scene-container" ref="sceneContainer" class="scene-container">
-            <div class="rotation">
+            <!-- <div class="settingsMenu">
                 Auto-rotate
-                <input v-model="rotating" type="checkbox">
-            </div>
-            <Tooltip :is-active="isActive" :camera="camera" :scene="scene"
-                     :container-id="containerId" :add-tick="addTick" />
+                <input v-model="settings.rotate" type="checkbox">
+            </div> -->
+            <Tooltip :camera="camera" :scene="scene" :container-id="containerId"
+                     :add-tick="addTick" :add-hookup="addHookup" />
         </div>
         <Skybox :scene="scene" />
     </div>
@@ -14,22 +14,16 @@
 
 <script>
 import * as THREE from 'three'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-import {Resizer} from './systems/resizer'
-import Renderer from './systems/renderer'
-// import {Tooltip} from './systems/tooltip'
-import Skybox from './systems/Skybox'
-import Tooltip from './systems/Tooltip.vue'
+import Tooltip from './components/Tooltip'
+import Skybox from './components/Skybox'
+import {buildCamera} from './systems/camera'
+import {buildRenderer} from './systems/renderer'
+import {buildControls} from './systems/controls'
+import {buildLights} from './systems/lights'
+import {buildLayout, buildHabitat} from './systems/habitat'
+import Resizer from './systems/resizer'
 import Loader from './systems/loader'
-
-// ref: https://threejs.org/docs/#api/en/loaders/Cache
-
-// Vue/ThreeJS structure ref:
-// https://stackoverflow.com/questions/47849626/import-and-use-three-js-library-in-vue-component (PolygonParrot's answer)
-
-// File structure ref:
-// discoverthreejs.com
 
 export default {
     components: {
@@ -49,28 +43,29 @@ export default {
     data() {
         return {
             containerId: 'scene-container',
-            container: null,
-            renderer: null,
-            controls: null,
-            camera: null,
-            rotating: true,
-            raycaster: null,
-            mouse: null,
-            directLight: null,
-            ambientLight: null,
-            scene: null,
-            animationFrame: null,
-            models: {}, // TODO: Move to store, trim extras when user runs sim
-            layout: [], // A grid showing relative positions of active places
-            habitat: null, // A 3D object of all active places rendered according to layout
-            loader: null,
             settings: {
                 shadows: false,
                 transparency: false,
                 rotate: false,
                 antialias: false,
+                maxDistance: 200,
+                enableDamping: true,
             },
-            addTick: null,
+
+            // Systems: ThreeJS tools and objects
+            scene: null,
+            camera: null,
+            renderer: null,
+            controls: null,
+            lights: null,
+            resizer: null,
+            loader: null,
+
+            // State
+            layout: [], // A grid showing relative positions of active places
+            habitat: [], // Objects to be removed from scene when refreshing layout
+            updatables: [], // Objects with a .tick() function which is called every frame
+            hookupables: [], // Objects with .hookup()/.unhook(), called when World goes active/hidden
         }
     },
     watch: {
@@ -80,109 +75,64 @@ export default {
             },
             deep: true,
         },
-        isActive(newActive, oldActive) {
+        isActive(newActive) {
             if (newActive) {
-                this.hookup()
+                this.start()
             } else {
-                this.unhook()
+                this.stop()
             }
-        },
-        rotating(newVal) {
-            this.controls.autoRotate = newVal
         },
     },
     mounted() {
-        this.hookup = this.hookup.bind(this)
-        this.unhook = this.unhook.bind(this)
-
         this.init()
-        this.renderer.tick()
+        this.buildScene(this.gameConfig)
+        this.start()
     },
     beforeDestroy() {
-        cancelAnimationFrame(this.animationFrame)
-        this.unhook()
+        this.stop()
     },
     methods: {
         init() {
             this.scene = new THREE.Scene()
-
-            this.camera = new THREE.PerspectiveCamera(35, 1, 0.1, 1000) // fov, aspect, near, far
-            this.camera.position.set(0, 5, 30)
-
-            this.directLight = new THREE.DirectionalLight('white', 3)
-            this.directLight.position.set(10, 20, 15)
-            if (this.settings.shadows) {
-                this.directLight.castShadow = true
-            }
-            this.ambientLight = new THREE.AmbientLight('white', 1)
-            this.scene.add(this.directLight, this.ambientLight)
-
-            this.renderer = new Renderer(this.containerId, this.scene, this.camera, this.settings)
-            this.addTick = (obj) => this.renderer.addTick(obj)
-
-            this.controls = new OrbitControls(this.camera, this.renderer.renderer.domElement)
-            this.controls.maxPolarAngle = Math.PI * 0.49
-            this.controls.maxDistance = 200
-            this.controls.enableDamping = true
-            this.controls.autoRotate = true
-
-            this.resizer = new Resizer(this.camera, this.renderer.renderer, this.containerId)
-
+            this.camera = buildCamera()
+            this.renderer = buildRenderer(this.containerId, this.settings)
+            this.controls = buildControls(this.camera, this.renderer.domElement, this.settings, this.addTick)
+            this.lights = buildLights(this.settings, this.scene)
+            this.resizer = new Resizer(this.camera, this.renderer, this.containerId, this.addHookup)
             this.loader = new Loader(this.settings)
-
-            this.buildScene(this.gameConfig)
         },
-        hookup() {
-            if (this.resizer) { this.resizer.hookup() }
+        start() {
+            for (const obj of this.hookupables) {
+                obj.hookup()
+            }
+            this.renderer.setAnimationLoop(() => {
+                for (const obj of this.updatables) {
+                    obj.tick()
+                }
+                this.renderer.render(this.scene, this.camera)
+            })
         },
-        unhook() {
-            if (this.resizer) { this.resizer.unhook() }
+        stop() {
+            this.renderer.setAnimationLoop(null)
+            for (const obj of this.hookupables) {
+                obj.unhook()
+            }
+        },
+        addHookup(obj) {
+            this.hookupables.push(obj)
+        },
+        addTick(obj) {
+            this.updatables.push(obj)
         },
         async buildScene(config) {
-            // Ignore changes that don't affect layout
-            const newLayout = this.buildLayout(config)
-            if (JSON.stringify(newLayout) === JSON.stringify(this.layout)) {
+            // Check/udpate the layout
+            const layout = buildLayout(config)
+            if (JSON.stringify(layout) === JSON.stringify(this.layout)) {
                 return
             }
-            this.layout = newLayout
-            if (this.habitat) {
-                this.scene.remove(this.habitat)
-            }
-            this.habitat = await this.buildHabitat(this.layout)
-            this.scene.add(this.habitat)
-        },
-        buildLayout(config) {
-            let layout = []
-            if (Object.keys(config).includes('powerGeneration')) {
-                if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
-                    layout.push(
-                        {place: config.powerGeneration.type, amount: config.powerGeneration.amount}
-                    )
-                }
-            }
-            const pressurizedEnv = []
-            if (config.crewQuarters.type !== 'none') {
-                pressurizedEnv.push(
-                    {place: config.crewQuarters.type, amount: config.crewQuarters.amount}
-                )
-            }
-            if (config.greenhouse.type !== 'none') {
-                pressurizedEnv.push(
-                    {place: config.greenhouse.type, amount: config.greenhouse.amount}
-                )
-            }
-            if (pressurizedEnv.length > 0) { // If there are buildings, add airlock at the front
-                pressurizedEnv.unshift(
-                    {place: 'empty', amount: 5},
-                    {place: 'steps', amount: 1},
-                    {place: 'airlock', amount: 1},
-                )
-                layout = layout.concat(pressurizedEnv)
-            }
+            this.layout = layout
 
-            return layout
-        },
-        async buildHabitat(layout) {
+            // Load models
             const models = {}
             await Promise.all(layout.map(async item => {
                 if (item.place !== 'empty') {
@@ -190,25 +140,13 @@ export default {
                 }
             }))
 
-            const habitat = new THREE.Group()
-            let edge = 0 // tracks the 'back' of last placed model
-            for (let i = layout.length - 1; i >= 0; i--) {
-                const item = layout[i]
-                if (item.place === 'empty') {
-                    edge -= item.amount
-                } else {
-                    const model = models[item.place]
-                    const bbox = new THREE.Box3().setFromObject(model)
-                    model.position.y = -bbox.min.y // Place on ground
-                    model.position.z -= edge + bbox.min.z // Move behind last object
-                    edge = edge - bbox.max.z + bbox.min.z // Reset back edge
-
-                    habitat.add(model)
-                }
+            // Arrange models into layout, add to scene
+            if (this.habitat) {
+                this.scene.remove(this.habitat)
             }
-            const bbox = new THREE.Box3().setFromObject(habitat)
-            habitat.position.z -= bbox.max.z/2 // Center habitat on origin
-            return habitat
+            const habitat = buildHabitat(layout, models)
+            this.habitat = habitat
+            this.scene.add(habitat)
         },
     },
 }
@@ -234,7 +172,7 @@ export default {
     flex-grow: 1;
 }
 
-.rotation {
+.settingsMenu {
     position: absolute;
     top: 0;
     right: 0;
@@ -244,6 +182,5 @@ export default {
     padding: 4px;
     background-color: #1e1e1eaa;
     z-index: 100;
-
 }
 </style>
