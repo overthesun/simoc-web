@@ -24,7 +24,7 @@ const buildLayout = config => {
         pressurizedEnv.unshift(
             {place: 'empty', amount: 5},
             {place: 'steps', amount: 1},
-            {place: 'airlock', amount: 1},
+            {place: 'airlock', amount: 1}
         )
         layout = layout.concat(pressurizedEnv)
     }
@@ -54,4 +54,62 @@ const buildHabitat = (layout, models) => {
     return habitat
 }
 
-export {buildLayout, buildHabitat}
+const buildHub = model => {
+    // The small hub provided is half, with a slighly imperfect center.
+    // Clone it, rotate 90-deg, move behind the other, adjust, merge.
+    const backside = model.clone()
+    model.rotation.y += Math.PI
+    const modelBox = new THREE.Box3().setFromObject(model)
+    const backsideBox = new THREE.Box3().setFromObject(backside)
+    const manualOffset = '0.6'
+    backside.position.z += modelBox.max.z - backsideBox.min.z - manualOffset
+    const newModel = new THREE.Group()
+    newModel.add(model)
+    newModel.add(backside)
+    // TODO: Rotate by Math.PI/12 to line up airlocks.
+    // When I do it now, the bounding box rotates as well, so habitat is misaligned.
+    // I think it needs a model.updateMatrix() and wait a tick before building the layout.
+    return newModel
+}
+
+const buildSolar = (model, amount) => {
+    const panelBox = new THREE.Box3().setFromObject(model)
+    const width = panelBox.max.x - panelBox.min.x
+    const depth = panelBox.max.z - panelBox.min.z
+    const colSpacing = 1
+    const rowSpacing = -0.5
+
+    // Make a layout in the form of [[height] * width]
+    // Calculate the largest square, add extras in columns
+    // math ref: https://math.stackexchange.com/a/1183694
+    const squareRatio = Math.round((depth + colSpacing) / (width + rowSpacing) * 10) / 10
+    const widthRaw = Math.sqrt(amount * squareRatio)
+    const height = Math.floor(widthRaw / squareRatio)
+    const widthBase = height
+    const extraPanels = amount - (height * widthBase)
+    const extraRows = Math.floor(extraPanels / height)
+    const layout = Array(widthBase + extraRows).fill(height)
+    const extraCol = extraPanels - (extraRows * height)
+    if (extraCol) {
+        layout.push(extraCol)
+    }
+
+    // Build an array of clones
+    const solar_array = new THREE.Group()
+    layout.forEach((col, i) => {
+        for (let j = col; j > 0; j--) {
+            const panelModel = model.clone()
+            const offsetX = i * ((width + rowSpacing) + (width/2))
+            const offsetZ = j * ((depth + colSpacing) + (depth/2))
+            panelModel.position.set(offsetX, 0, offsetZ)
+            solar_array.add(panelModel)
+        }
+    })
+
+    const arrayBox = new THREE.Box3().setFromObject(solar_array)
+    solar_array.position.x = -arrayBox.max.x/2
+    solar_array.position.z = -arrayBox.max.z/2
+    return solar_array
+}
+
+export {buildLayout, buildHabitat, buildHub, buildSolar}

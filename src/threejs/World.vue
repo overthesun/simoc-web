@@ -96,36 +96,33 @@ export default {
             this.scene = new THREE.Scene()
             this.camera = buildCamera()
             this.renderer = buildRenderer(this.containerId, this.settings)
-            this.controls = buildControls(this.camera, this.renderer.domElement, this.settings, this.addTick)
+            this.controls = buildControls(this.camera, this.renderer.domElement,
+                                          this.settings, this.addTick)
             this.lights = buildLights(this.settings, this.scene)
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId, this.addHookup)
             this.loader = new Loader(this.settings)
         },
         start() {
-            for (const obj of this.hookupables) {
-                obj.hookup()
-            }
+            this.hookupables.forEach(obj => obj.hookup())
             this.renderer.setAnimationLoop(() => {
-                for (const obj of this.updatables) {
-                    obj.tick()
-                }
+                this.updatables.forEach(obj => obj.tick())
                 this.renderer.render(this.scene, this.camera)
             })
         },
         stop() {
             this.renderer.setAnimationLoop(null)
-            for (const obj of this.hookupables) {
-                obj.unhook()
-            }
+            this.hookupables.forEach(obj => obj.unhook())
         },
         addHookup(obj) {
+            // {name: String, hookup: Function, unhook: Function}
             this.hookupables.push(obj)
         },
         addTick(obj) {
+            // {name: String, tick: Function}
             this.updatables.push(obj)
         },
         async buildScene(config) {
-            // Check/udpate the layout
+            // Check if config update results in layout update (not always the case)
             const layout = buildLayout(config)
             if (JSON.stringify(layout) === JSON.stringify(this.layout)) {
                 return
@@ -140,11 +137,11 @@ export default {
                 }
             }))
 
-            // Arrange models into layout, add to scene
+            // Build scene and update
+            const habitat = buildHabitat(layout, models)
             if (this.habitat) {
                 this.scene.remove(this.habitat)
             }
-            const habitat = buildHabitat(layout, models)
             this.habitat = habitat
             this.scene.add(habitat)
         },
