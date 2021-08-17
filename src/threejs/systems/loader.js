@@ -7,14 +7,14 @@ const placeIndex = {
     solar_pv_array_mars: {assetName: 'solar_panel'},
     steps: {assetName: 'steps'},
     airlock: {assetName: 'airlock'},
-    crew_habitat_sam: {assetName: 'hub'},
-    crew_habitat_small: {assetName: 'hub'},
-    crew_habitat_medium: {assetName: 'hub'},
-    crew_habitat_large: {assetName: 'hub'},
+    crew_habitat_sam: {assetName: 'hub_small'},
+    crew_habitat_small: {assetName: 'hub_small'},
+    crew_habitat_medium: {assetName: 'hub_large'},
+    crew_habitat_large: {assetName: 'hub_large'},
     greenhouse_sam: {assetName: 'greenhouse_small'},
     greenhouse_small: {assetName: 'greenhouse_small'},
-    greenhouse_medium: {assetName: 'greenhouse_small'},
-    greenhouse_large: {assetName: 'greenhouse_small'},
+    greenhouse_medium: {assetName: 'greenhouse_medium'},
+    greenhouse_large: {assetName: 'greenhouse_large'},
 }
 
 class Loader {
@@ -47,7 +47,7 @@ class Loader {
         // Rotate to face +z
         model.rotation.y += Math.PI/2
 
-        if (assetName === 'hub') {
+        if (assetName === 'hub_small') {
             model = this.buildHub(model)
         }
         if (assetName === 'solar_panel') {
