@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
-import {buildHub, buildSolar} from './habitat'
+import {buildSolar} from './habitat'
 
 THREE.Cache.enabled = true
 
@@ -48,12 +48,14 @@ class Loader {
         // Rotate to face +z
         model.rotation.y += Math.PI/2
 
-        if (assetName === 'hub_small') {
-            model = buildHub(model)
-        }
         if (assetName === 'solar_panel') {
             model = buildSolar(model, amount)
         }
+
+        // if (assetName === 'hub_small' || assetName === 'hub_large') {
+        //     const outline = new THREE.BoxHelper(model)
+        //     model.add(outline)
+        // }
 
         model.traverse(item => {
             // Set transparency

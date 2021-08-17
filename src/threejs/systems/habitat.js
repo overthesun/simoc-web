@@ -42,9 +42,16 @@ const buildHabitat = (layout, models) => {
         } else {
             const model = models[item.place]
             const bbox = new THREE.Box3().setFromObject(model)
+
+            let boxScale = 1
+            if (['crew_habitat_small', 'crew_habitat_medium',
+                 'crew_habitat_large'].includes(item.place)) {
+                boxScale = 0.82
+            }
+
             model.position.y = -bbox.min.y // Place on ground
-            model.position.z -= edge + bbox.min.z // Move behind last object
-            edge = edge - bbox.max.z + bbox.min.z // Reset back edge
+            model.position.z -= edge + (bbox.min.z * boxScale) // Move behind last object
+            edge = edge - (bbox.max.z * boxScale) + (bbox.min.z * boxScale) // Reset back edge
 
             habitat.add(model)
         }
@@ -54,23 +61,6 @@ const buildHabitat = (layout, models) => {
     return habitat
 }
 
-const buildHub = model => {
-    // The small hub provided is half, with a slighly imperfect center.
-    // Clone it, rotate 90-deg, move behind the other, adjust, merge.
-    const backside = model.clone()
-    model.rotation.y += Math.PI
-    const modelBox = new THREE.Box3().setFromObject(model)
-    const backsideBox = new THREE.Box3().setFromObject(backside)
-    const manualOffset = '0.6'
-    backside.position.z += modelBox.max.z - backsideBox.min.z - manualOffset
-    const newModel = new THREE.Group()
-    newModel.add(model)
-    newModel.add(backside)
-    // TODO: Rotate by Math.PI/12 to line up airlocks.
-    // When I do it now, the bounding box rotates as well, so habitat is misaligned.
-    // I think it needs a model.updateMatrix() and wait a tick before building the layout.
-    return newModel
-}
 
 const buildSolar = (model, amount) => {
     const panelBox = new THREE.Box3().setFromObject(model)
@@ -112,4 +102,4 @@ const buildSolar = (model, amount) => {
     return solar_array
 }
 
-export {buildLayout, buildHabitat, buildHub, buildSolar}
+export {buildLayout, buildHabitat, buildSolar}
