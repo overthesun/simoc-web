@@ -75,7 +75,7 @@ export default {
 
 .panel select {
     color: #eee;
-    background-color: transparent;
+    background-color: #1e1e1e;
     border: 1px solid #eee;
     border-radius: 5px;
     padding: 3px;
@@ -87,6 +87,10 @@ export default {
     background-repeat: no-repeat, repeat;
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
+}
+.panel select option {
+    color: #eee;
+    background-color: #1e1e1e;
 }
     .panel-select{
         margin-left:auto;

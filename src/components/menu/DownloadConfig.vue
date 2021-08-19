@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 
 export default {
     props: {
@@ -13,11 +14,13 @@ export default {
         buttonText: {type: String, default: 'Download Configuration'},
     },
     methods: {
+        ...mapActions('modal', ['alert']),
+
         handleClick() {
             // abort if parent declares invalid
             if (!this.isValid) {
                 if (this.alertUserOnInvalid) {
-                    alert('Current form invalid')
+                    this.alert('Current form invalid')
                 }
                 return
             }

@@ -45,19 +45,47 @@ export default {
             this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
             next()  // proceed without asking questions
         } else {
-            // ask for confirmation before leaving the dashboard
-            if (window.confirm('Terminate simulation and leave?  All unsaved data will be lost.')) {
-                next()  // user confirmed, proceed
+            // Make user to confirm before exiting.
+            const confirmExit = () => {
+                this.confirm({
+                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                    confirmCallback: () => next(),
+                })
+            }
+            // Prompt user to take the feedback survey *only* the first time (per session)
+            if (!this.getSurveyWasPrompted) {
+                this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
-                next(false)  // stay on page
+                confirmExit()
             }
         }
     },
+    data() {
+        return {
+            pausedForModal: false,
+        }
+    },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation']),
+        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
+                                    'getIsTimerRunning']),
+        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
+    },
+    watch: {
+        // If a modal opens while the timer is on,
+        // pause it, then start it again after modal closes.
+        getModalActive(newActive, oldActive) {
+            if (oldActive === false && this.getIsTimerRunning === true) {
+                this.PAUSETIMER()
+                this.pausedForModal = true
+            } else if (newActive === false && this.pausedForModal) {
+                this.STARTTIMER()
+                this.pausedForModal = false
+            }
+        },
     },
     methods: {
-        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION']),
+        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
     },
 }
 </script>
