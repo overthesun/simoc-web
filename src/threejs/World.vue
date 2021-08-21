@@ -59,7 +59,7 @@ export default {
             loader: null,
 
             // State
-            layout: [], // A grid showing relative positions of active places
+            layout: {}, // An object with the current layout parameters
             habitat: [], // Objects to be removed from scene when refreshing layout
             updatables: [], // Objects with a .tick() function which is called every frame
             hookupables: [], // Objects with .hookup()/.unhook(), called when World goes active/hidden
@@ -129,9 +129,15 @@ export default {
             }
             this.layout = layout
 
+            // Make a list of all models in the scene
+            const allModels = []
+            for (let section in layout) {
+                layout[section].forEach(item => allModels.push(item))
+            }
+
             // Load models
             const models = {}
-            await Promise.all(layout.map(async item => {
+            await Promise.all(allModels.map(async item => {
                 if (item.place !== 'empty') {
                     models[item.place] = await this.loader.load(item)
                 }

@@ -17,42 +17,58 @@ const placeIndex = {
 }
 
 const buildLayout = config => {
-    let layout = []
-    if (Object.keys(config).includes('powerGeneration')) {
-        if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
-            layout.push(
-                {place: config.powerGeneration.type, amount: config.powerGeneration.amount},
-            )
-        }
+    let layout = {
+        pressurized: [],
+        solar: [],
+        vehicles: [],
     }
+
+    // Pressurized environment includes steps, airlock, crewQuarters, greenhouse
+    // Position in order
     const pressurizedEnv = []
     if (config.crewQuarters.type !== 'none') {
-        pressurizedEnv.push(
+        layout.pressurized.push(
             {place: config.crewQuarters.type, amount: config.crewQuarters.amount}
         )
     }
     if (config.greenhouse.type !== 'none') {
-        pressurizedEnv.push(
+        layout.pressurized.push(
             {place: config.greenhouse.type, amount: config.greenhouse.amount}
         )
     }
-    if (pressurizedEnv.length > 0) { // If there are buildings, add airlock at the front
-        pressurizedEnv.unshift(
-            {place: 'empty', amount: 5},
+    if (layout.pressurized.length > 0) { // If there are buildings, add airlock at the front
+        layout.pressurized.unshift(
             {place: 'steps', amount: 1},
             {place: 'airlock', amount: 1}
         )
-        layout = layout.concat(pressurizedEnv)
     }
+
+    // Solar is just solar panels
+    if (Object.keys(config).includes('powerGeneration')) {
+        if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
+            layout.solar.push(
+                {place: config.powerGeneration.type, amount: config.powerGeneration.amount},
+            )
+        }
+    }
+
+    // Vehicles includes the rover and lander
+    layout.vehicles.push(
+        {place: 'rover', amount: 1},
+        {place: 'lander', amount: 1},
+    )
 
     return layout
 }
 
 const buildHabitat = (layout, models) => {
     const habitat = new THREE.Group()
+
+    // 1. Build the pressurized section
+    const pressurizedEnv = new THREE.Group()
     let edge = 0 // tracks the 'back' of last placed model
-    for (let i = layout.length - 1; i >= 0; i--) {
-        const item = layout[i]
+    for (let i = layout.pressurized.length - 1; i >= 0; i--) {
+        const item = layout.pressurized[i]
         if (item.place === 'empty') {
             edge -= item.amount
         } else {
@@ -69,11 +85,25 @@ const buildHabitat = (layout, models) => {
             model.position.z -= edge + (bbox.min.z * boxScale) // Move behind last object
             edge = edge - (bbox.max.z * boxScale) + (bbox.min.z * boxScale) // Reset back edge
 
-            habitat.add(model)
+            pressurizedEnv.add(model)
         }
     }
-    const bbox = new THREE.Box3().setFromObject(habitat)
-    habitat.position.z -= bbox.max.z/2 // Center habitat on origin
+    const bbox = new THREE.Box3().setFromObject(pressurizedEnv)
+    pressurizedEnv.position.z -= bbox.max.z // front door to habitat is at origin
+    const rightEdge = bbox.max.x
+    const leftEdge = bbox.min.x
+    habitat.add(pressurizedEnv)
+
+    // 2. Build solar array
+    const solar = layout.solar[0]
+    if (solar) {
+        const model = models[solar.place]
+        const bbox = new THREE.Box3().setFromObject(model)
+        model.position.y = -bbox.min.y // Place on ground
+        model.position.z -= bbox.max.z // Align front with front of habitat
+        model.position.x += rightEdge - bbox.min.x
+        habitat.add(model)
+    }
     return habitat
 }
 

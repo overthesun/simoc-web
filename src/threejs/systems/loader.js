@@ -77,15 +77,22 @@ class Loader {
 
     clearCache(layout) {
         // Remove items from cache which are not part of current layout
+                    // Make a list of all models in the scene
+                    const allModels = []
+                    for (let section in layout) {
+                        layout[section].forEach(item => allModels.push(item))
+                    }
 
         // Get the list of models in current layout
         const activePlaces = []
-        layout.forEach(item => {
-            const placeData = placeIndex[item.place]
-            if (placeData) {
-                activePlaces.push(placeData.assetName)
-            }
-        })
+        for (let section in layout) {
+            layout[section].forEach(item => {
+                const placeData = placeIndex[item.place]
+                if (placeData) {
+                    activePlaces.push(placeData.assetName)
+                }
+            })
+        }
 
         // Cycle through cache, find 3d models, check if active, remove if not.
         for (const [key, value] of Object.entries(THREE.Cache.files)) {
