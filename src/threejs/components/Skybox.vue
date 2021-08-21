@@ -3,6 +3,10 @@
 <script>
 import * as THREE from 'three'
 
+// Image taken from JMARS
+// (Not using because it doesn't go well with sky colors)
+const SURFACE_TEXTURE = 'mars-colormap-25973N23598E'
+
 export default {
     props: {
         scene: {
@@ -44,11 +48,13 @@ export default {
             const groundTexture = new THREE.TextureLoader().load(images.dn)
             groundTexture.wrapS = THREE.RepeatWrapping
             groundTexture.wrapT = THREE.RepeatWrapping
-            groundTexture.repeat.set(1000, 1000)
+            groundTexture.repeat.set(100, 100)
             const groundGeometry = new THREE.PlaneGeometry(10000, 10000)
             const groundMaterial = new THREE.MeshStandardMaterial({map: groundTexture})
             const mesh = new THREE.Mesh(groundGeometry, groundMaterial)
             mesh.position.y = 0.0
+            mesh.position.x = 50
+            mesh.position.z = 50
             mesh.rotation.x = -Math.PI / 2
             mesh.receiveShadow = true
             mesh.userData.key = 'ground'
