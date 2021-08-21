@@ -1,22 +1,11 @@
 import * as THREE from 'three'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
-import {buildSolar} from './habitat'
+import {buildSolar, placeIndex} from './habitat'
 
+// Turn on caching for all loaders (includes the skybox loader)
+// Assets will automatically be taken from cache if they have
+// already been loaded in current session.
 THREE.Cache.enabled = true
-
-const placeIndex = {
-    solar_pv_array_mars: {assetName: 'solar_panel'},
-    steps: {assetName: 'steps'},
-    airlock: {assetName: 'airlock'},
-    crew_habitat_sam: {assetName: 'hub_small'},
-    crew_habitat_small: {assetName: 'hub_small'},
-    crew_habitat_medium: {assetName: 'hub_large'},
-    crew_habitat_large: {assetName: 'hub_large'},
-    greenhouse_sam: {assetName: 'greenhouse_small'},
-    greenhouse_small: {assetName: 'greenhouse_small'},
-    greenhouse_medium: {assetName: 'greenhouse_medium'},
-    greenhouse_large: {assetName: 'greenhouse_large'},
-}
 
 class Loader {
     constructor(settings) {
@@ -25,11 +14,24 @@ class Loader {
         this.manager.onError = fname => {
             console.log(`There was a problem loading ${fname}`)
         }
+
+        this.manager.onStart = () => this.showLoadingScreen(true)
+        this.manager.onLoad = () => this.showLoadingScreen(false)
+
         this.loader = new GLTFLoader(this.manager)
     }
 
     settings(newSettings) {
         this.settings = newSettings
+    }
+
+    showLoadingScreen(value) {
+        const loadingScreen = document.getElementById('loading-overlay')
+        if (value) {
+            loadingScreen.style.display = 'flex'
+        } else {
+            loadingScreen.style.display = 'none'
+        }
     }
 
     async load({place, amount}) {
@@ -40,10 +42,9 @@ class Loader {
 
         // Load model
         const {assetName} = placeIndex[place]
-        let model
         // eslint-disable-next-line prefer-template
         const asset = await import('../../assets/models/' + assetName + '.glb')
-        model = await this.loader.loadAsync(asset.default)
+        let model = await this.loader.loadAsync(asset.default)
         model = model.scene
         // Rotate to face +z
         model.rotation.y += Math.PI/2
@@ -51,11 +52,6 @@ class Loader {
         if (assetName === 'solar_panel') {
             model = buildSolar(model, amount)
         }
-
-        // if (assetName === 'hub_small' || assetName === 'hub_large') {
-        //     const outline = new THREE.BoxHelper(model)
-        //     model.add(outline)
-        // }
 
         model.traverse(item => {
             // Set transparency
@@ -77,6 +73,34 @@ class Loader {
         })
 
         return model
+    }
+
+    clearCache(layout) {
+        // Remove items from cache which are not part of current layout
+
+        // Get the list of models in current layout
+        const activePlaces = []
+        layout.forEach(item => {
+            const placeData = placeIndex[item.place]
+            if (placeData) {
+                activePlaces.push(placeData.assetName)
+            }
+        })
+
+        // Cycle through cache, find 3d models, check if active, remove if not.
+        for (const [key, value] of Object.entries(THREE.Cache.files)) {
+            // By default, items are added to Cache with the following format:
+            // '/static/img/h2s_ft.b266c4a3.jpg'
+            const fname = key.split('/').slice(-1)[0]
+            const ftype = fname.split('.').slice(-1)[0]
+            if (ftype === 'glb') {
+                const place = fname.split('.')[0]
+                if (!activePlaces.includes(place)) {
+                    console.log(`Removing ${place} from cache`)
+                    THREE.Cache.remove(key)
+                }
+            }
+        }
     }
 }
 

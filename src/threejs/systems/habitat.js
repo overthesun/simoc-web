@@ -1,11 +1,27 @@
 import * as THREE from 'three'
 
+const placeIndex = {
+    solar_pv_array_mars: {assetName: 'solar_panel'},
+    steps: {assetName: 'steps'},
+    airlock: {assetName: 'airlock'},
+    crew_habitat_sam: {assetName: 'hub_small'},
+    crew_habitat_small: {assetName: 'hub_small'},
+    crew_habitat_medium: {assetName: 'hub_large'},
+    crew_habitat_large: {assetName: 'hub_large'},
+    greenhouse_sam: {assetName: 'greenhouse_small'},
+    greenhouse_small: {assetName: 'greenhouse_small'},
+    greenhouse_medium: {assetName: 'greenhouse_medium'},
+    greenhouse_large: {assetName: 'greenhouse_large'},
+    lander: {assetName: 'lander'},
+    rover: {assetName: 'rover'},
+}
+
 const buildLayout = config => {
     let layout = []
     if (Object.keys(config).includes('powerGeneration')) {
         if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
             layout.push(
-                {place: config.powerGeneration.type, amount: config.powerGeneration.amount}
+                {place: config.powerGeneration.type, amount: config.powerGeneration.amount},
             )
         }
     }
@@ -102,4 +118,4 @@ const buildSolar = (model, amount) => {
     return solar_array
 }
 
-export {buildLayout, buildHabitat, buildSolar}
+export {buildLayout, buildHabitat, buildSolar, placeIndex}

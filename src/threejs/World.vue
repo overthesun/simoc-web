@@ -1,10 +1,7 @@
 <template>
     <div id="world">
         <div id="scene-container" ref="sceneContainer" class="scene-container">
-            <!-- <div class="settingsMenu">
-                Auto-rotate
-                <input v-model="settings.rotate" type="checkbox">
-            </div> -->
+            <div id="loading-overlay">Loading...</div>
             <Tooltip :camera="camera" :scene="scene" :container-id="containerId"
                      :add-tick="addTick" :add-hookup="addHookup" />
         </div>
@@ -90,6 +87,9 @@ export default {
     },
     beforeDestroy() {
         this.stop()
+
+        // Remove unused items from cache.
+        this.loader.clearCache(this.layout)
     },
     methods: {
         init() {
@@ -179,5 +179,21 @@ export default {
     padding: 4px;
     background-color: #1e1e1eaa;
     z-index: 100;
+}
+
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
+    background-color: #1e1e1eaa;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: none;
 }
 </style>
