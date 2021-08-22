@@ -21,10 +21,6 @@ class Loader {
         this.loader = new GLTFLoader(this.manager)
     }
 
-    settings(newSettings) {
-        this.settings = newSettings
-    }
-
     showLoadingScreen(value) {
         const loadingScreen = document.getElementById('loading-overlay')
         if (value) {
@@ -46,6 +42,7 @@ class Loader {
         const asset = await import('../../assets/models/' + assetName + '.glb')
         let model = await this.loader.loadAsync(asset.default)
         model = model.scene
+
         // Rotate to face +z
         model.rotation.y += Math.PI/2
 
@@ -77,11 +74,6 @@ class Loader {
 
     clearCache(layout) {
         // Remove items from cache which are not part of current layout
-                    // Make a list of all models in the scene
-                    const allModels = []
-                    for (let section in layout) {
-                        layout[section].forEach(item => allModels.push(item))
-                    }
 
         // Get the list of models in current layout
         const activePlaces = []
@@ -95,19 +87,19 @@ class Loader {
         }
 
         // Cycle through cache, find 3d models, check if active, remove if not.
-        for (const [key, value] of Object.entries(THREE.Cache.files)) {
+        Object.keys(THREE.Cache.files).forEach(key => {
             // By default, items are added to Cache with the following format:
             // '/static/img/h2s_ft.b266c4a3.jpg'
             const fname = key.split('/').slice(-1)[0]
             const ftype = fname.split('.').slice(-1)[0]
-            if (ftype === 'glb') {
+            if (ftype === 'glb') {  // Ignore .jpg files
                 const place = fname.split('.')[0]
                 if (!activePlaces.includes(place)) {
                     console.log(`Removing ${place} from cache`)
                     THREE.Cache.remove(key)
                 }
             }
-        }
+        })
     }
 }
 
@@ -153,8 +145,7 @@ const placeholderRefs = {
 
 // Build a placeholder
 const buildPlaceholder = key => {
-    const {size} = placeholderRefs[key]
-    const {color} = placeholderRefs[key]
+    const {size, color} = placeholderRefs[key]
 
     const geometry = new BoxBufferGeometry(size[0], size[1], size[2])
     const spec = {color: color}

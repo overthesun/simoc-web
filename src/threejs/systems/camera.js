@@ -8,9 +8,9 @@ const buildCamera = () => {
         1000  // far plane
     )
     camera.position.set(
-        0,  // x
-        5,  // y
-        30  // z
+        40,  // x
+        20,  // y
+        80   // z
     )
     return camera
 }

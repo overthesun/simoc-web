@@ -14,6 +14,7 @@ import * as THREE from 'three'
 
 import Tooltip from './components/Tooltip'
 import Skybox from './components/Skybox'
+import StatsBox from './systems/stats'
 import {buildCamera} from './systems/camera'
 import {buildRenderer} from './systems/renderer'
 import {buildControls} from './systems/controls'
@@ -44,9 +45,10 @@ export default {
                 shadows: false,
                 transparency: false,
                 rotate: false,
-                antialias: false,
+                antialias: true,
                 maxDistance: 200,
                 enableDamping: true,
+                stats: true,
             },
 
             // Systems: ThreeJS tools and objects
@@ -57,6 +59,7 @@ export default {
             lights: null,
             resizer: null,
             loader: null,
+            stats: null,
 
             // State
             layout: {}, // An object with the current layout parameters
@@ -101,6 +104,9 @@ export default {
             this.lights = buildLights(this.settings, this.scene)
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId, this.addHookup)
             this.loader = new Loader(this.settings)
+            if (this.settings.stats) {
+                this.states = new StatsBox(this.containerId, this.addTick)
+            }
         },
         start() {
             this.hookupables.forEach(obj => obj.hookup())

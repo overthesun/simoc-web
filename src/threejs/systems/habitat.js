@@ -17,29 +17,28 @@ const placeIndex = {
 }
 
 const buildLayout = config => {
+    // Build a basic, human-readable 'layout' object from a gameConfig object.
     let layout = {
         pressurized: [],
         solar: [],
         vehicles: [],
     }
 
-    // Pressurized environment includes steps, airlock, crewQuarters, greenhouse
-    // Position in order
-    const pressurizedEnv = []
-    if (config.crewQuarters.type !== 'none') {
-        layout.pressurized.push(
-            {place: config.crewQuarters.type, amount: config.crewQuarters.amount}
-        )
-    }
+    // Pressurized buildings includes crewQuarters and greenhouse
     if (config.greenhouse.type !== 'none') {
         layout.pressurized.push(
             {place: config.greenhouse.type, amount: config.greenhouse.amount}
         )
     }
+    if (config.crewQuarters.type !== 'none') {
+        layout.pressurized.push(
+            {place: config.crewQuarters.type, amount: config.crewQuarters.amount}
+        )
+    }
     if (layout.pressurized.length > 0) { // If there are buildings, add airlock at the front
-        layout.pressurized.unshift(
+        layout.pressurized.push(
+            {place: 'airlock', amount: 1},
             {place: 'steps', amount: 1},
-            {place: 'airlock', amount: 1}
         )
     }
 
@@ -52,9 +51,10 @@ const buildLayout = config => {
         }
     }
 
-    // Vehicles includes the rover and lander
+    // Vehicles includes the rover and lander by default
     layout.vehicles.push(
         {place: 'rover', amount: 1},
+        {place: 'empty', amount: 50},
         {place: 'lander', amount: 1},
     )
 
@@ -64,32 +64,27 @@ const buildLayout = config => {
 const buildHabitat = (layout, models) => {
     const habitat = new THREE.Group()
 
-    // 1. Build the pressurized section
+    // 1. Build the pressurized section, centered at x=0, extending from z=0 into -z
     const pressurizedEnv = new THREE.Group()
-    let edge = 0 // tracks the 'back' of last placed model
-    for (let i = layout.pressurized.length - 1; i >= 0; i--) {
-        const item = layout.pressurized[i]
-        if (item.place === 'empty') {
-            edge -= item.amount
-        } else {
-            const model = models[item.place]
-            const bbox = new THREE.Box3().setFromObject(model)
+    let backEdge = 0
+    layout.pressurized.forEach(item => {
+        const model = models[item.place]
 
-            let boxScale = 1
-            if (['crew_habitat_small', 'crew_habitat_medium',
-                 'crew_habitat_large'].includes(item.place)) {
-                boxScale = 0.82
-            }
-
-            model.position.y = -bbox.min.y // Place on ground
-            model.position.z -= edge + (bbox.min.z * boxScale) // Move behind last object
-            edge = edge - (bbox.max.z * boxScale) + (bbox.min.z * boxScale) // Reset back edge
-
-            pressurizedEnv.add(model)
+        let scl = 1
+        if (['crew_habitat_small', 'crew_habitat_medium',
+        'crew_habitat_large'].includes(item.place)) {
+            scl = 0.82  // Remove 'margin' around the outside of hub models
         }
-    }
+
+        const bbox = new THREE.Box3().setFromObject(model)
+        model.position.y = -bbox.min.y  // Place on ground
+        model.position.z -= backEdge + (bbox.min.z * scl)  // Move behind last object
+        backEdge = backEdge - (bbox.max.z * scl) + (bbox.min.z * scl)  // Reset back edge
+
+        pressurizedEnv.add(model)
+    })
     const bbox = new THREE.Box3().setFromObject(pressurizedEnv)
-    pressurizedEnv.position.z -= bbox.max.z // front door to habitat is at origin
+    pressurizedEnv.position.z -= bbox.max.z  // front door to habitat is at origin
     const rightEdge = bbox.max.x
     const leftEdge = bbox.min.x
     habitat.add(pressurizedEnv)
@@ -99,14 +94,41 @@ const buildHabitat = (layout, models) => {
     if (solar) {
         const model = models[solar.place]
         const bbox = new THREE.Box3().setFromObject(model)
-        model.position.y = -bbox.min.y // Place on ground
-        model.position.z -= bbox.max.z // Align front with front of habitat
-        model.position.x += rightEdge - bbox.min.x
+        model.position.y = -bbox.min.y  // Place on ground
+        model.position.z -= bbox.max.z  // Align front with front of habitat
+        model.position.x += rightEdge - bbox.min.x  // Move to 'right' of habitat
+        model.rotation.y += Math.PI/4  // Rotate 45-deg
         habitat.add(model)
     }
+
+    // 3. Add vehicles
+    const vehicles = new THREE.Group()
+    let vBackEdge = 0
+    layout.vehicles.forEach(item => {
+        if (item.place === 'empty') {
+            vBackEdge += item.amount
+        } else {
+            const model = models[item.place]
+            const bbox = new THREE.Box3().setFromObject(model)
+            model.position.y = -bbox.min.y  // Place on ground
+            if (item.place === 'rover') {
+                model.position.y -= 1.35  // Rover has 'margin' on bottom
+            }
+            model.position.z -= vBackEdge - bbox.min.z  // Move behind last object
+            vBackEdge = vBackEdge - bbox.max.z - bbox.min.z  // Reset back edge
+            vehicles.add(model)
+        }
+    })
+    const vbox = new THREE.Box3().setFromObject(vehicles)
+    vehicles.position.x += leftEdge - vbox.max.x // Move to 'left' of habitat
+    habitat.add(vehicles)
+
+    // Center everything at x=0
+    const hbox = new THREE.Box3().setFromObject(habitat)
+    habitat.position.x -= (hbox.max.x + hbox.min.x) / 2
+
     return habitat
 }
-
 
 const buildSolar = (model, amount) => {
     const panelBox = new THREE.Box3().setFromObject(model)
@@ -115,9 +137,8 @@ const buildSolar = (model, amount) => {
     const colSpacing = 1
     const rowSpacing = -0.5
 
-    // Make a layout in the form of [[height] * width]
+    // Make an array in the form of [[height] * width]
     // Calculate the largest square, add extras in columns
-    // math ref: https://math.stackexchange.com/a/1183694
     const squareRatio = Math.round((depth + colSpacing) / (width + rowSpacing) * 10) / 10
     const widthRaw = Math.sqrt(amount * squareRatio)
     const height = Math.floor(widthRaw / squareRatio)
