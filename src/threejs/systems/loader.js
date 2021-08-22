@@ -8,8 +8,9 @@ import {buildSolar, placeIndex} from './habitat'
 THREE.Cache.enabled = true
 
 class Loader {
-    constructor(settings) {
+    constructor(settings, showLoadingScreen) {
         this.settings = settings
+        this.showLoadingScreen = showLoadingScreen
         this.manager = new THREE.LoadingManager()
         this.manager.onError = fname => {
             console.log(`There was a problem loading ${fname}`)
@@ -19,15 +20,6 @@ class Loader {
         this.manager.onLoad = () => this.showLoadingScreen(false)
 
         this.loader = new GLTFLoader(this.manager)
-    }
-
-    showLoadingScreen(value) {
-        const loadingScreen = document.getElementById('loading-overlay')
-        if (value) {
-            loadingScreen.style.display = 'flex'
-        } else {
-            loadingScreen.style.display = 'none'
-        }
     }
 
     async load({place, amount}) {

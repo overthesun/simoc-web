@@ -1,7 +1,7 @@
 <template>
     <div id="world">
         <div id="scene-container" ref="sceneContainer" class="scene-container">
-            <div id="loading-overlay">Loading...</div>
+            <div ref="loadingScreen" class="loading-screen">Loading...</div>
             <Tooltip :camera="camera" :scene="scene" :container-id="containerId"
                      :add-tick="addTick" :add-hookup="addHookup" />
         </div>
@@ -127,6 +127,14 @@ export default {
             // {name: String, tick: Function}
             this.updatables.push(obj)
         },
+        showLoadingScreen(value) {
+            const ls = this.$refs.loadingScreen
+            if (value) {
+                ls.style.display = 'flex'
+            } else {
+                ls.style.display = 'none'
+            }
+        },
         async buildScene(config) {
             // Check if config update results in layout update (not always the case)
             const layout = buildLayout(config)
@@ -193,7 +201,7 @@ export default {
     z-index: 100;
 }
 
-#loading-overlay {
+.loading-screen {
     position: absolute;
     top: 0;
     left: 0;

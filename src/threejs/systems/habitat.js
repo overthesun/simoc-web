@@ -111,9 +111,6 @@ const buildHabitat = (layout, models) => {
             const model = models[item.place]
             const bbox = new THREE.Box3().setFromObject(model)
             model.position.y = -bbox.min.y  // Place on ground
-            if (item.place === 'rover') {
-                model.position.y -= 1.35  // Rover has 'margin' on bottom
-            }
             model.position.z -= vBackEdge - bbox.min.z  // Move behind last object
             vBackEdge = vBackEdge - bbox.max.z - bbox.min.z  // Reset back edge
             vehicles.add(model)
