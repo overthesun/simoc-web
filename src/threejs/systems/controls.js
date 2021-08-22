@@ -10,7 +10,7 @@ const buildControls = (camera, domElement, settings, addTick) => {
 
     addTick({
         name: 'controls',
-        tick: () => controls.update()
+        tick: () => controls.update(),
     })
 
     return controls

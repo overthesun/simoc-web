@@ -18,7 +18,7 @@ const placeIndex = {
 
 const buildLayout = config => {
     // Build a basic, human-readable 'layout' object from a gameConfig object.
-    let layout = {
+    const layout = {
         pressurized: [],
         solar: [],
         vehicles: [],
@@ -38,7 +38,7 @@ const buildLayout = config => {
     if (layout.pressurized.length > 0) { // If there are buildings, add airlock at the front
         layout.pressurized.push(
             {place: 'airlock', amount: 1},
-            {place: 'steps', amount: 1},
+            {place: 'steps', amount: 1}
         )
     }
 
@@ -46,7 +46,7 @@ const buildLayout = config => {
     if (Object.keys(config).includes('powerGeneration')) {
         if (config.powerGeneration.type !== 'none' && config.powerGeneration.amount) {
             layout.solar.push(
-                {place: config.powerGeneration.type, amount: config.powerGeneration.amount},
+                {place: config.powerGeneration.type, amount: config.powerGeneration.amount}
             )
         }
     }
@@ -55,7 +55,7 @@ const buildLayout = config => {
     layout.vehicles.push(
         {place: 'rover', amount: 1},
         {place: 'empty', amount: 50},
-        {place: 'lander', amount: 1},
+        {place: 'lander', amount: 1}
     )
 
     return layout
@@ -72,31 +72,31 @@ const buildHabitat = (layout, models) => {
 
         let scl = 1
         if (['crew_habitat_small', 'crew_habitat_medium',
-        'crew_habitat_large'].includes(item.place)) {
+             'crew_habitat_large'].includes(item.place)) {
             scl = 0.82  // Remove 'margin' around the outside of hub models
         }
 
-        const bbox = new THREE.Box3().setFromObject(model)
-        model.position.y = -bbox.min.y  // Place on ground
-        model.position.z -= backEdge + (bbox.min.z * scl)  // Move behind last object
-        backEdge = backEdge - (bbox.max.z * scl) + (bbox.min.z * scl)  // Reset back edge
+        const mBox = new THREE.Box3().setFromObject(model)
+        model.position.y = -mBox.min.y  // Place on ground
+        model.position.z -= backEdge + (mBox.min.z * scl)  // Move behind last object
+        backEdge = backEdge - (mBox.max.z * scl) + (mBox.min.z * scl)  // Reset back edge
 
         pressurizedEnv.add(model)
     })
-    const bbox = new THREE.Box3().setFromObject(pressurizedEnv)
-    pressurizedEnv.position.z -= bbox.max.z  // front door to habitat is at origin
-    const rightEdge = bbox.max.x
-    const leftEdge = bbox.min.x
+    const peBox = new THREE.Box3().setFromObject(pressurizedEnv)
+    pressurizedEnv.position.z -= peBox.max.z  // front door to habitat is at origin
+    const rightEdge = peBox.max.x
+    const leftEdge = peBox.min.x
     habitat.add(pressurizedEnv)
 
     // 2. Build solar array
     const solar = layout.solar[0]
     if (solar) {
         const model = models[solar.place]
-        const bbox = new THREE.Box3().setFromObject(model)
-        model.position.y = -bbox.min.y  // Place on ground
-        model.position.z -= bbox.max.z  // Align front with front of habitat
-        model.position.x += rightEdge - bbox.min.x  // Move to 'right' of habitat
+        const sBox = new THREE.Box3().setFromObject(model)
+        model.position.y = -sBox.min.y  // Place on ground
+        model.position.z -= sBox.max.z  // Align front with front of habitat
+        model.position.x += rightEdge - sBox.min.x  // Move to 'right' of habitat
         model.rotation.y += Math.PI/4  // Rotate 45-deg
         habitat.add(model)
     }
@@ -109,15 +109,15 @@ const buildHabitat = (layout, models) => {
             vBackEdge += item.amount
         } else {
             const model = models[item.place]
-            const bbox = new THREE.Box3().setFromObject(model)
-            model.position.y = -bbox.min.y  // Place on ground
-            model.position.z -= vBackEdge - bbox.min.z  // Move behind last object
-            vBackEdge = vBackEdge - bbox.max.z - bbox.min.z  // Reset back edge
+            const mBox = new THREE.Box3().setFromObject(model)
+            model.position.y = -mBox.min.y  // Place on ground
+            model.position.z -= vBackEdge - mBox.min.z  // Move behind last object
+            vBackEdge = vBackEdge - mBox.max.z - mBox.min.z  // Reset back edge
             vehicles.add(model)
         }
     })
-    const vbox = new THREE.Box3().setFromObject(vehicles)
-    vehicles.position.x += leftEdge - vbox.max.x // Move to 'left' of habitat
+    const vBox = new THREE.Box3().setFromObject(vehicles)
+    vehicles.position.x += leftEdge - vBox.max.x // Move to 'left' of habitat
     habitat.add(vehicles)
 
     // Center everything at x=0
@@ -128,9 +128,9 @@ const buildHabitat = (layout, models) => {
 }
 
 const buildSolar = (model, amount) => {
-    const panelBox = new THREE.Box3().setFromObject(model)
-    const width = panelBox.max.x - panelBox.min.x
-    const depth = panelBox.max.z - panelBox.min.z
+    const pBox = new THREE.Box3().setFromObject(model)
+    const width = pBox.max.x - pBox.min.x
+    const depth = pBox.max.z - pBox.min.z
     const colSpacing = 1
     const rowSpacing = -0.5
 
@@ -160,9 +160,9 @@ const buildSolar = (model, amount) => {
         }
     })
 
-    const arrayBox = new THREE.Box3().setFromObject(solar_array)
-    solar_array.position.x = -arrayBox.max.x/2
-    solar_array.position.z = -arrayBox.max.z/2
+    const aBox = new THREE.Box3().setFromObject(solar_array)
+    solar_array.position.x = -aBox.max.x/2
+    solar_array.position.z = -aBox.max.z/2
     return solar_array
 }
 

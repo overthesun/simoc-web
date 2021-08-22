@@ -103,7 +103,7 @@ export default {
                                           this.settings, this.addTick)
             this.lights = buildLights(this.settings, this.scene)
             this.resizer = new Resizer(this.camera, this.renderer, this.containerId, this.addHookup)
-            this.loader = new Loader(this.settings)
+            this.loader = new Loader(this.settings, this.showLoadingScreen)
             if (this.settings.stats) {
                 this.states = new StatsBox(this.containerId, this.addTick)
             }
@@ -145,9 +145,9 @@ export default {
 
             // Make a list of all models in the scene
             const allModels = []
-            for (let section in layout) {
-                layout[section].forEach(item => allModels.push(item))
-            }
+            Object.entries(layout).forEach(([key, section]) => {
+                section.forEach(item => allModels.push(item))
+            })
 
             // Load models
             const models = {}
