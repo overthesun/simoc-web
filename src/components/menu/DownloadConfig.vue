@@ -8,7 +8,7 @@ import {mapActions} from 'vuex'
 export default {
     props: {
         isValid: Boolean,
-        config: {type: Function, required: true},
+        config: {type: Object, required: true},
         fileName: {type: String, default: 'simoc_download.json'},
         alertUserOnInvalid: {type: Boolean, default: false},
         buttonText: {type: String, default: 'Download Configuration'},
