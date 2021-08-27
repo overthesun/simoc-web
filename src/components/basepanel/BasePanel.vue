@@ -61,16 +61,23 @@ export default {
     padding: 8px;
 }
 
+.panel-hidden {
+    display: none;
+}
+
+.panel-fullscreen {
+}
+
 .panel-header {
     font-family: 'Nasalization', "Open Sans", sans-serif;
     margin: 0;
     border-bottom: 1px solid #999;
     font-size: 16px;
     font-weight: 300;
-    display:grid;
+    display: grid;
     /* maybe using a single grid layout for
         title/icon/content would be better */
-    grid-template-columns: 1fr 26px;
+    grid-template-columns: 1fr 52px;
 }
 
 .panel select {

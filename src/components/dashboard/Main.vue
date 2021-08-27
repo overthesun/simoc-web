@@ -7,11 +7,17 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div class="dashboard-view-wrapper">
-        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))" :key="index">
+    <div :class="{'dashboard-onepanel': fullscreenStatus.includes('panel-fullscreen')}"
+         class="dashboard-view-wrapper">
+        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
+                   :key="index" :class="fullscreenStatus[index]">
             <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template v-slot:panel-menu>
                 <div class="panel-menu">
+                    <!-- the fullscreen icon, enlarge/shrink the panel when clicked -->
+                    <div class="menu-icon-wrapper" @click="resizePanel(index)">
+                        <fa-icon :icon="['fas','arrows-alt']" class="fa-icon menu-icon" />
+                    </div>
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
                         <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
@@ -62,6 +68,7 @@ export default {
             // list of default panels; update this to change the initial panels displayed
             activePanels: [],
             panels: panels,  // object mapping all available panel names with their corresponding object
+            fullscreenStatus: [],  // list of CSS classes for each panel's fullscreen status
             visibleMenu: null,  // the index of the visible panel menu, null if no panel menu is open
             visiblePanelSelect: null,  // the index of the visible panel select dropdown
             selectedPanel: null,  // store the name of the panel selected through the dropdown
@@ -83,6 +90,7 @@ export default {
     watch: {
         getActivePanels() {
             this.activePanels = this.getActivePanels
+            this.resetFullscreenStatus()
         },
     },
     beforeMount() {
@@ -96,6 +104,18 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
+
+        resetFullscreenStatus() {
+            this.fullscreenStatus = new Array(this.activePanels.length).fill('')
+        },
+        resizePanel(index) {
+            if (this.fullscreenStatus[index] === 'panel-fullscreen') {
+                this.resetFullscreenStatus()
+            } else {
+                this.fullscreenStatus = new Array(this.activePanels.length).fill('panel-hidden')
+                this.fullscreenStatus[index] = 'panel-fullscreen'
+            }
+        },
 
         openPanelMenu(index) {
             // open the panel menu at index or close it if it's already open
@@ -160,9 +180,15 @@ export default {
         grid-column-gap: 16px;
         overflow: auto;
     }
+    .dashboard-onepanel {
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+    }
 
     .panel-menu {
         position: relative;
+        display: flex;
+        flex: 1 1;
 
     }
     .panel-menu .menu-icon-wrapper {
