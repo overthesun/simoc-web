@@ -44,6 +44,8 @@ menu button being present on other unrelated configurations.
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
                 <div :class="{'option-item-active' : 'Graphs'===activeOption}"
                      class="option-item" @click="SETACTIVEREFERENCE('Graphs')">GRAPHS</div>
+                <div :class="{'option-item-active' : 'Layout'===activeOption}"
+                     class="option-item" @click="SETACTIVEREFERENCE('Layout')">LAYOUT</div>
             </nav>
             <main class="main main-reference">
                 <slot name="main-wizard-reference" />
@@ -109,10 +111,17 @@ export default {
         grid-template-rows: 22px minmax(0,1fr) 48px;
     }
 
+.main-reference{
+    width: 100%;
+    overflow: hidden;
+}
+
     .reference-wrapper{
         height:100%;
+        max-width:100%;
         padding:16px;
         box-sizing:border-box;
+        overflow:hidden;
     }
 
     header {
@@ -184,6 +193,7 @@ export default {
 
     .option-item{
         position:relative;
+        font-size:0.9em;
 
         &:hover{
             cursor:pointer;
