@@ -2,18 +2,17 @@
 -->
 
 <template>
-    <p>Layout</p>
-</template>
     <World :game-config="getConfiguration" :is-active="active" />
+</template>
 
 <script>
 import {mapGetters} from 'vuex'
-// import World from '../../threejs/World'
+import World from '../../threejs/World'
 
 export default {
-    // components: {
-    //     World,
-    // },
+    components: {
+        World,
+    },
     data() {
         return {
             active: true,

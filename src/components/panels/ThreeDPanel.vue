@@ -1,17 +1,16 @@
 <template>
-    <p>ThreeD</p>
-</template>
     <World :game-config="getConfiguration" :is-active="true" />
+</template>
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-// import World from '../../threejs/World'
+import World from '../../threejs/World'
 
 export default {
     panelTitle: 'Habitat View',
-    // components: {
-    //     World: World,
-    // },
+    components: {
+        World: World,
+    },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
     },
