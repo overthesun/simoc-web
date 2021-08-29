@@ -30,11 +30,6 @@ let scene
 let camera
 let renderer
 let loader
-let controls
-let lights
-let resizer
-let skybox
-let stats
 
 export default {
     components: {
@@ -61,7 +56,7 @@ export default {
                 antialias: true,
                 maxDistance: 200,
                 enableDamping: true,
-                // stats: true,
+                stats: false,
             },
 
             // State
@@ -103,12 +98,14 @@ export default {
             renderer = buildRenderer(this.containerId, this.settings)
             loader = new Loader(this.settings, this.showLoadingScreen)
 
+            // eslint-disable-next-line no-new
             new Resizer(camera, renderer, this.containerId, this.addHookup)
             buildControls(camera, renderer.domElement, this.settings, this.addTick)
             buildLights(this.settings, scene)
             buildSkybox(scene, this.settings)
             if (this.settings.stats) {
-                StatsBox(this.containerId, this.addTick)
+                // eslint-disable-next-line no-new
+                new StatsBox(this.containerId, this.addTick)
             }
         },
         start() {
