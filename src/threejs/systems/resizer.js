@@ -1,12 +1,13 @@
 class Resizer {
-    constructor(camera, renderer, containerId, addHookup) {
-        this.containerId = containerId
+    constructor(camera, renderer, addHookup, container) {
+        this.container = container
         this.camera = camera
         this.renderer = renderer
         this.setSize()
 
         this.hookup = this.hookup.bind(this)
         this.unhook = this.unhook.bind(this)
+        this.setSize = this.setSize.bind(this)
         addHookup({
             name: 'resizer',
             hookup: this.hookup,
@@ -15,9 +16,8 @@ class Resizer {
     }
 
     setSize() {
-        const container = document.getElementById(this.containerId)
-        const width = container.offsetWidth
-        const height = container.offsetHeight
+        const width = this.container.offsetWidth
+        const height = this.container.offsetHeight
         const aspectRatio = width / height
         this.camera.aspect = aspectRatio
         this.camera.updateProjectionMatrix()
@@ -26,7 +26,7 @@ class Resizer {
     }
 
     hookup() {
-        window.addEventListener('resize', () => this.setSize())
+        window.addEventListener('resize', this.setSize)
     }
 
     unhook() {

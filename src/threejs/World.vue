@@ -99,7 +99,7 @@ export default {
             loader = new Loader(this.settings, this.showLoadingScreen)
 
             // eslint-disable-next-line no-new
-            new Resizer(camera, renderer, this.containerId, this.addHookup)
+            new Resizer(camera, renderer, this.addHookup, this.$refs.sceneContainer)
             buildControls(camera, renderer.domElement, this.settings, this.addTick)
             buildLights(this.settings, scene)
             buildSkybox(scene, this.settings)
