@@ -56,7 +56,7 @@ export default {
         stringFormatter: StringFormatter,
 
         toggle(section) {
-            this.$set(this.isOpen, section, !this.isOpen[section])
+            this.isOpen[section] = !this.isOpen[section]
         },
 
         handleAgent(section, agent) {
