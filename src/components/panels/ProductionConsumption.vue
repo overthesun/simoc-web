@@ -30,6 +30,7 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    emits: ['panel-section-changed'],
     data() {
         return {
             // default on 'atmo_co2' if we don't get anything

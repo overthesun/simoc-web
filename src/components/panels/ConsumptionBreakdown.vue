@@ -9,9 +9,9 @@
                 </option>
             </select>
             <dl>
-                <template v-for="(agent_data, agent_name, k) in selected_consumption">
-                    <dt :key="`dt_${agent_name}_${k}`">{{stringFormatter(agent_name)}}</dt>
-                    <dd :key="`dd_${agent_name}_${k}`">{{agent_data.value}} {{units[selected_currency]}}</dd>
+                <template v-for="(agent_data, agent_name, k) in selected_consumption" :key="`tmpl_${agent_name}_${k}`">
+                    <dt>{{stringFormatter(agent_name)}}</dt>
+                    <dd>{{agent_data.value}} {{units[selected_currency]}}</dd>
                 </template>
             </dl>
         </template>

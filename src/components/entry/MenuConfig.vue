@@ -9,14 +9,14 @@ Can be reenabled in Menu.vue if needed.
 <template>
     <div class="entry-wrapper">
         <BaseEntry>
-            <template v-slot:option-items>
+            <template #option-items>
                 <div class="option-item option-item-active"> CONFIGURATION MENU </div>
             </template>
-            <template v-slot:entry-main>
+            <template #entry-main>
                 <button form="login-form" class="btn-normal" @click="toGuided">GUIDED CONFIGURATION</button>
                 <button form="login-form" class="btn-normal" @click="toCustom">CUSTOM CONFIGURATION</button>
             </template>
-            <template v-slot:entry-button>
+            <template #entry-button>
                 <div class="btn-wrapper">
                     <button form="login-form" class="btn-warning" @click="toMainMenu">MAIN MENU</button>
                 </div>

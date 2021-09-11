@@ -3,63 +3,66 @@
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="getMenuActive" />
-        <router-view>
-            <!-- Wizard Jump Options, only available in Guided Configuration -->
-            <template v-slot:navigation-section-select>
-                <!-- Set the activeForm index if the user changes the value to something other than selected -->
-                <select class="section-select" @change="setActiveForm">
-                    <option selected disabled>Jump To Section</option>
-                    <option :selected="formIndex === 0" value="0">Initial</option>
-                    <option :selected="formIndex === 1" value="1">Inhabitants</option>
-                    <option :selected="formIndex === 2" value="2">Greenhouse</option>
-                    <option :selected="formIndex === 3" value="3">Energy</option>
-                    <option :selected="formIndex === 4" value="4">Finalize</option>
-                </select>
-            </template>
-            <template v-slot:main-wizard-input>
-                <form ref="form" class="form-wrapper" @submit.prevent="">
-                    <!-- If we are in Guided config and not at the finalize step, only show the activeForm component -->
-                    <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
-                    <!-- Else, if we are in the Custom config or in the Finalize step
-                         of the Guided config, show all components -->
-                    <section v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'"
-                             :class="{'validating': validating}" class="form-wrapper">
-                        <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
-                        <Initial ref="initial" />
-                        <Inhabitants ref="inhabitants" />
-                        <Greenhouse ref="greenhouse" />
-                        <Energy ref="energy" />
-                        <!--
-                        This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
-                        <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
-                        -->
-                    </section>
-                </form>
-            </template>
-            <template v-slot:wizard-configuration-footer>
-                <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
-                <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
-                    <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
-                         No animations present to require it. -->
-                    <button v-if="!isFirstForm" class="btn-previous" @click="decrementIndex">Previous Section</button>
-                    <button v-if="!isFinalForm" class="btn-next" @click="incrementIndex">Next Section</button>
-                    <button v-if="isFinalForm" class="btn-launch" @click="launchSimulation">Launch Simulation</button>
-                </nav>
-                <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
-                <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper">
-                    <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
-                </nav>
-            </template>
+        <router-view v-slot="{Component}">
+            <component :is="Component">
+                <!-- Wizard Jump Options, only available in Guided Configuration -->
+                <template #navigation-section-select>
+                    <!-- Set the activeForm index if the user changes the value to something other than selected -->
+                    <select class="section-select" @change="setActiveForm">
+                        <option selected disabled>Jump To Section</option>
+                        <option :selected="formIndex === 0" value="0">Initial</option>
+                        <option :selected="formIndex === 1" value="1">Inhabitants</option>
+                        <option :selected="formIndex === 2" value="2">Greenhouse</option>
+                        <option :selected="formIndex === 3" value="3">Energy</option>
+                        <option :selected="formIndex === 4" value="4">Finalize</option>
+                    </select>
+                </template>
+                <template #main-wizard-input>
+                    <form ref="form" class="form-wrapper" @submit.prevent="">
+                        <!-- If we are in Guided config and not at the finalize step,
+                             only show the activeForm component -->
+                        <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
+                        <!-- Else, if we are in the Custom config or in the Finalize step
+                            of the Guided config, show all components -->
+                        <section v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'"
+                                 :class="{'validating': validating}" class="form-wrapper">
+                            <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
+                            <Initial ref="initial" />
+                            <Inhabitants ref="inhabitants" />
+                            <Greenhouse ref="greenhouse" />
+                            <Energy ref="energy" />
+                            <!--
+                            This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
+                            <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
+                            -->
+                        </section>
+                    </form>
+                </template>
+                <template #wizard-configuration-footer>
+                    <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
+                    <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
+                        <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
+                            No animations present to require it. -->
+                        <button v-if="!isFirstForm" class="btn-previous" @click="decrementIndex">Previous Section</button>
+                        <button v-if="!isFinalForm" class="btn-next" @click="incrementIndex">Next Section</button>
+                        <button v-if="isFinalForm" class="btn-launch" @click="launchSimulation">Launch Simulation</button>
+                    </nav>
+                    <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
+                    <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper">
+                        <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
+                    </nav>
+                </template>
 
-            <template v-slot:main-wizard-reference>
-                <keep-alive>
+                <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
-                    <component :is="getActiveReference" />
-                </keep-alive>
-                <!--<Reference/>-->
-                <!--<GreenhouseDoughnut/>-->
-            </template>
-            <template v-slot:footer-wizard-reference />
+                    <keep-alive>
+                        <component :is="getActiveReference" />
+                    </keep-alive>
+                    <!--<Reference/>-->
+                    <!--<GreenhouseDoughnut/>-->
+                </template>
+                <template #footer-wizard-reference />
+            </component>
         </router-view>
     </div>
 

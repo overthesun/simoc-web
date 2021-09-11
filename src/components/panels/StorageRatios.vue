@@ -29,6 +29,7 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    emits: ['panel-section-changed'],
     data() {
         return {
             storage: undefined,

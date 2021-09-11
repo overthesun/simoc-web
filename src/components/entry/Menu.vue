@@ -4,10 +4,10 @@
 <template>
     <div class="entry-wrapper">
         <BaseEntry>
-            <template v-slot:option-items>
+            <template #option-items>
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
-            <template v-slot:entry-main>
+            <template #entry-main>
                 <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
@@ -16,7 +16,7 @@
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
-            <template v-slot:entry-button>
+            <template #entry-button>
                 <div class="btn-wrapper">
                     <button form="login-form" class="btn-warning" @click="logout">Log Out</button>
                 </div>
@@ -43,7 +43,7 @@ export default {
     mounted() {
         window.addEventListener('keydown', this.keyListener)
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {

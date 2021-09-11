@@ -16,7 +16,7 @@ module.exports = {
         es6: true,
     },
     extends: [
-        'plugin:vue/recommended',  // rules list: https://eslint.vuejs.org/rules/
+        'plugin:vue/vue3-recommended',  // rules list: https://eslint.vuejs.org/rules/
         '@vue/airbnb',  // rules list: https://github.com/airbnb/javascript
     ],
     parser: 'vue-eslint-parser',

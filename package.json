@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,7 +11,7 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^2.0.2",
+    "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "@json-editor/json-editor": "^2.5.4",
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
@@ -19,24 +19,25 @@
     "core-js": "^3.15.2",
     "json-loader": "^0.5.7",
     "socket.io-client": "^3.0.4",
-    "vue": "^2.6.10",
-    "vue-gtag": "^1.8.0",
-    "vue-router": "^3.0.3",
-    "vuex": "^3.0.1"
+    "vue": "^3.1.5",
+    "vue-gtag-next": "^1.14.0",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@vue/cli-plugin-babel": "^4.5.13",
-    "@vue/cli-plugin-eslint": "^4.5.13",
-    "@vue/cli-service": "^3.12.1",
+    "@vue/cli-plugin-babel": "^5.0.0-beta.3",
+    "@vue/cli-plugin-eslint": "^5.0.0-beta.3",
+    "@vue/cli-service": "^5.0.0-beta.3",
+    "@vue/compiler-sfc": "^3.1.5",
     "@vue/eslint-config-airbnb": "^5.3.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
     "eslint-formatter-summary": "^1.1.0",
-    "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.6.10"
+    "eslint-plugin-vue": "^7.14.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.52.0"
   },
   "postcss": {
     "plugins": {
