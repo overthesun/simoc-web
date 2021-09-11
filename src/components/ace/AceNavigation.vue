@@ -46,7 +46,7 @@ export default {
     },
     mounted() {
         this.sections.forEach(section => {
-            this.$set(this.isOpen, section, false)
+            this.isOpen[section] = !this.isOpen[section]
         })
     },
     methods: {
