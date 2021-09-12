@@ -39,7 +39,7 @@ module.exports = {
     // ref: https://stegriff.co.uk/upblog/how-to-change-webpack-settings-set-by-vue-cli/)
     lintOnSave: true,
 
-    // // adding a new loader: https://cli.vuejs.org/guide/webpack.html#adding-a-new-loader
+    // adding a new loader: https://cli.vuejs.org/guide/webpack.html#adding-a-new-loader
     chainWebpack: config => {
         // .glb Loader
         config.module

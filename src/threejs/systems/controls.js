@@ -5,7 +5,7 @@ const buildControls = (camera, domElement, settings, addTick) => {
     controls.maxPolarAngle = Math.PI * 0.49
 
     controls.maxDistance = settings.maxDistance ? settings.maxDistance : 200
-    controls.enableDamping = settings.enableDamping ? settings.enableDamping : true
+    controls.enableDamping = settings.enableDamping
     controls.autoRotate = settings.rotate
 
     addTick({
