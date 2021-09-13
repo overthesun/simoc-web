@@ -102,17 +102,8 @@ export default {
         },
         // Adapted from '../views/DashboardView.vue'
         keyListener(e) {
-            let key_matched = true
-            switch (e.key) {
-                case 'a':
-                    this.showAgentEditor = true
-                    break
-                default:
-                    key_matched = false  // no key matched
-                    break
-            }
-            if (key_matched) {
-                e.preventDefault()
+            if (e.ctrlKey && e.key === 'a') {
+                this.showAgentEditor = true
             }
         },
     },
