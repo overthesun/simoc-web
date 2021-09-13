@@ -26,6 +26,18 @@ jobs:
           mkdir simdata
           cd simdata
           wget -r -nH --cut-dirs=2 --no-parent --accept="*.json" -erobots=off -q --show-progress https://simoc.space/download/simdata/
+      - name: Download skybox
+        run: |
+          cd src/assets
+          mkdir skybox
+          cd skybox
+          wget -r -nH --cut-dirs=2 --no-parent --accept="*.jpg" -erobots=off -q --show-progress https://simoc.space/download/skybox/
+      - name: Download models
+        run: |
+          cd src/assets
+          mkdir models
+          cd models
+          wget -r -nH --cut-dirs=2 --no-parent --accept="*.glb" -erobots=off -q --show-progress https://simoc.space/download/models/
       - name: npm install, build, test, and lint
         run: |
           npm install
