@@ -74,7 +74,7 @@ import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
-        Greenhouse, Energy, Reference, Graphs} from '../components/configuration'
+        Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 
 export default {
     components: {
@@ -87,6 +87,7 @@ export default {
         Energy,
         Reference,
         Graphs,
+        Layout,
     },
     data() {
         return {

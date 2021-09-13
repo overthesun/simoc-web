@@ -117,7 +117,7 @@ export default {
         display:flex;
         justify-content:center;
         align-items:center;
-        margin-bottom: 48px;
+        margin-bottom: 36px;
     }
 
     ::v-deep(.option-item) {
@@ -157,7 +157,7 @@ export default {
         justify-content:flex-start;
         align-items:center;
         flex-direction:column;
-        margin-bottom:48px;
+        margin-bottom:16px;
         overflow: hidden;
         overflow-y:auto;
         position:relative;
@@ -190,7 +190,7 @@ export default {
         width: 256px;
         height: 48px;
         min-height: 48px;
-        margin-bottom: 24px;
+        margin-bottom: 12px;
         border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
