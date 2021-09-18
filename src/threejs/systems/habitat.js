@@ -74,7 +74,7 @@ const buildHabitat = (layout, models) => {
 
         let scl = 1
         if (['crew_habitat_small', 'crew_habitat_medium',
-             'crew_habitat_large'].includes(item.place)) {
+             'crew_habitat_large', 'crew_habitat_sam'].includes(item.place)) {
             scl = 0.82  // Remove 'margin' around the outside of hub models
         }
 
