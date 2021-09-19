@@ -2,6 +2,8 @@ import * as THREE from 'three'
 
 const placeIndex = {
     solar_pv_array_mars: {assetName: 'solar_panel'},
+    solar_panel_single: {assetName: 'solar_panel_single'},
+    solar_panel_double: {assetName: 'solar_panel_double'},
     steps: {assetName: 'steps'},
     airlock: {assetName: 'airlock'},
     crew_habitat_sam: {assetName: 'hub_small'},
@@ -139,37 +141,37 @@ const buildHabitat = (layout, models) => {
     return habitat
 }
 
-const buildSolar = (model, baseAmount) => {
-    // Each 'solar_panel' model includes 3 panels
-    const amount = Math.ceil(baseAmount / 3)
+const buildSolar = (baseAmount, model, single_panel, double_panel) => {
+    // Build layout: rows of roughly equal length up to N panels long
+    const MAX_ROW_LENGTH = 20
+    const fullCols = Math.floor(baseAmount / 3) // columns with 3 panels (default)
+    const oddCol = baseAmount - (fullCols * 3) // last col with 1 or 2 panels
+    const totalCols = fullCols + (oddCol ? 1 : 0)
+    const nRows = Math.ceil(totalCols / MAX_ROW_LENGTH)
+    const baseRowLength = Math.round(totalCols / nRows)
+    const lastRowLength = totalCols - ((nRows - 1) * baseRowLength)
+    const layout = Array(nRows - 1).fill(baseRowLength)
+    layout.push(lastRowLength)
 
+    // Calculate spacing values
     const pBox = new THREE.Box3().setFromObject(model)
     const width = pBox.max.x - pBox.min.x
     const depth = pBox.max.z - pBox.min.z
     const colSpacing = 1
     const rowSpacing = -0.5
 
-    // Make an array in the form of [[height] * width]
-    // Calculate the largest square, add extras in columns
-    const squareRatio = Math.round((depth + colSpacing) / (width + rowSpacing) * 10) / 10
-    const widthRaw = Math.sqrt(amount * squareRatio)
-    const height = Math.floor(widthRaw / squareRatio)
-    const widthBase = height
-    const extraPanels = amount - (height * widthBase)
-    const extraRows = Math.floor(extraPanels / height)
-    const layout = Array(widthBase + extraRows).fill(height)
-    const extraCol = extraPanels - (extraRows * height)
-    if (extraCol) {
-        layout.push(extraCol)
-    }
-
     // Build an array of clones
     const solar_array = new THREE.Group()
     layout.forEach((col, i) => {
         for (let j = col; j > 0; j--) {
-            const panelModel = model.clone()
-            const offsetX = i * ((width + rowSpacing) + (width/2))
-            const offsetZ = j * ((depth + colSpacing) + (depth/2))
+            let panelModel
+            if (i === 0 && j === col && oddCol) {
+                panelModel = oddCol === 1 ? single_panel : double_panel
+            } else {
+                panelModel = model.clone()
+            }
+            const offsetX = j * ((width + rowSpacing) + (width/2))
+            const offsetZ = i * ((depth + colSpacing) + (depth/2))
             panelModel.position.set(offsetX, 0, offsetZ)
             solar_array.add(panelModel)
         }

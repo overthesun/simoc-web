@@ -22,6 +22,16 @@ class Loader {
         this.loader = new GLTFLoader(this.manager)
     }
 
+    async loadModel(assetName, place) {
+        // eslint-disable-next-line prefer-template
+        const asset = await import('../../assets/models/' + assetName + '.glb')
+        let model = await this.loader.loadAsync(asset.default)
+        model = model.scene
+        model.name = place
+        model.rotation.y += Math.PI/2 // Face +z
+        return model
+    }
+
     async load({place, amount}) {
         if (!(place in placeIndex)) {
             console.log(`Place ${place} not in placeIndex.`)
@@ -30,17 +40,12 @@ class Loader {
 
         // Load model
         const {assetName} = placeIndex[place]
-        // eslint-disable-next-line prefer-template
-        const asset = await import('../../assets/models/' + assetName + '.glb')
-        let model = await this.loader.loadAsync(asset.default)
-        model = model.scene
-        model.name = place
-
-        // Rotate to face +z
-        model.rotation.y += Math.PI/2
+        let model = await this.loadModel(assetName, place)
 
         if (assetName === 'solar_panel') {
-            model = buildSolar(model, amount)
+            const single_panel = await this.loadModel('solar_panel_single', 'solar_panel_single')
+            const double_panel = await this.loadModel('solar_panel_double', 'solar_panel_double')
+            model = buildSolar(amount, model, single_panel, double_panel)
         }
 
         model.traverse(item => {
@@ -92,7 +97,6 @@ class Loader {
             if (ftype === 'glb') {  // Ignore .jpg files
                 const place = fname.split('.')[0]
                 if (!activePlaces.includes(place)) {
-                    console.log(`Removing ${place} from cache`)
                     THREE.Cache.remove(key)
                 }
             }
