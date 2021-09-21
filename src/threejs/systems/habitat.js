@@ -124,8 +124,8 @@ const buildHabitat = (layout, models) => {
         }
     })
     const vBox = new THREE.Box3().setFromObject(vehicles)
-    vehicles.position.x += leftEdge - vBox.max.x // Move to 'left' of habitat
-    vehicles.position.x -= 10// Add extra space (for greenhouse_large + rocket)
+    vehicles.position.x += leftEdge - vBox.max.x  // Move to 'left' of habitat
+    vehicles.position.x -= 10  // Add extra space (for greenhouse_large + rocket)
     habitat.add(vehicles)
 
     // Center everything at x=0
