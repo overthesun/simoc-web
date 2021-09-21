@@ -4,6 +4,7 @@ const placeIndex = {
     solar_pv_array_mars: {assetName: 'solar_panel'},
     solar_panel_single: {assetName: 'solar_panel_single'},
     solar_panel_double: {assetName: 'solar_panel_double'},
+    solar_panel_triple: {assetName: 'solar_panel'},
     steps: {assetName: 'steps'},
     airlock: {assetName: 'airlock'},
     crew_habitat_sam: {assetName: 'hub_small'},
@@ -141,20 +142,29 @@ const buildHabitat = (layout, models) => {
     return habitat
 }
 
-const buildSolar = (baseAmount, model, single_panel, double_panel) => {
-    // Build layout: rows of roughly equal length up to N panels long
+const buildSolar = (nPanels, solar_panel_single, solar_panel_double, solar_panel_triple) => {
+    // Arrange panels into rows of equal length up to N panels long. Use the following names:
+    // - PANEL: A single, square solar panel.
+    // - GROUP: 1, 2 or 3 panels, a single model
+    // - ROW: Several groups positioned side-by-side
+    const PANELS_PER_GROUP = 3
     const MAX_ROW_LENGTH = 20
-    const fullCols = Math.floor(baseAmount / 3) // columns with 3 panels (default)
-    const oddCol = baseAmount - (fullCols * 3) // last col with 1 or 2 panels
-    const totalCols = fullCols + (oddCol ? 1 : 0)
-    const nRows = Math.ceil(totalCols / MAX_ROW_LENGTH)
-    const baseRowLength = Math.round(totalCols / nRows)
-    const lastRowLength = totalCols - ((nRows - 1) * baseRowLength)
+
+    // Determine the number of groups and size of last group
+    const nGroups = Math.ceil(nPanels / PANELS_PER_GROUP)
+    const lastGroupSize = nPanels - ((nGroups - 1) * PANELS_PER_GROUP)
+
+    // Determine the number of rows, length, and length of last row
+    const nRows = Math.ceil(nGroups / MAX_ROW_LENGTH)
+    const baseRowLength = Math.ceil(nGroups / nRows)
+    const lastRowLength = nGroups - ((nRows - 1) * baseRowLength)
+
+    // Build layout array where elements = rows and element values = row lengths
     const layout = Array(nRows - 1).fill(baseRowLength)
     layout.push(lastRowLength)
 
     // Calculate spacing values
-    const pBox = new THREE.Box3().setFromObject(model)
+    const pBox = new THREE.Box3().setFromObject(solar_panel_triple)
     const width = pBox.max.x - pBox.min.x
     const depth = pBox.max.z - pBox.min.z
     const colSpacing = 1
@@ -165,10 +175,11 @@ const buildSolar = (baseAmount, model, single_panel, double_panel) => {
     layout.forEach((col, i) => {
         for (let j = col; j > 0; j--) {
             let panelModel
-            if (i === 0 && j === col && oddCol) {
-                panelModel = oddCol === 1 ? single_panel : double_panel
+            // Use different model for last group
+            if (i === 0 && j === col && lastGroupSize !== PANELS_PER_GROUP) {
+                panelModel = lastGroupSize === 1 ? solar_panel_single : solar_panel_double
             } else {
-                panelModel = model.clone()
+                panelModel = solar_panel_triple.clone()
             }
             const offsetX = j * ((width + rowSpacing) + (width/2))
             const offsetZ = i * ((depth + colSpacing) + (depth/2))

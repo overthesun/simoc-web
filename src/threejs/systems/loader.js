@@ -40,12 +40,14 @@ class Loader {
 
         // Load model
         const {assetName} = placeIndex[place]
-        let model = await this.loadModel(assetName, place)
-
+        let model
         if (assetName === 'solar_panel') {
-            const single_panel = await this.loadModel('solar_panel_single', 'solar_panel_single')
-            const double_panel = await this.loadModel('solar_panel_double', 'solar_panel_double')
-            model = buildSolar(amount, model, single_panel, double_panel)
+            const solar_panel_single = await this.loadModel('solar_panel_single', 'solar_array')
+            const solar_panel_double = await this.loadModel('solar_panel_double', 'solar_array')
+            const solar_panel_triple = await this.loadModel('solar_panel', 'solar_array')
+            model = buildSolar(amount, solar_panel_single, solar_panel_double, solar_panel_triple)
+        } else {
+            model = await this.loadModel(assetName, place)
         }
 
         model.traverse(item => {
