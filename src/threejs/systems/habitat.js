@@ -161,7 +161,7 @@ const buildSolar = (nPanels, solar_panel_single, solar_panel_double, solar_panel
 
     // Build layout array where elements = rows and element values = row lengths
     const layout = Array(nRows - 1).fill(baseRowLength)
-    layout.push(lastRowLength)
+    layout.unshift(lastRowLength)
 
     // Calculate spacing values
     const pBox = new THREE.Box3().setFromObject(solar_panel_triple)
