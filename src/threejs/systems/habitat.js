@@ -2,6 +2,9 @@ import * as THREE from 'three'
 
 const placeIndex = {
     solar_pv_array_mars: {assetName: 'solar_panel'},
+    solar_panel_single: {assetName: 'solar_panel_single'},
+    solar_panel_double: {assetName: 'solar_panel_double'},
+    solar_panel_triple: {assetName: 'solar_panel'},
     steps: {assetName: 'steps'},
     airlock: {assetName: 'airlock'},
     crew_habitat_sam: {assetName: 'hub_small'},
@@ -74,7 +77,7 @@ const buildHabitat = (layout, models) => {
 
         let scl = 1
         if (['crew_habitat_small', 'crew_habitat_medium',
-             'crew_habitat_large'].includes(item.place)) {
+             'crew_habitat_large', 'crew_habitat_sam'].includes(item.place)) {
             scl = 0.82  // Remove 'margin' around the outside of hub models
         }
 
@@ -121,7 +124,8 @@ const buildHabitat = (layout, models) => {
         }
     })
     const vBox = new THREE.Box3().setFromObject(vehicles)
-    vehicles.position.x += leftEdge - vBox.max.x // Move to 'left' of habitat
+    vehicles.position.x += leftEdge - vBox.max.x  // Move to 'left' of habitat
+    vehicles.position.x -= 10  // Add extra space (for greenhouse_large + rocket)
     habitat.add(vehicles)
 
     // Center everything at x=0
@@ -138,37 +142,47 @@ const buildHabitat = (layout, models) => {
     return habitat
 }
 
-const buildSolar = (model, baseAmount) => {
-    // Each 'solar_panel' model includes 3 panels
-    const amount = Math.ceil(baseAmount / 3)
+const buildSolar = (nPanels, solar_panel_single, solar_panel_double, solar_panel_triple) => {
+    // Arrange panels into rows of equal length up to N panels long. Use the following names:
+    // - PANEL: A single, square solar panel.
+    // - GROUP: 1, 2 or 3 panels, a single model
+    // - ROW: Several groups positioned side-by-side
+    const PANELS_PER_GROUP = 3
+    const MAX_ROW_LENGTH = 20
 
-    const pBox = new THREE.Box3().setFromObject(model)
+    // Determine the number of groups and size of last group
+    const nGroups = Math.ceil(nPanels / PANELS_PER_GROUP)
+    const lastGroupSize = nPanels - ((nGroups - 1) * PANELS_PER_GROUP)
+
+    // Determine the number of rows, length, and length of last row
+    const nRows = Math.ceil(nGroups / MAX_ROW_LENGTH)
+    const baseRowLength = Math.ceil(nGroups / nRows)
+    const lastRowLength = nGroups - ((nRows - 1) * baseRowLength)
+
+    // Build layout array where elements = rows and element values = row lengths
+    const layout = Array(nRows - 1).fill(baseRowLength)
+    layout.unshift(lastRowLength)
+
+    // Calculate spacing values
+    const pBox = new THREE.Box3().setFromObject(solar_panel_triple)
     const width = pBox.max.x - pBox.min.x
     const depth = pBox.max.z - pBox.min.z
     const colSpacing = 1
     const rowSpacing = -0.5
 
-    // Make an array in the form of [[height] * width]
-    // Calculate the largest square, add extras in columns
-    const squareRatio = Math.round((depth + colSpacing) / (width + rowSpacing) * 10) / 10
-    const widthRaw = Math.sqrt(amount * squareRatio)
-    const height = Math.floor(widthRaw / squareRatio)
-    const widthBase = height
-    const extraPanels = amount - (height * widthBase)
-    const extraRows = Math.floor(extraPanels / height)
-    const layout = Array(widthBase + extraRows).fill(height)
-    const extraCol = extraPanels - (extraRows * height)
-    if (extraCol) {
-        layout.push(extraCol)
-    }
-
     // Build an array of clones
     const solar_array = new THREE.Group()
     layout.forEach((col, i) => {
         for (let j = col; j > 0; j--) {
-            const panelModel = model.clone()
-            const offsetX = i * ((width + rowSpacing) + (width/2))
-            const offsetZ = j * ((depth + colSpacing) + (depth/2))
+            let panelModel
+            // Use different model for last group
+            if (i === 0 && j === col && lastGroupSize !== PANELS_PER_GROUP) {
+                panelModel = lastGroupSize === 1 ? solar_panel_single : solar_panel_double
+            } else {
+                panelModel = solar_panel_triple.clone()
+            }
+            const offsetX = j * ((width + rowSpacing) + (width/2))
+            const offsetZ = i * ((depth + colSpacing) + (depth/2))
             panelModel.position.set(offsetX, 0, offsetZ)
             solar_array.add(panelModel)
         }
