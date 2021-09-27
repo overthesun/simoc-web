@@ -67,32 +67,36 @@ const buildLayout = config => {
 const buildHabitat = (layout, models) => {
     const habitat = new THREE.Group()
     habitat.name = 'habitat'
+    let rightEdge = 0
+    let leftEdge = 0
 
     // 1. Build the pressurized section, centered at x=0, extending from z=0 into -z
-    const pressurizedEnv = new THREE.Group()
-    pressurizedEnv.name = 'pressurizedEnv'
-    let backEdge = 0
-    layout.pressurized.forEach(item => {
-        const model = models[item.place]
+    if (layout.pressurized.length > 0) {
+        const pressurizedEnv = new THREE.Group()
+        pressurizedEnv.name = 'pressurizedEnv'
+        let backEdge = 0
+        layout.pressurized.forEach(item => {
+            const model = models[item.place]
 
-        let scl = 1
-        if (['crew_habitat_small', 'crew_habitat_medium',
-             'crew_habitat_large', 'crew_habitat_sam'].includes(item.place)) {
-            scl = 0.82  // Remove 'margin' around the outside of hub models
-        }
+            let scl = 1
+            if (['crew_habitat_small', 'crew_habitat_medium',
+                 'crew_habitat_large', 'crew_habitat_sam'].includes(item.place)) {
+                scl = 0.82  // Remove 'margin' around the outside of hub models
+            }
 
-        const mBox = new THREE.Box3().setFromObject(model)
-        model.position.y = -mBox.min.y  // Place on ground
-        model.position.z -= backEdge + (mBox.min.z * scl)  // Move behind last object
-        backEdge = backEdge - (mBox.max.z * scl) + (mBox.min.z * scl)  // Reset back edge
+            const mBox = new THREE.Box3().setFromObject(model)
+            model.position.y = -mBox.min.y  // Place on ground
+            model.position.z -= backEdge + (mBox.min.z * scl)  // Move behind last object
+            backEdge = backEdge - (mBox.max.z * scl) + (mBox.min.z * scl)  // Reset back edge
 
-        pressurizedEnv.add(model)
-    })
-    const peBox = new THREE.Box3().setFromObject(pressurizedEnv)
-    pressurizedEnv.position.z -= peBox.max.z  // front door to habitat is at origin
-    const rightEdge = peBox.max.x
-    const leftEdge = peBox.min.x
-    habitat.add(pressurizedEnv)
+            pressurizedEnv.add(model)
+        })
+        const peBox = new THREE.Box3().setFromObject(pressurizedEnv)
+        pressurizedEnv.position.z -= peBox.max.z  // front door to habitat is at origin
+        rightEdge = peBox.max.x
+        leftEdge = peBox.min.x
+        habitat.add(pressurizedEnv)
+    }
 
     // 2. Build solar array
     const solar = layout.solar[0]
