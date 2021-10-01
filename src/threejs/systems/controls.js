@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-const EYE_LEVEL = 2 // The lowest viewing angle should eye-level, not ground
+const EYE_LEVEL = 2 // The lowest viewing angle should be eye-level, not ground
 
 const buildControls = (camera, domElement, settings, addTick) => {
     const controls = new OrbitControls(camera, domElement)
