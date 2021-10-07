@@ -1,9 +1,12 @@
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
+const EYE_LEVEL = 2 // The lowest viewing angle should be eye-level, not ground
+
 const buildControls = (camera, domElement, settings, addTick) => {
     const controls = new OrbitControls(camera, domElement)
     controls.maxPolarAngle = Math.PI * 0.49
+    controls.target.set(0, EYE_LEVEL, 0)
 
     controls.maxDistance = settings.maxDistance ? settings.maxDistance : 200
     controls.enableDamping = settings.enableDamping
@@ -12,8 +15,8 @@ const buildControls = (camera, domElement, settings, addTick) => {
     // Limit pan
     // eslint-disable-next-line max-len
     // ref: https://discourse.threejs.org/t/how-to-limit-pan-in-orbitcontrols-for-orthographiccamera/9061/10
-    const minPan = new THREE.Vector3(-50, 0, -50)
-    const maxPan = new THREE.Vector3(50, 0, 50)
+    const minPan = new THREE.Vector3(-50, EYE_LEVEL, -50)
+    const maxPan = new THREE.Vector3(50, EYE_LEVEL, 50)
     const adjPan = new THREE.Vector3()
 
     controls.addEventListener('change', () => {
