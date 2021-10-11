@@ -55,7 +55,12 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
         total_storage_capacity() {
-            return this.getGameConfig.storages.air_storage[0].total_capacity.value
+            // gameConfig structure has been updated in the backend, but presets use old structure.
+            if (Array.isArray(this.getGameConfig.storages.air_storage)) {
+                return this.getGameConfig.storages.air_storage[0].total_capacity.value
+            } else {
+                return this.getGameConfig.storages.air_storage.total_capacity.value
+            }
         },
     },
     methods: {
