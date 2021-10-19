@@ -46,7 +46,8 @@ export default {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
-                                    'getStorageCapacities', 'getGameConfig']),
+                                    'getStorageCapacities', 'getGameConfig',
+                                    'getHumanAtmosphere']),
         step() {
             return this.getCurrentStepBuffer
         },
@@ -119,7 +120,7 @@ export default {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step).air_storage[1]
+            const air_storage = this.getStorageCapacities(this.step)[this.getHumanAtmosphere][1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {

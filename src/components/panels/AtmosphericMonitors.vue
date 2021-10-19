@@ -53,7 +53,7 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getHumanAtmosphere', 'getGameConfig']),
         total_storage_capacity() {
             // gameConfig structure has been updated in the backend, but presets use old structure.
             if (Array.isArray(this.getGameConfig.storages.air_storage)) {
@@ -68,7 +68,7 @@ export default {
             // TODO: handle multiple air_storages with an optional dropdown
             const {total_storage_capacity} = this
             return step => {
-                const amount = this.getStorageCapacities(step).air_storage[1][currency].value
+                const amount = this.getStorageCapacities(step)[this.getHumanAtmosphere][1][currency].value
                 return amount / total_storage_capacity * 100
             }
         },
