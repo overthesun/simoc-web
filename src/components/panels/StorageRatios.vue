@@ -7,7 +7,8 @@
             </option>
         </select>
         <div>
-            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage" />
+            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage"
+                         :storages-mapping="storagesMapping" />
         </div>
     </div>
 </template>
@@ -33,6 +34,7 @@ export default {
     data() {
         return {
             storage: undefined,
+            storagesMapping: {},
         }
     },
     computed: {
@@ -50,7 +52,10 @@ export default {
                 stor_group.forEach((stor, stor_id) => {
                     // each stor has an additional id key, so we need >2 keys to have
                     // two currencies (one id key + two or more currency keys)
-                    if (Object.keys(stor).length > 2) {
+                    // ABM Redesign: gameConfig objects include other fields, so need to
+                    // filter for currencies. Including '_' is a shorthand way to do that.
+                    const currencies = Object.keys(stor).filter(c => c.includes('_'))
+                    if (currencies.length > 2) {
                         filtered.push([stor_name, stor_id+1])
                     }
                 })
@@ -72,6 +77,13 @@ export default {
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
         this.storage = this.panelSection ?? this.getMultiCurrencyStorages[0].join('/')
+        Object.entries(this.getGameConfig.storages).forEach(([storage_name, storage]) => {
+            if (storage[0].storageType) {
+                this.storagesMapping[storage_name] = storage[0].storageType[0]
+            } else {
+                this.storagesMapping[storage_name] = storage_name
+            }
+        })
     },
     methods: {
         stringFormatter: StringFormatter,

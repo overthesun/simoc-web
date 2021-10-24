@@ -54,10 +54,10 @@ export default {
         total_air_storage_capacity() {
             // return the total capacity of the air storage
             // gameConfig structure has been updated in the backend, but presets use old structure.
-            if (Array.isArray(this.getGameConfig.storages.air_storage)) {
-                return this.getGameConfig.storages.air_storage[0].total_capacity.value
+            if (Array.isArray(this.getGameConfig.storages[this.getHumanAtmosphere])) {
+                return this.getGameConfig.storages[this.getHumanAtmosphere][0].total_capacity.value
             } else {
-                return this.getGameConfig.storages.air_storage.total_capacity.value
+                return this.getGameConfig.storages[this.getHumanAtmosphere].total_capacity.value
             }
         },
         o2() {

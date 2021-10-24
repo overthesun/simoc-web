@@ -190,13 +190,7 @@ export default {
                 state.humanAtmosphere = 'air_storage'
                 state.gameConfig = value
             } else {
-                const storages = {
-                    air_storage: [],
-                    food_storage: [],
-                    water_storage: [],
-                    nutrient_storage: [],
-                    power_storage: [],
-                }
+                const storages = {}
                 const storageTypes = {
                     atmo: 'air_storage',
                     food: 'food_storage',
@@ -206,20 +200,22 @@ export default {
                     enrg: 'power_storage',
                 }
                 Object.entries(value.agents).forEach(([agent_type, attributes]) => {
-                    const addedTo = []
+                    // Agents can store more than 1 class of currencies; we add a 'storageType'
+                    // attribute which is an array of all the storageTypes it contains.
+                    const storageType = []
                     Object.keys(attributes).forEach(field => {
                         Object.entries(storageTypes).forEach(([prefix, storage]) => {
-                            if (field.includes(prefix)) {
-                                if (!addedTo.includes(storage)) {
-                                    addedTo.push(storage)
-                                    storages[storage].push({name: agent_type, ...attributes})
-                                    if (prefix === 'atmo' && agent_type.includes('habitat')) {
-                                        state.humanAtmosphere = agent_type
-                                    }
+                            if (field.includes(prefix) && !storageType.includes(storage)) {
+                                storageType.push(storage)
+                                if (prefix === 'atmo' && agent_type.includes('habitat')) {
+                                    state.humanAtmosphere = agent_type
                                 }
                             }
                         })
                     })
+                    if (storageType.length) {
+                        storages[agent_type] = [{storageType, ...attributes}]
+                    }
                 })
                 state.gameConfig = {...value, storages}
             }
