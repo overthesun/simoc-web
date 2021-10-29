@@ -42,7 +42,7 @@ export default {
         getMultiCurrencyStorages() {
             const {storages} = this.getGameConfig
             // The storages var looks like:
-            // {air_storage: {0: {atmo_o2:..., atmo_co2,...}, 1: {...}}, food_storage: {...}, ...}
+            // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
             // Some storages (e.g. power_storage) only have 1 currency in the inner object,
             // so it doesn't make much sense to calculate the ratios for those storages.
             // This function takes all the storages that have at least 2 currencies,

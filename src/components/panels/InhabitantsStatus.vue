@@ -62,7 +62,7 @@ export default {
         },
         o2() {
             return this.attempt_read(() => {
-                const o2_perc = this.get_gas_percentage('atmo_o2')
+                const o2_perc = this.get_gas_percentage('o2')
                 /*
                 Color the O2 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
@@ -78,7 +78,7 @@ export default {
         },
         co2() {
             return this.attempt_read(() => {
-                const co2_perc = this.get_gas_percentage('atmo_co2')
+                const co2_perc = this.get_gas_percentage('co2')
                 /*
                 Color the CO2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
@@ -95,15 +95,15 @@ export default {
         water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {h2o_potb} = storage.water_storage[1]
-                return `${h2o_potb.value} ${h2o_potb.unit}`
+                const {potable} = storage.water_storage[1]
+                return `${potable.value} ${potable.unit}`
             })
         },
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {food_edbl} = storage.food_storage[1]
-                return `${food_edbl.value} ${food_edbl.unit}`
+                const {ration} = storage.food_storage[1]
+                return `${ration.value} ${ration.unit}`
             })
         },
         humans() {
