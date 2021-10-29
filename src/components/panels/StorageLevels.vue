@@ -40,7 +40,6 @@ export default {
             return {
                 atmo_o2: 'Oxygen (O₂)',
                 atmo_co2: 'Carbon dioxide (CO₂)',
-                atmo_co2tank: 'CO₂ Storage',
                 atmo_n2: 'Nitrogen (N₂)',
                 atmo_ch4: 'Methane (CH₄)',
                 atmo_h2: 'Free hydrogen (H₂)',
