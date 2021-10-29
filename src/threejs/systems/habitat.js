@@ -108,6 +108,12 @@ const buildHabitat = (layout, models) => {
         model.position.z -= sBox.max.z  // Align front with front of habitat
         model.position.x += rightEdge - sBox.min.x  // Move to 'right' of habitat
         model.rotation.y += Math.PI/4  // Rotate 45-deg
+
+        // Rotating the rectangular solar array causes the corners to stick out beyond the sBox
+        // calculated above. Pad to prevent overlap with pressurized environment.
+        const SOLAR_PADDING = 5
+        model.position.x += SOLAR_PADDING
+
         habitat.add(model)
     }
 

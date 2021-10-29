@@ -185,20 +185,8 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    z-index: 10;
+    z-index: 8;
     flex-grow: 1;
-}
-
-.settingsMenu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: auto;
-    height: auto;
-    margin: 4px;
-    padding: 4px;
-    background-color: #1e1e1eaa;
-    z-index: 100;
 }
 
 .loading-screen {
@@ -209,7 +197,7 @@ export default {
     height: 100%;
     color: white;
     background-color: #1e1e1eaa;
-    z-index: 101;
+    z-index: 9;
     display: flex;
     flex-direction: column;
     align-items: center;

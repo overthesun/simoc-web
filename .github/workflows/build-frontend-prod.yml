@@ -44,17 +44,26 @@ jobs:
           npm run build --if-present
           npm test --if-present
           npm run lint -- --no-fix
-      - name: Create Frontend Artifacts
-        run: tar -cvf frontend_dist.tar dist/
-      - name: Save Frontend Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist-archive
-          path: frontend_dist.tar
-      - name: Backend Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository: overthesun/simoc
-          event-type: frontend-update-prod
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      # To avoid hitting the artifact quota,
+      # disable the next two steps for now.
+      # The artifact doesn't seem to be used anyway.
+#     - name: Create Frontend Artifacts
+#       run: tar -cvf frontend_dist.tar dist/
+#     - name: Save Frontend Artifacts
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: dist-archive
+#         path: frontend_dist.tar
+      # This step can be used to notify the backend
+      # that the frontend changed.  The backend can
+      # then listen to a repository_dispatch event
+      # and automatically build and deploy the
+      # changes.  Backend deployment is triggered
+      # manually now, so this step is disabled too.
+#     - name: Backend Repository Dispatch
+#       uses: peter-evans/repository-dispatch@v1
+#       with:
+#         token: ${{ secrets.ACCESS_TOKEN }}
+#         repository: overthesun/simoc
+#         event-type: frontend-update-prod
+#         client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
