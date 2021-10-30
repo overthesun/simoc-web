@@ -55,12 +55,10 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getStorageCapacities', 'getHumanAtmosphere', 'getGameConfig']),
         total_storage_capacity() {
+            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
             // gameConfig structure has been updated in the backend, but presets use old structure.
-            if (Array.isArray(this.getGameConfig.storages[this.getHumanAtmosphere])) {
-                return this.getGameConfig.storages[this.getHumanAtmosphere][0].total_capacity.value
-            } else {
-                return this.getGameConfig.storages[this.getHumanAtmosphere].total_capacity.value
-            }
+            storage = Array.isArray(storage) ? storage[0] : storage
+            return storage.total_capacity.value
         },
     },
     methods: {
