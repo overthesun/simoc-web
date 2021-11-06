@@ -117,25 +117,25 @@ export default {
 
 <style lang="scss" scoped>
 #simDataInputFile {
-  display: none;
+    display: none;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
-.entry-wrapper{
-  height:100%;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  box-sizing:border-box;
-  position:relative;
-}
+    .entry-wrapper{
+        height:100%;
+        width:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        box-sizing:border-box;
+        position:relative;
+    }
 
-.btn-warning{
-  background-color: #ff3100;
-}
+    .btn-warning{
+        background-color: #ff3100;
+    }
 </style>
