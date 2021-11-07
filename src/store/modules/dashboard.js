@@ -127,7 +127,12 @@ export default {
         SETLOADFROMSIMDATA(state, value) {
             state.loadFromSimData = value
         },
+        // load the live Dashboard
+        // TODO: Create a default object for the live view, determine which variables
+        //  are necessary for the live dashboard
+        SETLIVE(state) {
 
+        },
 
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
