@@ -14,7 +14,7 @@
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
                 <button :class="{'hidden': !showSensorMode}" form="login-form" class="btn-normal"
-                        @click="toAce">SENSOR MODE</button>
+                        @click="toLiveDashboard">SENSOR MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
@@ -32,6 +32,7 @@
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseEntry} from '../base'
+import * as data from '../../assets/simdata/simoc-simdata-1-human-preset'
 
 export default {
     components: {
@@ -50,7 +51,8 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
+                                      'SETLIVE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -66,6 +68,22 @@ export default {
         toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
+        },
+        // Send the user to the live Dashboard
+        toLiveDashboard() {
+            // TODO: Refactor below to set up dashboard with initial values
+            // this.SETLIVE()
+            try {
+                this.SETCONFIGURATION(data.configuration)
+                this.SETSIMULATIONDATA(data)
+                this.SETBUFFERMAX(data.steps)
+            } catch (error) {
+                console.error(error)  // report full error in the console
+                this.alert('An error occurred while reading the file.')
+                return
+            }
+            this.SETLOADFROMSIMDATA(true)
+            this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
