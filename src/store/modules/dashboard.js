@@ -53,6 +53,7 @@ export default {
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
+        humanAtmosphere: 'air_storage',  // the name of the habitat agent which humans breathe
         activePanels: [],
     },
     getters: {
@@ -82,6 +83,7 @@ export default {
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
+        getHumanAtmosphere: state => state.humanAtmosphere,
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
@@ -179,7 +181,44 @@ export default {
         },
         // this is the full game_config returned by the backend after a /new_game
         SETGAMECONFIG(state, value) {
-            state.gameConfig = value
+            /*
+            As of October '21, the backend no longer distinguishes between agents and storages.
+            Much of the dashboard was designed to pull directly from gameConfig.storages.
+            Here, we determine which agents have storage, and add them back manually.
+            */
+            if (Object.keys(value).includes('storages')) {
+                state.humanAtmosphere = 'air_storage'
+                state.gameConfig = value
+            } else {
+                const storages = {}
+                const storageTypes = {
+                    atmo: 'air_storage',
+                    food: 'food_storage',
+                    h2o: 'water_storage',
+                    sold: 'nutrient_storage',
+                    biomass: 'nutrient_storage',
+                    enrg: 'power_storage',
+                }
+                Object.entries(value.agents).forEach(([agent_type, attributes]) => {
+                    // Agents can store more than 1 class of currencies; we add a 'storageType'
+                    // attribute which is an array of all the storageTypes it contains.
+                    const storageType = []
+                    Object.keys(attributes).forEach(field => {
+                        Object.entries(storageTypes).forEach(([prefix, storage]) => {
+                            if (field.includes(prefix) && !storageType.includes(storage)) {
+                                storageType.push(storage)
+                                if (prefix === 'atmo' && agent_type.includes('habitat')) {
+                                    state.humanAtmosphere = agent_type
+                                }
+                            }
+                        })
+                    })
+                    if (storageType.length) {
+                        storages[agent_type] = [{storageType, ...attributes}]
+                    }
+                })
+                state.gameConfig = {...value, storages}
+            }
         },
         SETMINSTEPNUMBER(state, value) {
             state.parameters.min_step_num = value
