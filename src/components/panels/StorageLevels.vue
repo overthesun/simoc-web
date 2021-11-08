@@ -26,7 +26,8 @@ export default {
     panelTitle: 'Storage Levels',
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities',
+                                    'getCurrencyDict']),
     },
     methods: {
         stringFormatter: StringFormatter,
@@ -39,7 +40,8 @@ export default {
             return storage
         },
         label2name(label) {
-            return {
+            // TODO: ABM Redesign Workaround
+            const definedLocally = {
                 o2: 'Oxygen (O₂)',
                 co2: 'Carbon dioxide (CO₂)',
                 n2: 'Nitrogen (N₂)',
@@ -50,13 +52,17 @@ export default {
                 urine: 'Urine',
                 feces: 'Waste (carries feces)',
                 treated: 'Treated',
-                // h2o_totl: 'Total',
                 fertilizer: 'Fertilizer',
                 waste: 'Unused salts',
                 ration: 'Food',
                 biomass: 'Biomass (edible, inedible)',
                 kwh: 'Energy (battery)',
-            }[label]
+            }
+            if (definedLocally[label]) {
+                return definedLocally[label]
+            } else {
+                return this.getCurrencyDict[label].label
+            }
         },
     },
 }

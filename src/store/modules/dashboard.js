@@ -54,6 +54,7 @@ export default {
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
         gameCurrencies: {},  // the active list of currencies, sorted by class
+        currencyDict: {},
         humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
     },
@@ -85,6 +86,7 @@ export default {
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
         getGameCurrencies: state => state.gameCurrencies,
+        getCurrencyDict: state => state.currencyDict,
         getHumanAtmosphere: state => state.humanAtmosphere,  // TODO: Revert ABM Workaround
 
         getActivePanels: state => state.activePanels,
@@ -185,6 +187,11 @@ export default {
         // this is the full game_config returned by the backend after a /new_game
         SETGAMECURRENCIES(state, value) {
             state.gameCurrencies = value
+            Object.entries(value).forEach(([currencyClass, currencies]) => {
+                Object.entries(currencies).forEach(([currency, currencyData]) => {
+                    state.currencyDict[currency] = {...currencyData, currencyClass}
+                })
+            })
         },
         SETGAMECONFIG(state, value) {
             /*
