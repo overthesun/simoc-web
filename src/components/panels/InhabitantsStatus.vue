@@ -40,6 +40,7 @@ export default {
             // inline styles for co2/o2
             co2_style: {color: '#eee'},
             o2_style: {color: '#eee'},
+            food_storages: {},
         }
     },
     computed: {
@@ -47,7 +48,7 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
                                     'getStorageCapacities', 'getGameConfig',
-                                    'getHumanAtmosphere']),
+                                    'getGameCurrencies', 'getHumanAtmosphere']),
         step() {
             return this.getCurrentStepBuffer
         },
@@ -101,8 +102,21 @@ export default {
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {ration} = storage.food_storage[1]
-                return `${ration.value} ${ration.unit}`
+                let foodValue = 0
+                let foodUnits = null
+                // TODO: ABM Redesign Workaround
+                Object.entries(this.food_storages).forEach(([storageName, foodCurrencies]) => {
+                    if (!storage[storageName]) {
+                        return
+                    }
+                    Object.values(foodCurrencies).forEach(c => {
+                        foodValue += storage[storageName]['1'][c].value
+                        if (!foodUnits) {
+                            foodUnits = storage[storageName]['1'][c].unit
+                        }
+                    })
+                })
+                return `${foodValue} ${foodUnits}`
             })
         },
         humans() {
@@ -114,6 +128,25 @@ export default {
                 return this.getConfiguration.humans.amount
             }
         },
+    },
+    mounted() {
+        // TODO: ABM Redesign Workaround
+        // Compile a list of storages that include food, and which food currencies they contain.
+        const {storages} = this.getGameConfig
+        const foodTypes = Object.keys(this.getGameCurrencies.food)
+        Object.entries(storages).forEach(([storageName, storageData]) => {
+            const foodCurrencies = []
+            if (storageData[0].storageType.includes('food_storage')) {
+                Object.keys(storageData[0]).forEach(attr => {
+                    if (foodTypes.includes(attr)) {
+                        foodCurrencies.push(attr)
+                    }
+                })
+            }
+            if (foodCurrencies.length > 0) {
+                this.food_storages[storageName] = foodCurrencies
+            }
+        })
     },
     methods: {
         stringFormatter: StringFormatter,
