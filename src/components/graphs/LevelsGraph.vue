@@ -18,14 +18,14 @@ export default {
     props: {
         id: {type: String, required: true},
         plottedStorage: {type: String, required: true},
-        storagesMapping: {type: Object, required: true},
+        storagesMapping: {type: Object, required: true},  // TODO: Revert ABM Workaround
     },
     data() {
         return {
             prevStep: 0,
             storage_name: String,
             storage_num: String,
-            storageType: String,
+            storageType: String,  // TODO: Revert ABM Workaround
             setsinfo: {
                 // These are used to determine labels, colors, and line order in the graph.
                 // They should be updated if a new storage type or currency is added,

@@ -53,12 +53,11 @@ export default {
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
+            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            // TODO: Revert ABM Workaround
             // gameConfig structure has been updated in the backend, but presets use old structure.
-            if (Array.isArray(this.getGameConfig.storages[this.getHumanAtmosphere])) {
-                return this.getGameConfig.storages[this.getHumanAtmosphere][0].total_capacity.value
-            } else {
-                return this.getGameConfig.storages[this.getHumanAtmosphere].total_capacity.value
-            }
+            storage = Array.isArray(storage) ? storage[0] : storage
+            return storage.total_capacity.value
         },
         o2() {
             return this.attempt_read(() => {

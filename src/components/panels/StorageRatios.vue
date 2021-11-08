@@ -50,10 +50,9 @@ export default {
             const filtered = []
             Object.entries(storages).forEach(([stor_name, stor_group]) => {
                 stor_group.forEach((stor, stor_id) => {
+                    // TODO: Revert ABM Workaround
                     // each stor has an additional id key, so we need >2 keys to have
                     // two currencies (one id key + two or more currency keys)
-                    // ABM Redesign: gameConfig objects include other fields, so need to
-                    // filter for currencies. Including '_' is a shorthand way to do that.
                     const currencies = Object.keys(stor).filter(c => c.includes('_'))
                     if (currencies.length > 2) {
                         filtered.push([stor_name, stor_id+1])

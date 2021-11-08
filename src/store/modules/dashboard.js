@@ -54,7 +54,7 @@ export default {
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
         gameCurrencies: {},  // the active list of currencies, sorted by class
-        humanAtmosphere: 'air_storage',  // the name of the habitat agent which humans breathe
+        humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
     },
     getters: {
@@ -85,7 +85,8 @@ export default {
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
         getGameCurrencies: state => state.gameCurrencies,
-        getHumanAtmosphere: state => state.humanAtmosphere,
+        getHumanAtmosphere: state => state.humanAtmosphere,  // TODO: Revert ABM Workaround
+
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
@@ -187,6 +188,7 @@ export default {
         },
         SETGAMECONFIG(state, value) {
             /*
+            TODO: Revert ABM Workaround
             As of October '21, the backend no longer distinguishes between agents and storages.
             Much of the dashboard was designed to pull directly from gameConfig.storages.
             Here, we determine which agents have storage, and add them back manually.
