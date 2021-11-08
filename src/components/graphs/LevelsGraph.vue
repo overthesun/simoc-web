@@ -73,7 +73,7 @@ export default {
         // TODO: this code is very similar to VersusGraph.vue
         initChart() {
             [this.storage_name, this.storage_num] = this.plottedStorage.split('/')
-            this.storageType = this.storagesMapping[this.storage_name]
+            this.storage_type = this.storagesMapping[this.storage_name]
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
@@ -87,7 +87,7 @@ export default {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(24).fill(''),
                     // create N datasets with different labels/colors
-                    datasets: this.setsinfo[this.storageType].labels_colors.map(
+                    datasets: this.setsinfo[this.storage_type].labels_colors.map(
                         ([label, color]) => ({
                             lineTension: 0,
                             data: Array(24),
@@ -165,7 +165,7 @@ export default {
                     Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
-                            const index = this.setsinfo[this.storageType].order[key]
+                            const index = this.setsinfo[this.storage_type].order[key]
                             const ratio = (elem.value * 100 / tot_storage).toFixed(4)
                             data.datasets[index].data.push(ratio)
                         }
