@@ -239,7 +239,6 @@ export default {
                         storages[agent_type] = [{storageType, ...attributes}]
                     }
                 })
-                console.log(storages)
                 state.gameConfig = {...value, storages}
             }
         },

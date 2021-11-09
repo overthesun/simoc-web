@@ -38,9 +38,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig', 'getCurrencyDict']),
         getMultiCurrencyStorages() {
             const {storages} = this.getGameConfig
+            const allCurrencies = Object.keys(this.getCurrencyDict)
             // The storages var looks like:
             // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
             // Some storages (e.g. power_storage) only have 1 currency in the inner object,
@@ -53,7 +54,7 @@ export default {
                     // TODO: Revert ABM Workaround
                     // each stor has an additional id key, so we need >2 keys to have
                     // two currencies (one id key + two or more currency keys)
-                    const currencies = Object.keys(stor).filter(c => c.includes('_'))
+                    const currencies = Object.keys(stor).filter(c => allCurrencies.includes(c))
                     if (currencies.length > 2) {
                         filtered.push([stor_name, stor_id+1])
                     }

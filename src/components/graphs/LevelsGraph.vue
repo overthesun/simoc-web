@@ -43,7 +43,7 @@ export default {
                 nutrient_storage: {
                     labels_colors: [['Biomass Total', '#3cb44b'], ['Waste', '#f58231'],
                                     ['Fertilizer', '#46f0f0']],
-                    order: {biomass: 1, waste: 2, fertilizer: 3},
+                    order: {biomass: 0, waste: 1, fertilizer: 2},
                 },
             },
         }
