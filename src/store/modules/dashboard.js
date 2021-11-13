@@ -53,8 +53,8 @@ export default {
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
-        gameCurrencies: {},  // the active list of currencies, sorted by class
-        currencyDict: {},
+        gameCurrencies: {},  // the active list of currencies, grouped by class
+        currencyDict: {},  // all gameCurrencies not grouped, but with 'currencyClass' param added
         humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
     },
@@ -185,24 +185,27 @@ export default {
             state.parameters.game_id = value
         },
         // this is the full game_config returned by the backend after a /new_game
-        SETGAMECURRENCIES(state, value) {
-            state.gameCurrencies = value
-            Object.entries(value).forEach(([currencyClass, currencies]) => {
-                Object.entries(currencies).forEach(([currency, currencyData]) => {
-                    state.currencyDict[currency] = {...currencyData, currencyClass}
-                })
-            })
-        },
-        SETGAMECONFIG(state, value) {
+        SETGAMEPARAMS(state, value) {
             /*
             TODO: Revert ABM Workaround
             As of October '21, the backend no longer distinguishes between agents and storages.
             Much of the dashboard was designed to pull directly from gameConfig.storages.
             Here, we determine which agents have storage, and add them back manually.
             */
-            if (Object.keys(value).includes('storages')) {
+            const {game_config, currency_desc} = value
+
+            // Load currency data into state
+            state.gameCurrencies = currency_desc
+            Object.entries(currency_desc).forEach(([currencyClass, currencies]) => {
+                Object.entries(currencies).forEach(([currency, currencyData]) => {
+                    state.currencyDict[currency] = {...currencyData, currencyClass}
+                })
+            })
+            // Load game config data into state
+            if (Object.keys(game_config).includes('storages')) {
+                // This is the old system, is only here to accomodate presets
                 state.humanAtmosphere = 'air_storage'
-                state.gameConfig = value
+                state.gameConfig = game_config
             } else {
                 const storages = {}
                 const storageTypes = {
@@ -212,19 +215,13 @@ export default {
                     nutrients: 'nutrient_storage',
                     energy: 'power_storage',
                 }
-                const currencyClassRef = {}
-                Object.entries(state.gameCurrencies).forEach(([currency_class, currencies]) => {
-                    Object.keys(currencies).forEach(currency => {
-                        currencyClassRef[currency] = currency_class
-                    })
-                })
-                Object.entries(value.agents).forEach(([agent_type, attributes]) => {
+                Object.entries(game_config.agents).forEach(([agent_type, attributes]) => {
                     // Agents can store more than 1 class of currencies; we add a 'storageType'
                     // attribute which is an array of all the storageTypes it contains.
                     const storageType = []
                     Object.keys(attributes).forEach(field => {
-                        if (Object.keys(currencyClassRef).includes(field)) {
-                            const currencyClass = currencyClassRef[field]
+                        if (Object.keys(state.currencyDict).includes(field)) {
+                            const {currencyClass} = state.currencyDict[field]
                             const storage = storageTypes[currencyClass]
                             if (!storageType.includes(storage)) {
                                 storageType.push(storage)
@@ -239,7 +236,7 @@ export default {
                         storages[agent_type] = [{storageType, ...attributes}]
                     }
                 })
-                state.gameConfig = {...value, storages}
+                state.gameConfig = {...game_config, storages}
             }
         },
         SETMINSTEPNUMBER(state, value) {

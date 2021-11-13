@@ -149,13 +149,11 @@ export default {
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMECONFIG', 'SETGAMECURRENCIES',
-                                      'SETSIMULATIONDATA', 'SETLOADFROMSIMDATA',
-                                      'SETBUFFERMAX']),
+        ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
+                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
-
 
         toggleMenu() {
             this.menuActive = !this.menuActive
@@ -270,8 +268,10 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
-                this.SETGAMECURRENCIES(response.data.currency_desc)
-                this.SETGAMECONFIG(response.data.game_config)
+                this.SETGAMEPARAMS({
+                    game_config: response.data.game_config,
+                    currency_desc: response.data.currency_desc,
+                })
                 this.SETLOADFROMSIMDATA(false)
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
