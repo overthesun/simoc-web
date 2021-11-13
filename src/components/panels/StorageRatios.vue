@@ -38,11 +38,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig', 'getCurrencyDict']),
         getMultiCurrencyStorages() {
             const {storages} = this.getGameConfig
+            const allCurrencies = Object.keys(this.getCurrencyDict)
             // The storages var looks like:
-            // {air_storage: {0: {atmo_o2:..., atmo_co2,...}, 1: {...}}, food_storage: {...}, ...}
+            // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
             // Some storages (e.g. power_storage) only have 1 currency in the inner object,
             // so it doesn't make much sense to calculate the ratios for those storages.
             // This function takes all the storages that have at least 2 currencies,
@@ -50,11 +51,10 @@ export default {
             const filtered = []
             Object.entries(storages).forEach(([stor_name, stor_group]) => {
                 stor_group.forEach((stor, stor_id) => {
+                    // TODO: Revert ABM Workaround
                     // each stor has an additional id key, so we need >2 keys to have
                     // two currencies (one id key + two or more currency keys)
-                    // ABM Redesign: gameConfig objects include other fields, so need to
-                    // filter for currencies. Including '_' is a shorthand way to do that.
-                    const currencies = Object.keys(stor).filter(c => c.includes('_'))
+                    const currencies = Object.keys(stor).filter(c => allCurrencies.includes(c))
                     if (currencies.length > 2) {
                         filtered.push([stor_name, stor_id+1])
                     }

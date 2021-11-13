@@ -53,7 +53,9 @@ export default {
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
-        humanAtmosphere: 'air_storage',  // the name of the habitat agent which humans breathe
+        gameCurrencies: {},  // the active list of currencies, grouped by class
+        currencyDict: {},  // all gameCurrencies not grouped, but with 'currencyClass' param added
+        humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
     },
     getters: {
@@ -83,7 +85,10 @@ export default {
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
-        getHumanAtmosphere: state => state.humanAtmosphere,
+        getGameCurrencies: state => state.gameCurrencies,
+        getCurrencyDict: state => state.currencyDict,
+        getHumanAtmosphere: state => state.humanAtmosphere,  // TODO: Revert ABM Workaround
+
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
@@ -180,44 +185,58 @@ export default {
             state.parameters.game_id = value
         },
         // this is the full game_config returned by the backend after a /new_game
-        SETGAMECONFIG(state, value) {
+        SETGAMEPARAMS(state, value) {
             /*
+            TODO: Revert ABM Workaround
             As of October '21, the backend no longer distinguishes between agents and storages.
             Much of the dashboard was designed to pull directly from gameConfig.storages.
             Here, we determine which agents have storage, and add them back manually.
             */
-            if (Object.keys(value).includes('storages')) {
+            const {game_config, currency_desc} = value
+
+            // Load currency data into state
+            state.gameCurrencies = currency_desc
+            Object.entries(currency_desc).forEach(([currencyClass, currencies]) => {
+                Object.entries(currencies).forEach(([currency, currencyData]) => {
+                    state.currencyDict[currency] = {...currencyData, currencyClass}
+                })
+            })
+            // Load game config data into state
+            if (Object.keys(game_config).includes('storages')) {
+                // This is the old system, is only here to accomodate presets
                 state.humanAtmosphere = 'air_storage'
-                state.gameConfig = value
+                state.gameConfig = game_config
             } else {
                 const storages = {}
                 const storageTypes = {
-                    atmo: 'air_storage',
+                    atmosphere: 'air_storage',
                     food: 'food_storage',
-                    h2o: 'water_storage',
-                    sold: 'nutrient_storage',
-                    biomass: 'nutrient_storage',
-                    enrg: 'power_storage',
+                    water: 'water_storage',
+                    nutrients: 'nutrient_storage',
+                    energy: 'power_storage',
                 }
-                Object.entries(value.agents).forEach(([agent_type, attributes]) => {
+                Object.entries(game_config.agents).forEach(([agent_type, attributes]) => {
                     // Agents can store more than 1 class of currencies; we add a 'storageType'
                     // attribute which is an array of all the storageTypes it contains.
                     const storageType = []
                     Object.keys(attributes).forEach(field => {
-                        Object.entries(storageTypes).forEach(([prefix, storage]) => {
-                            if (field.includes(prefix) && !storageType.includes(storage)) {
+                        if (Object.keys(state.currencyDict).includes(field)) {
+                            const {currencyClass} = state.currencyDict[field]
+                            const storage = storageTypes[currencyClass]
+                            if (!storageType.includes(storage)) {
                                 storageType.push(storage)
-                                if (prefix === 'atmo' && agent_type.includes('habitat')) {
+                                if (currencyClass === 'atmosphere' &&
+                                        agent_type.includes('habitat')) {
                                     state.humanAtmosphere = agent_type
                                 }
                             }
-                        })
+                        }
                     })
                     if (storageType.length) {
                         storages[agent_type] = [{storageType, ...attributes}]
                     }
                 })
-                state.gameConfig = {...value, storages}
+                state.gameConfig = {...game_config, storages}
             }
         },
         SETMINSTEPNUMBER(state, value) {
@@ -327,8 +346,8 @@ export default {
         },
         SETDEFAULTPANELS(state) {
             state.activePanels = [
-                'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
-                'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
+                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
             ]
         },
         INITGAME(state, value) {
@@ -341,14 +360,14 @@ export default {
                 n_steps: 10,
                 total_agent_count: ['human_agent'],
                 agent_growth: [],
-                total_production: ['atmo_co2', 'atmo_o2', 'h2o_potb', 'enrg_kwh'],
-                total_consumption: ['atmo_co2', 'atmo_o2', 'h2o_potb', 'enrg_kwh'],
+                total_production: ['co2', 'o2', 'potable', 'kwh'],
+                total_consumption: ['co2', 'o2', 'potable', 'kwh'],
                 // we now calculate the ratios on the frontend
-                // "storage_ratios": {"air_storage_1": ["atmo_co2", "atmo_o2", "atmo_ch4",
-                //                                     "atmo_n2", "atmo_h2", "atmo_h2o"],},
+                // "storage_ratios": {"air_storage_1": ["co2", "o2", "ch4",
+                //                                     "n2", "h2", "h2o"],},
                 storage_capacities: {}, // empty obj == get all values
                 details_per_agent: {agent_types: [], // empty obj == get all agents
-                                    currency_types: ['enrg_kwh', 'atmo_co2'],
+                                    currency_types: ['kwh', 'co2'],
                                     directions: ['in']},
                 parse_filters: [],
                 single_agent: 1,

@@ -40,6 +40,7 @@ export default {
             // inline styles for co2/o2
             co2_style: {color: '#eee'},
             o2_style: {color: '#eee'},
+            food_storages: {},
         }
     },
     computed: {
@@ -47,22 +48,21 @@ export default {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
                                     'getStorageCapacities', 'getGameConfig',
-                                    'getHumanAtmosphere']),
+                                    'getGameCurrencies', 'getHumanAtmosphere']),
         step() {
             return this.getCurrentStepBuffer
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
+            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            // TODO: Revert ABM Workaround
             // gameConfig structure has been updated in the backend, but presets use old structure.
-            if (Array.isArray(this.getGameConfig.storages[this.getHumanAtmosphere])) {
-                return this.getGameConfig.storages[this.getHumanAtmosphere][0].total_capacity.value
-            } else {
-                return this.getGameConfig.storages[this.getHumanAtmosphere].total_capacity.value
-            }
+            storage = Array.isArray(storage) ? storage[0] : storage
+            return storage.total_capacity.value
         },
         o2() {
             return this.attempt_read(() => {
-                const o2_perc = this.get_gas_percentage('atmo_o2')
+                const o2_perc = this.get_gas_percentage('o2')
                 /*
                 Color the O2 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
@@ -78,7 +78,7 @@ export default {
         },
         co2() {
             return this.attempt_read(() => {
-                const co2_perc = this.get_gas_percentage('atmo_co2')
+                const co2_perc = this.get_gas_percentage('co2')
                 /*
                 Color the CO2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
@@ -95,15 +95,28 @@ export default {
         water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {h2o_potb} = storage.water_storage[1]
-                return `${h2o_potb.value} ${h2o_potb.unit}`
+                const {potable} = storage.water_storage[1]
+                return `${potable.value} ${potable.unit}`
             })
         },
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {food_edbl} = storage.food_storage[1]
-                return `${food_edbl.value} ${food_edbl.unit}`
+                let foodValue = 0
+                let foodUnits = null
+                // TODO: ABM Redesign Workaround
+                Object.entries(this.food_storages).forEach(([storageName, foodCurrencies]) => {
+                    if (!storage[storageName]) {
+                        return
+                    }
+                    Object.values(foodCurrencies).forEach(c => {
+                        foodValue += storage[storageName]['1'][c].value
+                        if (!foodUnits) {
+                            foodUnits = storage[storageName]['1'][c].unit
+                        }
+                    })
+                })
+                return `${foodValue} ${foodUnits}`
             })
         },
         humans() {
@@ -115,6 +128,25 @@ export default {
                 return this.getConfiguration.humans.amount
             }
         },
+    },
+    mounted() {
+        // TODO: ABM Redesign Workaround
+        // Compile a list of storages that include food, and which food currencies they contain.
+        const {storages} = this.getGameConfig
+        const foodTypes = Object.keys(this.getGameCurrencies.food)
+        Object.entries(storages).forEach(([storageName, storageData]) => {
+            const foodCurrencies = []
+            if (storageData[0].storageType.includes('food_storage')) {
+                Object.keys(storageData[0]).forEach(attr => {
+                    if (foodTypes.includes(attr)) {
+                        foodCurrencies.push(attr)
+                    }
+                })
+            }
+            if (foodCurrencies.length > 0) {
+                this.food_storages[storageName] = foodCurrencies
+            }
+        })
     },
     methods: {
         stringFormatter: StringFormatter,

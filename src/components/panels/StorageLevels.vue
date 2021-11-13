@@ -26,38 +26,51 @@ export default {
     panelTitle: 'Storage Levels',
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities',
+                                    'getCurrencyDict']),
     },
     methods: {
         stringFormatter: StringFormatter,
         storage(step) {
             const storage = this.getStorageCapacities(step)
             // TODO: this value is currently unused, so hide it for now
-            delete storage.nutrient_storage[1].biomass_edible
-            return storage
+            if (Object.keys(storage.nutrient_storage[1]).includes('biomass_edible')) {
+                delete storage.nutrient_storage[1].biomass_edible
+            }
+            // Don't display storages with 0 balance.
+            const filteredStorage = {}
+            Object.entries(storage).forEach(([stor_name, stor_obj]) => {
+                if (!Object.keys(filteredStorage).includes(stor_name)) {
+                    filteredStorage[stor_name] = {1: {}}
+                }
+                Object.entries(stor_obj[1]).forEach(([currency, data]) => {
+                    if (data.value > 0) {
+                        filteredStorage[stor_name][1][currency] = data
+                    }
+                })
+            })
+            return filteredStorage
         },
         label2name(label) {
-            return {
-                atmo_o2: 'Oxygen (O₂)',
-                atmo_co2: 'Carbon dioxide (CO₂)',
-                atmo_n2: 'Nitrogen (N₂)',
-                atmo_ch4: 'Methane (CH₄)',
-                atmo_h2: 'Free hydrogen (H₂)',
-                atmo_h2o: 'Water (H₂0) vapor',
-                h2o_potb: 'Potable',
-                h2o_urin: 'Urine',
-                h2o_wste: 'Waste (carries feces)',
-                h2o_tret: 'Treated',
-                h2o_totl: 'Total',
-                sold_n: 'Nitrogen',
-                sold_p: 'Phosphorus',
-                sold_k: 'Potassium',
-                sold_wste: 'Unused salts',
-                food_edbl: 'Food',
-                biomass_edible: 'Edible (greenhouse)',  // not used
-                biomass_totl: 'Biomass (edible, inedible)',
-                enrg_kwh: 'Energy (battery)',
-            }[label]
+            // TODO: ABM Redesign Workaround
+            const definedLocally = {
+                o2: 'Oxygen (O₂)',
+                co2: 'Carbon dioxide (CO₂)',
+                n2: 'Nitrogen (N₂)',
+                ch4: 'Methane (CH₄)',
+                h2: 'Free hydrogen (H₂)',
+                h2o: 'Water (H₂0) vapor',
+                potable: 'Potable',
+                urine: 'Urine',
+                feces: 'Waste (carries feces)',
+                treated: 'Treated',
+                fertilizer: 'Fertilizer',
+                waste: 'Unused salts',
+                ration: 'Food',
+                biomass: 'Biomass (edible, inedible)',
+                kwh: 'Energy (battery)',
+            }
+            return definedLocally[label] ?? this.getCurrencyDict[label].label
         },
     },
 }
