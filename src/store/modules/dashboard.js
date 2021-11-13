@@ -137,7 +137,7 @@ export default {
             let init
             try {
                 console.log('* Loading initial cached values...')
-                init = await import(`../../assets/simdata/simoc-simdata-1-human-preset`)
+                init = await import('../../assets/simdata/simoc-simdata-1-human-preset')
             } catch (error) {
                 console.log('* Loading cached values failed, falling back on regular request')
                 console.error(error)
@@ -154,7 +154,7 @@ export default {
             state.detailsPerAgent = init.details_per_agent
         },
         SETLOADFROMINITLIVEDATA(state, value) {
-           state.loadFromInitLiveData = value
+            state.loadFromInitLiveData = value
         },
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
