@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETINITLIVEDATA']),
+                                      'SETINITLIVEDATA', 'SETLOADFROMINITLIVEDATA']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -82,7 +82,7 @@ export default {
                 this.alert('An error occurred while reading the file.')
                 return
             }
-            this.SETLOADFROMSIMDATA(true)
+            this.SETLOADFROMINITLIVEDATA(true)
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
