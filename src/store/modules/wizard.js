@@ -382,5 +382,13 @@ export default {
         SETPRESET(context, name) {
             context.commit('set_config', context.state.presets[name])
         },
+        // Set the initial configuration for the live dashboard
+        SETINITLIVECONFIG(context) {
+            console.log('* Loading initial configuration...')
+            // TODO: Edit with preconfigured initial dashboard config file
+            //   Temporarily using '1 Human' as the initial config file
+            //   Currently, the Menu passes an empty value to config
+            context.commit('set_config', context.state.presets.one_human)
+        },
     },
 }
