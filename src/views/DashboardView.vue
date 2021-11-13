@@ -75,10 +75,10 @@ export default {
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
         if (!this.getLoadFromSimData) {
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
             // if we load from initial live data, we have to reconfigure the Dashboard View to
             // present components relevant to the live view
             if (!this.getLoadFromInitLiveData) {
-                this.SETBUFFERMAX(0)  // Reset the max buffer value
                 // init a new game, set game id, reset all data buffers
                 this.INITGAME(this.getGameID)
                 // This sets the get_step parameter for the agentGrowth filter.
@@ -95,15 +95,18 @@ export default {
                 window.addEventListener('beforeunload', this.confirmBeforeLeaving)
                 window.addEventListener('unload', this.killGameOnUnload)
                 // setup the websocket to get the requested steps
+
+                //   this function includes step setup for calculating sim data.
+                this.setupWebsocket()
             } else {
+                // This block is executed when loadFromInitLiveData is true. It navigates the
+                // user to a dashboard view of live sensor readings
                 console.log('Starting live dashboard')
+                this.openWebSocket()
             }
-            // TODO: Refactor setupWebSocket() to incorporate a setup for live mode. Currently,
-            //   this function includes step setup for calculating sim data.
-            this.setupWebsocket()
+            // after this, the Timeline component will be mounted
+            // and it will start the timer that shows the steps
         }
-        // after this, the Timeline component will be mounted
-        // and it will start the timer that shows the steps
     },
 
     mounted() {
@@ -112,19 +115,30 @@ export default {
     },
 
     beforeUnmount() {
-        // if the sim is still running upon leaving the page, stop it;
-        // some methods in DashboardMenu.vue rely on this to stop the sim
-        this.STOPTIMER()   // stop the step timer
-        this.SETMENUACTIVE(false)  // close the menu if it was open
-        if (!this.getTerminated) {
-            this.killGame()
+        // If the mounted dashboard is running a sim, kill the game. The live dashboard is still
+        // collecting data even if the user is not watching the dashboard. It should not tell
+        // the server to kill the process.
+        if (!this.getLoadFromInitLiveData) {
+            // if the sim is still running upon leaving the page, stop it;
+            // some methods in DashboardMenu.vue rely on this to stop the sim
+            this.STOPTIMER()   // stop the step timer
+            this.SETMENUACTIVE(false)  // close the menu if it was open
+            if (!this.getTerminated) {
+                this.killGame()
+            }
+            // disconnect and destroy the websocket
+            this.tearDownWebSocket()
+            // remove these if when we leave the dashboard
+            window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
+            window.removeEventListener('unload', this.killGameOnUnload)
+            window.removeEventListener('keydown', this.keyListener)
+        } else {
+            // Ensure loadFromInitLiveData is false when user navigates from live dashboard
+            // so the conditional allows the user to access the sim dashboard as desired.
+            console.log('* Navigating from the live dashboard...')
+            this.tearDownWebSocket()
+            this.SETLOADFROMINITLIVEDATA(false)
         }
-        // disconnect and destroy the websocket
-        this.tearDownWebSocket()
-        // remove these if when we leave the dashboard
-        window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
-        window.removeEventListener('unload', this.killGameOnUnload)
-        window.removeEventListener('keydown', this.keyListener)
     },
 
     methods: {
@@ -132,7 +146,7 @@ export default {
                                       'SETGETSTEPSTIMERID', 'SETMINSTEPNUMBER', 'INITGAME',
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
-                                      'SETPLANTSPECIESPARAM']),
+                                      'SETPLANTSPECIESPARAM', 'SETLOADFROMINITLIVEDATA']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
@@ -170,6 +184,23 @@ export default {
             })
             socket.on('user_connected', msg => {
                 console.log(msg.message)
+            })
+            socket.on('disconnect', msg => {
+                console.log('Websocket disconnected')
+            })
+        },
+        // openWebSocket: This method opens a websocket and keeps it open until a user navigates
+        // away from the dashboard. This method is called if loadFromInitLiveData is true.
+        openWebSocket() {
+            const socket = io()
+            this.socket = socket
+            console.log('Live socket created:', this.socket)
+
+            socket.on('connect', () => {
+                console.log('* Connecting to backend...')
+                // FIXME: This block creates a connection to the backend. The "new" backend that
+                //   sends data packets from the senors must be implemented in order to proceed from
+                //   this point.
             })
             socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')
