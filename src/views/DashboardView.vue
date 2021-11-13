@@ -21,7 +21,8 @@ export default {
         // getters from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
-                                    'getMaxStepBuffer', 'getLoadFromSimData']),
+                                    'getMaxStepBuffer', 'getLoadFromSimData',
+                                    'getLoadFromInitLiveData']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -74,23 +75,31 @@ export default {
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
         if (!this.getLoadFromSimData) {
-            this.SETBUFFERMAX(0)  // Reset the max buffer value
-            // init a new game, set game id, reset all data buffers
-            this.INITGAME(this.getGameID)
-            // This sets the get_step parameter for the agentGrowth filter.
-            // TODO: this should actually be done in tandem with the config wizard plant updates.
-            // This must be done after INITGAME or it will be reset
-            this.SETPLANTSPECIESPARAM(this.getConfiguration)
+            // if we load from initial live data, we have to reconfigure the Dashboard View to
+            // present components relevant to the live view
+            if (!this.getLoadFromInitLiveData) {
+                this.SETBUFFERMAX(0)  // Reset the max buffer value
+                // init a new game, set game id, reset all data buffers
+                this.INITGAME(this.getGameID)
+                // This sets the get_step parameter for the agentGrowth filter.
+                // TODO: this should actually be done in tandem with the config wizard plant updates.
+                // This must be done after INITGAME or it will be reset
+                this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
-            console.log('Starting simulation', this.getGameID)
+                console.log('Starting simulation', this.getGameID)
 
-            // Ask the user confirmation if they try to leave (by closing
-            // the tab/window, by refreshing, or by navigating elsewhere)
-            // and try to kill the game when they do.  Leaving via the
-            // back button is handled in BaseDashboard.beforeRouteLeave
-            window.addEventListener('beforeunload', this.confirmBeforeLeaving)
-            window.addEventListener('unload', this.killGameOnUnload)
-            // setup the websocket to get the requested steps
+                // Ask the user confirmation if they try to leave (by closing
+                // the tab/window, by refreshing, or by navigating elsewhere)
+                // and try to kill the game when they do.  Leaving via the
+                // back button is handled in BaseDashboard.beforeRouteLeave
+                window.addEventListener('beforeunload', this.confirmBeforeLeaving)
+                window.addEventListener('unload', this.killGameOnUnload)
+                // setup the websocket to get the requested steps
+            } else {
+                console.log('Starting live dashboard')
+            }
+            // TODO: Refactor setupWebSocket() to incorporate a setup for live mode. Currently,
+            //   this function includes step setup for calculating sim data.
             this.setupWebsocket()
         }
         // after this, the Timeline component will be mounted
