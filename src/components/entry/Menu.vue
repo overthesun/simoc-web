@@ -32,7 +32,6 @@
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseEntry} from '../base'
-import * as data from '../../assets/simdata/simoc-simdata-1-human-preset'
 
 export default {
     components: {
@@ -52,9 +51,9 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETLIVE']),
+                                      'SETINITLIVEDATA']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
+        ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
@@ -69,14 +68,15 @@ export default {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
         },
-        // Send the user to the live Dashboard
+        // Send the user to the live Dashboard with a default initial configuration and data
         toLiveDashboard() {
-            // TODO: Refactor below to set up dashboard with initial values
-            // this.SETLIVE()
             try {
-                this.SETCONFIGURATION(data.configuration)
-                this.SETSIMULATIONDATA(data)
-                this.SETBUFFERMAX(data.steps)
+                // REQUIRED: Initial dashboard configuration
+                // Determines layout of Dashboard configuration
+                this.SETINITLIVECONFIG()
+                // REQUIRED: Initial data
+                // Change this; not using sim data
+                this.SETINITLIVEDATA()
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')

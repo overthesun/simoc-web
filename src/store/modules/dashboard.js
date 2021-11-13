@@ -130,10 +130,26 @@ export default {
         // load the live Dashboard
         // TODO: Create a default object for the live view, determine which variables
         //  are necessary for the live dashboard
-        SETLIVE(state) {
-
+        async SETINITLIVEDATA(state) {
+            let init
+            try {
+                console.log('* Loading initial cached values...')
+                init = await import(`../../assets/simdata/simoc-simdata-1-human-preset`)
+            } catch (error) {
+                console.log('* Loading cached values failed, falling back on regular request')
+                console.error(error)
+            }
+            // TODO: Manually set the values below
+            state.gameConfig = init.game_config
+            state.parameters = init.parameters
+            state.totalConsumption = init.total_consumption
+            state.totalProduction = init.total_production
+            state.agentCount = init.total_agent_count
+            state.agentGrowth = init.agent_growth
+            state.storageRatio = init.storage_ratios
+            state.storageCapacities = init.storage_capacities
+            state.detailsPerAgent = init.details_per_agent
         },
-
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
         // are met for a reasonable buffer amount.
