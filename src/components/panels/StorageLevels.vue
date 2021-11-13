@@ -37,7 +37,19 @@ export default {
             if (Object.keys(storage.nutrient_storage[1]).includes('biomass_edible')) {
                 delete storage.nutrient_storage[1].biomass_edible
             }
-            return storage
+            // Don't display storages with 0 balance.
+            const filteredStorage = {}
+            Object.entries(storage).forEach(([stor_name, stor_obj]) => {
+                if (!Object.keys(filteredStorage).includes(stor_name)) {
+                    filteredStorage[stor_name] = {1: {}}
+                }
+                Object.entries(stor_obj[1]).forEach(([currency, data]) => {
+                    if (data.value > 0) {
+                        filteredStorage[stor_name][1][currency] = data
+                    }
+                })
+            })
+            return filteredStorage
         },
         label2name(label) {
             // TODO: ABM Redesign Workaround
@@ -58,11 +70,7 @@ export default {
                 biomass: 'Biomass (edible, inedible)',
                 kwh: 'Energy (battery)',
             }
-            if (definedLocally[label]) {
-                return definedLocally[label]
-            } else {
-                return this.getCurrencyDict[label].label
-            }
+            return definedLocally[label] ?? this.getCurrencyDict[label].label
         },
     },
 }
