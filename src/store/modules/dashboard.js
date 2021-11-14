@@ -41,6 +41,7 @@ export default {
         storageRatio: {},
         storageCapacities: {},
         detailsPerAgent: {},
+        time: {}, // the latest sensor reading time at SAM
         maxStepBuffer: 0,      // the number of steps in the buffer
         currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
@@ -54,6 +55,7 @@ export default {
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         loadFromInitLiveData: false, // if true, load from initial live data
         gameConfig: {},  // the full game_config returned by /new_game
+        samConfig: {}, // the current SAM configuration
         activePanels: [],
     },
     getters: {
@@ -85,6 +87,7 @@ export default {
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
+        getSamConfig: state => state.samConfig,
         getActivePanels: state => state.activePanels,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
@@ -92,6 +95,21 @@ export default {
                 README: 'Format may vary, only import from the main menu.',
                 game_config: state.gameConfig,
                 steps: state.maxStepBuffer,
+                parameters: state.parameters,
+                total_consumption: state.totalConsumption,
+                total_production: state.totalProduction,
+                total_agent_count: state.agentCount,
+                agent_growth: state.agentGrowth,
+                storage_ratios: state.storageRatio,
+                storage_capacities: state.storageCapacities,
+                details_per_agent: state.detailsPerAgent,
+            }
+        },
+        getLiveData(state) {
+            return {
+                README: 'Update the configuration from the dashboard.',
+                sam_config: state.samConfig,
+                time: state.time,
                 parameters: state.parameters,
                 total_consumption: state.totalConsumption,
                 total_production: state.totalProduction,
@@ -131,27 +149,27 @@ export default {
             state.loadFromSimData = value
         },
         // load the live Dashboard
-        // TODO: Create a default object for the live view, determine which variables
+        // TODO: Ryan, create a default object for the live view, determine which variables
         //  are necessary for the live dashboard
         async SETINITLIVEDATA(state) {
             let init
             try {
                 console.log('* Loading initial cached values...')
-                init = await import('../../assets/simdata/simoc-simdata-1-human-preset')
+                init = await import('../../assets/simoc-livedata-init')
             } catch (error) {
                 console.log('* Loading cached values failed, falling back on regular request')
                 console.error(error)
             }
-            // TODO: Manually set the values below
-            state.gameConfig = init.game_config
+
+            state.gameConfig = init.sam_config
             state.parameters = init.parameters
-            state.totalConsumption = init.total_consumption
-            state.totalProduction = init.total_production
-            state.agentCount = init.total_agent_count
-            state.agentGrowth = init.agent_growth
-            state.storageRatio = init.storage_ratios
-            state.storageCapacities = init.storage_capacities
-            state.detailsPerAgent = init.details_per_agent
+            state.totalConsumption = {}
+            state.totalProduction = {}
+            state.agentCount = {}
+            state.agentGrowth = {}
+            state.storageRatio = {}
+            state.storageCapacities = {}
+            state.detailsPerAgent = {}
         },
         SETLOADFROMINITLIVEDATA(state, value) {
             state.loadFromInitLiveData = value
@@ -350,6 +368,9 @@ export default {
         },
     },
     actions: {
+        // TODO: Ryan, Update this action with a conditional for when live mode is active live mode
+        //   live mode items will be updated such as 'time' and 'sam_config'. This can be done
+        //   one the backend is set up to send the new config/agent_data file.
         parseStep({commit, dispatch}, stepData) {
             console.log(stepData)
             stepData.forEach(item => {

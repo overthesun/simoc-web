@@ -69,19 +69,33 @@ export default {
             this.$router.push('ace')
         },
         // Send the user to the live Dashboard with a default initial configuration and data
+        // FIXME: Make this look like launchSimulation() from ConfigurationView.vue
         toLiveDashboard() {
             try {
                 // REQUIRED: Initial dashboard configuration
                 // Determines layout of Dashboard configuration
+                // TODO: Ryan, Request backend for the inital sam/data_config from service 'new_game'
+                //   ** Reference parseStep() in dashboard.js **
+                //   In order to do this, the backend needs to serve the frontend the
+                //   initial agent_data file simoc-livedata-init.json. Once it has this service
+                //   available at the /dashboard endpoint, SETINITLIVEDATA should make a request
+                //   to the backend and utilize parseStep() to build the initial file. This can
+                //   additionally be used to read each new incoming packet from the sensors.
                 this.SETINITLIVECONFIG()
-                // REQUIRED: Initial data
-                // Change this; not using sim data
+                // TODO: Ryan, Currently the following setter opens a file simoc-livedata-init.json
+                //   containing the initial sam_config and agent_data. The backend should be
+                //   supplying this information through the service 'new_game' at endpoint
+                //   /dashboard. Once the backend can supply this file, update setter to retrieve
+                //   that file through a request. Once this is done, setup DashboardView socketio.on
+                //   method openWebSocket() to continuously update the json file and send it as a
+                //   packet to the frontend to display on the dashboard.
                 this.SETINITLIVEDATA()
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')
                 return
             }
+            this.SETLOADFROMSIMDATA(false)
             this.SETLOADFROMINITLIVEDATA(true)
             this.$router.push('dashboard')
         },
