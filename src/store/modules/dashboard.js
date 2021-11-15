@@ -163,13 +163,6 @@ export default {
 
             state.gameConfig = init.sam_config
             state.parameters = init.parameters
-            state.totalConsumption = {}
-            state.totalProduction = {}
-            state.agentCount = {}
-            state.agentGrowth = {}
-            state.storageRatio = {}
-            state.storageCapacities = {}
-            state.detailsPerAgent = {}
         },
         SETLOADFROMINITLIVEDATA(state, value) {
             state.loadFromInitLiveData = value
