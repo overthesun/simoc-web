@@ -203,11 +203,15 @@ export default {
 
             socket.on('connect', () => {
                 console.log('* Connecting to backend...')
+                this.socket.emit('get_data')
             })
-            socket.on('sent_data', () => {
+            socket.on('sent_data', msg => {
                 // TODO: Ryan This block creates a connection to the backend. The "new" backend
                 //  that sends data packets from the senors must be implemented in order to proceed
-                //  from this point.
+                //  from this point. The following line is expecting below to print the agent_data
+                //  filled with sensor data in json format. This is to be sent to a parse_step()
+                //  in the dashboard store to update the Dashboard View.
+                console.log(Object.values(msg.data))
             })
             socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')
