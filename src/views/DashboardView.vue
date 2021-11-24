@@ -123,25 +123,25 @@ export default {
         // If the mounted dashboard is running a sim, kill the game. The live dashboard is still
         // collecting data even if the user is not watching the dashboard. It should not tell
         // the server to kill the process.
-        if (!this.getLoadFromInitLiveData) {
-            // if the sim is still running upon leaving the page, stop it;
-            // some methods in DashboardMenu.vue rely on this to stop the sim
-            this.STOPTIMER()   // stop the step timer
-            this.SETMENUACTIVE(false)  // close the menu if it was open
-            if (!this.getTerminated) {
-                this.killGame()
-            }
-            // disconnect and destroy the websocket
-            this.tearDownWebSocket()
-            // remove these if when we leave the dashboard
-            window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
-            window.removeEventListener('unload', this.killGameOnUnload)
-            window.removeEventListener('keydown', this.keyListener)
-        } else {
-            // Ensure loadFromInitLiveData is false when user navigates from live dashboard
-            // so the conditional allows the user to access the sim dashboard as desired.
+
+        // if the sim is still running upon leaving the page, stop it;
+        // some methods in DashboardMenu.vue rely on this to stop the sim
+        this.STOPTIMER()   // stop the step timer
+        this.SETMENUACTIVE(false)  // close the menu if it was open
+        if (!this.getTerminated) {
+            this.killGame()
+        }
+        // disconnect and destroy the websocket
+        this.tearDownWebSocket()
+        // remove these if when we leave the dashboard
+        window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
+        window.removeEventListener('unload', this.killGameOnUnload)
+        window.removeEventListener('keydown', this.keyListener)
+
+        // Ensure loadFromInitLiveData is false when user navigates from live dashboard
+        // so the conditional allows the user to access the sim dashboard as desired.
+        if (this.getLoadFromInitLiveData) {
             console.log('* Navigating from the live dashboard...')
-            this.tearDownWebSocket()
             this.SETLOADFROMINITLIVEDATA(false)
         }
     },
