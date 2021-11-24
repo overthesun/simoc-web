@@ -77,38 +77,40 @@ export default {
         this.request_sent = false  // true if we already sent a req to get_steps
         this.tearDownWebSocket()
 
-        // if we load the simulation data, there's nothing else to do, otherwise
-        // we have to reset a few more values, init the game, and request steps
-        if (!this.getLoadFromSimData) {
+        if (this.getLoadFromInitLiveData) {
+        // This block is executed when loadFromInitLiveData is true. It navigates the
+        // user to a dashboard view of live sensor readings
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
+            console.log('Starting live dashboard')
+            this.openWebSocket()
+
+            // if we load the simulation data, there's nothing else to do, otherwise
+            // we have to reset a few more values, init the game, and request steps
+        } else if (!this.getLoadFromSimData) {
             this.SETBUFFERMAX(0)  // Reset the max buffer value
             // if we load from initial live data, we have to reconfigure the Dashboard View to
             // present components relevant to the live view
-            if (!this.getLoadFromInitLiveData) {
-                // init a new game, set game id, reset all data buffers
-                this.INITGAME(this.getGameID)
-                // This sets the get_step parameter for the agentGrowth filter.
-                // TODO: this should actually be done in tandem with the config wizard plant updates.
-                // This must be done after INITGAME or it will be reset
-                this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
-                console.log('Starting simulation', this.getGameID)
+            // init a new game, set game id, reset all data buffers
+            this.INITGAME(this.getGameID)
+            // This sets the get_step parameter for the agentGrowth filter.
+            // TODO: this should actually be done in tandem with the config wizard plant updates.
+            // This must be done after INITGAME or it will be reset
+            this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
-                // Ask the user confirmation if they try to leave (by closing
-                // the tab/window, by refreshing, or by navigating elsewhere)
-                // and try to kill the game when they do.  Leaving via the
-                // back button is handled in BaseDashboard.beforeRouteLeave
-                window.addEventListener('beforeunload', this.confirmBeforeLeaving)
-                window.addEventListener('unload', this.killGameOnUnload)
-                // setup the websocket to get the requested steps
+            console.log('Starting simulation', this.getGameID)
 
-                //   this function includes step setup for calculating sim data.
-                this.setupWebsocket()
-            } else {
-                // This block is executed when loadFromInitLiveData is true. It navigates the
-                // user to a dashboard view of live sensor readings
-                console.log('Starting live dashboard')
-                this.openWebSocket()
-            }
+            // Ask the user confirmation if they try to leave (by closing
+            // the tab/window, by refreshing, or by navigating elsewhere)
+            // and try to kill the game when they do.  Leaving via the
+            // back button is handled in BaseDashboard.beforeRouteLeave
+            window.addEventListener('beforeunload', this.confirmBeforeLeaving)
+            window.addEventListener('unload', this.killGameOnUnload)
+            // setup the websocket to get the requested steps
+
+            //   this function includes step setup for calculating sim data.
+            this.setupWebsocket()
+
             // after this, the Timeline component will be mounted
             // and it will start the timer that shows the steps
         }
