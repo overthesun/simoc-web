@@ -22,7 +22,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData',
-                                    'getLoadFromInitLiveData']),
+                                    'getLoadFromLiveData']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -77,8 +77,8 @@ export default {
         this.request_sent = false  // true if we already sent a req to get_steps
         this.tearDownWebSocket()
 
-        if (this.getLoadFromInitLiveData) {
-        // This block is executed when loadFromInitLiveData is true. It navigates the
+        if (this.getLoadFromLiveData) {
+        // This block is executed when loadFromLiveData is true. It navigates the
         // user to a dashboard view of live sensor readings
             this.SETBUFFERMAX(0)  // Reset the max buffer value
             console.log('Starting live dashboard')
@@ -140,11 +140,11 @@ export default {
         window.removeEventListener('unload', this.killGameOnUnload)
         window.removeEventListener('keydown', this.keyListener)
 
-        // Ensure loadFromInitLiveData is false when user navigates from live dashboard
+        // Ensure loadFromLiveData is false when user navigates from live dashboard
         // so the conditional allows the user to access the sim dashboard as desired.
-        if (this.getLoadFromInitLiveData) {
+        if (this.getLoadFromLiveData) {
             console.log('* Navigating from the live dashboard...')
-            this.SETLOADFROMINITLIVEDATA(false)
+            this.SETLOADFROMLIVEDATA(false)
         }
     },
 
@@ -153,7 +153,7 @@ export default {
                                       'SETGETSTEPSTIMERID', 'SETMINSTEPNUMBER', 'INITGAME',
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
-                                      'SETPLANTSPECIESPARAM', 'SETLOADFROMINITLIVEDATA']),
+                                      'SETPLANTSPECIESPARAM', 'SETLOADFROMLIVEDATA']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
@@ -197,7 +197,7 @@ export default {
             })
         },
         // openWebSocket: This method opens a websocket and keeps it open until a user navigates
-        // away from the dashboard. This method is called if loadFromInitLiveData is true.
+        // away from the dashboard. This method is called if loadFromLiveData is true.
         openWebSocket() {
             const socket = io()
             this.socket = socket

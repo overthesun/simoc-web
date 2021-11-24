@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETINITLIVEDATA', 'SETLOADFROMINITLIVEDATA']),
+                                      'SETINITLIVEDATA', 'SETLOADFROMLIVEDATA']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -96,7 +96,7 @@ export default {
                 return
             }
             this.SETLOADFROMSIMDATA(false)
-            this.SETLOADFROMINITLIVEDATA(true)
+            this.SETLOADFROMLIVEDATA(true)
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue

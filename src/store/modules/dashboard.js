@@ -53,7 +53,7 @@ export default {
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
-        loadFromInitLiveData: false, // if true, load from initial live data
+        loadFromLiveData: false, // if true, load from initial live data
         gameConfig: {},  // the full game_config returned by /new_game
         samConfig: {}, // the current SAM configuration
         activePanels: [],
@@ -67,7 +67,7 @@ export default {
         getCurrentStepBuffer: state => state.currentStepBuffer,
         getStepInterval: state => state.stepInterval,
 
-        getLoadFromInitLiveData: state => state.loadFromInitLiveData,
+        getLoadFromLiveData: state => state.loadFromLiveData,
 
         getStepNumber: state => state.stepNumber,
         getAgentType: state => stepNumber => state.agentCount[stepNumber],
@@ -164,8 +164,8 @@ export default {
             state.gameConfig = init.sam_config
             state.parameters = init.parameters
         },
-        SETLOADFROMINITLIVEDATA(state, value) {
-            state.loadFromInitLiveData = value
+        SETLOADFROMLIVEDATA(state, value) {
+            state.loadFromLiveData = value
         },
         // Starts the step timer. This object is actually created within the
         // DashboardView component on mounted. The timer is not started until the conditions
