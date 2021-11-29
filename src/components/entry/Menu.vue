@@ -51,8 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETINITLIVEDATA', 'SETLOADFROMLIVEDATA', 'SETGAMEID',
-                                      'SETGAMECONFIG']),
+                                      'SETSAMCONFIG', 'SETLOADFROMLIVEDATA']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -72,88 +71,19 @@ export default {
         // Send the user to the live Dashboard with a default initial configuration and data
         // FIXME: Make this look like launchSimulation() from ConfigurationView.vue
         toLiveDashboard() {
+            // TODO: Ryan, add a socketio connection here in Menu.vue to open a socket to the
+            //  backend to retrieve the initial config and agent_values that can be saved into
+            //  a file similarly to how the ConfigurationView does it. This socket can then be closed
+            //  because it is later reopened in DashboardView once the program navigates to that page
+            //  It may not even have to be saved, just stored in the samConfig and other variables
+            //  making up the getter getLiveData from dashboard.js. This will make it so the
+            //  dashboard can load with these required values.
             try {
                 // REQUIRED: Initial dashboard configuration
                 // Determines layout of Dashboard configuration
-                // TODO: Ryan, Request backend for the inital sam/data_config from service 'new_game'
-                //   ** Reference parseStep() in dashboard.js **
-                //   In order to do this, the backend needs to serve the frontend the
-                //   initial agent_data file simoc-livedata-init.json. Once it has this service
-                //   available at the /dashboard endpoint, SETINITLIVEDATA should make a request
-                //   to the backend and utilize parseStep() to build the initial file. This can
-                //   additionally be used to read each new incoming packet from the sensors.
 
                 this.SETINITLIVECONFIG() // wizard is being set
-
-                this.SETGAMEID('0000000000000000')
-                this.SETGAMECONFIG({
-                    agents: {},
-                    storages: {
-                        air_storage: [
-                            {
-                                id: 1,
-                                atmo_o2: 200.55795,
-                                atmo_co2: 0.3957539,
-                                atmo_n2: 747.6543,
-                                atmo_ch4: 0.001790525,
-                                atmo_h2: 0.000526625,
-                                atmo_h2o: 9.575,
-                                total_capacity: {
-                                    value: 957.5,
-                                    unit: 'kg',
-                                },
-                            },
-                        ],
-                        water_storage: [
-                            {
-                                id: 1,
-                                h2o_potb: 689.4,
-                                h2o_urin: 0,
-                                h2o_wste: 0,
-                                h2o_tret: 76.60000000000001,
-                                total_capacity: {
-                                    value: 766,
-                                    unit: 'kg',
-                                },
-                            },
-                        ],
-                        nutrient_storage: [
-                            {
-                                id: 1,
-                                biomass_totl: 0,
-                                biomass_edible: 0,
-                                sold_n: 100,
-                                sold_p: 100,
-                                sold_k: 100,
-                                sold_wste: 0,
-                            },
-                        ],
-                        power_storage: [
-                            {
-                                id: 1,
-                                enrg_kwh: 1,
-                            },
-                        ],
-                        food_storage: [
-                            {
-                                id: 1,
-                                food_edbl: 1,
-                            },
-                        ],
-                    },
-                    termination: [],
-                    single_agent: 1,
-                    total_amount: 10,
-                })
-
-                // TODO: Ryan, Currently the following setter opens a file simoc-livedata-init.json
-                //   containing the initial sam_config and agent_data. The backend should be
-                //   supplying this information through the service 'new_game' at endpoint
-                //   /dashboard. Once the backend can supply this file, update setter to retrieve
-                //   that file through a request. Once this is done, setup DashboardView socketio.on
-                //   method openWebSocket() to continuously update the json file and send it as a
-                //   packet to the frontend to display on the dashboard.
-                this.SETINITLIVEDATA()
+                this.SETSAMCONFIG() // game_config is being set
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')

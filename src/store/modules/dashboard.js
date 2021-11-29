@@ -149,21 +149,17 @@ export default {
             state.loadFromSimData = value
         },
         // load the live Dashboard
-        // TODO: Ryan, create a default object for the live view, determine which variables
-        //  are necessary for the live dashboard
-        async SETINITLIVEDATA(state) {
-            let init
+        async SETSAMCONFIG(state) {
+            let sam_config
             try {
-                console.log('* Loading initial cached values...')
-                init = await import('../../assets/simoc-livedata-init')
+                console.log('* Loading SAM configuration...')
+                sam_config = await import('../../assets/sam-config')
             } catch (error) {
-                console.log('* Loading cached values failed, falling back on regular request')
+                console.log('* Loading SAM configuration failed.')
                 console.error(error)
             }
 
-            // FIXME: The following resets game_config
-            // state.gameConfig = init.sam_config
-            // state.parameters = init.parameters
+            state.gameConfig = sam_config
         },
         SETLOADFROMLIVEDATA(state, value) {
             state.loadFromLiveData = value
