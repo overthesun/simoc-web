@@ -22,7 +22,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData',
-                                    'getLoadFromLiveData']),
+                                    'getLoadFromLiveData', 'getGameConfig']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -199,6 +199,7 @@ export default {
         // openWebSocket: This method opens a websocket and keeps it open until a user navigates
         // away from the dashboard. This method is called if loadFromLiveData is true.
         openWebSocket() {
+            // To connect to the simoc-sam, specify the port here
             const socket = io()
             this.socket = socket
             console.log('Live socket created:', this.socket)
@@ -213,7 +214,210 @@ export default {
                 //  from this point. The following line is expecting below to print the agent_data
                 //  filled with sensor data in json format. This is to be sent to a parse_step()
                 //  in the dashboard store to update the Dashboard View.
-                console.log(Object.values(msg.data))
+                // this.parseStep(Object.values(msg.data))
+                // TODO: Ryan setup an agent_data file and pass it to the function below to check
+                //  that the charts are being updated
+
+                const data = []
+                for (let i = 1; i <= 240; i++) {
+                    data.push({
+                        id: 2622983854907820000,
+                        step_num: i,
+                        user_id: 2993,
+                        game_id: 5584426218715874000,
+                        start_time: 1638145080,
+                        time: 3600,
+                        hours_per_step: 1,
+                        is_terminated: 'False',
+                        termination_reason: null,
+                        agent_growth: {
+                            '': 0,
+                        },
+                        total_agent_count: {
+                            human_agent: 1,
+                        },
+                        total_production: {
+                            atmo_co2: {
+                                value: 0.025916,
+                                unit: '1.0 kg',
+                            },
+                            atmo_o2: {
+                                value: 0,
+                                unit: '',
+                            },
+                            h2o_potb: {
+                                value: 4.75,
+                                unit: '1.0 kg',
+                            },
+                            enrg_kwh: {
+                                value: 0.000203,
+                                unit: '1.0 kWh',
+                            },
+                        },
+                        total_consumption: {
+                            atmo_co2: {
+                                value: 0,
+                                unit: '',
+                            },
+                            atmo_o2: {
+                                value: 0.021583,
+                                unit: '1.0 kg',
+                            },
+                            h2o_potb: {
+                                value: 0.165833,
+                                unit: '1.0 kg',
+                            },
+                            enrg_kwh: {
+                                value: 2.723,
+                                unit: '1.0 kWh',
+                            },
+                        },
+                        details_per_agent: {
+                            in: {
+                                enrg_kwh: {
+                                    solid_waste_aerobic_bioreactor: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    multifiltration_purifier_post_treatment: {
+                                        value: 0.012,
+                                        unit: '1.0 kWh',
+                                    },
+                                    oxygen_generation_SFWE: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    urine_recycling_processor_VCD: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    co2_removal_SAWD: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    co2_reduction_sabatier: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    ch4_removal_agent: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    dehumidifier: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    crew_habitat_small: {
+                                        value: 2.711,
+                                        unit: '1.0 kWh',
+                                    },
+                                },
+                                atmo_co2: {
+                                    co2_removal_SAWD: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                    co2_reduction_sabatier: {
+                                        value: 0,
+                                        unit: '',
+                                    },
+                                },
+                            },
+                        },
+                        storage_capacities: {
+                            air_storage: {
+                                1: {
+                                    atmo_o2: {
+                                        value: 261.803417,
+                                        unit: 'kg',
+                                    },
+                                    atmo_co2: {
+                                        value: 0.542566,
+                                        unit: 'kg',
+                                    },
+                                    atmo_n2: {
+                                        value: 976.05,
+                                        unit: 'kg',
+                                    },
+                                    atmo_ch4: {
+                                        value: 0.002337,
+                                        unit: 'kg',
+                                    },
+                                    atmo_h2: {
+                                        value: 0.000688,
+                                        unit: 'kg',
+                                    },
+                                    atmo_h2o: {
+                                        value: 12.579167,
+                                        unit: 'kg',
+                                    },
+                                },
+                            },
+                            water_storage: {
+                                1: {
+                                    h2o_potb: {
+                                        value: 904.584167,
+                                        unit: 'kg',
+                                    },
+                                    h2o_urin: {
+                                        value: 0.0625,
+                                        unit: 'kg',
+                                    },
+                                    h2o_wste: {
+                                        value: 0.087083,
+                                        unit: 'kg',
+                                    },
+                                    h2o_tret: {
+                                        value: 95.25,
+                                        unit: 'kg',
+                                    },
+                                },
+                            },
+                            nutrient_storage: {
+                                1: {
+                                    biomass_totl: {
+                                        value: 0,
+                                        unit: 'kg',
+                                    },
+                                    sold_n: {
+                                        value: 100,
+                                        unit: 'kg',
+                                    },
+                                    sold_p: {
+                                        value: 100,
+                                        unit: 'kg',
+                                    },
+                                    sold_k: {
+                                        value: 100,
+                                        unit: 'kg',
+                                    },
+                                    sold_wste: {
+                                        value: 0,
+                                        unit: 'kg',
+                                    },
+                                },
+                            },
+                            power_storage: {
+                                1: {
+                                    enrg_kwh: {
+                                        value: 997.277,
+                                        unit: 'kWh',
+                                    },
+                                },
+                            },
+                            food_storage: {
+                                1: {
+                                    food_edbl: {
+                                        value: 99.937083,
+                                        unit: 'kg',
+                                    },
+                                },
+                            },
+                        },
+                    })
+                }
+
+                this.parseStep(data)
             })
             socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')

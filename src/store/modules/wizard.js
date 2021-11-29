@@ -23,6 +23,62 @@ function get_default_config() {
     }
 }
 
+function get_default_live_config() {
+    // return the default configuration,
+    // and ensures that a new object is returned
+    return {
+        name: 'Default config',
+        simdata_file: '',
+        location: 'mars',
+        duration: {
+            type: 'none',
+            amount: 10,
+            units: 'day',
+        },
+        humans: {
+            type: 'human_agent',
+            amount: 1,
+            units: '',
+        },
+        food: {
+            type: 'food_storage',
+            amount: 1,
+            units: 'kg',
+        },
+        eclss: {
+            type: 'eclss',
+            amount: 1,
+            units: '',
+        },
+        powerGeneration: {
+            type: 'solar_pv_array_mars',
+            amount: 1,
+            units: '',
+        },
+        powerStorage: {
+            type: 'power_storage',
+            amount: 1,
+            units: 'kWh',
+        },
+        crewQuarters: {
+            type: 'crew_habitat_sam',
+            amount: 1,
+            units: '',
+        },
+        greenhouse: {
+            type: 'greenhouse_sam',
+            amount: 1,
+            units: '',
+        },
+        plantSpecies: [
+            {
+                type: '',
+                amount: '',
+            },
+        ],
+    }
+}
+
 function get_presets() {
     return {
         one_human: {
@@ -385,7 +441,7 @@ export default {
         // Set the initial configuration for the live dashboard
         SETINITLIVECONFIG(context) {
             console.log('* Loading initial configuration...')
-            context.commit('set_config', get_default_config())
+            context.commit('set_config', get_default_live_config())
         },
     },
 }

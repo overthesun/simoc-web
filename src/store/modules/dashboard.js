@@ -161,8 +161,9 @@ export default {
                 console.error(error)
             }
 
-            state.gameConfig = init.sam_config
-            state.parameters = init.parameters
+            // FIXME: The following resets game_config
+            // state.gameConfig = init.sam_config
+            // state.parameters = init.parameters
         },
         SETLOADFROMLIVEDATA(state, value) {
             state.loadFromLiveData = value

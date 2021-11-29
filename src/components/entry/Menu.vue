@@ -51,7 +51,8 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETINITLIVEDATA', 'SETLOADFROMLIVEDATA']),
+                                      'SETINITLIVEDATA', 'SETLOADFROMLIVEDATA', 'SETGAMEID',
+                                      'SETGAMECONFIG']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -81,7 +82,70 @@ export default {
                 //   available at the /dashboard endpoint, SETINITLIVEDATA should make a request
                 //   to the backend and utilize parseStep() to build the initial file. This can
                 //   additionally be used to read each new incoming packet from the sensors.
-                this.SETINITLIVECONFIG()
+
+                this.SETINITLIVECONFIG() // wizard is being set
+
+                this.SETGAMEID('0000000000000000')
+                this.SETGAMECONFIG({
+                    agents: {},
+                    storages: {
+                        air_storage: [
+                            {
+                                id: 1,
+                                atmo_o2: 200.55795,
+                                atmo_co2: 0.3957539,
+                                atmo_n2: 747.6543,
+                                atmo_ch4: 0.001790525,
+                                atmo_h2: 0.000526625,
+                                atmo_h2o: 9.575,
+                                total_capacity: {
+                                    value: 957.5,
+                                    unit: 'kg',
+                                },
+                            },
+                        ],
+                        water_storage: [
+                            {
+                                id: 1,
+                                h2o_potb: 689.4,
+                                h2o_urin: 0,
+                                h2o_wste: 0,
+                                h2o_tret: 76.60000000000001,
+                                total_capacity: {
+                                    value: 766,
+                                    unit: 'kg',
+                                },
+                            },
+                        ],
+                        nutrient_storage: [
+                            {
+                                id: 1,
+                                biomass_totl: 0,
+                                biomass_edible: 0,
+                                sold_n: 100,
+                                sold_p: 100,
+                                sold_k: 100,
+                                sold_wste: 0,
+                            },
+                        ],
+                        power_storage: [
+                            {
+                                id: 1,
+                                enrg_kwh: 1,
+                            },
+                        ],
+                        food_storage: [
+                            {
+                                id: 1,
+                                food_edbl: 1,
+                            },
+                        ],
+                    },
+                    termination: [],
+                    single_agent: 1,
+                    total_amount: 10,
+                })
+
                 // TODO: Ryan, Currently the following setter opens a file simoc-livedata-init.json
                 //   containing the initial sam_config and agent_data. The backend should be
                 //   supplying this information through the service 'new_game' at endpoint
