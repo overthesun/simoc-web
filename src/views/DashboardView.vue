@@ -200,19 +200,32 @@ export default {
         // away from the dashboard. This method is called if loadFromLiveData is true.
         openWebSocket() {
             // To connect to the simoc-sam, specify the port here
-            const socket = io()
+            const socket = io('http://localhost:8081')
+
             this.socket = socket
             console.log('Live socket created:', this.socket)
 
-            socket.on('connect', () => {
-                console.log('* Connecting to backend...')
-                this.socket.emit('get_data')
+            socket.on('connect', msg => {
+                console.log('Connected to server')
+                console.log('Registering client')
+
+                this.socket.emit('register-client')
             })
-            socket.on('sent_data', msg => {
-                this.parseStep(Object.values(msg.data))
+            socket.on('hab-info', config => {
+                console.log('Received habitat info:', config)
+                console.log('Requesting step data')
+
+                this.socket.emit('send-step-data')
+            })
+            socket.on('step-batch', batch => {
+                console.log(`Received a batch of ${batch.length} step from the server:`)
+                console.log(batch)
+
+                // TODO: Retrieve real step data and send to parseStep
+                // this.parseStep(msg)
             })
             socket.on('disconnect', msg => {
-                console.log('Websocket disconnected')
+                console.log('Server disconnected')
             })
         },
 
