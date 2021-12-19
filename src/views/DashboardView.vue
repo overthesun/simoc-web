@@ -154,9 +154,15 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM', 'SETLOADFROMLIVEDATA']),
+        // getStepBatch Getter receives the entire batch of step_data from the store which
+        // can be sent to parseStep in the dashboard store. See store/modules/step.js
+        ...mapGetters('step', ['getStepBatch']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
+        // parseData Action parses the sensor data sent from the simoc-sam to create step_data.
+        // See store/modules/step.js
+        ...mapActions('step', ['parseData']),
 
         setupWebsocket() {
             const socket = io()
@@ -212,17 +218,19 @@ export default {
                 this.socket.emit('register-client')
             })
             socket.on('hab-info', config => {
+                // TODO: Set sam-config here using meta data from simoc-sam
+                // TODO: or Get whole sam-config here
                 console.log('Received habitat info:', config)
                 console.log('Requesting step data')
 
                 this.socket.emit('send-step-data')
             })
-            socket.on('step-batch', batch => {
-                console.log(`Received a batch of ${batch.length} step from the server:`)
-                console.log(batch)
+            socket.on('step-batch', data => {
+                console.log(`Received a batch of ${data.length} step from the server:`)
 
-                // TODO: Retrieve real step data and send to parseStep
-                // this.parseStep(msg)
+                // send batch to parseData in the step store for parsing
+                this.parseData(data)
+                this.parseStep(this.getStepBatch())
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')

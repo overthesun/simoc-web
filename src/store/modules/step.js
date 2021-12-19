@@ -104,39 +104,280 @@ export default {
             state.terminationReason = value
         },
         setAgentGrowth(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
             state.agentGrowth = value
         },
         setTotalAgentCount(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
-            state.totalAgentCount = value
+            const total_agent_count = {
+                human_agent: value,
+            }
+
+            state.totalAgentCount = total_agent_count
         },
         setTotalProduction(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
-            state.totalProduction = value
+            const total_production = {
+                atmo_co2: {
+                    // value: value.atmo_co2,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                atmo_o2: {
+                    // value: value.atmo_o2,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                h2o_potb: {
+                    // value: value.h2o_potb,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                enrg_kwh: {
+                    // value: value.enrg_kwh,
+                    value: 0,
+                    unit: '1.0 kWh',
+                },
+            }
+
+            state.totalProduction = total_production
         },
         setTotalConsumption(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
-            state.totalConsumption = value
+            const total_consumption = {
+                atmo_co2: {
+                    // value: value.atmo_co2,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                atmo_o2: {
+                    // value: value.atmo_o2,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                h2o_potb: {
+                    // value: value.h2o_potb,
+                    value: 0,
+                    unit: '1.0 kg',
+                },
+                enrg_kwh: {
+                    // value: value.enrg_kwh,
+                    value: 0,
+                    unit: '1.0 kWh',
+                },
+            }
+
+            state.totalConsumption = total_consumption
         },
         setDetailsPerAgent(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
-            state.detailsPerAgent = value
+            const details_per_agent = {
+                in: {
+                    enrg_kwh: {
+                        solid_waste_aerobic_bioreactor: {
+                            value: value.solid_waste_aerobic_bioreactor,
+                            unit: '1.0 kWh',
+                        },
+                        multifiltration_purifier_post_treatment: {
+                            value: value.multifiltration_purifier_post_treatment,
+                            unit: '1.0 kWh',
+                        },
+                        oxygen_generation_SFWE: {
+                            value: value.oxygen_generation_SFWE,
+                            unit: '1.0 kWh',
+                        },
+                        urine_recycling_processor_VCD: {
+                            value: value.urine_recycling_processor_VCD,
+                            unit: '1.0 kWh',
+                        },
+                        co2_removal_SAWD: {
+                            value: value.co2_removal_SAWD,
+                            unit: '1.0 kWh',
+                        },
+                        co2_reduction_sabatier: {
+                            value: value.co2_reduction_sabatier,
+                            unit: '1.0 kWh',
+                        },
+                        ch4_removal_agent: {
+                            value: value.ch4_removal_agent,
+                            unit: '1.0 kWh',
+                        },
+                        dehumidifier: {
+                            value: value.dehumidifier,
+                            unit: '1.0 kWh',
+                        },
+                        crew_habitat_small: {
+                            value: value.crew_habitat_small,
+                            unit: '1.0 kWh',
+                        },
+                    },
+                    atmo_co2: {
+                        co2_removal_SAWD: {
+                            value: value.co2_removal_SAWD,
+                            unit: '1.0 kWh',
+                        },
+                        co2_reduction_sabatier: {
+                            value: value.co2_reduction_sabatier,
+                            unit: '1.0 kWh',
+                        },
+                    },
+                },
+            }
+
+            state.detailsPerAgent = details_per_agent
         },
         setStorageCapacities(state, value) {
-            // TODO: Build object based on step_data extracted from a sim
-            state.storageCapacities = value
+            const storage_capacities = {
+                air_storage: {
+                    1: {
+                        atmo_o2: {
+                            // value: value.atmo_o2,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        atmo_co2: {
+                            // value: value.atmo_co2,
+                            value: value,
+                            unit: 'kg',
+                        },
+                        atmo_n2: {
+                            // value: value.atmo_n2,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        atmo_ch4: {
+                            // value: value.atmo_ch4,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        atmo_h2: {
+                            // value: value.atmo_h2,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        atmo_h2o: {
+                            // value: value.atmo_h2o,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                    },
+                },
+                water_storage: {
+                    1: {
+                        h2o_potb: {
+                            // value: value.h2o_potb,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        h2o_urin: {
+                            // value: value.h2o_urin,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        h2o_wste: {
+                            // value: value.h2o_wste,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        h2o_tret: {
+                            // value: value.h2o_tret,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                    },
+                },
+                nutrient_storage: {
+                    1: {
+                        biomass_totl: {
+                            // value: value.biomass_totl,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        sold_n: {
+                            // value: value.sold_n,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        sold_p: {
+                            // value: value.sold_p,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        sold_k: {
+                            // value: value.sold_k,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                        sold_wste: {
+                            // value: value.sold_wste,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                    },
+                },
+                power_storage: {
+                    1: {
+                        enrg_kwh: {
+                            // value: value.enrg_kwh,
+                            value: 0,
+                            unit: 'kWh',
+                        },
+                    },
+                },
+                food_storage: {
+                    1: {
+                        food_edbl: {
+                            // value: value.food_edbl,
+                            value: 0,
+                            unit: 'kg',
+                        },
+                    },
+                },
+            }
+
+            state.storageCapacities = storage_capacities
         },
         setStepBatch(state, value) {
-            // TODO: Add schema verification to ensure stepData is properly formatted
-            state.stepBatch.push(state.stepData)
+            console.log('Adding step data to batch...')
+            console.log(value)
+
+            // console.log(`atmo_co2: ${value
+            //         .storage_capacities.air_storage[1].atmo_co2.value}`)
+
+            state.stepBatch.push(value)
         },
     },
     actions: {
-        parseData({commit, dispatch}, data) {
+        parseData({commit, getters}, data) {
             console.log(data)
             data.forEach(item => {
-                // TODO: Parse sensor data and sort into designated state variables
+                let newStepData = true
+                for (const value in item) {
+                    switch (value) {
+                        case 'step_num':
+                            // console.log(`step_num[${item.step_num}]:  ${item.step_num}`)
+                            commit('setStepNum', item.step_num)
+                            break
+                        case 'co2_ppm':
+                            // console.log(`co2_ppm[${item.step_num}]:   ${item.co2_ppm}`)
+                            commit('setStorageCapacities', item.co2_ppm)
+                            break
+                        case 'hum_perc':
+                            // console.log(`hum_perc[${item.step_num}]:  ${item.hum_perc}`)
+                            // TODO: Create humidity state
+                            // commit('', item.hum_perc)
+                            break
+                        case 'temp':
+                            // TODO: Create temperature state
+                            // console.log(`temp[${item.step_num}]:      ${item.temp}`)
+                            // commit('', item.temp)
+                            break
+                        default:
+                            newStepData = false
+                            console.log('Data not found')
+                    }
+                }
+
+                if (newStepData) {
+                    commit('setTotalProduction')
+                    commit('setTotalConsumption')
+                    commit('setStepBatch', getters.getStepData)
+                }
             })
         },
     },
