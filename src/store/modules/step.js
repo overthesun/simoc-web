@@ -347,7 +347,7 @@ export default {
             console.log(data)
             data.forEach(item => {
                 let newStepData = true
-                for (const value in item) {
+                Object.keys(item).forEach(value => {
                     switch (value) {
                         case 'step_num':
                             // console.log(`step_num[${item.step_num}]:  ${item.step_num}`)
@@ -371,7 +371,7 @@ export default {
                             newStepData = false
                             console.log('Data not found')
                     }
-                }
+                })
 
                 if (newStepData) {
                     commit('setTotalProduction')
