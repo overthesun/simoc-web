@@ -14,7 +14,7 @@
  * the dashboard store (dashboard.js).
  *
  * @author Ryan Meneses
- * @version 1.0
+ * @version 2.0
  * @since December 13, 2021
  */
 export default {
@@ -38,6 +38,17 @@ export default {
         totalConsumption: {},
         detailsPerAgent: {},
         storageCapacities: {},
+
+        // details_per_agent atomic state variables
+        solidWasteAerobicBioreactor: {value: 0, unit: 'kWh'},
+        multifiltrationPurifierPostTreatment: {value: 0, unit: 'kWh'},
+        oxygenGenerationSFWE: {value: 0, unit: 'kWh'},
+        urineRecyclingProcessorVCD: {value: 0, unit: 'kWh'},
+        co2RemovalSAWD: {value: 0, unit: 'kWh'},
+        co2ReductionSabatier: {value: 0, unit: 'kWh'},
+        ch4RemovalAgent: {value: 0, unit: 'kWh'},
+        dehumidifier: {value: 0, unit: 'kWh'},
+        crewHabitat: {value: 0, unit: 'kWh'},
 
         // air_storage atomic state variables
         atmoO2: {value: 0, unit: 'kg'},
@@ -67,7 +78,7 @@ export default {
         foodEdbl: {value: 0, unit: 'kg'},
 
         // step_data of atomic state variable containers
-        stepData: {},
+        stepData: null,
         stepBatch: [],
     },
     getters: {
@@ -82,12 +93,49 @@ export default {
         getIsTerminated: state => state.isTerminated,
         getTerminationReason: state => state.terminationReason,
 
-        // atomic container getters returns dictionaries in proper format
+        // plant and human_agent getters
         getAgentGrowth: state => state.agentGrowth,
         getTotalAgentCount: state => state.totalAgentCount,
-        getTotalProduction: state => state.totalProduction,
-        getTotalConsumption: state => state.totalConsumption,
-        getDetailsPerAgent: state => state.detailsPerAgent,
+
+        // atomic container getters returns dictionaries in proper format
+        getTotalProduction(state) {
+            return {
+                atmo_co2: state.atmoCO2,
+                atmo_o2: state.atmoO2,
+                h2o_potb: state.h2oPotb,
+                enrg_kwh: state.enrgKwh,
+            }
+        },
+        getTotalConsumption(state) {
+            return {
+                atmo_co2: state.atmoCO2,
+                atmo_o2: state.atmoO2,
+                h2o_potb: state.h2oPotb,
+                enrg_kwh: state.enrgKwh,
+            }
+        },
+        getDetailsPerAgent(state) {
+            return {
+                in: {
+                    enrg_kwh: {
+                        solid_waste_aerobic_bioreactor: state.solidWasteAerobicBioreactor,
+                        // eslint-disable-next-line max-len,vue/max-len
+                        multifiltration_purifier_post_treatment: state.multifiltrationPurifierPostTreatment,
+                        oxygen_generation_SFWE: state.oxygenGenerationSFWE,
+                        urine_recycling_processor_VCD: state.urineRecyclingProcessorVCD,
+                        co2_removal_SAWD: state.co2RemovalSAWD,
+                        co2_reduction_sabatier: state.co2ReductionSabatier,
+                        ch4_removal_agent: state.ch4RemovalAgent,
+                        dehumidifier: state.dehumidifier,
+                        crew_habitat_small: state.crewHabitat,
+                    },
+                    atmo_co2: {
+                        co2_removal_SAWD: state.co2RemovalSAWD,
+                        co2_reduction_sabatier: state.co2ReductionSabatier,
+                    },
+                },
+            }
+        },
         getStorageCapacities(state) {
             return {
                 air_storage: {
@@ -138,6 +186,7 @@ export default {
         getAtmoH2: state => state.atmoH2,
         getAtmoH2O: state => state.atmoH2O,
 
+        // step_data getters
         getStepData(state, getters) {
             return {
                 id: state.id,
@@ -151,9 +200,9 @@ export default {
                 termination_reason: state.terminationReason,
                 agent_growth: state.agentGrowth,
                 total_agent_count: state.totalAgentCount,
-                total_production: state.totalProduction,
-                total_consumption: state.totalConsumption,
-                details_per_agent: state.detailsPerAgent,
+                total_production: getters.getTotalProduction,
+                total_consumption: getters.getTotalConsumption,
+                details_per_agent: getters.getDetailsPerAgent,
                 storage_capacities: getters.getStorageCapacities,
             }
         },
@@ -189,127 +238,73 @@ export default {
             state.terminationReason = value
         },
 
-        // atomic state variable mutators
+        // plant and human_agent mutators
         setAgentGrowth(state, value) {
             state.agentGrowth = value
         },
         setTotalAgentCount(state, value) {
-            const total_agent_count = {
+            state.totalAgentCount = {
                 human_agent: value,
             }
-
-            state.totalAgentCount = total_agent_count
         },
-        setTotalProduction(state, value) {
-            const total_production = {
-                atmo_co2: {
-                    // value: value.atmo_co2,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                atmo_o2: {
-                    // value: value.atmo_o2,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                h2o_potb: {
-                    // value: value.h2o_potb,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                enrg_kwh: {
-                    // value: value.enrg_kwh,
-                    value: 0,
-                    unit: '1.0 kWh',
-                },
+
+        // atomic state variable mutators
+        // -- details_per_agent --
+        setSolidWasteAerobicBioreactor(state, value) {
+            state.solidWasteAerobicBioreactor = {
+                value: value,
+                unit: 'kWh',
             }
-
-            state.totalProduction = total_production
         },
-        setTotalConsumption(state, value) {
-            const total_consumption = {
-                atmo_co2: {
-                    // value: value.atmo_co2,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                atmo_o2: {
-                    // value: value.atmo_o2,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                h2o_potb: {
-                    // value: value.h2o_potb,
-                    value: 0,
-                    unit: '1.0 kg',
-                },
-                enrg_kwh: {
-                    // value: value.enrg_kwh,
-                    value: 0,
-                    unit: '1.0 kWh',
-                },
+        setMultifiltrationPurifierPostTreatment(state, value) {
+            state.multifiltrationPurifierPostTreatment = {
+                value: value,
+                unit: 'kWh',
             }
-
-            state.totalConsumption = total_consumption
         },
-        setDetailsPerAgent(state, value) {
-            const details_per_agent = {
-                in: {
-                    enrg_kwh: {
-                        solid_waste_aerobic_bioreactor: {
-                            value: value.solid_waste_aerobic_bioreactor,
-                            unit: '1.0 kWh',
-                        },
-                        multifiltration_purifier_post_treatment: {
-                            value: value.multifiltration_purifier_post_treatment,
-                            unit: '1.0 kWh',
-                        },
-                        oxygen_generation_SFWE: {
-                            value: value.oxygen_generation_SFWE,
-                            unit: '1.0 kWh',
-                        },
-                        urine_recycling_processor_VCD: {
-                            value: value.urine_recycling_processor_VCD,
-                            unit: '1.0 kWh',
-                        },
-                        co2_removal_SAWD: {
-                            value: value.co2_removal_SAWD,
-                            unit: '1.0 kWh',
-                        },
-                        co2_reduction_sabatier: {
-                            value: value.co2_reduction_sabatier,
-                            unit: '1.0 kWh',
-                        },
-                        ch4_removal_agent: {
-                            value: value.ch4_removal_agent,
-                            unit: '1.0 kWh',
-                        },
-                        dehumidifier: {
-                            value: value.dehumidifier,
-                            unit: '1.0 kWh',
-                        },
-                        crew_habitat_small: {
-                            value: value.crew_habitat_small,
-                            unit: '1.0 kWh',
-                        },
-                    },
-                    atmo_co2: {
-                        co2_removal_SAWD: {
-                            value: value.co2_removal_SAWD,
-                            unit: '1.0 kWh',
-                        },
-                        co2_reduction_sabatier: {
-                            value: value.co2_reduction_sabatier,
-                            unit: '1.0 kWh',
-                        },
-                    },
-                },
+        setOxygenGenerationSFWE(state, value) {
+            state.oxygenGenerationSFWE = {
+                value: value,
+                unit: 'kWh',
             }
-
-            state.detailsPerAgent = details_per_agent
         },
-
-        // air_storage atomic state variable mutators
+        setUrineRecyclingProcessorVCD(state, value) {
+            state.urineRecyclingProcessorVCD = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        setCO2RemovalSAWD(state, value) {
+            state.co2RemovalSAWD = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        setCO2ReductionSabatier(state, value) {
+            state.co2ReductionSabatier = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        setCH4RemovalAgent(state, value) {
+            state.ch4RemovalAgent = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        setDehumidifier(state, value) {
+            state.dehumidifier = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        setCrewHabitat(state, value) {
+            state.crewHabitat = {
+                value: value,
+                unit: 'kWh',
+            }
+        },
+        // -- air_storage --
         setAtmoO2(state, value) {
             state.atmoO2 = {
                 value: value,
@@ -346,8 +341,7 @@ export default {
                 unit: 'kg',
             }
         },
-
-        // water_storage atomic state variable mutators
+        // -- water_storage --
         setH2OPotb(state, value) {
             state.h2oPotb = {
                 value: value,
@@ -372,8 +366,7 @@ export default {
                 unit: 'kg',
             }
         },
-
-        // nutrient_storage atomic state variable mutators
+        // -- nutrient_storage --
         setBiomassTotl(state, value) {
             state.biomassTotl = {
                 value: value,
@@ -404,16 +397,14 @@ export default {
                 unit: 'kg',
             }
         },
-
-        // power_storage atomic state variable mutators
+        // -- power_storage --
         setEnrgKwh(state, value) {
             state.enrgKwh = {
                 value: value,
                 unit: 'kWh',
             }
         },
-
-        // food_storage atomic state variable mutators
+        // -- food_storage --
         setFoodEdbl(state, value) {
             state.foodEdbl = {
                 value: value,
@@ -421,13 +412,11 @@ export default {
             }
         },
 
+        // step_data mutators
         // stepBatch mutator pushes new step_data onto an array
         setStepBatch(state, value) {
             console.log('Adding step data to batch...')
             console.log(value)
-
-            // console.log(`atmo_co2: ${value
-            //         .storage_capacities.air_storage[1].atmo_co2.value}`)
 
             state.stepBatch.push(value)
         },
@@ -464,8 +453,6 @@ export default {
                 })
 
                 if (newStepData) {
-                    commit('setTotalProduction')
-                    commit('setTotalConsumption')
                     commit('setStepBatch', getters.getStepData)
                 }
             })
