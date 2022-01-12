@@ -1,6 +1,6 @@
 <template>
     <section class="panel-dl-wrapper">
-        <dl v-if="info_section == 'mission-status'">
+        <dl v-if="info_section == 'atmo_readings'">
             <dt>CO2</dt>
             <dd>{{getAtmoCO2PPM()}} ppm</dd>
             <dt>Temperature</dt>
@@ -20,7 +20,7 @@ export default {
     panelTitle: 'SCD-30 NDIR Sensor',
     data() {
         return {
-            info_section: 'mission-status',
+            info_section: 'atmo_readings',
         }
     },
     computed: {
@@ -29,7 +29,6 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
         getAtmoCO2PPM() {
-            console.log('HERE')
             return this.getAtmoCO2.value
         },
         getTemp() {
