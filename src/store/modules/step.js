@@ -14,7 +14,7 @@
  * the dashboard store (dashboard.js).
  *
  * @author Ryan Meneses
- * @version 2.0
+ * @version 2.1
  * @since December 13, 2021
  */
 export default {
@@ -57,6 +57,8 @@ export default {
         atmoCH4: {value: 0, unit: 'kg'},
         atmoH2: {value: 0, unit: 'kg'},
         atmoH2O: {value: 0, unit: 'kg'},
+        atmoHum: {value: 0, unit: '%'},
+        atmoTemp: {value: 0, unit: 'C°'},
 
         // water_storage atomic state variables
         h2oPotb: {value: 0, unit: 'kg'},
@@ -185,6 +187,8 @@ export default {
         getAtmoCH4: state => state.atmoCH4,
         getAtmoH2: state => state.atmoH2,
         getAtmoH2O: state => state.atmoH2O,
+        getAtmoHum: state => state.atmoHum,
+        getAtmoTemp: state => state.atmoTemp,
 
         // step_data getters
         getStepData(state, getters) {
@@ -341,6 +345,18 @@ export default {
                 unit: 'kg',
             }
         },
+        setAtmoHum(state, value) {
+            state.atmoHum = {
+                value: value,
+                unit: '%',
+            }
+        },
+        setAtmoTemp(state, value) {
+            state.atmoTemp = {
+                value: value,
+                unit: 'C°',
+            }
+        },
         // -- water_storage --
         setH2OPotb(state, value) {
             state.h2oPotb = {
@@ -438,13 +454,12 @@ export default {
                             break
                         case 'hum_perc':
                             // console.log(`hum_perc[${item.step_num}]:  ${item.hum_perc}`)
-                            // TODO: Create humidity state
-                            // commit('setAtmoHum', item.hum_perc)
+                            commit('setAtmoHum', item.hum_perc)
                             break
                         case 'temp':
                             // console.log(`temp[${item.step_num}]:      ${item.temp}`)
                             // TODO: Create temperature state
-                            // commit('setAtmoTemp', item.temp)
+                            commit('setAtmoTemp', item.temp)
                             break
                         default:
                             newStepData = false
