@@ -4,9 +4,9 @@
             <dt>CO2</dt>
             <dd>{{getAtmoCO2PPM()}} ppm</dd>
             <dt>Temperature</dt>
-            <dd>{{getTemp()}}</dd>
+            <dd>{{getTemp()}} C°</dd>
             <dt>Humidity</dt>
-            <dd>{{getHumidity()}}</dd>
+            <dd>{{getHumidity()}}%</dd>
         </dl>
     </section>
 </template>
@@ -24,7 +24,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('step', ['getAtmoCO2']),
+        ...mapGetters('step', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum']),
     },
     methods: {
         stringFormatter: StringFormatter,
@@ -32,10 +32,10 @@ export default {
             return this.getAtmoCO2.value
         },
         getTemp() {
-            return 0
+            return this.getAtmoTemp.value
         },
         getHumidity() {
-            return 0
+            return this.getAtmoHum.value
         },
     },
 }
