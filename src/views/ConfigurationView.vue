@@ -235,10 +235,13 @@ export default {
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
                 const simdata = await this.importPresetData(presets[preset_name])
+                // Get currency_desc from backend
+                const response = await axios.get('/get_currency_desc')
+                const {currency_desc} = response.data
                 if (simdata) {
                     try {
                         this.SETCONFIGURATION(simdata.configuration)
-                        this.SETSIMULATIONDATA(simdata)
+                        this.SETSIMULATIONDATA({simdata, currency_desc})
                         this.SETBUFFERMAX(simdata.steps)
                         this.SETLOADFROMSIMDATA(true)
                         this.$router.push('dashboard')

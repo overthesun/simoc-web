@@ -109,8 +109,17 @@ export default {
     },
     mutations: {
         // restore simulation data returned by getSimulationData
-        SETSIMULATIONDATA(state, simdata) {
-            state.gameConfig = simdata.game_config
+        SETSIMULATIONDATA(state, value) {
+            const {simdata, currency_desc} = value
+            state.gameCurrencies = currency_desc
+
+            // TODO: Revert ABM Workaround
+            const game_vars = parse_updated_game_vars(simdata.game_config, currency_desc)
+            const {humanAtmosphere,  currencyDict, gameConfig} = game_vars
+            state.humanAtmosphere = humanAtmosphere
+            state.currencyDict = currencyDict
+            state.gameConfig = gameConfig
+
             state.parameters = simdata.parameters
             state.totalConsumption = simdata.total_consumption
             state.totalProduction = simdata.total_production
@@ -186,58 +195,15 @@ export default {
         },
         // this is the full game_config returned by the backend after a /new_game
         SETGAMEPARAMS(state, value) {
-            /*
-            TODO: Revert ABM Workaround
-            As of October '21, the backend no longer distinguishes between agents and storages.
-            Much of the dashboard was designed to pull directly from gameConfig.storages.
-            Here, we determine which agents have storage, and add them back manually.
-            */
             const {game_config, currency_desc} = value
-
-            // Load currency data into state
             state.gameCurrencies = currency_desc
-            Object.entries(currency_desc).forEach(([currencyClass, currencies]) => {
-                Object.entries(currencies).forEach(([currency, currencyData]) => {
-                    state.currencyDict[currency] = {...currencyData, currencyClass}
-                })
-            })
-            // Load game config data into state
-            if (Object.keys(game_config).includes('storages')) {
-                // This is the old system, is only here to accomodate presets
-                state.humanAtmosphere = 'air_storage'
-                state.gameConfig = game_config
-            } else {
-                const storages = {}
-                const storageTypes = {
-                    atmosphere: 'air_storage',
-                    food: 'food_storage',
-                    water: 'water_storage',
-                    nutrients: 'nutrient_storage',
-                    energy: 'power_storage',
-                }
-                Object.entries(game_config.agents).forEach(([agent_type, attributes]) => {
-                    // Agents can store more than 1 class of currencies; we add a 'storageType'
-                    // attribute which is an array of all the storageTypes it contains.
-                    const storageType = []
-                    Object.keys(attributes).forEach(field => {
-                        if (Object.keys(state.currencyDict).includes(field)) {
-                            const {currencyClass} = state.currencyDict[field]
-                            const storage = storageTypes[currencyClass]
-                            if (!storageType.includes(storage)) {
-                                storageType.push(storage)
-                                if (currencyClass === 'atmosphere' &&
-                                        agent_type.includes('habitat')) {
-                                    state.humanAtmosphere = agent_type
-                                }
-                            }
-                        }
-                    })
-                    if (storageType.length) {
-                        storages[agent_type] = [{storageType, ...attributes}]
-                    }
-                })
-                state.gameConfig = {...game_config, storages}
-            }
+
+            // TODO: Revert ABM Workaround
+            const game_vars = parse_updated_game_vars(game_config, currency_desc)
+            const {humanAtmosphere,  currencyDict, gameConfig} = game_vars
+            state.humanAtmosphere = humanAtmosphere
+            state.currencyDict = currencyDict
+            state.gameConfig = gameConfig
         },
         SETMINSTEPNUMBER(state, value) {
             state.parameters.min_step_num = value
@@ -398,4 +364,59 @@ export default {
             })
         },
     },
+}
+
+const parse_updated_game_vars = (game_config, currency_desc) => {
+    /*
+    As of October '21, the backend no longer distinguishes between agents and storages.
+    Much of the dashboard was designed to pull directly from gameConfig.storages.
+    Here, we determine which agents have storage, and add them back manually.
+    */
+
+    // Load currency data into dict
+    const currencyDict = {}
+    Object.entries(currency_desc).forEach(([currencyClass, currencies]) => {
+        Object.entries(currencies).forEach(([currency, currencyData]) => {
+            currencyDict[currency] = {...currencyData, currencyClass}
+        })
+    })
+
+    let humanAtmosphere = ''
+    let gameConfig = {}
+    // Load game config data into state
+    const storages = {}
+    const storageTypes = {
+        atmosphere: 'air_storage',
+        food: 'food_storage',
+        water: 'water_storage',
+        nutrients: 'nutrient_storage',
+        energy: 'power_storage',
+    }
+    Object.entries(game_config.agents).forEach(([agent_type, attributes]) => {
+        // Agents can store more than 1 class of currencies; we add a 'storageType'
+        // attribute which is an array of all the storageTypes it contains.
+        const storageType = []
+        Object.keys(attributes).forEach(field => {
+            if (Object.keys(currencyDict).includes(field)) {
+                const {currencyClass} = currencyDict[field]
+                const storage = storageTypes[currencyClass]
+                if (!storageType.includes(storage)) {
+                    storageType.push(storage)
+                    if (currencyClass === 'atmosphere' &&
+                            agent_type.includes('habitat')) {
+                        humanAtmosphere = agent_type
+                    }
+                }
+            }
+        })
+        if (storageType.length) {
+            storages[agent_type] = [{storageType, ...attributes}]
+        }
+    })
+    if (!Object.keys(game_config).includes('storages')) {
+        gameConfig = {...game_config, storages}
+    } else {
+        gameConfig = game_config
+    }
+    return {currencyDict, gameConfig, humanAtmosphere}
 }
