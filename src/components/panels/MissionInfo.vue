@@ -70,6 +70,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Mission Information',
+    modes: ['sim'],
     data() {
         return {
             info_section: 'mission-status',
