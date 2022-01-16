@@ -55,7 +55,6 @@ export default {
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         loadFromLiveData: false, // if true, load from initial live data
         gameConfig: {},  // the full game_config returned by /new_game
-        samConfig: {}, // the current SAM configuration
         activePanels: [],
         currentMode: '',
     },
@@ -88,7 +87,6 @@ export default {
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
-        getSamConfig: state => state.samConfig,
         getActivePanels: state => state.activePanels,
         getCurrentMode: state => state.currentMode,
         // return a json obj that contains all the simulation data
@@ -97,21 +95,6 @@ export default {
                 README: 'Format may vary, only import from the main menu.',
                 game_config: state.gameConfig,
                 steps: state.maxStepBuffer,
-                parameters: state.parameters,
-                total_consumption: state.totalConsumption,
-                total_production: state.totalProduction,
-                total_agent_count: state.agentCount,
-                agent_growth: state.agentGrowth,
-                storage_ratios: state.storageRatio,
-                storage_capacities: state.storageCapacities,
-                details_per_agent: state.detailsPerAgent,
-            }
-        },
-        getLiveData(state) {
-            return {
-                README: 'Update the configuration from the dashboard.',
-                sam_config: state.samConfig,
-                time: state.time,
                 parameters: state.parameters,
                 total_consumption: state.totalConsumption,
                 total_production: state.totalProduction,
