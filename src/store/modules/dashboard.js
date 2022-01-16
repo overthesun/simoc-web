@@ -41,7 +41,6 @@ export default {
         storageRatio: {},
         storageCapacities: {},
         detailsPerAgent: {},
-        time: {}, // the latest sensor reading time at SAM
         maxStepBuffer: 0,      // the number of steps in the buffer
         currentStepBuffer: 0,  // the step the simulation is displaying
         stepInterval: 1000,    // the time between the steps, in milliseconds
