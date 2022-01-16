@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETSAMCONFIG', 'SETLOADFROMLIVEDATA']),
+                                      'SETSAMCONFIG', 'SETLOADFROMLIVEDATA', 'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETINITLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -59,7 +59,7 @@ export default {
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
-
+            this.SETCURRENTMODE('sim') // set 'sim' mode
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('configuration')
         },
@@ -69,19 +69,10 @@ export default {
             this.$router.push('ace')
         },
         // Send the user to the live Dashboard with a default initial configuration and data
-        // FIXME: Make this look like launchSimulation() from ConfigurationView.vue
         toLiveDashboard() {
-            // TODO: Ryan, add a socketio connection here in Menu.vue to open a socket to the
-            //  backend to retrieve the initial config and agent_values that can be saved into
-            //  a file similarly to how the ConfigurationView does it. This socket can then be closed
-            //  because it is later reopened in DashboardView once the program navigates to that page
-            //  It may not even have to be saved, just stored in the samConfig and other variables
-            //  making up the getter getLiveData from dashboard.js. This will make it so the
-            //  dashboard can load with these required values.
-            try {
-                // REQUIRED: Initial dashboard configuration
-                // Determines layout of Dashboard configuration
+            this.SETCURRENTMODE('live') // set 'live' mode
 
+            try {
                 this.SETINITLIVECONFIG() // wizard is being set
                 this.SETSAMCONFIG() // game_config is being set
             } catch (error) {
@@ -95,6 +86,7 @@ export default {
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
+            this.SETCURRENTMODE('sim') // set 'sim' mode
             this.$refs.simDataInputFile.click()
         },
         handleSimData(e) {
