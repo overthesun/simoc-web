@@ -33,7 +33,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Inhabitants Status',
-    modes: ['sim'],
+    modes: ['sim', 'live'],
     data() {
         return {
             // shades of red to warn the user when values pass the threshold
