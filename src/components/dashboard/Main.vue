@@ -93,7 +93,7 @@ export default {
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
         } else {
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode === 'sim' ? 'sim' : 'live')
         }
     },
     methods: {
