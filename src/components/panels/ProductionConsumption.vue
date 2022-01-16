@@ -20,6 +20,7 @@ import {VersusGraph} from '../graphs'
 
 export default {
     panelTitle: 'Production / Consumption',
+    modes: ['sim', 'live'],
     components: {
         VersusGraph,
     },

@@ -18,6 +18,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'SCD-30 NDIR Sensor',
+    modes: ['live'],
     data() {
         return {
             info_section: 'atmo_readings',

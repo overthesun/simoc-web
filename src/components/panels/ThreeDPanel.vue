@@ -8,6 +8,7 @@ import World from '../../threejs/World'
 
 export default {
     panelTitle: 'Habitat View',
+    modes: ['sim'],
     components: {
         World: World,
     },
