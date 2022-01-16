@@ -458,7 +458,6 @@ export default {
                             break
                         case 'temp':
                             // console.log(`temp[${item.step_num}]:      ${item.temp}`)
-                            // TODO: Create temperature state
                             commit('setAtmoTemp', item.temp)
                             break
                         default:

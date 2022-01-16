@@ -353,9 +353,6 @@ export default {
         },
     },
     actions: {
-        // TODO: Ryan, Update this action with a conditional for when live mode is active live mode
-        //   live mode items will be updated such as 'time' and 'sam_config'. This can be done
-        //   one the backend is set up to send the new config/agent_data file.
         parseStep({commit, dispatch}, stepData) {
             console.log(stepData)
             stepData.forEach(item => {

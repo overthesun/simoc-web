@@ -47,11 +47,6 @@ export default {
     },
 
     beforeMount() {
-        // TODO: Ryan, Refactor lines 51-74--place these in the first if-block on line 78 as they
-        //  are related to setting up the sim dashboard. Currently, the mock data used by the live
-        //    dashboard needs lines 51-74 so that it is properly reset but the actual data that
-        //    the live dashboard is to receive will not contain these values
-
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
