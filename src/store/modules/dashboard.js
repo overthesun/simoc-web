@@ -54,6 +54,7 @@ export default {
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         gameConfig: {},  // the full game_config returned by /new_game
         activePanels: [],
+        currentMode: '',
     },
     getters: {
         getMenuActive: state => state.menuActive,
@@ -83,6 +84,7 @@ export default {
         getIsTimerRunning: state => state.isTimerRunning,
         getGameConfig: state => state.gameConfig,
         getActivePanels: state => state.activePanels,
+        getCurrentMode: state => state.currentMode,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
             return {
@@ -286,11 +288,17 @@ export default {
         SETACTIVEPANELS(state, panels) {
             state.activePanels = panels
         },
-        SETDEFAULTPANELS(state) {
-            state.activePanels = [
-                'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
-                'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
-            ]
+        SETDEFAULTPANELS(state, mode) {
+            state.activePanels = {
+                sim: [
+                    'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
+                    'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
+                ],
+            }[mode]
+        },
+        // Set current mode
+        SETCURRENTMODE(state, value) {
+            state.currentMode = value
         },
         INITGAME(state, value) {
             // set a new game_id and reset all other values
