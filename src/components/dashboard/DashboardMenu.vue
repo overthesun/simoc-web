@@ -50,6 +50,7 @@ export default {
         }
     },
     methods: {
+        ...mapGetters('dashboard', ['getCurrentMode']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
@@ -84,7 +85,7 @@ export default {
         // Reset Panels Layout button
         resetPanelsLayout() {
             localStorage.removeItem('panels-layout')
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode)
         },
         // Logout button route
         async logout() {
