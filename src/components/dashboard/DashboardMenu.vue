@@ -35,7 +35,8 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
+                                    'getCurrentMode']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
@@ -50,7 +51,6 @@ export default {
         }
     },
     methods: {
-        ...mapGetters('dashboard', ['getCurrentMode']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
                                       'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
