@@ -9,9 +9,9 @@ class conversions {
     //Converts ppm to kg of CO2 using a variation of the ideal gas law and Biosphere's volume.
 
     //molecular mass of CO2 in kg
-    let mass = 0.044
-    let percentage = ppm / 1000000
-    let temp_k = celsius_to_kelvin(temp_celsius)
+    let mass = 0.0440095
+    let percentage = this.ppm_to_percent(ppm) / 100
+    let temp_k = this.celsius_to_kelvin(temp_celsius)
 
     let r = 8.3145
 
@@ -21,6 +21,24 @@ class conversions {
 
     return kg
   }
+
+  static ch4_ppm_to_kg(ppm, temp_celsius) {
+    //Converts ppm to kg of CH4 using a variation of the ideal gas law
+
+    //molecular mass of CH4 in kg
+    let mass = 0.0160425
+    let percentage = this.ppm_to_percent(ppm) / 100
+    let temp_k = this.celsius_to_kelvin(temp_celsius)
+    let r = 8.3145
+
+    //modification of PV=nRT (ideal gas law)
+    let density = (pressure * mass) / (r * temp_k)
+    var kg = density * volume * percentage
+
+    return kg
+  }
+
+
 
   static humidity_to_kg_water(relHum, temp_celsius) {
     //Converts relative humidity to kg of H20 using variations of Clausius Clapeyron and Ideal Gas Law.
@@ -42,7 +60,27 @@ class conversions {
     return kg
   }
 
+  static ppm_to_percent(ppm) {
+    return ppm / 10000
+  }
+
   static celsius_to_kelvin(celsius) {
     return celsius + 273.15
+  }
+
+  static celsius_to_fahrenheit(celsius) {
+    return (celsius * 1.8) + 32
+  }
+
+  static atm_to_pascals(atm) {
+    //Converts atmospheres to pascals
+    var pascals = atm * 1.01325 * Math.pow(10, 5)
+    return pascals
+  }
+
+  static bar_to_atm(bar) {
+    //Converts bars to atmospheres
+    var atmospheres = bar / 1.01325
+    return atmospheres
   }
 }
