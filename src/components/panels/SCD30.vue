@@ -1,12 +1,12 @@
 <template>
     <section class="panel-dl-wrapper">
-        <dl v-if="info_section == 'atmo_readings'">
+        <dl>
             <dt>CO2</dt>
-            <dd>{{getAtmoCO2PPM()}} ppm</dd>
+            <dd>{{getAtmoCO2.value}} ppm</dd>
             <dt>Temperature</dt>
-            <dd>{{getTemp()}} C°</dd>
-            <dt>Humidity</dt>
-            <dd>{{getHumidity()}}%</dd>
+            <dd>{{getAtmoTemp.value}} °C</dd>
+            <dt>Relative Humidity</dt>
+            <dd>{{getAtmoHum.value}}%</dd>
         </dl>
     </section>
 </template>
@@ -14,38 +14,17 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'SCD-30 NDIR Sensor',
     modes: ['live'],
-    data() {
-        return {
-            info_section: 'atmo_readings',
-        }
-    },
     computed: {
         ...mapGetters('live', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum']),
-    },
-    methods: {
-        stringFormatter: StringFormatter,
-        getAtmoCO2PPM() {
-            return this.getAtmoCO2.value
-        },
-        getTemp() {
-            return this.getAtmoTemp.value
-        },
-        getHumidity() {
-            return this.getAtmoHum.value
-        },
     },
 }
 </script>
 
 
 <style lang="scss" scoped>
-#mission-info-select {
-  width: 50%;
-  margin-bottom: 1em;
-}
+
 </style>
