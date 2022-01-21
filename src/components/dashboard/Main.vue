@@ -70,12 +70,14 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getActivePanels']),
+        ...mapGetters('dashboard', ['getActivePanels', 'getCurrentMode']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                sorted.push([panel.panelTitle, panelName])
+                if (panel.modes.includes(this.getCurrentMode)) {
+                    sorted.push([panel.panelTitle, panelName])
+                }
             })
             return sorted.sort()
         },
@@ -91,7 +93,7 @@ export default {
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
         } else {
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode)
         }
     },
     methods: {
