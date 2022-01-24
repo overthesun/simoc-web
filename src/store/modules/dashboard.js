@@ -294,6 +294,9 @@ export default {
                     'MissionInfo', 'ProductionConsumption:enrg_kwh', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
                 ],
+                live: [
+                    'SCD30',
+                ],
             }[mode]
         },
         // Set current mode
