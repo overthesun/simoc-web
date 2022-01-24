@@ -35,7 +35,8 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
+                                    'getGameCurrencies']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
@@ -67,6 +68,7 @@ export default {
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
             simdata.configuration = this.getConfiguration
+            simdata.currency_desc = this.getGameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
