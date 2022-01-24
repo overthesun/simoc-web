@@ -13,6 +13,8 @@
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
+                <button :class="{'hidden': !showSensorMode}" form="login-form" class="btn-normal"
+                        @click="toLiveDashboard">SENSOR MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
@@ -38,6 +40,7 @@ export default {
     data() {
         return {
             showAgentEditor: false,
+            showSensorMode: false,
         }
     },
     mounted() {
@@ -105,6 +108,8 @@ export default {
         keyListener(e) {
             if (e.ctrlKey && e.key === 'a') {
                 this.showAgentEditor = true
+            } else if (e.ctrlKey && e.key === 's') {
+                this.showSensorMode = true
             }
         },
     },
