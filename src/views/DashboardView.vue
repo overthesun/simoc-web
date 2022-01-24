@@ -21,7 +21,7 @@ export default {
         // getters from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
-                                    'getMaxStepBuffer', 'getLoadFromSimData']),
+                                    'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -71,9 +71,13 @@ export default {
         this.request_sent = false  // true if we already sent a req to get_steps
         this.tearDownWebSocket()
 
+        if (this.getCurrentMode === 'live') {
+            console.log('Starting live dashboard')
+            this.openWebSocket()
+
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
-        if (!this.getLoadFromSimData) {
+        } else if (!this.getLoadFromSimData) {
             this.SETBUFFERMAX(0)  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
             this.INITGAME(this.getGameID)
@@ -127,6 +131,9 @@ export default {
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
+        // parseData Action parses the sensor data sent from the simoc-sam.
+        // See store/modules/livedata.js
+        ...mapActions('livedata', ['parseData']),
 
         setupWebsocket() {
             const socket = io()
@@ -164,6 +171,37 @@ export default {
             })
             socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')
+            })
+        },
+        // This method opens a websocket and keeps it open until a user navigates
+        // away from the dashboard. This method is called if current mode is 'live'.
+        openWebSocket() {
+            // Connect to the simoc-sam
+            const socket = io('http://localhost:8081')
+
+            this.socket = socket
+            console.log('Live socket created:', this.socket)
+
+            socket.on('connect', msg => {
+                console.log('Connected to server')
+                console.log('Registering client')
+
+                this.socket.emit('register-client')
+            })
+            socket.on('hab-info', config => {
+                console.log('Received habitat info:', config)
+                console.log('Requesting step data')
+
+                this.socket.emit('send-step-data')
+            })
+            socket.on('step-batch', data => {
+                console.log(`Received a batch of ${data.length} sensor readings from the server:`)
+
+                // Send batch to parseData in the livedata store for parsing
+                this.parseData(data)
+            })
+            socket.on('disconnect', msg => {
+                console.log('Server disconnected')
             })
         },
 

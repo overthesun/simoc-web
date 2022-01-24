@@ -53,7 +53,7 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
                                       'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
+        ...mapActions('wizard', ['SETCONFIGURATION', 'SETLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
@@ -66,6 +66,12 @@ export default {
         toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
+        },
+        // Send the user to the live Dashboard with a default initial configuration and data
+        toLiveDashboard() {
+            this.SETCURRENTMODE('live')  // set 'live' mode
+            this.SETLIVECONFIG()  // set live configuration in wizard store
+            this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {

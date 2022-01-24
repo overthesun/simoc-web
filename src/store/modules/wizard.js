@@ -382,5 +382,10 @@ export default {
         SETPRESET(context, name) {
             context.commit('set_config', context.state.presets[name])
         },
+        // Set the required configurations for the live Dashboard
+        SETLIVECONFIG(context) {
+            console.log('* Setting initial duration...')
+            context.commit('set_config', {duration: {}})
+        },
     },
 }
