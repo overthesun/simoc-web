@@ -19,7 +19,7 @@ export default {
     panelTitle: 'SCD-30 NDIR Sensor',
     modes: ['live'],
     computed: {
-        ...mapGetters('live', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum']),
+        ...mapGetters('livedata', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum']),
     },
 }
 </script>
