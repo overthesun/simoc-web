@@ -14,7 +14,7 @@
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
                 <button :class="{'hidden': !showSensorMode}" form="login-form" class="btn-normal"
-                        @click="toLiveDashboard">SENSOR MODE</button>
+                        @click="toLiveDashboard">LIVE MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
