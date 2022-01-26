@@ -29,22 +29,22 @@ export default {
         getdataBatch: state => state.dataBatch,
     },
     mutations: {
-        setStepNum(state, value) {
+        SETSTEPNUM(state, value) {
             state.stepNum = value
         },
-        setAtmoCO2(state, value) {
+        SETATMOCO2(state, value) {
             state.atmoCO2 = {
                 value: value,
                 unit: 'ppm',
             }
         },
-        setAtmoHum(state, value) {
+        SETATMOHUM(state, value) {
             state.atmoHum = {
                 value: value,
                 unit: '%',
             }
         },
-        setAtmoTemp(state, value) {
+        SETATMOTEMP(state, value) {
             state.atmoTemp = {
                 value: value,
                 unit: '°C',
@@ -59,19 +59,19 @@ export default {
                     switch (value) {
                         case 'step_num':
                             // console.log(`step_num[${item.step_num}]:  ${item.step_num}`)
-                            commit('setStepNum', item.step_num)
+                            commit('SETSTEPNUM', item.step_num)
                             break
                         case 'co2_ppm':
                             // console.log(`co2_ppm[${item.step_num}]:   ${item.co2_ppm}`)
-                            commit('setAtmoCO2', item.co2_ppm)
+                            commit('SETATMOCO2', item.co2_ppm)
                             break
                         case 'hum_perc':
                             // console.log(`hum_perc[${item.step_num}]:  ${item.hum_perc}`)
-                            commit('setAtmoHum', item.hum_perc)
+                            commit('SETATMOHUM', item.hum_perc)
                             break
                         case 'temp':
                             // console.log(`temp[${item.step_num}]:      ${item.temp}`)
-                            commit('setAtmoTemp', item.temp)
+                            commit('SETATMOTEMP', item.temp)
                             break
                         default:
                             console.log('Data not found')
