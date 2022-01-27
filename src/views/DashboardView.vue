@@ -73,7 +73,7 @@ export default {
 
         if (this.getCurrentMode === 'live') {
             console.log('Starting live dashboard')
-            this.openWebSocket()
+            this.setupLiveWebsocket()
 
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
@@ -175,8 +175,8 @@ export default {
         },
         // This method opens a websocket and keeps it open until a user navigates
         // away from the dashboard. This method is called if current mode is 'live'.
-        openWebSocket() {
-            // Connect to the simoc-sam
+        setupLiveWebsocket() {
+            // Connect to the simoc-sam SocketIO Server
             const socket = io('http://localhost:8081')
 
             this.socket = socket
