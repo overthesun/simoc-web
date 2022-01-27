@@ -177,7 +177,7 @@ export default {
         // away from the dashboard. This method is called if current mode is 'live'.
         setupLiveWebsocket() {
             // Connect to the simoc-sam SocketIO Server
-            const socket = io('http://localhost:8081')
+            const socket = io(`http://${window.location.hostname}:8081`)
 
             this.socket = socket
             console.log('Live socket created:', this.socket)
