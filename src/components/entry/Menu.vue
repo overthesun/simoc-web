@@ -13,6 +13,8 @@
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
+                <button :class="{'hidden': !showSensorMode}" form="login-form" class="btn-normal"
+                        @click="toLiveDashboard">LIVE MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
@@ -38,6 +40,7 @@ export default {
     data() {
         return {
             showAgentEditor: false,
+            showSensorMode: false,
         }
     },
     mounted() {
@@ -50,7 +53,7 @@ export default {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
                                       'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
+        ...mapActions('wizard', ['SETCONFIGURATION', 'SETLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
@@ -63,6 +66,12 @@ export default {
         toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
+        },
+        // Send the user to the live Dashboard with a default initial configuration and data
+        toLiveDashboard() {
+            this.SETCURRENTMODE('live')  // set 'live' mode
+            this.SETLIVECONFIG()  // set live configuration in wizard store
+            this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
@@ -105,6 +114,8 @@ export default {
         keyListener(e) {
             if (e.ctrlKey && e.key === 'a') {
                 this.showAgentEditor = true
+            } else if (e.ctrlKey && e.key === 's') {
+                this.showSensorMode = true
             }
         },
     },
