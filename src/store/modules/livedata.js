@@ -8,8 +8,8 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.0
- * @since   January 23, 2022
+ * @version 1.1
+ * @since   January 29, 2022
  */
 export default {
     state: {
@@ -23,60 +23,51 @@ export default {
     },
     getters: {
         // atmospheric state getters
-        getAtmoCO2: state => state.atmoCO2,
-        getAtmoHum: state => state.atmoHum,
-        getAtmoTemp: state => state.atmoTemp,
-        getdataBatch: state => state.dataBatch,
+        getAtmoCO2: state => stepNumber => state.atmoCO2[stepNumber],
+        getAtmoHum: state => stepNumber => state.atmoHum[stepNumber],
+        getAtmoTemp: state => stepNumber => state.atmoTemp[stepNumber],
+
+        getDataBatch: state => state.dataBatch,
+        getStepNum: state => state.stepNum,
     },
     mutations: {
-        SETSTEPNUM(state, value) {
-            state.stepNum = value
-        },
         SETATMOCO2(state, value) {
-            state.atmoCO2 = {
-                value: value,
-                unit: 'ppm',
-            }
+            const {step_num: step} = value
+            const {co2_ppm} = value
+
+            state.atmoCO2[step] = co2_ppm
         },
         SETATMOHUM(state, value) {
-            state.atmoHum = {
-                value: value,
-                unit: '%',
-            }
+            const {step_num: step} = value
+            const {hum_perc} = value
+
+            state.atmoHum[step] = hum_perc
         },
         SETATMOTEMP(state, value) {
-            state.atmoTemp = {
-                value: value,
-                unit: '°C',
-            }
+            const {step_num: step} = value
+            const {temp} = value
+
+            state.atmoTemp[step] = temp
+        },
+        SETSTEPNUM(state, value) {
+            const {step_num: step} = value
+
+            state.stepNum = step
+        },
+        SETDATABATCH(state, value) {
+            state.dataBatch.push(value)
         },
     },
     actions: {
         parseData({commit, getters}, data) {
             console.log(data)
+            commit('SETDATABATCH', data)
+
             data.forEach(item => {
-                Object.keys(item).forEach(value => {
-                    switch (value) {
-                        case 'step_num':
-                            // console.log(`step_num[${item.step_num}]:  ${item.step_num}`)
-                            commit('SETSTEPNUM', item.step_num)
-                            break
-                        case 'co2_ppm':
-                            // console.log(`co2_ppm[${item.step_num}]:   ${item.co2_ppm}`)
-                            commit('SETATMOCO2', item.co2_ppm)
-                            break
-                        case 'hum_perc':
-                            // console.log(`hum_perc[${item.step_num}]:  ${item.hum_perc}`)
-                            commit('SETATMOHUM', item.hum_perc)
-                            break
-                        case 'temp':
-                            // console.log(`temp[${item.step_num}]:      ${item.temp}`)
-                            commit('SETATMOTEMP', item.temp)
-                            break
-                        default:
-                            console.log('Data not found')
-                    }
-                })
+                commit('SETATMOCO2', item)
+                commit('SETATMOHUM', item)
+                commit('SETATMOTEMP', item)
+                commit('SETSTEPNUM', item)
             })
         },
     },
