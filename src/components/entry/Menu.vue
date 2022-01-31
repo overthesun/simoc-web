@@ -47,7 +47,8 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
+                                      'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -55,7 +56,6 @@ export default {
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
-
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('configuration')
         },
@@ -87,6 +87,7 @@ export default {
                 this.alert('An error occurred while reading the file.')
                 return
             }
+            this.SETCURRENTMODE('sim')
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },

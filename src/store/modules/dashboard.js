@@ -57,6 +57,7 @@ export default {
         currencyDict: {},  // all gameCurrencies not grouped, but with 'currencyClass' param added
         humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
+        currentMode: '',
     },
     getters: {
         getMenuActive: state => state.menuActive,
@@ -90,6 +91,7 @@ export default {
         getHumanAtmosphere: state => state.humanAtmosphere,  // TODO: Revert ABM Workaround
 
         getActivePanels: state => state.activePanels,
+        getCurrentMode: state => state.currentMode,
         // return a json obj that contains all the simulation data
         getSimulationData(state) {
             return {
@@ -310,11 +312,17 @@ export default {
         SETACTIVEPANELS(state, panels) {
             state.activePanels = panels
         },
-        SETDEFAULTPANELS(state) {
-            state.activePanels = [
-                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
-                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
-            ]
+        SETDEFAULTPANELS(state, mode) {
+            state.activePanels = {
+                sim: [
+                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+                ],
+            }[mode]
+        },
+        // Set current mode
+        SETCURRENTMODE(state, value) {
+            state.currentMode = value
         },
         INITGAME(state, value) {
             // set a new game_id and reset all other values
