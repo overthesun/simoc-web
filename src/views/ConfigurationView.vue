@@ -150,7 +150,7 @@ export default {
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
         ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
+                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
@@ -243,6 +243,7 @@ export default {
                         this.SETCONFIGURATION(simdata.configuration)
                         this.SETSIMULATIONDATA({simdata, currency_desc})
                         this.SETBUFFERMAX(simdata.steps)
+                        this.SETCURRENTMODE('sim')
                         this.SETLOADFROMSIMDATA(true)
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
@@ -275,6 +276,7 @@ export default {
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
+                this.SETCURRENTMODE('sim')
                 this.SETLOADFROMSIMDATA(false)
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')

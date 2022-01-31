@@ -24,6 +24,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
+    modes: ['sim'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities',

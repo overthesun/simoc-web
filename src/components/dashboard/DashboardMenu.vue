@@ -36,7 +36,7 @@ export default {
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
-                                    'getGameCurrencies']),
+                                    'getGameCurrencies', 'getCurrentMode']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
@@ -86,7 +86,7 @@ export default {
         // Reset Panels Layout button
         resetPanelsLayout() {
             localStorage.removeItem('panels-layout')
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode)
         },
         // Logout button route
         async logout() {
