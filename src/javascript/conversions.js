@@ -14,7 +14,7 @@ static function ch4_ppm_to_kg(ppm, temp_celsius, volume, pressure) {
   return this.ppm_to_kg(mass, ppm, temp_celsius, volume, pressure)
 }
 
-static function ppm_to_kg(mass, ppm, temp_celsius, colume, pressure) {
+static function ppm_to_kg(mass, ppm, temp_celsius, volume, pressure) {
   // Converts ppm to kg of a gas 
   const percentage = this.ppm_to_percent(ppm) / 100
   const temp_k = this.celsius_to_kelvin(temp_celsius)
