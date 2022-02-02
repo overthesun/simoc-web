@@ -20,6 +20,7 @@ export default {
 
         // The following are sensor objects
         BME688: {},  // Adafruit BME688 Temperature, Humidity, Pressure and Gas Sensor
+        SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
 
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
@@ -32,6 +33,7 @@ export default {
 
         // sensor getters
         getBME688: state => stepNumber => state.BME688[stepNumber],
+        getSGP30: state => stepNumber => state.SGP30[stepNumber],
 
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
@@ -61,6 +63,12 @@ export default {
 
             state.BME688[step] = bme688
         },
+        SETSGP30(state, value) {
+            const {step_num: step} = value
+            const {sgp30} = value
+
+            state.SGP30[step] = sgp30
+        },
         SETSTEPNUM(state, value) {
             const {step_num: step} = value
 
@@ -80,6 +88,7 @@ export default {
                 commit('SETATMOHUM', item)
                 commit('SETATMOTEMP', item)
                 commit('SETBME688', item)
+                commit('SETSGP30', item)
                 commit('SETSTEPNUM', item)
             })
         },
