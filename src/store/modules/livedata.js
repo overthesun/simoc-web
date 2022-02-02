@@ -8,8 +8,8 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.1
- * @since   January 29, 2022
+ * @version 1.2
+ * @since   February 1, 2022
  */
 export default {
     state: {
@@ -23,6 +23,7 @@ export default {
         SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
         SCD30: {},  // Adafruit SCD30 NDIR CO2 Temperature and Humidity Sensor
 
+        timestamp: '',  // time each batch of sensor readings were sent
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
     },
@@ -37,6 +38,7 @@ export default {
         getSGP30: state => stepNumber => state.SGP30[stepNumber],
         getSCD30: state => stepNumber => state.SCD30[stepNumber],
 
+        getTimestamp: state => stepNumber => state.timestamp[stepNumber],
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
     },
@@ -77,6 +79,12 @@ export default {
 
             state.SCD30[step] = scd30
         },
+        SETTIMESTAMP(state, value) {
+            const {step_num: step} = value
+            const {timestamp} = value
+
+            state.timestamp[step] = timestamp
+        },
         SETSTEPNUM(state, value) {
             const {step_num: step} = value
 
@@ -98,6 +106,7 @@ export default {
                 commit('SETBME688', item)
                 commit('SETSGP30', item)
                 commit('SETSCD30', item)
+                commit('SETTIMESTAMP', item)
                 commit('SETSTEPNUM', item)
             })
         },
