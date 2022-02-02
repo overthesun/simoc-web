@@ -18,6 +18,9 @@ export default {
         atmoHum: {},
         atmoTemp: {},
 
+        // The following are sensor objects
+        BME688: {},  // Adafruit BME688 Temperature, Humidity, Pressure and Gas Sensor
+
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
     },
@@ -26,6 +29,9 @@ export default {
         getAtmoCO2: state => stepNumber => state.atmoCO2[stepNumber],
         getAtmoHum: state => stepNumber => state.atmoHum[stepNumber],
         getAtmoTemp: state => stepNumber => state.atmoTemp[stepNumber],
+
+        // sensor getters
+        getBME688: state => stepNumber => state.BME688[stepNumber],
 
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
@@ -49,6 +55,12 @@ export default {
 
             state.atmoTemp[step] = temp
         },
+        SETBME688(state, value) {
+            const {step_num: step} = value
+            const {bme688} = value
+
+            state.BME688[step] = bme688
+        },
         SETSTEPNUM(state, value) {
             const {step_num: step} = value
 
@@ -67,6 +79,7 @@ export default {
                 commit('SETATMOCO2', item)
                 commit('SETATMOHUM', item)
                 commit('SETATMOTEMP', item)
+                commit('SETBME688', item)
                 commit('SETSTEPNUM', item)
             })
         },
