@@ -23,7 +23,7 @@ export default {
         SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
         SCD30: {},  // Adafruit SCD30 NDIR CO2 Temperature and Humidity Sensor
 
-        timestamp: '',  // time each batch of sensor readings were sent
+        timestamp: {},  // time each batch of sensor readings were sent
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
     },
