@@ -6,7 +6,8 @@
         <span class="icon-wrapper" title="Previous step" @click="prevStep">
             <fa-icon :icon="['fas','step-backward']" class="fa-icon" />
         </span>
-        <span>{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
+        <span v-if="getCurrentMode === 'sim'">{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
+        <span v-if="getCurrentMode === 'live'">{{getCurrentStepBuffer}}</span>
         <span class="icon-wrapper" title="Next step" @click="nextStep">
             <fa-icon :icon="['fas','step-forward']" class="fa-icon" />
         </span>
@@ -18,7 +19,7 @@ import {mapGetters, mapMutations} from 'vuex'
 
 export default {
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getCurrentMode']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {

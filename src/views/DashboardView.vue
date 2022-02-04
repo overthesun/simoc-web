@@ -22,6 +22,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
+        ...mapGetters('livedata', ['getStepNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -199,6 +200,7 @@ export default {
 
                 // Send batch to parseData in the livedata store for parsing
                 this.parseData(data)
+                this.SETBUFFERCURRENT(this.getStepNum)
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')
