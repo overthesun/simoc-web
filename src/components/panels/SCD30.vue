@@ -2,11 +2,11 @@
     <section class="panel-dl-wrapper">
         <dl>
             <dt>CO2</dt>
-            <dd>{{getAtmoCO2(getStepNum)}} ppm</dd>
+            <dd>{{getAtmoCO2(getCurrentStepBuffer)}} ppm</dd>
             <dt>Temperature</dt>
-            <dd>{{getAtmoTemp(getStepNum)}} °C</dd>
+            <dd>{{getAtmoTemp(getCurrentStepBuffer)}} °C</dd>
             <dt>Relative Humidity</dt>
-            <dd>{{getAtmoHum(getStepNum)}}%</dd>
+            <dd>{{getAtmoHum(getCurrentStepBuffer)}}%</dd>
         </dl>
     </section>
 </template>
@@ -19,7 +19,8 @@ export default {
     panelTitle: 'SCD-30 NDIR Sensor',
     modes: ['live'],
     computed: {
-        ...mapGetters('livedata', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum', 'getStepNum']),
+        ...mapGetters('livedata', ['getAtmoCO2', 'getAtmoTemp', 'getAtmoHum']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
     },
 }
 </script>
