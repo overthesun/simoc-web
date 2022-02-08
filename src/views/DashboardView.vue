@@ -14,6 +14,7 @@ export default {
     data() {
         return {
             socket: null,  // the websocket used to get the steps
+            initialLiveEntry: true,  // is this the first time a user entered the live dashboard?
         }
     },
 
@@ -132,6 +133,8 @@ export default {
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
+        // Increment the duration of the mission based on the step number
+        ...mapActions('wizard', ['SETLIVECONFIG']),
         // parseData Action parses the sensor data sent from the simoc-sam.
         // See store/modules/livedata.js
         ...mapActions('livedata', ['parseData']),
@@ -200,7 +203,19 @@ export default {
 
                 // Send batch to parseData in the livedata store for parsing
                 this.parseData(data)
-                this.SETBUFFERCURRENT(this.getStepNum)
+
+                // FIXME: This is a temporary workaround, the starting step_num should be set
+                //   when the hab-info is sent on launch of the live dashboard. In this case
+                //   SETBUFFERCURRENT would be called within the 'hab-info' endpoint block.
+                // On initial entry to the live dashboard set the current buffer
+                if (this.initialLiveEntry) {
+                    console.log('Setting the current buffer...')
+                    this.SETBUFFERCURRENT(this.getStepNum - 9)  // Adjust to start at first reading in batch
+                    this.initialLiveEntry = false
+                }
+
+                this.SETLIVECONFIG({duration: {amount: this.getStepNum}})  // Sets the totalMissionHours
+                this.SETBUFFERMAX(this.getStepNum)
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')
