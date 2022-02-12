@@ -14,7 +14,6 @@ export default {
     data() {
         return {
             socket: null,  // the websocket used to get the steps
-            initialLiveEntry: true,  // is this the first time a user entered the live dashboard?
         }
     },
 
@@ -203,16 +202,6 @@ export default {
 
                 // Send batch to parseData in the livedata store for parsing
                 this.parseData(data)
-
-                // FIXME: This is a temporary workaround, the starting step_num should be set
-                //   when the hab-info is sent on launch of the live dashboard. In this case
-                //   SETBUFFERCURRENT would be called within the 'hab-info' endpoint block.
-                // On initial entry to the live dashboard set the current buffer
-                if (this.initialLiveEntry) {
-                    console.log('Setting the current buffer...')
-                    this.SETBUFFERCURRENT(this.getStepNum - 9)  // Adjust to start at first reading in batch
-                    this.initialLiveEntry = false
-                }
 
                 this.SETLIVECONFIG({duration: {amount: this.getStepNum}})  // Sets the totalMissionHours
                 this.SETBUFFERMAX(this.getStepNum)
