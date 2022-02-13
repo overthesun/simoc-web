@@ -81,7 +81,10 @@ export default {
         },
         SETTIMESTAMP(state, value) {
             const {step_num: step} = value
-            const {timestamp} = value
+            let {timestamp} = value
+
+            const dateTime = timestamp.split(' ')
+            timestamp = {date: dateTime[0], time: dateTime[1]}
 
             state.timestamp[step] = timestamp
         },
