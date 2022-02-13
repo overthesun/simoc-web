@@ -14,40 +14,40 @@
 export default {
     state: {
         // The following atmospheric readings are set by the SCD-30 NDIR CO2 Sensor
-        atmoCO2: {},
-        atmoHum: {},
-        atmoTemp: {},
+        co2: {},
+        relHum: {},
+        temp: {},
 
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
     },
     getters: {
         // atmospheric state getters
-        getAtmoCO2: state => stepNumber => state.atmoCO2[stepNumber],
-        getAtmoHum: state => stepNumber => state.atmoHum[stepNumber],
-        getAtmoTemp: state => stepNumber => state.atmoTemp[stepNumber],
+        getCO2: state => stepNumber => state.co2[stepNumber],
+        getRelHum: state => stepNumber => state.relHum[stepNumber],
+        getTemp: state => stepNumber => state.temp[stepNumber],
 
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
     },
     mutations: {
-        SETATMOCO2(state, value) {
+        SETCO2(state, value) {
             const {step_num: step} = value
-            const {co2_ppm} = value
+            const {co2} = value
 
-            state.atmoCO2[step] = co2_ppm
+            state.co2[step] = co2
         },
-        SETATMOHUM(state, value) {
+        SETRELHUM(state, value) {
             const {step_num: step} = value
-            const {hum_perc} = value
+            const {rel_hum} = value
 
-            state.atmoHum[step] = hum_perc
+            state.relHum[step] = rel_hum
         },
-        SETATMOTEMP(state, value) {
+        SETTEMP(state, value) {
             const {step_num: step} = value
             const {temp} = value
 
-            state.atmoTemp[step] = temp
+            state.temp[step] = temp
         },
         SETSTEPNUM(state, value) {
             const {step_num: step} = value
@@ -64,9 +64,9 @@ export default {
             commit('SETDATABATCH', data)
 
             data.forEach(item => {
-                commit('SETATMOCO2', item)
-                commit('SETATMOHUM', item)
-                commit('SETATMOTEMP', item)
+                commit('SETCO2', item)
+                commit('SETRELHUM', item)
+                commit('SETTEMP', item)
                 commit('SETSTEPNUM', item)
             })
         },
