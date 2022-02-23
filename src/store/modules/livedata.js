@@ -8,7 +8,7 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.1
+ * @version 1.2
  * @since   January 29, 2022
  */
 export default {
@@ -18,6 +18,7 @@ export default {
         atmoHum: {},
         atmoTemp: {},
 
+        initStepNum: null,
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
     },
@@ -29,6 +30,7 @@ export default {
 
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
+        getInitStepNum: state => state.initStepNum,
     },
     mutations: {
         SETATMOCO2(state, value) {
@@ -48,6 +50,9 @@ export default {
             const {temp} = value
 
             state.atmoTemp[step] = temp
+        },
+        SETINITSTEPNUM(state, value) {
+            state.initStepNum = value
         },
         SETSTEPNUM(state, value) {
             const {step_num: step} = value
