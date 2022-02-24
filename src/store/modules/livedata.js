@@ -9,7 +9,7 @@
  *
  * @author  Ryan Meneses
  * @version 1.2
- * @since   January 29, 2022
+ * @since   February 23, 2022
  */
 export default {
     state: {
@@ -55,7 +55,10 @@ export default {
             state.initStepNum = value
         },
         SETSTEPNUM(state, value) {
-            const {step_num: step} = value
+            let {step_num: step} = value
+
+            // Adjust stepNum from initStepNum to start scrubber at 1
+            step -= state.initStepNum - 1
 
             state.stepNum = step
         },
