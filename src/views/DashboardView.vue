@@ -74,6 +74,8 @@ export default {
 
         if (this.getCurrentMode === 'live') {
             console.log('Starting live dashboard')
+
+            this.SETINITSTEPNUM(null) // Reset initStepNum to null
             this.setupLiveWebsocket()
 
         // if we load the simulation data, there's nothing else to do, otherwise
