@@ -22,7 +22,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
-        ...mapGetters('livedata', ['getStepNum']),
+        ...mapGetters('livedata', ['getStepNum', 'getInitStepNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -129,6 +129,7 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
+        ...mapMutations('livedata', ['SETINITSTEPNUM']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
@@ -199,6 +200,13 @@ export default {
             })
             socket.on('step-batch', data => {
                 console.log(`Received a batch of ${data.length} sensor readings from the server:`)
+
+                // If initStepNum is null set it to the first step_num sent in the batch of data.
+                // This indicates that a client has made an initial connection to the live dashboard.
+                if (this.getInitStepNum === null) {
+                    console.log(`Initial step_num: ${data[0].step_num}`)
+                    this.SETINITSTEPNUM(data[0].step_num)
+                }
 
                 // Send batch to parseData in the livedata store for parsing
                 this.parseData(data)
