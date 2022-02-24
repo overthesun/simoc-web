@@ -57,8 +57,8 @@ export default {
         SETSTEPNUM(state, value) {
             let {step_num: step} = value
 
-            // Adjust stepNum from initStepNum to start scrubber at 1
-            step -= state.initStepNum - 1
+            // Adjust stepNum from initStepNum to start scrubber at 0
+            step -= state.initStepNum
 
             state.stepNum = step
         },
