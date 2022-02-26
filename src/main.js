@@ -20,8 +20,8 @@ createApp(App)
         .use(VueGtag, {
             // enable Gtag/Analytics tracking
             // remember to use the right code for each branch
-            config: {id: 'UA-29092818-6'},
-            enabled: process.env.NODE_ENV === 'production',
+            property: {id: 'UA-29092818-7'},
+            isEnabled: process.env.NODE_ENV === 'production',
         }, router)
         .component('FaIcon', FontAwesomeIcon)
         .component('FaLayers', FontAwesomeLayers)
