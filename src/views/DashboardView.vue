@@ -194,6 +194,9 @@ export default {
 
                 this.socket.emit('send-step-data')
             })
+            socket.on('sensor-info', info => {
+                console.log('Received sensor info:', info)
+            })
             socket.on('step-batch', data => {
                 console.log(`Received a batch of ${data.length} sensor readings from the server:`)
 
