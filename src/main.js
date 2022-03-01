@@ -1,5 +1,5 @@
 import {createApp} from 'vue'
-import VueGtag from 'vue-gtag-next'
+import VueGtag, {trackRouter} from 'vue-gtag-next'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
@@ -30,7 +30,10 @@ createApp(App)
         .use(VueGtag, {
             isEnabled: process.env.NODE_ENV === 'production',
             property: {id: tracking_id},
-        }, router)
+        })
         .component('FaIcon', FontAwesomeIcon)
         .component('FaLayers', FontAwesomeLayers)
         .mount('#app')
+
+// Enable Analytics tracking for SPAs
+trackRouter(router)
