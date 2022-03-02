@@ -128,6 +128,7 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
+        ...mapMutations('livedata', ['SETSENSORINFO']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
@@ -196,6 +197,8 @@ export default {
             })
             socket.on('sensor-info', info => {
                 console.log('Received sensor info:', info)
+
+                this.SETSENSORINFO(info)
             })
             socket.on('step-batch', data => {
                 console.log(`Received a batch of ${data.length} sensor readings from the server:`)
