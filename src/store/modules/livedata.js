@@ -8,8 +8,8 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.1
- * @since   January 29, 2022
+ * @version 1.2
+ * @since   March 1, 2022
  */
 export default {
     state: {
@@ -20,6 +20,7 @@ export default {
 
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
+        sensorInfo: {},  // set from initial callback sensor-info sent by the server
     },
     getters: {
         // atmospheric state getters
@@ -29,6 +30,7 @@ export default {
 
         getDataBatch: state => state.dataBatch,
         getStepNum: state => state.stepNum,
+        getSensorInfo: state => state.sensorInfo,
     },
     mutations: {
         SETATMOCO2(state, value) {
@@ -56,6 +58,9 @@ export default {
         },
         SETDATABATCH(state, value) {
             state.dataBatch.push(value)
+        },
+        SETSENSORINFO(state, value) {
+            state.sensorInfo = value
         },
     },
     actions: {
