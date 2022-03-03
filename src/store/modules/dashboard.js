@@ -295,7 +295,7 @@ export default {
                     'InhabitantsStatus', 'ProductionConsumption:atmo_co2', 'AtmosphericMonitors',
                 ],
                 live: [
-                    'SCD30',
+                    'SCD30', 'Sensors',
                 ],
             }[mode]
         },
