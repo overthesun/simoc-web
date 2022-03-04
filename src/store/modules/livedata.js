@@ -14,45 +14,94 @@
 export default {
     state: {
         // The following atmospheric readings are set by the SCD-30 NDIR CO2 Sensor
-        atmoCO2: {},
-        atmoHum: {},
-        atmoTemp: {},
+        co2: {},
+        relHum: {},
+        temp: {},
 
+        initStepNum: null,
+
+        // The following are sensor objects
+        BME688: {},  // Adafruit BME688 Temperature, Humidity, Pressure and Gas Sensor
+        SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
+        SCD30: {},  // Adafruit SCD30 NDIR CO2 Temperature and Humidity Sensor
+
+        timestamp: {},  // time each batch of sensor readings were sent
         stepNum: 0,  // step_num sent by the server
         dataBatch: [],  // batch of sensor readings
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
     },
     getters: {
         // atmospheric state getters
-        getAtmoCO2: state => stepNumber => state.atmoCO2[stepNumber],
-        getAtmoHum: state => stepNumber => state.atmoHum[stepNumber],
-        getAtmoTemp: state => stepNumber => state.atmoTemp[stepNumber],
+        getCO2: state => stepNumber => state.co2[stepNumber],
+        getRelHum: state => stepNumber => state.relHum[stepNumber],
+        getTemp: state => stepNumber => state.temp[stepNumber],
 
-        getDataBatch: state => state.dataBatch,
+        // sensor getters
+        getBME688: state => stepNumber => state.BME688[stepNumber],
+        getSGP30: state => stepNumber => state.SGP30[stepNumber],
+        getSCD30: state => stepNumber => state.SCD30[stepNumber],
+
+        getTimestamp: state => stepNumber => state.timestamp[stepNumber],
+        getInitStepNum: state => state.initStepNum,
         getStepNum: state => state.stepNum,
+
         getSensorInfo: state => state.sensorInfo,
+        getDataBatch: state => state.dataBatch,
     },
     mutations: {
-        SETATMOCO2(state, value) {
+        SETCO2(state, value) {
             const {step_num: step} = value
-            const {co2_ppm} = value
+            const {co2} = value
 
-            state.atmoCO2[step] = co2_ppm
+            state.co2[step] = co2
         },
-        SETATMOHUM(state, value) {
+        SETRELHUM(state, value) {
             const {step_num: step} = value
-            const {hum_perc} = value
+            const {rel_hum} = value
 
-            state.atmoHum[step] = hum_perc
+            state.relHum[step] = rel_hum
         },
-        SETATMOTEMP(state, value) {
+        SETTEMP(state, value) {
             const {step_num: step} = value
             const {temp} = value
 
-            state.atmoTemp[step] = temp
+            state.temp[step] = temp
+        },
+        SETBME688(state, value) {
+            const {step_num: step} = value
+            const {bme688} = value
+
+            state.BME688[step] = bme688
+        },
+        SETSGP30(state, value) {
+            const {step_num: step} = value
+            const {sgp30} = value
+
+            state.SGP30[step] = sgp30
+        },
+        SETSCD30(state, value) {
+            const {step_num: step} = value
+            const {scd30} = value
+
+            state.SCD30[step] = scd30
+        },
+        SETTIMESTAMP(state, value) {
+            const {step_num: step} = value
+            let {timestamp} = value
+
+            const dateTime = timestamp.split(' ')
+            timestamp = {date: dateTime[0], time: dateTime[1]}
+
+            state.timestamp[step] = timestamp
+        },
+        SETINITSTEPNUM(state, value) {
+            state.initStepNum = value
         },
         SETSTEPNUM(state, value) {
-            const {step_num: step} = value
+            let {step_num: step} = value
+
+            // Adjust stepNum from initStepNum to start scrubber at 0
+            step -= state.initStepNum
 
             state.stepNum = step
         },
@@ -69,9 +118,13 @@ export default {
             commit('SETDATABATCH', data)
 
             data.forEach(item => {
-                commit('SETATMOCO2', item)
-                commit('SETATMOHUM', item)
-                commit('SETATMOTEMP', item)
+                commit('SETCO2', item)
+                commit('SETRELHUM', item)
+                commit('SETTEMP', item)
+                commit('SETBME688', item)
+                commit('SETSGP30', item)
+                commit('SETSCD30', item)
+                commit('SETTIMESTAMP', item)
                 commit('SETSTEPNUM', item)
             })
         },

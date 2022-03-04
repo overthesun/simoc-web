@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETCURRENTMODE']),
+                                      'SETCURRENTMODE', 'SETPARAMETERS']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -70,7 +70,8 @@ export default {
         // Send the user to the live Dashboard with a default initial configuration and data
         toLiveDashboard() {
             this.SETCURRENTMODE('live')  // set 'live' mode
-            this.SETLIVECONFIG()  // set live configuration in wizard store
+            this.SETPARAMETERS({min_step_num: 0})  // create min_step_num parameter
+            this.SETLIVECONFIG({duration: {amount: 0}})  // set live configuration in wizard store
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
