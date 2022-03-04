@@ -192,16 +192,16 @@ export default {
             socket.on('hab-info', config => {
                 console.log('Received habitat info:', config)
                 console.log('Requesting step data')
-
-                this.socket.emit('send-step-data')
             })
             socket.on('sensor-info', info => {
                 console.log('Received sensor info:', info)
-
                 this.SETSENSORINFO(info)
+
+                console.log('Requesting step data')
+                this.socket.emit('send-step-data')
             })
             socket.on('step-batch', data => {
-                console.log(`Received a batch of ${data.length} sensor readings from the server:`)
+                console.log(`Received a bundle from the server:`)
 
                 // Send batch to parseData in the livedata store for parsing
                 this.parseData(data)
