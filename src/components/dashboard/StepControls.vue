@@ -2,12 +2,13 @@
 
 <template>
     <div id="step-controls">
-        <!-- Looks like: |< 25/100 >| -->
+        <!-- Looks like (sim mode): |< 25/100 >| -->
+        <!-- Looks like: (live mode): |< 5|12:37:28 >| -->
         <span class="icon-wrapper" title="Previous step" @click="prevStep">
             <fa-icon :icon="['fas','step-backward']" class="fa-icon" />
         </span>
         <span v-if="getCurrentMode === 'sim'">{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
-        <span v-if="getCurrentMode === 'live'">{{getCurrentStepBuffer}}/{{getTime()}}</span>
+        <span v-if="getCurrentMode === 'live'">{{getCurrentStepBuffer}}|{{getTime()}}</span>
         <span class="icon-wrapper" title="Next step" @click="nextStep">
             <fa-icon :icon="['fas','step-forward']" class="fa-icon" />
         </span>
