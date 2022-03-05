@@ -8,105 +8,103 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.2
+ * @version 1.3
  * @since   March 1, 2022
  */
 export default {
     state: {
-        // The following atmospheric readings are set by the SCD-30 NDIR CO2 Sensor
-        co2: {},
-        relHum: {},
-        temp: {},
+        co2: {},  // Average CO2 reading over all sensors
+        relHum: {},  // Average relative humidity reading over all sensors
+        temp: {},  // Average temperature reading over all sensors
 
-        initStepNum: null,
+        initBundleNum: null,  // Initial bundle number received by this client
 
-        // The following are sensor objects
         BME688: {},  // Adafruit BME688 Temperature, Humidity, Pressure and Gas Sensor
         SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
         SCD30: {},  // Adafruit SCD30 NDIR CO2 Temperature and Humidity Sensor
 
-        timestamp: {},  // time each batch of sensor readings were sent
-        stepNum: 0,  // step_num sent by the server
-        dataBatch: [],  // batch of sensor readings
+        timestamp: {},  // time each bundle of sensor readings were sent
+        bundleNum: 0,  // n sent by the server
+        dataBundle: [],  // bundle of sensor readings
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
     },
     getters: {
         // atmospheric state getters
-        getCO2: state => stepNumber => state.co2[stepNumber],
-        getRelHum: state => stepNumber => state.relHum[stepNumber],
-        getTemp: state => stepNumber => state.temp[stepNumber],
+        getCO2: state => bundleNum => state.co2[bundleNum],
+        getRelHum: state => bundleNum => state.relHum[bundleNum],
+        getTemp: state => bundleNum => state.temp[bundleNum],
 
         // sensor getters
-        getBME688: state => stepNumber => state.BME688[stepNumber],
-        getSGP30: state => stepNumber => state.SGP30[stepNumber],
-        getSCD30: state => stepNumber => state.SCD30[stepNumber],
+        getBME688: state => bundleNum => state.BME688[bundleNum],
+        getSGP30: state => bundleNum => state.SGP30[bundleNum],
+        getSCD30: state => bundleNum => state.SCD30[bundleNum],
 
-        getTimestamp: state => stepNumber => state.timestamp[stepNumber],
-        getInitStepNum: state => state.initStepNum,
-        getStepNum: state => state.stepNum,
+        getTimestamp: state => bundleNum => state.timestamp[bundleNum],
+        getInitBundleNum: state => state.initBundleNum,
+        getBundleNum: state => state.bundleNum,
 
         getSensorInfo: state => state.sensorInfo,
-        getDataBatch: state => state.dataBatch,
+        getDataBundle: state => state.dataBundle,
     },
     mutations: {
         SETCO2(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {co2} = value
 
-            state.co2[step] = co2
+            state.co2[bundle] = co2
         },
         SETRELHUM(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {rel_hum} = value
 
-            state.relHum[step] = rel_hum
+            state.relHum[bundle] = rel_hum
         },
         SETTEMP(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {temp} = value
 
-            state.temp[step] = temp
+            state.temp[bundle] = temp
         },
         SETBME688(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {bme688} = value
 
-            state.BME688[step] = bme688
+            state.BME688[bundle] = bme688
         },
         SETSGP30(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {sgp30} = value
 
-            state.SGP30[step] = sgp30
+            state.SGP30[bundle] = sgp30
         },
         SETSCD30(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             const {scd30} = value
 
-            state.SCD30[step] = scd30
+            state.SCD30[bundle] = scd30
         },
         SETTIMESTAMP(state, value) {
-            const {step_num: step} = value
+            const {n: bundle} = value
             let {timestamp} = value
 
             const dateTime = timestamp.split(' ')
             timestamp = {date: dateTime[0], time: dateTime[1]}
 
-            state.timestamp[step] = timestamp
+            state.timestamp[bundle] = timestamp
         },
-        SETINITSTEPNUM(state, value) {
-            state.initStepNum = value
+        SETINITBUNDLENUM(state, value) {
+            state.initBundleNum = value
         },
-        SETSTEPNUM(state, value) {
-            let {step_num: step} = value
+        SETBUNDLENUM(state, value) {
+            let {n: bundle} = value
 
-            // Adjust stepNum from initStepNum to start scrubber at 0
-            step -= state.initStepNum
+            // Adjust bundleNum from initBundleNum to start scrubber at 0
+            bundle -= state.initBundleNum
 
-            state.stepNum = step
+            state.bundleNum = bundle
         },
-        SETDATABATCH(state, value) {
-            state.dataBatch.push(value)
+        SETDATABUNDLE(state, value) {
+            state.dataBundle.push(value)
         },
         SETSENSORINFO(state, value) {
             state.sensorInfo = value
@@ -115,7 +113,7 @@ export default {
     actions: {
         parseData({commit, getters}, data) {
             console.log(data)
-            commit('SETDATABATCH', data)
+            commit('SETDATABUNDLE', data)
 
             data.forEach(item => {
                 commit('SETCO2', item)
@@ -125,7 +123,7 @@ export default {
                 commit('SETSGP30', item)
                 commit('SETSCD30', item)
                 commit('SETTIMESTAMP', item)
-                commit('SETSTEPNUM', item)
+                commit('SETBUNDLENUM', item)
             })
         },
     },

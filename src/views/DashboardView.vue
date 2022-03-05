@@ -22,7 +22,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
-        ...mapGetters('livedata', ['getStepNum', 'getInitStepNum']),
+        ...mapGetters('livedata', ['getBundleNum', 'getInitBundleNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -75,7 +75,7 @@ export default {
         if (this.getCurrentMode === 'live') {
             console.log('Starting live dashboard')
 
-            this.SETINITSTEPNUM(null) // Reset initStepNum to null
+            this.SETINITBUNDLENUM(null) // Reset initBundleNum to null
             this.setupLiveWebsocket()
 
         // if we load the simulation data, there's nothing else to do, otherwise
@@ -131,7 +131,7 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
-        ...mapMutations('livedata', ['SETSENSORINFO', 'SETINITSTEPNUM']),
+        ...mapMutations('livedata', ['SETSENSORINFO', 'SETINITBUNDLENUM']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
@@ -208,18 +208,18 @@ export default {
             socket.on('step-batch', data => {
                 console.log(`Received a bundle from the server:`)
 
-                // If initStepNum is null set it to the first step_num sent in the batch of data.
+                // If initBundleNum is null set it to the first n sent in the bundle of data.
                 // This indicates that a client has made an initial connection to the live dashboard.
-                if (this.getInitStepNum === null) {
-                    console.log(`Initial step_num: ${data[0].step_num}`)
-                    this.SETINITSTEPNUM(data[0].step_num)
+                if (this.getInitBundleNum === null) {
+                    console.log(`Initial bundle_num: ${data[0].n}`)
+                    this.SETINITBUNDLENUM(data[0].n)
                 }
 
-                // Send batch to parseData in the livedata store for parsing
+                // Send bundle to parseData in the livedata store for parsing
                 this.parseData(data)
 
-                this.SETLIVECONFIG({duration: {amount: this.getStepNum}})  // Sets the totalMissionHours
-                this.SETBUFFERMAX(this.getStepNum)
+                this.SETLIVECONFIG({duration: {amount: this.getBundleNum}})  // Sets the totalMissionHours
+                this.SETBUFFERMAX(this.getBundleNum)
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')
