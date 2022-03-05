@@ -85,12 +85,10 @@ export default {
         },
         SETTIMESTAMP(state, value) {
             const {n: bundle} = value
-            let {timestamp} = value
+            const {timestamp: t} = value
 
-            const dateTime = timestamp.split(' ')
-            timestamp = {date: dateTime[0], time: dateTime[1]}
-
-            state.timestamp[bundle] = timestamp
+            const dateTime = t.split(' ')
+            state.timestamp[bundle - state.initBundleNum] = {date: dateTime[0], time: dateTime[1]}
         },
         SETINITBUNDLENUM(state, value) {
             state.initBundleNum = value
