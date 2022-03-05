@@ -51,37 +51,37 @@ export default {
             const {n: bundle} = value
             const {co2} = value
 
-            state.co2[bundle] = co2
+            state.co2[bundle - state.initBundleNum] = co2
         },
         SETRELHUM(state, value) {
             const {n: bundle} = value
             const {rel_hum} = value
 
-            state.relHum[bundle] = rel_hum
+            state.relHum[bundle - state.initBundleNum] = rel_hum
         },
         SETTEMP(state, value) {
             const {n: bundle} = value
             const {temp} = value
 
-            state.temp[bundle] = temp
+            state.temp[bundle - state.initBundleNum] = temp
         },
         SETBME688(state, value) {
             const {n: bundle} = value
             const {bme688} = value
 
-            state.BME688[bundle] = bme688
+            state.BME688[bundle - state.initBundleNum] = bme688
         },
         SETSGP30(state, value) {
             const {n: bundle} = value
             const {sgp30} = value
 
-            state.SGP30[bundle] = sgp30
+            state.SGP30[bundle - state.initBundleNum] = sgp30
         },
         SETSCD30(state, value) {
             const {n: bundle} = value
             const {scd30} = value
 
-            state.SCD30[bundle] = scd30
+            state.SCD30[bundle - state.initBundleNum] = scd30
         },
         SETTIMESTAMP(state, value) {
             const {n: bundle} = value
@@ -96,12 +96,10 @@ export default {
             state.initBundleNum = value
         },
         SETBUNDLENUM(state, value) {
-            let {n: bundle} = value
+            const {n: bundle} = value
 
             // Adjust bundleNum from initBundleNum to start scrubber at 0
-            bundle -= state.initBundleNum
-
-            state.bundleNum = bundle
+            state.bundleNum = bundle - state.initBundleNum
         },
         SETDATABUNDLE(state, value) {
             state.dataBundle.push(value)
