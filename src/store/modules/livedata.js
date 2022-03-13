@@ -8,15 +8,11 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.4
+ * @version 1.5
  * @since   March 1, 2022
  */
 export default {
     state: {
-        co2: {},  // Average CO2 reading over all sensors
-        relHum: {},  // Average relative humidity reading over all sensors
-        temp: {},  // Average temperature reading over all sensors
-
         initBundleNum: null,  // Initial bundle number received by this client
 
         timestamp: {},  // time each bundle of sensor readings were sent
@@ -25,11 +21,6 @@ export default {
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
     },
     getters: {
-        // atmospheric state getters
-        getCO2: state => bundleNum => state.co2[bundleNum],
-        getRelHum: state => bundleNum => state.relHum[bundleNum],
-        getTemp: state => bundleNum => state.temp[bundleNum],
-
         getTimestamp: state => bundleNum => state.timestamp[bundleNum],
         getInitBundleNum: state => state.initBundleNum,
         getBundleNum: state => state.bundleNum,
@@ -38,24 +29,6 @@ export default {
         getDataBundle: state => state.dataBundle,
     },
     mutations: {
-        SETCO2(state, value) {
-            const {n: bundle} = value
-            const {co2} = value
-
-            state.co2[bundle - state.initBundleNum] = co2
-        },
-        SETRELHUM(state, value) {
-            const {n: bundle} = value
-            const {rel_hum} = value
-
-            state.relHum[bundle - state.initBundleNum] = rel_hum
-        },
-        SETTEMP(state, value) {
-            const {n: bundle} = value
-            const {temp} = value
-
-            state.temp[bundle - state.initBundleNum] = temp
-        },
         SETTIMESTAMP(state, value) {
             const {n: bundle} = value
             const {timestamp: t} = value
@@ -85,9 +58,6 @@ export default {
             commit('SETDATABUNDLE', data)
 
             data.forEach(item => {
-                commit('SETCO2', item)
-                commit('SETRELHUM', item)
-                commit('SETTEMP', item)
                 commit('SETTIMESTAMP', item)
                 commit('SETBUNDLENUM', item)
             })
