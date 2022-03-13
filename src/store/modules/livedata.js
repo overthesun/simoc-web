@@ -8,7 +8,7 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.3
+ * @version 1.4
  * @since   March 1, 2022
  */
 export default {
@@ -18,10 +18,6 @@ export default {
         temp: {},  // Average temperature reading over all sensors
 
         initBundleNum: null,  // Initial bundle number received by this client
-
-        BME688: {},  // Adafruit BME688 Temperature, Humidity, Pressure and Gas Sensor
-        SGP30: {},  // Adafruit SGP30 Air Quality Sensor VOC and eCO2
-        SCD30: {},  // Adafruit SCD30 NDIR CO2 Temperature and Humidity Sensor
 
         timestamp: {},  // time each bundle of sensor readings were sent
         bundleNum: 0,  // n sent by the server
@@ -33,11 +29,6 @@ export default {
         getCO2: state => bundleNum => state.co2[bundleNum],
         getRelHum: state => bundleNum => state.relHum[bundleNum],
         getTemp: state => bundleNum => state.temp[bundleNum],
-
-        // sensor getters
-        getBME688: state => bundleNum => state.BME688[bundleNum],
-        getSGP30: state => bundleNum => state.SGP30[bundleNum],
-        getSCD30: state => bundleNum => state.SCD30[bundleNum],
 
         getTimestamp: state => bundleNum => state.timestamp[bundleNum],
         getInitBundleNum: state => state.initBundleNum,
@@ -64,24 +55,6 @@ export default {
             const {temp} = value
 
             state.temp[bundle - state.initBundleNum] = temp
-        },
-        SETBME688(state, value) {
-            const {n: bundle} = value
-            const {bme688} = value
-
-            state.BME688[bundle - state.initBundleNum] = bme688
-        },
-        SETSGP30(state, value) {
-            const {n: bundle} = value
-            const {sgp30} = value
-
-            state.SGP30[bundle - state.initBundleNum] = sgp30
-        },
-        SETSCD30(state, value) {
-            const {n: bundle} = value
-            const {scd30} = value
-
-            state.SCD30[bundle - state.initBundleNum] = scd30
         },
         SETTIMESTAMP(state, value) {
             const {n: bundle} = value
@@ -115,9 +88,6 @@ export default {
                 commit('SETCO2', item)
                 commit('SETRELHUM', item)
                 commit('SETTEMP', item)
-                commit('SETBME688', item)
-                commit('SETSGP30', item)
-                commit('SETSCD30', item)
                 commit('SETTIMESTAMP', item)
                 commit('SETBUNDLENUM', item)
             })
