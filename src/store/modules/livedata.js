@@ -8,25 +8,27 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.5
+ * @version 1.5.1
  * @since   March 1, 2022
  */
 export default {
     state: {
         initBundleNum: null,  // Initial bundle number received by this client
-
-        timestamp: {},  // time each bundle of sensor readings were sent
-        bundleNum: 0,  // n sent by the server
-        dataBundle: [],  // bundle of sensor readings
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
+
+        bundleNum: 0,  // n sent by the server
+        timestamp: {},  // time each bundle of sensor readings were sent
+
+        dataBundles: [],  // bundle of sensor readings
     },
     getters: {
-        getTimestamp: state => bundleNum => state.timestamp[bundleNum],
         getInitBundleNum: state => state.initBundleNum,
-        getBundleNum: state => state.bundleNum,
-
         getSensorInfo: state => state.sensorInfo,
-        getDataBundle: state => state.dataBundle,
+
+        getBundleNum: state => state.bundleNum,
+        getTimestamp: state => bundleNum => state.timestamp[bundleNum],
+
+        getDataBundles: state => state.dataBundles,
     },
     mutations: {
         SETTIMESTAMP(state, value) {
@@ -45,19 +47,19 @@ export default {
             // Adjust bundleNum from initBundleNum to start scrubber at 0
             state.bundleNum = bundle - state.initBundleNum
         },
-        SETDATABUNDLE(state, value) {
-            state.dataBundle.push(value)
+        SETDATABUNDLES(state, value) {
+            state.dataBundles.push(value)
         },
         SETSENSORINFO(state, value) {
             state.sensorInfo = value
         },
     },
     actions: {
-        parseData({commit, getters}, data) {
-            console.log(data)
-            commit('SETDATABUNDLE', data)
+        parseData({commit, getters}, bundle) {
+            console.log(bundle)
+            commit('SETDATABUNDLES', bundle)
 
-            data.forEach(item => {
+            bundle.forEach(item => {
                 commit('SETTIMESTAMP', item)
                 commit('SETBUNDLENUM', item)
             })
