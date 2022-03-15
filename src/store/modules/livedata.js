@@ -8,8 +8,8 @@
  * the raw data into the proper state variable in the action block.
  *
  * @author  Ryan Meneses
- * @version 1.5.1
- * @since   March 1, 2022
+ * @version 1.6
+ * @since   March 15, 2022
  */
 export default {
     state: {
@@ -18,6 +18,7 @@ export default {
 
         bundleNum: 0,  // n sent by the server
         timestamp: {},  // time each bundle of sensor readings were sent
+        readings: {},  // sensor readings from bundle sent by server
 
         dataBundles: [],  // bundle of sensor readings
     },
@@ -26,6 +27,7 @@ export default {
         getSensorInfo: state => state.sensorInfo,
 
         getBundleNum: state => state.bundleNum,
+        getReadings: state => bundleNum => state.readings[bundleNum],
         getTimestamp: state => bundleNum => state.timestamp[bundleNum],
 
         getDataBundles: state => state.dataBundles,
@@ -53,6 +55,12 @@ export default {
         SETSENSORINFO(state, value) {
             state.sensorInfo = value
         },
+        SETREADINGS(state, value) {
+            const {n: bundle} = value
+            const {readings: r} = value
+
+            state.readings[bundle - state.initBundleNum] = r
+        },
     },
     actions: {
         parseData({commit, getters}, bundle) {
@@ -60,6 +68,7 @@ export default {
             commit('SETDATABUNDLES', bundle)
 
             bundle.forEach(item => {
+                commit('SETREADINGS', item)
                 commit('SETTIMESTAMP', item)
                 commit('SETBUNDLENUM', item)
             })
