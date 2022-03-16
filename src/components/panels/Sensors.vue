@@ -2,7 +2,7 @@
     <section class="panel-dl-wrapper">
         <template v-for="(bundle, id) in getSensorInfo" :key="`tmpl_${id}`">
             <div class="sensor-name">
-                {{sensorName(bundle)}}
+                {{sensorName(bundle)}} <label class="sensor-id"> {{id}} </label>
             </div>
             <dl>
                 <template v-for="(value, key) in sensorReadings(bundle)" :key="`tmpl_${key}`">
@@ -47,7 +47,12 @@ export default {
 
 
 <style lang="scss" scoped>
-.sensor-name + dl {
-  margin-left: 16px;
-}
+    .sensor-name + dl {
+        margin-left: 16px;
+        font-size: 14px;
+    }
+
+    .sensor-id {
+        font-size: 12px;
+    }
 </style>
