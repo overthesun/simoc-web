@@ -23,7 +23,7 @@ export default {
     modes: ['live'],
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('livedata', ['getSensorInfo']),
+        ...mapGetters('livedata', ['getSensorInfo', 'getReadings']),
     },
     methods: {
         sensorName(bundle) {
