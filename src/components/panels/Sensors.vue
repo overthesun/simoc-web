@@ -5,7 +5,7 @@
                 {{sensorName(bundle)}} <label class="sensor-id"> {{id}} </label>
             </div>
             <dl>
-                <template v-for="(value, key) in sensorReadings(bundle)" :key="`tmpl_${key}`">
+                <template v-for="(value, item) in sensorItems(bundle)" :key="`tmpl_${item}`">
                     <dt>{{value.label}}</dt>
                     <dd>{{(Math.random() * 100).toFixed(2)}} {{value.unit}}</dd>
                 </template>
@@ -36,7 +36,7 @@ export default {
 
             return type
         },
-        sensorReadings(bundle) {
+        sensorItems(bundle) {
             const {reading_info: readings} = bundle
 
             return readings
