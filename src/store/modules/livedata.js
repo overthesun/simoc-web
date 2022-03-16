@@ -3,22 +3,23 @@
  *
  * This file contains the state for live data.
  *
- * Raw sensor data is sent from the backend simoc-sam. The data received is stored here into
- * live data objects read by the dashboard. The function parseData is responsible for assigning
- * the raw data into the proper state variable in the action block.
+ * Raw sensor data is sent from the backend, simoc-sam. The data received is stored here into
+ * "live data" objects read by the Dashboard. The function parseData in the action block
+ * assigns the state variables in this store by parsing the object formed from the raw
+ * sensor data on the backend.
  *
  * @author  Ryan Meneses
- * @version 1.6
+ * @version 1.6.1
  * @since   March 15, 2022
  */
 export default {
     state: {
-        initBundleNum: null,  // Initial bundle number received by this client
+        initBundleNum: null,  // initial bundle number received by this client
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
 
         bundleNum: 0,  // n sent by the server
-        timestamp: {},  // time each bundle of sensor readings were sent
         readings: {},  // sensor readings from bundle sent by server
+        timestamp: {},  // time each bundle of sensor readings were sent
 
         dataBundles: [],  // bundle of sensor readings
     },
@@ -33,6 +34,41 @@ export default {
         getDataBundles: state => state.dataBundles,
     },
     mutations: {
+        /** Sets the initial bundle num detected by a new client. Used to start the
+         *  Dashboard step_num (called 'n' in live-mode) from 0.
+         */
+        SETINITBUNDLENUM(state, value) {
+            state.initBundleNum = value
+        },
+        /** Sets the sensor_info object sent by the server containing a list of all sensors
+         *  that did or are currently receiving readings on the backend.
+         */
+        SETSENSORINFO(state, value) {
+            // TODO: Make this a growing object that merges new sensors onto a list
+            //  of existing sensors
+            state.sensorInfo = value
+        },
+        /** Sets the bundleNum 'n' (called 'stepNum' in sim-mode) adjusted using the
+         *  initial bundle num so that it increments from 0.
+         */
+        SETBUNDLENUM(state, value) {
+            const {n: bundle} = value
+
+            // Adjust bundleNum from initBundleNum to start scrubber at 0
+            state.bundleNum = bundle - state.initBundleNum
+        },
+        /** Sets the readings object—a dict of sensors readings—sent by the backend with
+         *  each sensor in the readings matching one in the sensorInfo object by ID.
+         */
+        SETREADINGS(state, value) {
+            const {n: bundle} = value
+            const {readings: r} = value
+
+            state.readings[bundle - state.initBundleNum] = r
+        },
+        /** Sets the timestamp for each bundleNum 'n' and splitting it into a date and
+         *  time dict—received with timestamp[n].date and timestamp[n].time.
+         */
         SETTIMESTAMP(state, value) {
             const {n: bundle} = value
             const {timestamp: t} = value
@@ -40,29 +76,17 @@ export default {
             const dateTime = t.split(' ')
             state.timestamp[bundle - state.initBundleNum] = {date: dateTime[0], time: dateTime[1]}
         },
-        SETINITBUNDLENUM(state, value) {
-            state.initBundleNum = value
-        },
-        SETBUNDLENUM(state, value) {
-            const {n: bundle} = value
-
-            // Adjust bundleNum from initBundleNum to start scrubber at 0
-            state.bundleNum = bundle - state.initBundleNum
-        },
+        /** Sets the data bundles array, pushing all bundles—composed of bundleNum 'n',
+         *  readings object, and timestamp—received by the client.
+         */
         SETDATABUNDLES(state, value) {
             state.dataBundles.push(value)
         },
-        SETSENSORINFO(state, value) {
-            state.sensorInfo = value
-        },
-        SETREADINGS(state, value) {
-            const {n: bundle} = value
-            const {readings: r} = value
-
-            state.readings[bundle - state.initBundleNum] = r
-        },
     },
     actions: {
+        /** Parses each bundle sent by the backend updating the livedata store by passing
+         *  the entire object and destructuring it in the associated variable mutator.
+         */
         parseData({commit, getters}, bundle) {
             console.log(bundle)
             commit('SETDATABUNDLES', bundle)
