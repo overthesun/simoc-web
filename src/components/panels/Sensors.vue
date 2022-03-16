@@ -7,7 +7,7 @@
             <dl>
                 <template v-for="(value, item) in sensorItems(bundle)" :key="`tmpl_${item}`">
                     <dt>{{value.label}}</dt>
-                    <dd>{{(Math.random() * 100).toFixed(2)}} {{value.unit}}</dd>
+                    <dd>{{sensorReading(getCurrentStepBuffer, id, item)}} {{value.unit}}</dd>
                 </template>
             </dl>
         </template>
@@ -40,6 +40,26 @@ export default {
             const {reading_info: readings} = bundle
 
             return readings
+        },
+        sensorReading(currentStepBuffer, sensorId, sensorItem) {
+            const r = this.getReadings(currentStepBuffer)
+
+            let value = '-'
+            try {
+                Object.entries(r).forEach(id => {
+                    if (id[0] === sensorId) {
+                        Object.entries(id[1]).forEach(item => {
+                            if (item[0] === sensorItem) {
+                                value = item[1].toFixed(2)
+                            }
+                        })
+                    }
+                })
+            } catch (e) {
+                console.log('Awaiting sensor readings...')
+            }
+
+            return value
         },
     },
 }
