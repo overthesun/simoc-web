@@ -223,6 +223,12 @@ export default {
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')
+                this.SETINITBUNDLENUM(null)
+
+                this.SETBUFFERCURRENT(0)
+                this.SETBUFFERMAX(0)
+
+                this.SETMINSTEPNUMBER(0)
             })
         },
 
