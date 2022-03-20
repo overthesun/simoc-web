@@ -78,7 +78,9 @@ export default {
         if (this.getCurrentMode === 'live') {
             console.log('Starting live dashboard')
 
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
             this.SETINITBUNDLENUM(null) // Reset initBundleNum to null
+
             this.setupLiveWebsocket()
 
         // if we load the simulation data, there's nothing else to do, otherwise
