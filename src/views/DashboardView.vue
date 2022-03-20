@@ -31,11 +31,14 @@ export default {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
         getCurrentStepBuffer() {
-            // check that we have values in the buffer to avoid pausing
-            // the timer when current/max are set to 0 at the beginning
-            if ((this.getMaxStepBuffer > 1) &&
+            // pause timer only for sim mode
+            if (this.getCurrentMode === 'sim') {
+                // check that we have values in the buffer to avoid pausing
+                // the timer when current/max are set to 0 at the beginning
+                if ((this.getMaxStepBuffer > 1) &&
                 (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
-                this.PAUSETIMER()
+                    this.PAUSETIMER()
+                }
             }
         },
         getStopped() {
