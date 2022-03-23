@@ -1,15 +1,20 @@
 <template>
     <section class="panel-dl-wrapper">
-        <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
-            <div class="sensor-name">
-                {{sensorName(info)}} <label class="sensor-id"> {{id}} </label>
-            </div>
-            <dl>
-                <template v-for="(item, name) in sensorItems(info)" :key="`tmpl_${name}`">
-                    <dt>{{item.label}}</dt>
-                    <dd>{{sensorReading(getCurrentStepBuffer, id, name)}} {{item.unit}}</dd>
-                </template>
-            </dl>
+        <template v-if="getDataBundles.length === 0">
+            <div class="no-data"> [Awaiting data...] </div>
+        </template>
+        <template v-else>
+            <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
+                <div class="sensor-name">
+                    {{sensorName(info)}} <label class="sensor-id"> {{id}} </label>
+                </div>
+                <dl>
+                    <template v-for="(item, name) in sensorItems(info)" :key="`tmpl_${name}`">
+                        <dt>{{item.label}}</dt>
+                        <dd>{{sensorReading(getCurrentStepBuffer, id, name)}} {{item.unit}}</dd>
+                    </template>
+                </dl>
+            </template>
         </template>
     </section>
 </template>
@@ -23,7 +28,7 @@ export default {
     modes: ['live'],
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('livedata', ['getSensorInfo', 'getReadings']),
+        ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
     },
     methods: {
         /** Extracts the sensor name from the sensorInfo object and returns it setting the
