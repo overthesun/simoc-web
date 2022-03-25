@@ -116,6 +116,21 @@ export default {
     background: linear-gradient(#444, #333);
 }
 
+#dashboard-live-icon span {
+    font-size: 22px;
+    width: 36px;
+    height: 36px;
+}
+
+#dashboard-live-icon span:hover {
+    font-size: 24px;
+}
+
+#dashboard-live-text span {
+    margin-left: 6px;
+    font-size: 14px;
+}
+
 #dashboard-play-icon span {
     font-size: 24px;
     width: 36px;
