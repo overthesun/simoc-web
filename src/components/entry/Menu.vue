@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETCURRENTMODE', 'SETPARAMETERS']),
+                                      'SETCURRENTMODE', 'SETPARAMETERS', 'SETISLIVE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION', 'SETLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -98,6 +98,7 @@ export default {
                 return
             }
             this.SETCURRENTMODE('sim')
+            this.SETISLIVE(false)
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },

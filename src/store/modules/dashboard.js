@@ -180,7 +180,7 @@ export default {
         },
         // Is the live Dashboard live? i.e. Is the stepInterval 0?
         SETISLIVE(state, value) {
-            console.log('SETISLIVE:', value)
+            // console.log('SETISLIVE:', value)
             state.isLive = value
         },
         SETGAMEID(state, value) {

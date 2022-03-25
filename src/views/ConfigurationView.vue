@@ -150,7 +150,8 @@ export default {
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
         ...mapMutations('dashboard', ['SETGAMECONFIG', 'SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
+                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE',
+                                      'SETISLIVE']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
@@ -242,6 +243,7 @@ export default {
                         this.SETSIMULATIONDATA(simdata)
                         this.SETBUFFERMAX(simdata.steps)
                         this.SETCURRENTMODE('sim')
+                        this.SETISLIVE(false)
                         this.SETLOADFROMSIMDATA(true)
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
@@ -272,6 +274,7 @@ export default {
                 this.SETGAMEID(response.data.game_id)
                 this.SETGAMECONFIG(response.data.game_config)
                 this.SETCURRENTMODE('sim')
+                this.SETISLIVE(false)
                 this.SETLOADFROMSIMDATA(false)
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
