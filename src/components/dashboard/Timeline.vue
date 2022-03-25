@@ -1,7 +1,21 @@
 <!-- Timeline component -->
 
 <template>
-    <div class="timeline-wrapper">
+    <!-- Timeline visualization for live mode -->
+    <div v-if="getIsLive" class="timeline-wrapper">
+        <span class="timeline-item">
+            <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
+                   :style="{'background-image': 'linear-gradient(to right, #fc0303 0%, \
+                            #fc0303 ' + currentPercentage + '%, \
+                            #d0d0d0 ' + currentPercentage +'%, \
+                            #d0d0d0 '+ bufferPercentage +'%, \
+                            #444343 ' + bufferPercentage + '%, \
+                            #444343 100%)'}"
+                   class="live-timeline" type="range" disabled>
+        </span>
+    </div>
+    <!-- Timeline visualization for step mode -->
+    <div v-else class="timeline-wrapper">
         <span class="timeline-item">
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
@@ -32,7 +46,8 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
-                                    'getIsTimerRunning', 'getStepInterval', 'getCurrentMode']),
+                                    'getIsTimerRunning', 'getStepInterval', 'getCurrentMode',
+                                    'getIsLive']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     watch: {
@@ -138,6 +153,24 @@ export default {
     .timeline-text{
         font-size: 16px;
         font-weight: 200;
+    }
+
+    .live-timeline{
+        z-index:99;
+        appearance:none;
+        border-radius: 2px;
+        width: 70vw;
+        height: 4px;
+        outline:none;
+        background: transparent no-repeat;
+    }
+
+    .live-timeline::-webkit-slider-thumb{
+        visibility: hidden;
+    }
+
+    .live-timeline::-moz-range-thumb{
+        visibility: hidden;
     }
 
     .timeline{
