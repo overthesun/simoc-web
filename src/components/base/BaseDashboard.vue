@@ -11,6 +11,10 @@ future dashboard views
             <Main />
         </section>
         <section id="footer-wrapper">
+            <!-- Live button is made available on the live Dashboard -->
+            <div v-if="getCurrentMode === 'live'">
+                <LiveButton />
+            </div>
             <PlayButton />
             <Timeline />
             <StepControls />
@@ -21,7 +25,7 @@ future dashboard views
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Timeline, PlayButton, StepControls,
+import {Timeline, LiveButton, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
 
@@ -29,6 +33,7 @@ export default {
     components: {
         TheTopBar,
         DashboardMenu,
+        LiveButton,
         PlayButton,
         Timeline,
         StepControls,
@@ -67,7 +72,7 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
-                                    'getIsTimerRunning']),
+                                    'getIsTimerRunning', 'getCurrentMode']),
         ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
     },
     watch: {
