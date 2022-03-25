@@ -62,7 +62,7 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
-                                      'STOPTIMER', 'UPDATEBUFFERCURRENT']),
+                                      'STOPTIMER', 'UPDATEBUFFERCURRENT', 'SETSTEPINTERVAL']),
 
         startTimer() {
             // initialize and return the step timer that updates the
@@ -119,7 +119,12 @@ export default {
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
-                this.startTimer()
+                // If in live-mode and not live (i.e. not retrieving the latest readings),
+                // ensure the interval is set to 1000 ms after the user releases the slider.
+                if (this.getCurrentMode === 'live') {
+                    this.SETSTEPINTERVAL(1000)
+                }
+                this.STARTTIMER()
             }
         },
 
