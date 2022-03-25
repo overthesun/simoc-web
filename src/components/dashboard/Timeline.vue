@@ -53,19 +53,27 @@ export default {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
-            const stepTimer = new StepTimer(() => {
-                // start timer immediately if in live mode and there is at least
-                // 1 step in the max step buffer indicating an available reading
-                if (this.getCurrentMode === 'live' && this.getMaxStepBuffer >= 1) {
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
 
-                // increment the step only if we have enough buffered steps
-                // TODO check the number of steps requests so we can still
-                // run simulations with a number of steps <= the limit
-                } else if (this.getMaxStepBuffer >= 30) {
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
-                }
-            }, this.getStepInterval)
+            let stepTimer
+            if (this.getCurrentMode === 'live') {
+                stepTimer = new StepTimer(() => {
+                    // start timer immediately if in live mode and there is at least
+                    // 1 bundle in the maxStepBuffer indicating an available reading
+                    if (this.getMaxStepBuffer >= 1) {
+                        this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
+                    }
+                }, 0)
+            } else if (this.getCurrentMode === 'sim') {
+                stepTimer = new StepTimer(() => {
+                    // increment the step only if we have enough buffered steps
+                    // TODO check the number of steps requests so we can still
+                    // run simulations with a number of steps <= the limit
+                    if (this.getMaxStepBuffer >= 30) {
+                        this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
+                    }
+                }, this.getStepInterval)
+            }
+
             this.SETTIMERID(stepTimer)
             this.STARTTIMER()
             return stepTimer
