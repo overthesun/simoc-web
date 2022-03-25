@@ -49,6 +49,7 @@ export default {
         timerID: null,
         getStepsTimerID: null,
         isTimerRunning: false,
+        isLive: false,  // 'live' indicates a stepInterval of 0
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
@@ -82,6 +83,7 @@ export default {
         getTimerID: state => state.timerID,
         getGetStepsTimerID: state => state.getStepsTimerID,
         getIsTimerRunning: state => state.isTimerRunning,
+        getIsLive: state => state.isLive,
         getGameConfig: state => state.gameConfig,
         getActivePanels: state => state.activePanels,
         getCurrentMode: state => state.currentMode,
@@ -175,6 +177,11 @@ export default {
         // Is the step_timer already been created and running initiall?
         SETISTIMERRUNNING(state, value) {
             state.isTimerRunning = value
+        },
+        // Is the live Dashboard live? i.e. Is the stepInterval 0?
+        SETISLIVE(state, value) {
+            console.log('SETISLIVE:', value)
+            state.isLive = value
         },
         SETGAMEID(state, value) {
             state.parameters.game_id = value
