@@ -119,7 +119,7 @@ export default {
         align-items:center;
         margin-bottom: 36px;
     }
-
+/*
     ::v-deep(.option-item) {
         box-sizing:border-box;
         margin: 0px 16px;
@@ -147,6 +147,7 @@ export default {
             left:0;
         }
     }
+*/
 
     .main{
         box-sizing:border-box;
@@ -163,7 +164,7 @@ export default {
         position:relative;
     }
 
-
+/*
     ::v-deep(.link) {
         text-decoration: underline;
         &:visited,&{
@@ -174,6 +175,7 @@ export default {
             color: #999;
         }
     }
+*/
 
     .entry-button-wrapper{
         width:100%;
@@ -185,7 +187,7 @@ export default {
         justify-content:center;
         align-items:center;
     }
-
+/*
     ::v-deep(.btn-normal) {
         width: 256px;
         height: 48px;
@@ -207,7 +209,8 @@ export default {
             outline:none;
         }
     }
-
+*/
+/*
     ::v-deep(.btn-warning) {
         margin-top:auto;
         width: 256px;
@@ -231,7 +234,7 @@ export default {
             outline:none;
         }
     }
-
+*/
     .btn-disabled{
         background-color: #4c4c4c;
         color: #999;

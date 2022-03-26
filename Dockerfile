@@ -16,6 +16,11 @@ WORKDIR /frontend
 # COPY . ./
 # RUN npm install --global
 
+RUN npm uninstall node-sass && \
+	npm install sass &&  \
+	rm -rf node_modules/node-sass/ && \
+	mv node_modules/sass node_modules/node-sass
+
 EXPOSE 8080
 
 ENTRYPOINT [ "/bin/bash" ]
