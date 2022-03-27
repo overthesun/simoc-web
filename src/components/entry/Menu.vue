@@ -67,11 +67,18 @@ export default {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
         },
-        // Send the user to the live Dashboard with a default initial configuration and data
+        /** Routes the user to the live Dashboard. The minimum configuration required for any
+         *  Dashboard instance to open without error is the min_step_num and a duration object
+         *  composed of an 'amount' key-value pairing. Both of these values can be 0, but the
+         *  wizard store parses those two keys. Note that in sim mode these key-values are set in
+         *  the Configuration Menu which is rendered after the user selects New Configuration in
+         *  this Menu, but in live mode that menu is bypassed and they must be manually set here
+         *  before the Dashboard components can be rendered.
+         */
         toLiveDashboard() {
             this.SETCURRENTMODE('live')  // set 'live' mode
             this.SETPARAMETERS({min_step_num: 0})  // create min_step_num parameter
-            this.SETLIVECONFIG({duration: {amount: 0}})  // set live configuration in wizard store
+            this.SETLIVECONFIG({duration: {amount: 0}})  // set duration in wizard store
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
