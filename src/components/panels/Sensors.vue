@@ -65,9 +65,7 @@ export default {
             return items
         },
         /** Gets a sensor's readings from the livedata store at the currentStepBuffer of the
-         *  scrubber and returns a single item from the reading. On live Dashboard startup,
-         *  if the server is not sending bundles the readings variable in the livedata store
-         *  will be undefined and the panel will be awaiting readings.
+         *  scrubber and returns a single item from the reading.
          *
          *  @param currentStepBuffer The step the scrubber is currently on.
          *  @param sensorId The unique ID of a sensor.
@@ -78,19 +76,15 @@ export default {
             const r = this.getReadings(currentStepBuffer)
 
             let value = '-'
-            try {
-                Object.entries(r).forEach(reading => {
-                    if (reading[0] === sensorId) {
-                        Object.entries(reading[1]).forEach(item => {
-                            if (item[0] === itemName) {
-                                value = item[1].toFixed(2)
-                            }
-                        })
-                    }
-                })
-            } catch (e) {
-                console.log('Awaiting sensor readings...')
-            }
+            Object.entries(r).forEach(reading => {
+                if (reading[0] === sensorId) {
+                    Object.entries(reading[1]).forEach(item => {
+                        if (item[0] === itemName) {
+                            value = item[1].toFixed(2)
+                        }
+                    })
+                }
+            })
 
             return value
         },
