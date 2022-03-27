@@ -50,29 +50,29 @@ export default {
          *  initial bundle num so that it increments from 0.
          */
         SETBUNDLENUM(state, value) {
-            const {n: bundle} = value
+            const {n: bundle_n} = value
 
             // Adjust bundleNum from initBundleNum to start scrubber at 0
-            state.bundleNum = bundle - state.initBundleNum
+            state.bundleNum = bundle_n - state.initBundleNum
         },
         /** Sets the readings object—a dict of sensors readings—sent by the backend with
          *  each sensor in the readings matching one in the sensorInfo object by ID.
          */
         SETREADINGS(state, value) {
-            const {n: bundle} = value
+            const {n: bundle_n} = value
             const {readings: r} = value
 
-            state.readings[bundle - state.initBundleNum] = r
+            state.readings[bundle_n - state.initBundleNum] = r
         },
         /** Sets the timestamp for each bundleNum 'n' and splitting it into a date and
          *  time dict—received with timestamp[n].date and timestamp[n].time.
          */
         SETTIMESTAMP(state, value) {
-            const {n: bundle} = value
+            const {n: bundle_n} = value
             const {timestamp: t} = value
 
             const dateTime = t.split(' ')
-            state.timestamp[bundle - state.initBundleNum] = {date: dateTime[0], time: dateTime[1]}
+            state.timestamp[bundle_n - state.initBundleNum] = {date: dateTime[0], time: dateTime[1]}
         },
         /** Sets the data bundles array, pushing all bundles—composed of bundleNum 'n',
          *  readings object, and timestamp—received by the client.
