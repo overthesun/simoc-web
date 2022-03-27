@@ -70,25 +70,25 @@ export default {
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
 
-            let stepTimer
+            // if the Dashboard is in live mode set the delay for the timer to 0
             if (this.getCurrentMode === 'live') {
-                stepTimer = new StepTimer(() => {
-                    // start timer immediately if in live mode and there is at least
-                    // 1 bundle in the maxStepBuffer indicating an available reading
-                    if (this.getMaxStepBuffer >= 1) {
-                        this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
-                    }
-                }, 0)
-            } else if (this.getCurrentMode === 'sim') {
-                stepTimer = new StepTimer(() => {
-                    // increment the step only if we have enough buffered steps
-                    // TODO check the number of steps requests so we can still
-                    // run simulations with a number of steps <= the limit
-                    if (this.getMaxStepBuffer >= 30) {
-                        this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
-                    }
-                }, this.getStepInterval)
+                this.SETSTEPINTERVAL(0)
             }
+
+            // the minimum number of buffered steps required to start the timer for the
+            // sim dashboard is 24 and for the live dashboard is 1
+            const minBufferedSteps = (this.getCurrentMode === 'sim') ? 24 : 1
+            // console.log('MINBUFFEREDSTEPS:', minBufferedSteps)
+            // console.log('STEPINTERVAL:', this.getStepInterval)
+
+            const stepTimer = new StepTimer(() => {
+                // increment the step only if we have enough buffered steps
+                // TODO check the number of steps requests so we can still
+                // run simulations with a number of steps <= the limit
+                if (this.getMaxStepBuffer >= minBufferedSteps) {
+                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
+                }
+            }, this.getStepInterval)
 
             this.SETTIMERID(stepTimer)
             this.STARTTIMER()
