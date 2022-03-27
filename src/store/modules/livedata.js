@@ -72,7 +72,10 @@ export default {
             const {timestamp: t} = value
 
             const dateTime = t.split(' ')
-            state.timestamp[bundle_n - state.initBundleNum] = {date: dateTime[0], time: dateTime[1]}
+            state.timestamp[bundle_n - state.initBundleNum] = {
+                date: dateTime[0],
+                time: dateTime[1].split('.')[0],
+            }
         },
         /** Sets the data bundles array, pushing all bundles—composed of bundleNum 'n',
          *  readings object, and timestamp—received by the client.

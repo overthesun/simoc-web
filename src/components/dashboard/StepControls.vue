@@ -36,7 +36,7 @@ export default {
             const time = this.getTimestamp(this.getCurrentStepBuffer)
 
             try {
-                return time.time.split('.')[0]
+                return time.time
             } catch (e) {
                 return '00:00:00'
             }
