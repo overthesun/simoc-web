@@ -162,43 +162,7 @@ export default {
         font-weight: 200;
     }
 
-    .live-timeline{
-        z-index:99;
-        appearance:none;
-        border-radius: 2px;
-        width: 70vw;
-        height: 4px;
-        outline:none;
-        background: transparent no-repeat;
-    }
-
-    .live-timeline:hover::-webkit-slider-thumb{
-        visibility: visible;
-    }
-
-    .live-timeline::-webkit-slider-thumb{
-        visibility: hidden;
-        appearance:none;
-        width: 8px;
-        height: 16px;
-        border-radius:25%;
-        background-color: #fc0303;
-    }
-
-    .live-timeline:hover::-moz-range-thumb{
-        visibility: visible;
-    }
-
-    .live-timeline::-moz-range-thumb{
-        visibility: hidden;
-        width: 16px;
-        height: 16px;
-        border-radius:50%;
-        background-color: #fc0303;
-        cursor:pointer;
-    }
-
-    .timeline{
+    .timeline, .live-timeline{
         z-index:99;
         appearance:none;
         border-radius: 2px;
@@ -209,7 +173,11 @@ export default {
         background-repeat:no-repeat;
     }
 
-    .timeline::-webkit-slider-thumb{
+    .live-timeline:hover::-webkit-slider-thumb, .live-timeline:hover::-moz-range-thumb{
+        visibility: visible;
+    }
+
+    .timeline::-webkit-slider-thumb, .live-timeline::-webkit-slider-thumb{
         appearance:none;
         width: 8px;
         height: 16px;
@@ -217,11 +185,21 @@ export default {
         background-color: #67e300;
     }
 
-    .timeline::-moz-range-thumb{
+    .live-timeline::-webkit-slider-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
+    }
+
+    .timeline::-moz-range-thumb, .live-timeline::-moz-range-thumb{
         width: 16px;
         height: 16px;
         border-radius:50%;
         background-color: #67e300;
         cursor:pointer;
+    }
+
+    .live-timeline::-moz-range-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
     }
 </style>
