@@ -19,6 +19,15 @@
 
 // Termination flag: Universally accessible point to check if the simulation has terminated.
 
+// isLive: Different from but applies only to live-mode, isLive variable determines which Timeline
+// visualization and buttons are available between the PlayButton and LiveButton components. If
+// true, a red Timeline is presented with the tag LIVE next to the PlayButton indicating the
+// Dashboard is live, else, a green Timeline appears with a circle button, PlayButton, replacing the
+// LIVE tag indicating the Timeline is not live. Note that when LiveButton is pressed, the Resume
+// button is replaced with the Pause button. This takes advantage of the getIsTimerRunning variable
+// above that is updated when the timer is running which is in the template of the PlayButton
+// component.
+
 // ACTIONS
 // ParseStep function is an async call to parse all data from a particular get_step response object.
 // It's setup as async so that it can continue to process get_step objects out of order as
@@ -49,7 +58,7 @@ export default {
         timerID: null,
         getStepsTimerID: null,
         isTimerRunning: false,
-        isLive: false,  // 'live' indicates a stepInterval of 0
+        isLive: false,  // live Dashboard variable, not "live mode"; if true change to live Timeline
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
