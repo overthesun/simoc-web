@@ -32,23 +32,27 @@ export default {
         nextStep() {
             this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
         },
+        /** Get the time at some step. When the live dashboard is initialized the time is undefined
+         *  before the server sends it a bundle. If it is undefined return a default time of
+         *  00:00:00. Note the nullish coalescing operator cannot be used else unhandled runtime
+         *  error is thrown using an undefined key. This method is used only in live mode.
+         *
+         *  @returns {string} The time from the bundle at some step.
+         */
         getTime() {
             const time = this.getTimestamp(this.getCurrentStepBuffer)
-
-            try {
-                return time.time
-            } catch (e) {
-                return '00:00:00'
-            }
+            return (time === undefined) ? '00:00:00' : time.time
         },
+        /** Get the date at some step. When the live dashboard is initialized the date is undefined
+         *  before the server sends it a bundle. If it is undefined return a default date of
+         *  0000-00-00. Note the nullish coalescing operator cannot be used else unhandled runtime
+         *  error is thrown using an undefined key. This method is used only in live mode.
+         *
+         *  @returns {string} The date from the bundle at some step.
+         */
         getDate() {
             const date = this.getTimestamp(this.getCurrentStepBuffer)
-
-            try {
-                return date.date
-            } catch (e) {
-                return '0000-00-00'
-            }
+            return (date === undefined) ? '0000-00-00' : date.date
         },
     },
 }
