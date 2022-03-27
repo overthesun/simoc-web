@@ -88,11 +88,11 @@ export default {
         /** Parses each bundle sent by the backend updating the livedata store by passing
          *  the entire object and destructuring it in the associated variable mutator.
          */
-        parseData({commit, getters}, bundle) {
-            console.log(bundle)
-            commit('SETDATABUNDLES', bundle)
+        parseData({commit, getters}, bundles) {
+            console.log(bundles)
+            commit('SETDATABUNDLES', bundles)
 
-            bundle.forEach(item => {
+            bundles.forEach(item => {
                 commit('SETREADINGS', item)
                 commit('SETTIMESTAMP', item)
                 commit('SETBUNDLENUM', item)
