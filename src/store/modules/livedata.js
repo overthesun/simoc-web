@@ -74,7 +74,7 @@ export default {
             const dateTime = t.split(' ')
             state.timestamp[bundle_n - state.initBundleNum] = {
                 date: dateTime[0],
-                time: dateTime[1].split('.')[0],
+                time: dateTime[1].split('.')[0],  // Remove milliseconds from time
             }
         },
         /** Sets the data bundles array, pushing all bundles—composed of bundleNum 'n',
