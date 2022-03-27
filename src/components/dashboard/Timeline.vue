@@ -11,7 +11,8 @@
                             #d0d0d0 '+ bufferPercentage +'%, \
                             #444343 ' + bufferPercentage + '%, \
                             #444343 100%)'}"
-                   class="live-timeline" type="range" disabled>
+                   class="live-timeline" type="range"
+                   @input="pauseBuffer" @change="updateBuffer">
         </span>
     </div>
     <!-- Timeline visualization for step mode -->
@@ -61,7 +62,7 @@ export default {
         this.startTimer()
     },
     methods: {
-        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
+        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER', 'SETISLIVE',
                                       'STOPTIMER', 'UPDATEBUFFERCURRENT', 'SETSTEPINTERVAL']),
 
         startTimer() {
@@ -119,9 +120,10 @@ export default {
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
-                // If in live-mode and not live (i.e. not retrieving the latest readings),
-                // ensure the interval is set to 1000 ms after the user releases the slider.
+                // If in live-mode set to "not live" (i.e. not retrieving the latest readings),
+                // and ensure the interval is set to 1000 ms after the user releases the slider.
                 if (this.getCurrentMode === 'live') {
+                    this.SETISLIVE(false)
                     this.SETSTEPINTERVAL(1000)
                 }
                 this.STARTTIMER()
@@ -170,12 +172,30 @@ export default {
         background: transparent no-repeat;
     }
 
+    .live-timeline:hover::-webkit-slider-thumb{
+        visibility: visible;
+    }
+
     .live-timeline::-webkit-slider-thumb{
         visibility: hidden;
+        appearance:none;
+        width: 8px;
+        height: 16px;
+        border-radius:25%;
+        background-color: #fc0303;
+    }
+
+    .live-timeline:hover::-moz-range-thumb{
+        visibility: visible;
     }
 
     .live-timeline::-moz-range-thumb{
         visibility: hidden;
+        width: 16px;
+        height: 16px;
+        border-radius:50%;
+        background-color: #fc0303;
+        cursor:pointer;
     }
 
     .timeline{
