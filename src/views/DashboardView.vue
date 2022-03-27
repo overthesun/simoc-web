@@ -36,7 +36,7 @@ export default {
                 // check that we have values in the buffer to avoid pausing
                 // the timer when current/max are set to 0 at the beginning
                 if ((this.getMaxStepBuffer > 1) &&
-                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
+                    (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
                     this.PAUSETIMER()
                 }
             }
