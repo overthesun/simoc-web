@@ -12,9 +12,7 @@ future dashboard views
         </section>
         <section id="footer-wrapper">
             <!-- Live button is made available on the live Dashboard -->
-            <div v-if="getCurrentMode === 'live'">
-                <LiveButton />
-            </div>
+            <LiveButton v-if="getCurrentMode === 'live'" />
             <PlayButton />
             <Timeline />
             <StepControls />
