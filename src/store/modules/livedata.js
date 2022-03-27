@@ -44,9 +44,7 @@ export default {
          *  that did or are currently receiving readings on the backend.
          */
         SETSENSORINFO(state, value) {
-            // TODO: Make this a growing object that merges new sensors onto a list
-            //  of existing sensors
-            state.sensorInfo = value
+            Object.assign(state.sensorInfo, value)
         },
         /** Sets the bundleNum 'n' (called 'stepNum' in sim-mode) adjusted using the
          *  initial bundle num so that it increments from 0.
