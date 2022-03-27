@@ -1,7 +1,7 @@
 <template>
     <section class="panel-dl-wrapper">
         <template v-if="getDataBundles.length === 0">
-            <div class="no-data"> [Awaiting data...] </div>
+            <div class="no-data">[Awaiting data...]</div>
         </template>
         <template v-else>
             <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
