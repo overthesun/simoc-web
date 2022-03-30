@@ -114,27 +114,25 @@ export default {
     background: linear-gradient(#444, #333);
 }
 
-#dashboard-live-icon span {
-    font-size: 22px;
-    width: 36px;
-    height: 36px;
-}
-
-#dashboard-live-icon span:hover {
-    font-size: 24px;
-}
-
-#dashboard-live-text span {
+#dashboard-live-text div {
     margin-left: 6px;
     font-size: 14px;
+    cursor: default;
 }
 
-#dashboard-play-icon span {
+#dashboard-play-icon span, #dashboard-live-icon span {
     font-size: 24px;
     width: 36px;
     height: 36px;
 }
-#dashboard-play-icon span:hover {
+
+#dashboard-live-circle {
+    font-size: 6px;
+    transform: translateY(-50%);
+    color: #fc0303;
+}
+
+#dashboard-play-icon span:hover, #dashboard-live-icon span:hover {
     font-size: 26px;
 }
 #speed-controls,
