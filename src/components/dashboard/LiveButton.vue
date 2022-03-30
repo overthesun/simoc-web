@@ -2,7 +2,7 @@
 
 <template>
     <div v-if="getIsLive" id="dashboard-live-text">
-        <span> LIVE </span>
+        <div><fa-icon id="dashboard-live-circle" :icon="['fas','circle']" class="fa-icon" /> LIVE</div>
     </div>
     <div v-else id="dashboard-live-icon">
         <span title="Live" @click="goLive">
