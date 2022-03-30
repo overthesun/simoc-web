@@ -5,8 +5,8 @@
         <div><fa-icon id="dashboard-live-circle" :icon="['fas','circle']" class="fa-icon" /> LIVE</div>
     </div>
     <div v-else id="dashboard-live-icon">
-        <span title="Live" @click="goLive">
-            <fa-icon :icon="['fas','circle']" class="fa-icon" />
+        <span title="Go Live" @click="goLive">
+            <fa-icon :icon="['fas','dot-circle']" class="fa-icon" />
         </span>
     </div>
 </template>
