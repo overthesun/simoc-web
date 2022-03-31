@@ -2,11 +2,13 @@
 
 <template>
     <div id="step-controls">
-        <!-- Looks like: |< 25/100 >| -->
+        <!-- Looks like (sim mode): |< 25/100 >| -->
+        <!-- Looks like: (live mode): |< 5|12:37:28 >| -->
         <span class="icon-wrapper" title="Previous step" @click="prevStep">
             <fa-icon :icon="['fas','step-backward']" class="fa-icon" />
         </span>
-        <span>{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
+        <span v-if="getCurrentMode === 'sim'">{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
+        <span v-if="getCurrentMode === 'live'">{{getCurrentStepBuffer}}|{{getTime()}}</span>
         <span class="icon-wrapper" title="Next step" @click="nextStep">
             <fa-icon :icon="['fas','step-forward']" class="fa-icon" />
         </span>
@@ -18,7 +20,8 @@ import {mapGetters, mapMutations} from 'vuex'
 
 export default {
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
+        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getCurrentMode']),
+        ...mapGetters('livedata', ['getTimestamp']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {
@@ -28,6 +31,28 @@ export default {
         },
         nextStep() {
             this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
+        },
+        /** Get the time at some step. When the live dashboard is initialized the time is undefined
+         *  before the server sends it a bundle. If it is undefined return a default time of
+         *  00:00:00. Note the nullish coalescing operator cannot be used else unhandled runtime
+         *  error is thrown using an undefined key. This method is used only in live mode.
+         *
+         *  @returns {string} The time from the bundle at some step.
+         */
+        getTime() {
+            const time = this.getTimestamp(this.getCurrentStepBuffer)
+            return (time === undefined) ? '00:00:00' : time.time
+        },
+        /** Get the date at some step. When the live dashboard is initialized the date is undefined
+         *  before the server sends it a bundle. If it is undefined return a default date of
+         *  0000-00-00. Note the nullish coalescing operator cannot be used else unhandled runtime
+         *  error is thrown using an undefined key. This method is used only in live mode.
+         *
+         *  @returns {string} The date from the bundle at some step.
+         */
+        getDate() {
+            const date = this.getTimestamp(this.getCurrentStepBuffer)
+            return (date === undefined) ? '0000-00-00' : date.date
         },
     },
 }

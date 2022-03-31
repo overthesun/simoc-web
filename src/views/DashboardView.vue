@@ -21,7 +21,8 @@ export default {
         // getters from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
-                                    'getMaxStepBuffer', 'getLoadFromSimData']),
+                                    'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
+        ...mapGetters('livedata', ['getBundleNum', 'getInitBundleNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -30,11 +31,14 @@ export default {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
         getCurrentStepBuffer() {
-            // check that we have values in the buffer to avoid pausing
-            // the timer when current/max are set to 0 at the beginning
-            if ((this.getMaxStepBuffer > 1) &&
-                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
-                this.PAUSETIMER()
+            // pause timer only for sim mode
+            if (this.getCurrentMode === 'sim') {
+                // check that we have values in the buffer to avoid pausing
+                // the timer when current/max are set to 0 at the beginning
+                if ((this.getMaxStepBuffer > 1) &&
+                    (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
+                    this.PAUSETIMER()
+                }
             }
         },
         getStopped() {
@@ -71,9 +75,17 @@ export default {
         this.request_sent = false  // true if we already sent a req to get_steps
         this.tearDownWebSocket()
 
+        if (this.getCurrentMode === 'live') {
+            console.log('Starting live dashboard')
+
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
+            this.SETINITBUNDLENUM(null) // Reset initBundleNum to null
+
+            this.setupLiveWebsocket()
+
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
-        if (!this.getLoadFromSimData) {
+        } else if (!this.getLoadFromSimData) {
             this.SETBUFFERMAX(0)  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
             this.INITGAME(this.getGameID)
@@ -124,9 +136,15 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
+        ...mapMutations('livedata', ['SETSENSORINFO', 'SETINITBUNDLENUM']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
+        // Increment the duration of the mission based on the step number
+        ...mapActions('wizard', ['SETLIVECONFIG']),
+        // parseData Action parses the sensor data sent from the simoc-sam.
+        // See store/modules/livedata.js
+        ...mapActions('livedata', ['parseData']),
 
         setupWebsocket() {
             const socket = io()
@@ -164,6 +182,58 @@ export default {
             })
             socket.on('disconnect', msg => {
                 console.log('Websocket disconnected')
+            })
+        },
+        // This method opens a websocket and keeps it open until a user navigates
+        // away from the dashboard. This method is called if current mode is 'live'.
+        setupLiveWebsocket() {
+            // Connect to the simoc-sam SocketIO Server
+            const socket = io(`http://${window.location.hostname}:8081`)
+
+            this.socket = socket
+            console.log('Live socket created:', this.socket)
+
+            socket.on('connect', msg => {
+                console.log('Connected to server')
+                console.log('Registering client')
+
+                this.socket.emit('register-client')
+            })
+            socket.on('hab-info', config => {
+                console.log('Received habitat info:', config)
+                console.log('Requesting step data')
+            })
+            socket.on('sensor-info', info => {
+                console.log('Received sensor info:', info)
+                this.SETSENSORINFO(info)
+
+                console.log('Requesting step data')
+                this.socket.emit('send-step-data')
+            })
+            socket.on('step-batch', data => {
+                console.log(`Received a bundle from the server:`)
+
+                // If initBundleNum is null set it to the first n sent in the bundle of data.
+                // This indicates that a client has made an initial connection to the live dashboard.
+                if (this.getInitBundleNum === null) {
+                    console.log(`Initial bundle_num: ${data[0].n}`)
+                    this.SETINITBUNDLENUM(data[0].n)
+                }
+
+                // Send bundle to parseData in the livedata store for parsing
+                this.parseData(data)
+
+                this.SETLIVECONFIG({duration: {amount: this.getBundleNum}})  // Sets the totalMissionHours
+                this.SETBUFFERMAX(this.getBundleNum)
+            })
+            socket.on('disconnect', msg => {
+                console.log('Server disconnected')
+                this.SETINITBUNDLENUM(null)
+
+                this.SETBUFFERCURRENT(0)
+                this.SETBUFFERMAX(0)
+
+                this.SETMINSTEPNUMBER(0)
             })
         },
 

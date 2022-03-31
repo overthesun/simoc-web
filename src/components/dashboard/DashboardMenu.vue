@@ -80,11 +80,11 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.getActivePanels)
-            localStorage.setItem('panels-layout', panelsLayout)
+            localStorage.setItem(`panels-layout-${this.getCurrentMode}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            localStorage.removeItem('panels-layout')
+            localStorage.removeItem(`panels-layout-${this.getCurrentMode}`)
             this.SETDEFAULTPANELS(this.getCurrentMode)
         },
         // Logout button route

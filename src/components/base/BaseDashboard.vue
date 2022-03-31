@@ -11,6 +11,8 @@ future dashboard views
             <Main />
         </section>
         <section id="footer-wrapper">
+            <!-- Live button is made available on the live Dashboard -->
+            <LiveButton v-if="getCurrentMode === 'live'" />
             <PlayButton />
             <Timeline />
             <StepControls />
@@ -21,7 +23,7 @@ future dashboard views
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Timeline, PlayButton, StepControls,
+import {Timeline, LiveButton, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
 
@@ -29,6 +31,7 @@ export default {
     components: {
         TheTopBar,
         DashboardMenu,
+        LiveButton,
         PlayButton,
         Timeline,
         StepControls,
@@ -67,7 +70,7 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
-                                    'getIsTimerRunning']),
+                                    'getIsTimerRunning', 'getCurrentMode']),
         ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
     },
     watch: {
@@ -111,12 +114,25 @@ export default {
     background: linear-gradient(#444, #333);
 }
 
-#dashboard-play-icon span {
+#dashboard-live-text div {
+    margin-left: 6px;
+    font-size: 14px;
+    cursor: default;
+}
+
+#dashboard-play-icon span, #dashboard-live-icon span {
     font-size: 24px;
     width: 36px;
     height: 36px;
 }
-#dashboard-play-icon span:hover {
+
+#dashboard-live-circle {
+    font-size: 6px;
+    transform: translateY(-50%);
+    color: #fc0303;
+}
+
+#dashboard-play-icon span:hover, #dashboard-live-icon span:hover {
     font-size: 26px;
 }
 #speed-controls,

@@ -13,6 +13,8 @@
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
+                <button :class="{'hidden': !showSensorMode}" form="login-form" class="btn-normal"
+                        @click="toLiveDashboard">LIVE MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
@@ -38,6 +40,7 @@ export default {
     data() {
         return {
             showAgentEditor: false,
+            showSensorMode: false,
         }
     },
     mounted() {
@@ -48,9 +51,9 @@ export default {
     },
     methods: {
         ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETCURRENTMODE']),
+                                      'SETCURRENTMODE', 'SETPARAMETERS', 'SETISLIVE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
+        ...mapActions('wizard', ['SETCONFIGURATION', 'SETLIVECONFIG']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
@@ -63,6 +66,20 @@ export default {
         toAce() {
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('ace')
+        },
+        /** Routes the user to the live Dashboard. The minimum configuration required for any
+         *  Dashboard instance to open without error is the min_step_num and a duration object
+         *  composed of an 'amount' key-value pairing. Both of these values can be 0, but the
+         *  wizard store parses those two keys. Note that in sim mode these key-values are set in
+         *  the Configuration Menu which is rendered after the user selects New Configuration in
+         *  this Menu, but in live mode that menu is bypassed and they must be manually set here
+         *  before the Dashboard components can be rendered.
+         */
+        toLiveDashboard() {
+            this.SETCURRENTMODE('live')  // set 'live' mode
+            this.SETPARAMETERS({min_step_num: 0})  // create min_step_num parameter
+            this.SETLIVECONFIG({duration: {amount: 0}})  // set duration in wizard store
+            this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
@@ -88,6 +105,7 @@ export default {
                 return
             }
             this.SETCURRENTMODE('sim')
+            this.SETISLIVE(false)
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
@@ -105,6 +123,8 @@ export default {
         keyListener(e) {
             if (e.ctrlKey && e.key === 'a') {
                 this.showAgentEditor = true
+            } else if (e.ctrlKey && e.key === 's') {
+                this.showSensorMode = true
             }
         },
     },

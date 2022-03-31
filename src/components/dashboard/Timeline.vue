@@ -1,7 +1,22 @@
 <!-- Timeline component -->
 
 <template>
-    <div class="timeline-wrapper">
+    <!-- Timeline visualization for live mode -->
+    <div v-if="getIsLive" class="timeline-wrapper">
+        <span class="timeline-item">
+            <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
+                   :style="{'background-image': 'linear-gradient(to right, #fc0303 0%, \
+                            #fc0303 ' + currentPercentage + '%, \
+                            #d0d0d0 ' + currentPercentage +'%, \
+                            #d0d0d0 '+ bufferPercentage +'%, \
+                            #444343 ' + bufferPercentage + '%, \
+                            #444343 100%)'}"
+                   class="live-timeline" type="range"
+                   @input="pauseBuffer" @change="updateBuffer">
+        </span>
+    </div>
+    <!-- Timeline visualization for step mode -->
+    <div v-else class="timeline-wrapper">
         <span class="timeline-item">
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
@@ -32,7 +47,8 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
-                                    'getIsTimerRunning', 'getStepInterval']),
+                                    'getIsTimerRunning', 'getStepInterval', 'getCurrentMode',
+                                    'getIsLive']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     watch: {
@@ -46,21 +62,34 @@ export default {
         this.startTimer()
     },
     methods: {
-        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
-                                      'STOPTIMER', 'UPDATEBUFFERCURRENT']),
+        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER', 'SETISLIVE',
+                                      'STOPTIMER', 'UPDATEBUFFERCURRENT', 'SETSTEPINTERVAL']),
 
         startTimer() {
             // initialize and return the step timer that updates the
             // current step and triggers watches that update the panels
             this.STOPTIMER()  // if a timer exists already, stop it
+
+            // if the Dashboard is in live mode set the delay for the timer to 0
+            if (this.getCurrentMode === 'live') {
+                this.SETSTEPINTERVAL(0)
+            }
+
+            // the minimum number of buffered steps required to start the timer for the
+            // sim dashboard is 24 and for the live dashboard is 1
+            const minBufferedSteps = (this.getCurrentMode === 'sim') ? 24 : 1
+            // console.log('MINBUFFEREDSTEPS:', minBufferedSteps)
+            // console.log('STEPINTERVAL:', this.getStepInterval)
+
             const stepTimer = new StepTimer(() => {
                 // increment the step only if we have enough buffered steps
                 // TODO check the number of steps requests so we can still
                 // run simulations with a number of steps <= the limit
-                if (this.getMaxStepBuffer >= 30) {
+                if (this.getMaxStepBuffer >= minBufferedSteps) {
                     this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
                 }
             }, this.getStepInterval)
+
             this.SETTIMERID(stepTimer)
             this.STARTTIMER()
             return stepTimer
@@ -91,7 +120,13 @@ export default {
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
-                this.startTimer()
+                // If in live-mode set to "not live" (i.e. not retrieving the latest readings),
+                // and ensure the interval is set to 1000 ms after the user releases the slider.
+                if (this.getCurrentMode === 'live') {
+                    this.SETISLIVE(false)
+                    this.SETSTEPINTERVAL(1000)
+                }
+                this.STARTTIMER()
             }
         },
 
@@ -127,7 +162,7 @@ export default {
         font-weight: 200;
     }
 
-    .timeline{
+    .timeline, .live-timeline{
         z-index:99;
         appearance:none;
         border-radius: 2px;
@@ -138,7 +173,11 @@ export default {
         background-repeat:no-repeat;
     }
 
-    .timeline::-webkit-slider-thumb{
+    .live-timeline:hover::-webkit-slider-thumb, .live-timeline:hover::-moz-range-thumb{
+        visibility: visible;
+    }
+
+    .timeline::-webkit-slider-thumb, .live-timeline::-webkit-slider-thumb{
         appearance:none;
         width: 8px;
         height: 16px;
@@ -146,11 +185,21 @@ export default {
         background-color: #67e300;
     }
 
-    .timeline::-moz-range-thumb{
+    .live-timeline::-webkit-slider-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
+    }
+
+    .timeline::-moz-range-thumb, .live-timeline::-moz-range-thumb{
         width: 16px;
         height: 16px;
         border-radius:50%;
         background-color: #67e300;
         cursor:pointer;
+    }
+
+    .live-timeline::-moz-range-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
     }
 </style>
