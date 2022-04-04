@@ -1,19 +1,22 @@
 <template>
-    <section class="panel-dl-wrapper">
-        <template v-if="getDataBundles.length === 0">
-            <div class="no-data">[Awaiting data...]</div>
-        </template>
-        <template v-else />
-    </section>
+    <div class="panel-graph">
+        <div>
+            <AveragesGraph :id="'line-chart-co2'" :plotted-value="'x'" :unit="'ppm'" />
+        </div>
+    </div>
 </template>
 
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {AveragesGraph} from '../graphs'
 
 export default {
     panelTitle: 'Atmospheric CO2',
     modes: ['live'],
+    components: {
+        AveragesGraph,
+    },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
         ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
