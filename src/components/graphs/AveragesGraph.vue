@@ -121,19 +121,25 @@ export default {
         updateChart() {
             const currentStep = this.getCurrentStepBuffer
             const {data} = this.chart
+            // if the currentStep is not prevStep + 1 (e.g. when the user moved the scrubber)
+            // we need to redraw the previous 10 steps, otherwise we just add one step
             let startingStep
             if (currentStep !== this.prevStep+1) {
                 startingStep = currentStep - 10
             } else {
                 startingStep = currentStep
             }
+            // this will do 1 or 10 iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
+                // remove the oldest values
                 data.datasets[0].data.shift()
                 data.labels.shift()
                 if (step > 0) {
                     data.datasets[0].data.push()
                     data.labels.push(step)
                 } else {
+                    // for steps <= 0 use undefined as values and '' as labels
+                    // so that the plot still has 10 total items and is not stretched
                     data.datasets[0].data.push(undefined)
                     data.labels.push('')
                 }
