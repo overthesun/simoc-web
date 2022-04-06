@@ -124,10 +124,10 @@ export default {
             // if the currentStep is not prevStep + 1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 10 steps, otherwise we just add one step
             let startingStep
-            if (currentStep !== this.prevStep+1) {
-                startingStep = currentStep - 10
+            if (currentStep !== this.prevStep + 1) {
+                startingStep = currentStep - 10  // replace all 10 values
             } else {
-                startingStep = currentStep
+                startingStep = currentStep  // add the latest value
             }
             // this will do 1 or 10 iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
