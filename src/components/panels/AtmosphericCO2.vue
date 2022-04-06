@@ -16,6 +16,7 @@
     </div>
 </template>
 
+
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {AveragesGraph} from '../graphs'
@@ -26,12 +27,35 @@ export default {
     components: {
         AveragesGraph,
     },
-    computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
+    props: {
+        canvasNumber: {type: Number, required: true},
+        // these are passed by dashboard/Main.vue and
+        // determine the panel index and the selected graph
+        panelIndex: {type: Number, required: true},
+        panelSection: {type: String, default: null},
     },
-    methods: {
-
+    emits: ['panel-section-changed'],
+    data() {
+        return {
+            // default on 'crew_quarters' and 'co2_ppm'
+            // (e.g. when using "Change panel")
+            location: this.panelSection ?? 'crew_quarters',
+            unit: this.panelSection ?? 'co2_ppm',
+        }
+    },
+    computed: {
+        ...mapGetters('dashboard', ['getActivePanels']),
+    },
+    watch: {
+        location() {
+            // tell dashboard/Main.vue that we changed panel section,
+            // so that it can update the list of activePanels
+            this.$emit('panel-section-changed', this.panelIndex, this.location)
+        },
+        getActivePanels() {
+            // update section when the user clicks on the reset panels button of the dashboard menu
+            this.location = this.getActivePanels[this.panelIndex].split(':')[1]
+        },
     },
 }
 </script>
