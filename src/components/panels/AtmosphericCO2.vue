@@ -61,6 +61,25 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
+.panel-graph {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
 
+.panel-graph select {
+    width: 50%;
+}
+
+.graph-units select {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 15%;
+}
+
+.panel-graph select + div {
+    /* see https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 */
+    min-width: 0;
+    min-height: 0;
+}
 </style>
