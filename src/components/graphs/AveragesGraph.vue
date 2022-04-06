@@ -135,7 +135,10 @@ export default {
                 data.datasets[0].data.shift()
                 data.labels.shift()
                 if (step > 0) {
-                    data.datasets[0].data.push()
+                    // TODO: Create function that returns the average CO2 of all sensors.
+                    const average = Math.random() * 1000
+                    // add the new values
+                    data.datasets[0].data.push(average)
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
