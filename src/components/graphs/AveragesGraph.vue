@@ -30,16 +30,17 @@ export default {
     },
 
     computed: {
-
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
         ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
     },
 
     watch: {
+        // update the chart datasets and labels
+        // when the current step buffer changes
         getCurrentStepBuffer() {
             this.updateChart()
         },
-
+        // re-init the chart when we plot something else
         plottedValue() {
             this.initChart()
         },
