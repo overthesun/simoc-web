@@ -56,12 +56,15 @@ export default {
     methods: {
         initChart() {
             if (this.chart) {
+                // when switching chart we have to destroy
+                // the old one before reusing the same canvas
                 this.chart.destroy()
             }
             const canvas = document.getElementById(this.id)
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
+                    // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(10).fill(''),
                     datasets: [
                         {
