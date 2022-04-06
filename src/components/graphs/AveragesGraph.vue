@@ -85,18 +85,17 @@ export default {
                                 beginAtZero: true,
                                 callback: (value, index, values) => `${value}`,
                             },
-                            yAxisID: 'ppm',
                         }],
                         xAxes: [{
                             ticks: {
                                 beginAtZero: true,
                             },
-                            xAxisID: 'n',
                         }],
                     },
                     legend: {
                         display: true,
                         position: 'bottom',
+                        // https://stackoverflow.com/a/50450646
                         labels: {usePointStyle: true},
                     },
                     animation: {
