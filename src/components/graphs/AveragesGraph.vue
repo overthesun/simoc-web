@@ -66,11 +66,12 @@ export default {
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(10).fill(''),
+                    // TODO: Create total number of datasets equal to total number of CO2 sensors
                     datasets: [
                         {
                             lineTension: 0,
                             data: Array(10),
-                            label: 'SCD-30',
+                            label: 'Average',
                             borderColor: '#ff7729',
                             fill: false,
                             pointStyle: 'line',
@@ -104,7 +105,7 @@ export default {
                     },
                     title: {
                         display: false,
-                        text: 'CO2 Averages',
+                        text: '(Average) Atmospheric CO2',
                     },
 
                     defaultFontColor: '#1e1e1e',
