@@ -44,6 +44,9 @@ export default {
         plottedValue() {
             this.initChart()
         },
+        unit() {
+
+        },
     },
 
     mounted() {
