@@ -9,17 +9,18 @@ RUN apt-get update && \
     curl \
     wget \
     inetutils-ping \
-    npm
+    npm && \
+    if [ $(dpkg --print-architecture) = 'arm64' ]; then \
+        npm uninstall node-sass && \
+        npm install sass &&  \
+        rm -rf node_modules/node-sass/ && \
+        mv node_modules/sass node_modules/node-sass \
+    fi
 
 WORKDIR /frontend
 
 # COPY . ./
 # RUN npm install --global
-
-RUN npm uninstall node-sass && \
-	npm install sass &&  \
-	rm -rf node_modules/node-sass/ && \
-	mv node_modules/sass node_modules/node-sass
 
 EXPOSE 8080
 
