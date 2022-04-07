@@ -14,7 +14,7 @@ RUN apt-get update && \
         npm uninstall node-sass && \
         npm install sass &&  \
         rm -rf node_modules/node-sass/ && \
-        mv node_modules/sass node_modules/node-sass \
+        mv node_modules/sass node_modules/node-sass; \
     fi
 
 WORKDIR /frontend
