@@ -152,6 +152,9 @@ export default {
             this.chart.update()
             this.prevStep = currentStep
         },
+        calculateAverage() {
+            this.average = Math.random() * 1000
+        },
     },
 }
 </script>
