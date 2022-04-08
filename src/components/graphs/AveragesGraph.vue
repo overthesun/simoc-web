@@ -27,6 +27,7 @@ export default {
     data() {
         return {
             prevStep: 0,
+            average: 0,
         }
     },
 
