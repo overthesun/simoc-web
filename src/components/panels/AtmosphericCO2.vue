@@ -5,7 +5,8 @@
             <!-- <option :selected="location === 'greenhouse'" value="greenhouse">Greenhouse</option>-->
         </select>
         <div>
-            <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location" :unit="unit" />
+            <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
+                           :currency="'co2'" :unit="unit" />
         </div>
         <div class="graph-units">
             <select v-model="unit" required>
