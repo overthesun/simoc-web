@@ -152,7 +152,18 @@ export default {
             this.prevStep = currentStep
         },
         calculateAverage() {
-            this.average = Math.random() * 1000
+            const r = this.getReadings(this.getCurrentStepBuffer)
+
+            let average = 0
+            let numActiveSensors = 0
+            Object.entries(this.getSensorInfo).forEach(([key, value]) => {
+                if (r[key]) {
+                    numActiveSensors += 1
+                    average += r[key][this.currency]
+                }
+            })
+
+            this.average = average / numActiveSensors
         },
     },
 }
