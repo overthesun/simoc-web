@@ -37,9 +37,10 @@ export default {
     },
 
     watch: {
-        // update the chart datasets and labels
-        // when the current step buffer changes
+        // calculate the average for the panel currency then update the chart datasets
+        // and labels when the current step buffer changes
         getCurrentStepBuffer() {
+            this.calculateAverage()
             this.updateChart()
         },
         // re-init the chart when we plot something else
