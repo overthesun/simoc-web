@@ -21,6 +21,7 @@ export default {
     props: {
         id: {type: String, required: true},
         plottedValue: {type: String, required: true},
+        currency: {type: String, required: true},
         unit: {type: String, required: true},
     },
     data() {
