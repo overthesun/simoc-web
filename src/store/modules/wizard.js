@@ -76,8 +76,8 @@ function get_presets() {
             food: {type: 'food_storage', amount: 1200, units: 'kg'},
             crewQuarters: {type: 'crew_habitat_medium', amount: 1, units: ''},
             eclss: {type: 'eclss', amount: 1, units: ''},
-            powerGeneration: {type: 'solar_pv_array_mars', amount: 400, units: ''},
-            powerStorage: {type: 'power_storage', amount: 2000, units: 'kWh'},
+            powerGeneration: {type: 'solar_pv_array_mars', amount: 300, units: ''},
+            powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
             greenhouse: {type: 'greenhouse_small', amount: 1, units: ''},
             plantSpecies: [
                 {type: 'wheat', amount: 20},

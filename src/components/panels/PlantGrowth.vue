@@ -4,7 +4,7 @@
             <tr>
                 <th>Plant Species</th>
                 <th>Qty</th>
-                <th>% of Growth</th>
+                <th title="Based on expected growth at earth-normal growing conditions. Other factors (e.g. CO2 concentrations > 350ppm) may cause actual growth to be greater than 100%.">% of Growth</th>
             </tr>
             <tr v-for="(item, index) in getPlants" :key="index">
                 <td>{{stringFormatter(item.type)}}</td>
