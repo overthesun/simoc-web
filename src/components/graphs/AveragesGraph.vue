@@ -87,7 +87,7 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => `${value}`,
+                                callback: (value, index, values) => `${value}${this.unit}`,
                             },
                         }],
                         xAxes: [{
