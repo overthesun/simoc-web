@@ -6,13 +6,7 @@
         </select>
         <div>
             <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
-                           :currency="'co2'" :unit="unit" />
-        </div>
-        <div class="graph-units">
-            <select v-model="unit" required>
-                <option :selected="unit === 'co2_ppm'" value="co2_ppm">ppm</option>
-                <!-- <option :selected="unit === 'co2_ccm'" value="co2_ccm">ccm</option>-->
-            </select>
+                           :currency="'co2'" :color="'#e6194b'" :unit="' ppm'" />
         </div>
     </div>
 </template>
@@ -41,7 +35,6 @@ export default {
             // default on 'crew_quarters' and 'co2_ppm'
             // (e.g. when using "Change panel")
             location: this.panelSection ?? 'crew_quarters',
-            unit: this.panelSection ?? 'co2_ppm',
         }
     },
     computed: {
@@ -70,12 +63,6 @@ export default {
 
 .panel-graph select {
     width: 50%;
-}
-
-.graph-units select {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    width: 15%;
 }
 
 .panel-graph select + div {
