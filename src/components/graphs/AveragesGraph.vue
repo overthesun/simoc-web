@@ -22,6 +22,7 @@ export default {
         id: {type: String, required: true},
         plottedValue: {type: String, required: true},
         currency: {type: String, required: true},
+        color: {type: String, required: true},
         unit: {type: String, required: true},
     },
     data() {
@@ -75,7 +76,7 @@ export default {
                             lineTension: 0,
                             data: Array(10),
                             label: 'Average',
-                            borderColor: '#ff7729',
+                            borderColor: this.color,
                             fill: false,
                             pointStyle: 'line',
                         },
