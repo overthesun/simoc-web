@@ -8,7 +8,7 @@
                 </div>
                 <dl>
                     <template v-for="(value, name) in stor_values" :key="`tmpl_${name}`">
-                        <dt v-if='name == "co2"' title='CO2 exchanges to/from storage are recorded as both production and consumption'>{{label2name(name)}}</dt>
+                        <dt v-if="name == 'co2'" title="CO2 exchanges to/from storage are recorded as both production and consumption">{{label2name(name)}}</dt>
                         <dt v-else>{{label2name(name)}}</dt>
                         <dd>{{value.value}} {{value.unit}}</dd>
                     </template>
