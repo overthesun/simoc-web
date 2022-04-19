@@ -1,6 +1,7 @@
 This Readme assumes you have already built and are running the Simoc (Backend) docker containers
 and you are running sioserver from simoc-sam (SAM) as well as the sensors. See the readme's in those
-directories first.
+directories first. Also, make sure the SCD-30 is plugged into the MCP-2221, which is plugged into your USB C
+to USB A cable and plugged into the Raspberry Pi.
 
 Once SAM and BACK are running, to run WEB:
 
@@ -16,6 +17,20 @@ npm run serve
 5. Then open the web browser and choose SIMOC from the bookmarks bar (or type localhost:8080 into the browser)
 SIMOC should load in.
 
+6. Then choose PROCEED on the SIMOC page
+7. Next choose Sign in as a Guest
+8. Next choose Sign in as a Guest
+9. Press Ctrl+S on the keyboard, a menu to SAVE FILE will pop up. 
+10. Hit the x in the upper right corner
+11. Choose Live Mode
+12. Click the hamburger (3 lines) in the upper right of the "Sensors" panel.
+13. Choose Add Panel
+14. Choose Select Panel
+15. Choose Relative Humidity
+16. Now all the sensor are running on the scd-30 and the live graphs are displaying, try breathing on the sensor
+to observe changes.
+
+========== BUILDING ===========
 If not, it needs to be built. In that case press ctrl+C a few times and then when it comes back to FrontEnd# 
 type "exit" and press enter.
 
@@ -37,3 +52,16 @@ SIMOC should load in.
 
 5. Then open the web browser and choose SIMOC from the bookmarks bar (or type localhost:8080 into the browser)
 SIMOC should load in.
+
+6. Then choose PROCEED on the SIMOC page
+7. Next choose Sign in as a Guest
+8. Next choose Sign in as a Guest
+9. Press Ctrl+S on the keyboard, a menu to SAVE FILE will pop up. 
+10. Hit the x in the upper right corner
+11. Choose Live Mode
+12. Click the hamburger (3 lines) in the upper right of the "Sensors" panel.
+13. Choose Add Panel
+14. Choose Select Panel
+15. Choose Relative Humidity
+16. Now all the sensor are running on the scd-30 and the live graphs are displaying, try breathing on the sensor
+to observe changes.
