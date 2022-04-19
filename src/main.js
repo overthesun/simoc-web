@@ -1,5 +1,5 @@
 import {createApp} from 'vue'
-import VueGtag, {trackRouter} from 'vue-gtag-next'
+import VueGtag from 'vue-gtag-next'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
@@ -14,26 +14,15 @@ library.add(faPlay, faPause, faStepBackward, faStepForward, faMinus, faPlus, faT
             faBars, faArrowLeft, faArrowRight, faInfoCircle, faListUl, faCircle, faDotCircle,
             faPlusCircle, faMale, faTrash)
 
-// Gtag/Analytics tracking
-// Beta and NGS have two different tracking ids
-// Tracking is only active in production mode
-let tracking_id = null
-if (window.location.hostname.startsWith('beta')) {
-    tracking_id = 'UA-29092818-7'  // beta id
-} else {
-    tracking_id = 'UA-29092818-6'  // NGS id
-}
-
 createApp(App)
         .use(router)
         .use(store)
         .use(VueGtag, {
-            isEnabled: process.env.NODE_ENV === 'production',
-            property: {id: tracking_id},
-        })
+            // enable Gtag/Analytics tracking
+            // remember to use the right code for each branch
+            config: {id: 'UA-29092818-6'},
+            enabled: process.env.NODE_ENV === 'production',
+        }, router)
         .component('FaIcon', FontAwesomeIcon)
         .component('FaLayers', FontAwesomeLayers)
         .mount('#app')
-
-// Enable Analytics tracking for SPAs
-trackRouter(router)

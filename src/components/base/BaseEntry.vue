@@ -148,7 +148,6 @@ export default {
         }
     }
 */
-
     .main{
         box-sizing:border-box;
         width:100%;
@@ -176,7 +175,6 @@ export default {
         }
     }
 */
-
     .entry-button-wrapper{
         width:100%;
         height:48px;

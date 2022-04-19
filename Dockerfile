@@ -15,13 +15,6 @@ WORKDIR /frontend
 
 # COPY . ./
 
-RUN if [ $(dpkg --print-architecture) = 'arm64' ]; then \
-        npm uninstall node-sass && \
-        npm install sass &&  \
-        rm -rf node_modules/node-sass/ && \
-        mv node_modules/sass node_modules/node-sass; \
-    fi
-
 # RUN npm install --global
 
 EXPOSE 8080
