@@ -135,7 +135,6 @@ export default {
         margin-bottom: 36px;
     }
 
-
     .entry-button-wrapper{
         width:100%;
         height:48px;
@@ -160,8 +159,6 @@ export default {
         justify-content:space-evenly;
         align-items:center;
     }
-
-
 </style>
 
 <style lang="scss">
