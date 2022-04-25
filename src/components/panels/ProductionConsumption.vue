@@ -1,12 +1,12 @@
 <template>
     <div class="panel-graph">
         <select v-model="currency" required>
-            <option :selected="currency === 'atmo_co2' || !(currency in units)" value="atmo_co2">
+            <option :selected="currency === 'co2' || !(currency in units)" value="co2">
                 Carbon dioxide (CO₂)
             </option>
-            <option :selected="currency === 'atmo_o2'" value="atmo_o2">Oxygen (O₂)</option>
-            <option :selected="currency === 'h2o_potb'" value="h2o_potb">Potable Water</option>
-            <option :selected="currency === 'enrg_kwh'" value="enrg_kwh">Energy</option>
+            <option :selected="currency === 'o2'" value="o2">Oxygen (O₂)</option>
+            <option :selected="currency === 'potable'" value="potable">Potable Water</option>
+            <option :selected="currency === 'kwh'" value="kwh">Energy</option>
         </select>
         <div>
             <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency" :unit="units[currency]" />
@@ -34,14 +34,14 @@ export default {
     emits: ['panel-section-changed'],
     data() {
         return {
-            // default on 'atmo_co2' if we don't get anything
+            // default on 'co2' if we don't get anything
             // (e.g. when using "Change panel")
-            currency: this.panelSection ?? 'atmo_co2',
+            currency: this.panelSection ?? 'co2',
             units: {
-                atmo_co2: 'kg',
-                atmo_o2: 'kg',
-                h2o_potb: 'kg',
-                enrg_kwh: 'kW',
+                co2: 'kg',
+                o2: 'kg',
+                potable: 'kg',
+                kwh: 'kW',
             },
         }
     },

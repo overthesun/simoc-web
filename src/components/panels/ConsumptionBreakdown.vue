@@ -30,13 +30,13 @@ export default {
         return {
             selected_currency: null,
             currencies: {
-                enrg_kwh: 'Energy',
-                atmo_co2: 'Carbon Dioxide (CO₂)',
+                kwh: 'Energy',
+                co2: 'Carbon Dioxide (CO₂)',
             },
             // TODO: see comment in fix_unit
             units: {
-                enrg_kwh: 'kW',
-                atmo_co2: 'kg',
+                kwh: 'kW',
+                co2: 'kg',
             },
         }
     },

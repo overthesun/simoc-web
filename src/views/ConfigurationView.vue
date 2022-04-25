@@ -149,12 +149,11 @@ export default {
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMECONFIG', 'SETSIMULATIONDATA',
+        ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
                                       'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
-
 
         toggleMenu() {
             this.menuActive = !this.menuActive
@@ -236,10 +235,13 @@ export default {
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
                 const simdata = await this.importPresetData(presets[preset_name])
+                // Get currency_desc from backend
+                const response = await axios.get('/get_currency_desc')
+                const {currency_desc} = response.data
                 if (simdata) {
                     try {
                         this.SETCONFIGURATION(simdata.configuration)
-                        this.SETSIMULATIONDATA(simdata)
+                        this.SETSIMULATIONDATA({simdata, currency_desc})
                         this.SETBUFFERMAX(simdata.steps)
                         this.SETCURRENTMODE('sim')
                         this.SETLOADFROMSIMDATA(true)
@@ -270,7 +272,10 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
-                this.SETGAMECONFIG(response.data.game_config)
+                this.SETGAMEPARAMS({
+                    game_config: response.data.game_config,
+                    currency_desc: response.data.currency_desc,
+                })
                 this.SETCURRENTMODE('sim')
                 this.SETLOADFROMSIMDATA(false)
                 // If all is well then move the user to the dashboard screen
