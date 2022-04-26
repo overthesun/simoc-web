@@ -3,8 +3,10 @@ name: SIMOC Frontend Check
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
+    branches:
+      - "**"
   workflow_dispatch:
 
 jobs:
