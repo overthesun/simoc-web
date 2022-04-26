@@ -50,6 +50,7 @@ export default {
     methods: {
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
+            console.log(`Initializing ${this.plottedValue}`)
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas

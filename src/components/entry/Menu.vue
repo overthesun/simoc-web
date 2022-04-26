@@ -97,7 +97,7 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_data.configuration)
-                this.SETSIMULATIONDATA(json_data)
+                this.SETSIMULATIONDATA({simdata: json_data, currency_desc: json_data.currency_desc})
                 this.SETBUFFERMAX(json_data.steps)
             } catch (error) {
                 console.error(error)  // report full error in the console

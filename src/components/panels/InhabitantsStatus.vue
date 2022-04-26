@@ -1,12 +1,16 @@
 <template>
     <section class="panel-dl-wrapper">
         <dl>
-            <dt title="&lt;=19.5%: minimum permissible level; &lt;=15%: decreased ability to work strenuously;
-                       &lt;=12%: respiration and pulse increase; &lt;=8%: termination">
+            <dt title="&lt;=19.5%: minimum permissible level;
+&lt;=15%: decreased ability to work strenuously;
+&lt;=12%: respiration and pulse increase;
+&lt;=8%: termination">
                 O₂ (min. 8%):</dt>
             <dd :style="o2_style">{{o2}}</dd>
-            <dt title="&gt;=0.1%: complaints of stiffness and odors; &gt;=0.25%: general drowsiness;
-                       &gt;=0.5%: adverse health effects; &gt;=1%: termination">
+            <dt title="&gt;=0.1%: complaints of stiffness and odors;
+&gt;=0.25%: general drowsiness;
+&gt;=0.5%: adverse health effects;
+&gt;=1%: termination">
                 CO₂ (max. 1%):</dt>
             <dd :style="co2_style">{{co2}}</dd>
             <dt title="Inhabitants are terminated after 3 days with no water">
@@ -41,23 +45,29 @@ export default {
             // inline styles for co2/o2
             co2_style: {color: '#eee'},
             o2_style: {color: '#eee'},
+            food_storages: {},
         }
     },
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
-                                    'getStorageCapacities', 'getGameConfig']),
+                                    'getStorageCapacities', 'getGameConfig',
+                                    'getGameCurrencies', 'getHumanAtmosphere']),
         step() {
             return this.getCurrentStepBuffer
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
-            return this.getGameConfig.storages.air_storage[0].total_capacity.value
+            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            // TODO: Revert ABM Workaround
+            // gameConfig structure has been updated in the backend, but presets use old structure.
+            storage = Array.isArray(storage) ? storage[0] : storage
+            return storage.total_capacity.value
         },
         o2() {
             return this.attempt_read(() => {
-                const o2_perc = this.get_gas_percentage('atmo_o2')
+                const o2_perc = this.get_gas_percentage('o2')
                 /*
                 Color the O2 value in the panel based of this:
                 O2 <= 19.5% -- yellow -- minimum permissible level
@@ -73,7 +83,7 @@ export default {
         },
         co2() {
             return this.attempt_read(() => {
-                const co2_perc = this.get_gas_percentage('atmo_co2')
+                const co2_perc = this.get_gas_percentage('co2')
                 /*
                 Color the CO2 value in the panel based of this:
                 CO2 >= 0.1% -- yellow -- complaints of stiffness and odors
@@ -90,15 +100,28 @@ export default {
         water() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {h2o_potb} = storage.water_storage[1]
-                return `${h2o_potb.value} ${h2o_potb.unit}`
+                const {potable} = storage.water_storage[1]
+                return `${potable.value} ${potable.unit}`
             })
         },
         food() {
             return this.attempt_read(() => {
                 const storage = this.getStorageCapacities(this.step)
-                const {food_edbl} = storage.food_storage[1]
-                return `${food_edbl.value} ${food_edbl.unit}`
+                let foodValue = 0
+                let foodUnits = null
+                // TODO: ABM Redesign Workaround
+                Object.entries(this.food_storages).forEach(([storageName, foodCurrencies]) => {
+                    if (!storage[storageName]) {
+                        return
+                    }
+                    Object.values(foodCurrencies).forEach(c => {
+                        foodValue += storage[storageName]['1'][c].value
+                        if (!foodUnits) {
+                            foodUnits = storage[storageName]['1'][c].unit
+                        }
+                    })
+                })
+                return `${foodValue} ${foodUnits}`
             })
         },
         humans() {
@@ -111,11 +134,30 @@ export default {
             }
         },
     },
+    mounted() {
+        // TODO: ABM Redesign Workaround
+        // Compile a list of storages that include food, and which food currencies they contain.
+        const {storages} = this.getGameConfig
+        const foodTypes = Object.keys(this.getGameCurrencies.food)
+        Object.entries(storages).forEach(([storageName, storageData]) => {
+            const foodCurrencies = []
+            if (storageData[0].storageType.includes('food_storage')) {
+                Object.keys(storageData[0]).forEach(attr => {
+                    if (foodTypes.includes(attr)) {
+                        foodCurrencies.push(attr)
+                    }
+                })
+            }
+            if (foodCurrencies.length > 0) {
+                this.food_storages[storageName] = foodCurrencies
+            }
+        })
+    },
     methods: {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step).air_storage[1]
+            const air_storage = this.getStorageCapacities(this.step)[this.getHumanAtmosphere][1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {

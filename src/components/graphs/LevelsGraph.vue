@@ -18,12 +18,14 @@ export default {
     props: {
         id: {type: String, required: true},
         plottedStorage: {type: String, required: true},
+        storagesMapping: {type: Object, required: true},  // TODO: Revert ABM Workaround
     },
     data() {
         return {
             prevStep: 0,
             storage_name: String,
             storage_num: String,
+            storageType: String,  // TODO: Revert ABM Workaround
             setsinfo: {
                 // These are used to determine labels, colors, and line order in the graph.
                 // They should be updated if a new storage type or currency is added,
@@ -31,20 +33,17 @@ export default {
                 air_storage: {
                     labels_colors: [['H₂O', '#46f0f0'], ['CO₂', '#e6194b'], ['H₂', '#ffe119'],
                                     ['CH₄', '#f58231'], ['O₂', '#3cb44b'], ['N₂', '#4363d8']],
-                    order: {atmo_h2o: 0, atmo_co2: 1, atmo_h2: 2,
-                            atmo_ch4: 3, atmo_o2: 4, atmo_n2: 5},
+                    order: {h2o: 0, co2: 1, h2: 2, ch4: 3, o2: 4, n2: 5},
                 },
                 water_storage: {
                     labels_colors: [['Potable', '#46f0f0'], ['Treated', '#4363d8'],
                                     ['Urine', '#ffe119'], ['Waste', '#f58231']],
-                    order: {h2o_potb: 0, h2o_tret: 1, h2o_urin: 2, h2o_wste: 3},
+                    order: {potable: 0, treated: 1, urine: 2, feces: 3},
                 },
                 nutrient_storage: {
-                    labels_colors: [['Biomass Total', '#3cb44b'], ['Biomass Edible', '#bcf60c'],
-                                    ['Waste', '#f58231'], ['Potassium', '#46f0f0'],
-                                    ['Nitrogen', '#4363d8'], ['Phosphorus', '#f032e6']],
-                    order: {biomass_edible: 0, biomass_totl: 1, sold_wste: 2,
-                            sold_k: 3, sold_n: 4, sold_p: 5},
+                    labels_colors: [['Biomass Total', '#3cb44b'], ['Waste', '#f58231'],
+                                    ['Fertilizer', '#46f0f0']],
+                    order: {biomass: 0, waste: 1, fertilizer: 2},
                 },
             },
         }
@@ -74,6 +73,7 @@ export default {
         // TODO: this code is very similar to VersusGraph.vue
         initChart() {
             [this.storage_name, this.storage_num] = this.plottedStorage.split('/')
+            this.storage_type = this.storagesMapping[this.storage_name]
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
@@ -87,7 +87,7 @@ export default {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(24).fill(''),
                     // create N datasets with different labels/colors
-                    datasets: this.setsinfo[this.storage_name].labels_colors.map(
+                    datasets: this.setsinfo[this.storage_type].labels_colors.map(
                         ([label, color]) => ({
                             lineTension: 0,
                             data: Array(24),
@@ -165,7 +165,7 @@ export default {
                     Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
-                            const index = this.setsinfo[this.storage_name].order[key]
+                            const index = this.setsinfo[this.storage_type].order[key]
                             const ratio = (elem.value * 100 / tot_storage).toFixed(4)
                             data.datasets[index].data.push(ratio)
                         }

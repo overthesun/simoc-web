@@ -113,14 +113,56 @@ export default {
         font-size: 22px;
     }
 
+    .main{
+        box-sizing:border-box;
+        width:100%;
+        height:100%;
+        max-height:100%;
+        display:flex;
+        justify-content:flex-start;
+        align-items:center;
+        flex-direction:column;
+        margin-bottom:16px;
+        overflow: hidden;
+        overflow-y:auto;
+        position:relative;
+    }
+
     .main-options{
         display:flex;
         justify-content:center;
         align-items:center;
         margin-bottom: 36px;
     }
-/*
-    ::v-deep(.option-item) {
+
+    .entry-button-wrapper{
+        width:100%;
+        height:48px;
+        min-height:48px;
+        margin-bottom: 32px;
+        position:relative;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .btn-disabled{
+        background-color: #4c4c4c;
+        color: #999;
+    }
+
+    .footer{
+        width: 100%;
+        height: 24px;
+        min-height:24px;
+        display:flex;
+        justify-content:space-evenly;
+        align-items:center;
+    }
+</style>
+
+<style lang="scss">
+    .option-item {
         box-sizing:border-box;
         margin: 0px 16px;
         font-weight: 600;
@@ -147,24 +189,9 @@ export default {
             left:0;
         }
     }
-*/
-    .main{
-        box-sizing:border-box;
-        width:100%;
-        height:100%;
-        max-height:100%;
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
-        flex-direction:column;
-        margin-bottom:16px;
-        overflow: hidden;
-        overflow-y:auto;
-        position:relative;
-    }
 
-/*
-    ::v-deep(.link) {
+
+    .link {
         text-decoration: underline;
         &:visited,&{
             color:lightgreen;
@@ -174,19 +201,8 @@ export default {
             color: #999;
         }
     }
-*/
-    .entry-button-wrapper{
-        width:100%;
-        height:48px;
-        min-height:48px;
-        margin-bottom: 32px;
-        position:relative;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-    }
-/*
-    ::v-deep(.btn-normal) {
+
+    .btn-normal {
         width: 256px;
         height: 48px;
         min-height: 48px;
@@ -207,9 +223,8 @@ export default {
             outline:none;
         }
     }
-*/
-/*
-    ::v-deep(.btn-warning) {
+
+    .btn-warning {
         margin-top:auto;
         width: 256px;
         height: 48px;
@@ -231,19 +246,5 @@ export default {
         &:focus{
             outline:none;
         }
-    }
-*/
-    .btn-disabled{
-        background-color: #4c4c4c;
-        color: #999;
-    }
-
-    .footer{
-        width: 100%;
-        height: 24px;
-        min-height:24px;
-        display:flex;
-        justify-content:space-evenly;
-        align-items:center;
     }
 </style>
