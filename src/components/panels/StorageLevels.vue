@@ -48,7 +48,7 @@ export default {
                 if (!Object.keys(filteredStorage).includes(stor_name)) {
                     filteredStorage[stor_name] = {1: {}}
                 }
-                const stor_key = Object.keys(stor_obj).includes('null') ? 'null' : 1  // TODO: ABM-redesitn workaround
+                const stor_key = Object.keys(stor_obj).includes('null') ? 'null' : 1  // TODO: ABM-redesign workaround
                 Object.entries(stor_obj[stor_key]).forEach(([currency, data]) => {
                     if (data.value > 0) {
                         filteredStorage[stor_name][1][currency] = data
