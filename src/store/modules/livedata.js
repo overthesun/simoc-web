@@ -44,7 +44,7 @@ export default {
          *  that did or are currently receiving readings on the backend.
          */
         SETSENSORINFO(state, value) {
-            Object.assign(state.sensorInfo, value)
+            state.sensorInfo = value
         },
         /** Sets the bundleNum 'n' (called 'stepNum' in sim-mode) adjusted using the
          *  initial bundle num so that it increments from 0.

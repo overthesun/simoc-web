@@ -28,7 +28,7 @@ export default {
     data() {
         return {
             prevStep: 0,
-            average: 0,
+            activeSensors: [],
         }
     },
 
@@ -41,12 +41,17 @@ export default {
         // calculate the average for the panel currency then update the chart datasets
         // and labels when the current step buffer changes
         getCurrentStepBuffer() {
-            this.calculateAverage()
             this.updateChart()
         },
         // re-init the chart when we plot something else
         plottedValue() {
+            this.updateActiveSensors()
             this.initChart()
+        },
+        getSensorInfo() {
+            this.updateActiveSensors()
+            this.initChart()
+            console.log("Updating sensor info")
         },
         unit() {
 
@@ -54,10 +59,18 @@ export default {
     },
 
     mounted() {
+        this.updateActiveSensors()
         this.initChart()
     },
 
     methods: {
+        updateActiveSensors() {
+            if (this.plottedValue === 'all') {
+                this.activeSensors = Object.keys(this.getSensorInfo)
+            } else {
+                this.activeSensors = [this.plottedValue]
+            }
+        },
         initChart() {
             if (this.chart) {
                 // when switching chart we have to destroy
@@ -65,22 +78,24 @@ export default {
                 this.chart.destroy()
             }
             const canvas = document.getElementById(this.id)
+            // TODO: Create list of shades of this.color
+            const datasets = this.activeSensors.map(sid => {
+                return {
+                    lineTension: 0,
+                    data: Array(10),
+                    label: sid,
+                    borderColor: this.color,
+                    fill: false,
+                    pointStyle: 'line',
+                }
+            })
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(10).fill(''),
                     // TODO: Create total number of datasets equal to total number of CO2 sensors
-                    datasets: [
-                        {
-                            lineTension: 0,
-                            data: Array(10),
-                            label: 'Average',
-                            borderColor: this.color,
-                            fill: false,
-                            pointStyle: 'line',
-                        },
-                    ],
+                    datasets: datasets,
                 },
                 options: {
                     scales: {
@@ -136,36 +151,34 @@ export default {
             // this will do 1 or 10 iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values
-                data.datasets[0].data.shift()
+                data.datasets.forEach(set => set.data.shift())
                 data.labels.shift()
                 if (step > 0) {
+                    this.activeSensors.forEach((sid, i) => {
+                        const r = this.getReadings(step)
+                        let value = undefined
+                        if (sid === 'Average') {
+                            const values = Object.keys(r).map(key => r[key][this.currency])
+                            value = values.reduce((a,b) => a + b, 0) / values.length
+                        } else {
+                            if (Object.keys(r).includes(sid)) {
+                                value = r[sid][this.currency]
+                            }
+                        }
+                        data.datasets[i].data.push(value)
+                    })
                     // add the new values
-                    data.datasets[0].data.push(this.average)
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has 10 total items and is not stretched
-                    data.datasets[0].data.push(undefined)
+                    data.datasets.forEach(set => set.data.push(undefined))
                     data.labels.push('')
                 }
             }
             this.chart.update()
             this.prevStep = currentStep
-        },
-        calculateAverage() {
-            const r = this.getReadings(this.getCurrentStepBuffer)
-
-            let average = 0
-            let numActiveSensors = 0
-            Object.entries(this.getSensorInfo).forEach(([key, value]) => {
-                if (r[key]) {
-                    numActiveSensors += 1
-                    average += r[key][this.currency]
-                }
-            })
-
-            this.average = average / numActiveSensors
-        },
+        }
     },
 }
 </script>

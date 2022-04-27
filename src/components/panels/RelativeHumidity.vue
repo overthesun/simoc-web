@@ -1,7 +1,9 @@
 <template>
     <div class="panel-graph">
         <select v-model="location" required>
-            <option :selected="location === 'crew_quarters'" value="crew_quarters">Crew Quarters</option>
+            <option :selected="location === 'all'" value="all">All</option>
+            <option value="Average">Average</option>
+            <option v-for="(info, id) in getSensorInfo" :value="id" :key="id">{{info.sensor_name}} ({{id.slice(0, 5)}}..)</option>
             <!-- <option :selected="location === 'greenhouse'" value="greenhouse">Greenhouse</option>-->
         </select>
         <div>
@@ -32,13 +34,14 @@ export default {
     emits: ['panel-section-changed'],
     data() {
         return {
-            // default on 'crew_quarters' and 'co2_ppm'
+            // default on 'all' and 'co2_ppm'
             // (e.g. when using "Change panel")
-            location: this.panelSection ?? 'crew_quarters',
+            location: this.panelSection ?? 'all',
         }
     },
     computed: {
         ...mapGetters('dashboard', ['getActivePanels']),
+        ...mapGetters('livedata', ['getSensorInfo']),
     },
     watch: {
         location() {
