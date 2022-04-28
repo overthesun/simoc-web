@@ -41,10 +41,12 @@ export default {
             state.initBundleNum = value
         },
         /** Sets the sensor_info object sent by the server containing a list of all sensors
-         *  that did or are currently receiving readings on the backend.
+         *  that did or are currently receiving readings on the backend. Use Object.assign
+         *  so that if sensors are removed from the sensorInfo object sent by simoc-samm,
+         *  the info is still available to display past info.
          */
         SETSENSORINFO(state, value) {
-            state.sensorInfo = value
+            state.sensorInfo = {...state.sensorInfo, ...value}
         },
         /** Sets the bundleNum 'n' (called 'stepNum' in sim-mode) adjusted using the
          *  initial bundle num so that it increments from 0.

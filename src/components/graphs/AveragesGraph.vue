@@ -51,7 +51,7 @@ export default {
         getSensorInfo() {
             this.updateActiveSensors()
             this.initChart()
-            console.log("Updating sensor info")
+            console.log('Updating sensor info')
         },
         unit() {
 
@@ -79,16 +79,14 @@ export default {
             }
             const canvas = document.getElementById(this.id)
             // TODO: Create list of shades of this.color
-            const datasets = this.activeSensors.map(sid => {
-                return {
-                    lineTension: 0,
-                    data: Array(10),
-                    label: sid,
-                    borderColor: this.color,
-                    fill: false,
-                    pointStyle: 'line',
-                }
-            })
+            const datasets = this.activeSensors.map(sensor_id => ({
+                lineTension: 0,
+                data: Array(10),
+                label: sensor_id,
+                borderColor: this.color,
+                fill: false,
+                pointStyle: 'line',
+            }))
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
@@ -154,16 +152,14 @@ export default {
                 data.datasets.forEach(set => set.data.shift())
                 data.labels.shift()
                 if (step > 0) {
-                    this.activeSensors.forEach((sid, i) => {
+                    this.activeSensors.forEach((sensor_id, i) => {
                         const r = this.getReadings(step)
-                        let value = undefined
-                        if (sid === 'Average') {
+                        let value
+                        if (sensor_id === 'Average') {
                             const values = Object.keys(r).map(key => r[key][this.currency])
-                            value = values.reduce((a,b) => a + b, 0) / values.length
-                        } else {
-                            if (Object.keys(r).includes(sid)) {
-                                value = r[sid][this.currency]
-                            }
+                            value = values.reduce((a, b) => a + b, 0) / values.length
+                        } else if (Object.keys(r).includes(sensor_id)) {
+                            value = r[sensor_id][this.currency]
                         }
                         data.datasets[i].data.push(value)
                     })
@@ -178,7 +174,7 @@ export default {
             }
             this.chart.update()
             this.prevStep = currentStep
-        }
+        },
     },
 }
 </script>

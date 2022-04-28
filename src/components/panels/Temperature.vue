@@ -3,7 +3,7 @@
         <select v-model="location" required>
             <option :selected="location === 'all'" value="all">All</option>
             <option value="Average">Average</option>
-            <option v-for="(info, id) in getSensorInfo" :value="id" :key="id">{{info.sensor_name}} ({{id.slice(0, 5)}}..)</option>
+            <option v-for="(info, id) in getSensorInfo" :key="id" :value="id">{{id}}</option>
             <!-- <option :selected="location === 'greenhouse'" value="greenhouse">Greenhouse</option>-->
         </select>
         <div>
@@ -55,7 +55,7 @@ export default {
         },
         getSensorInfo() {
             console.log('TEMPERATURE PANEL SEES UPDATED SENSOR INFO')
-        }
+        },
     },
 }
 </script>
