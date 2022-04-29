@@ -5,9 +5,7 @@
         </template>
         <template v-else>
             <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
-                <div class="sensor-name">
-                    {{sensorName(info)}} <label class="sensor-id"> {{id}} </label>
-                </div>
+                <div class="sensor-name">{{id}}</div>
                 <dl>
                     <template v-for="(item, name) in sensorItems(info)" :key="`tmpl_${name}`">
                         <dt>{{item.label}}</dt>

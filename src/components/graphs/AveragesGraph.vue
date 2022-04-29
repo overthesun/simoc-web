@@ -17,6 +17,26 @@ The visual difference between minor and major lines are in there opacity with mi
 import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
+const getColorRange = (baseColor, n=1) => {
+    // Given a hex color, return a list of shades lighter/darker
+    const output = []
+    const step = Math.min(0.4, 1.6 / n)
+    const start = (1 - (n * step / 2))
+    // ref: https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+    const hex = String(baseColor).replace(/[^0-9a-f]/gi, '')
+    for (let i = 0; i < n; i++) {
+        const lum = start + (i * step)
+        let rgb = '#'
+        for (let j = 0; j < 3; j++) {
+            let c = parseInt(hex.substr(j * 2, 2), 16)
+            c = Math.round(Math.min(Math.max(0, c * lum), 255)).toString(16)
+            rgb += `00${c}`.substr(c.length)
+        }
+        output.push(rgb)
+    }
+    return output
+}
+
 export default {
     props: {
         id: {type: String, required: true},
@@ -79,11 +99,12 @@ export default {
             }
             const canvas = document.getElementById(this.id)
             // TODO: Create list of shades of this.color
-            const datasets = this.activeSensors.map(sensor_id => ({
+            const colors = getColorRange(this.color, this.activeSensors.length)
+            const datasets = this.activeSensors.map((sensor_id, i) => ({
                 lineTension: 0,
                 data: Array(10),
                 label: sensor_id,
-                borderColor: this.color,
+                borderColor: colors[i],
                 fill: false,
                 pointStyle: 'line',
             }))
