@@ -3,7 +3,7 @@
         <select v-model="location" required>
             <option :selected="location === 'all'" value="all">All</option>
             <option value="Average">Average</option>
-            <option v-for="(info, id) in getSensorInfo" :key="id" :value="id">{{id}}</option>
+            <option v-for="(info, id) in getSensorInfo" :key="id" :value="id">{{info.sensor_name}}</option>
             <!-- <option :selected="location === 'greenhouse'" value="greenhouse">Greenhouse</option>-->
         </select>
         <div>

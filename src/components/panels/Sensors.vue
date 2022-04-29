@@ -5,8 +5,10 @@
         </template>
         <template v-else>
             <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
-                <div class="sensor-name">{{id}}</div>
+                <div class="sensor-name">{{info.sensor_name}}</div>
                 <dl>
+                    <dt>Sensor ID</dt>
+                    <dd>{{id}}</dd>
                     <template v-for="(item, name) in sensorItems(info)" :key="`tmpl_${name}`">
                         <dt>{{item.label}}</dt>
                         <dd>{{sensorReading(getCurrentStepBuffer, id, name)}} {{item.unit}}</dd>

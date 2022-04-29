@@ -30,7 +30,7 @@ const getColorRange = (baseColor, n=1) => {
         for (let j = 0; j < 3; j++) {
             let c = parseInt(hex.substr(j * 2, 2), 16)
             c = Math.round(Math.min(Math.max(0, c * lum), 255)).toString(16)
-            rgb += `00${c}`.substr(c.length)
+            rgb += c.padStart(2, '0')
         }
         output.push(rgb)
     }
@@ -99,15 +99,21 @@ export default {
             }
             const canvas = document.getElementById(this.id)
             // TODO: Create list of shades of this.color
+            const allSensors = Object.keys(this.getSensorInfo)
             const colors = getColorRange(this.color, this.activeSensors.length)
-            const datasets = this.activeSensors.map((sensor_id, i) => ({
-                lineTension: 0,
-                data: Array(10),
-                label: sensor_id,
-                borderColor: colors[i],
-                fill: false,
-                pointStyle: 'line',
-            }))
+            const datasets = this.activeSensors.map((sensor_id, i) => {
+                const name = allSensors.includes(sensor_id)
+                    ? this.getSensorInfo[sensor_id].sensor_name
+                    : sensor_id
+                return {
+                    lineTension: 0,
+                    data: Array(10),
+                    label: name,
+                    borderColor: colors[i],
+                    fill: false,
+                    pointStyle: 'line',
+                }
+            })
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
