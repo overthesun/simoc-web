@@ -44,6 +44,7 @@ export default {
         currency: {type: String, required: true},
         color: {type: String, required: true},
         unit: {type: String, required: true},
+        currencySensorInfo: {type: Object, required: true},
     },
     data() {
         return {
@@ -68,7 +69,7 @@ export default {
             this.updateActiveSensors()
             this.initChart()
         },
-        getSensorInfo() {
+        currencySensorInfo() {
             this.updateActiveSensors()
             this.initChart()
             console.log('Updating sensor info')
@@ -86,7 +87,7 @@ export default {
     methods: {
         updateActiveSensors() {
             if (this.plottedValue === 'all') {
-                this.activeSensors = Object.keys(this.getSensorInfo)
+                this.activeSensors = Object.keys(this.currencySensorInfo)
             } else {
                 this.activeSensors = [this.plottedValue]
             }
@@ -99,11 +100,11 @@ export default {
             }
             const canvas = document.getElementById(this.id)
             // TODO: Create list of shades of this.color
-            const allSensors = Object.keys(this.getSensorInfo)
+            const allSensors = Object.keys(this.currencySensorInfo)
             const colors = getColorRange(this.color, this.activeSensors.length)
             const datasets = this.activeSensors.map((sensor_id, i) => {
                 const name = allSensors.includes(sensor_id)
-                    ? this.getSensorInfo[sensor_id].sensor_name
+                    ? this.currencySensorInfo[sensor_id].sensor_name
                     : sensor_id
                 return {
                     lineTension: 0,

@@ -390,7 +390,7 @@ export default {
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
                 live: [
-                    'Sensors', 'AtmosphericCO2', 'Temperature',
+                    'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                 ],
             }[mode]
         },

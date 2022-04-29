@@ -8,7 +8,7 @@
         </select>
         <div>
             <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
-                           :currency="currency" :color="'#e6194b'" :unit="' ppm'"
+                           :currency="currency" :color="'#3cb44b'" :unit="'%'"
                            :currency-sensor-info="currencySensorInfo" />
         </div>
     </div>
@@ -20,7 +20,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {AveragesGraph} from '../graphs'
 
 export default {
-    panelTitle: 'Atmospheric CO2',
+    panelTitle: 'Atmospheric O2',
     modes: ['live'],
     components: {
         AveragesGraph,
@@ -38,7 +38,7 @@ export default {
             // default on 'all' and 'co2_ppm'
             // (e.g. when using "Change panel")
             location: this.panelSection ?? 'all',
-            currency: 'co2',
+            currency: 'o2',
             currencySensorInfo: {},
         }
     },

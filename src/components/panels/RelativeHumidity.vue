@@ -3,12 +3,13 @@
         <select v-model="location" required>
             <option :selected="location === 'all'" value="all">All</option>
             <option value="Average">Average</option>
-            <option v-for="(info, id) in getSensorInfo" :key="id" :value="id">{{info.sensor_name}}</option>
+            <option v-for="(info, id) in currencySensorInfo" :key="id" :value="id">{{info.sensor_name}}</option>
             <!-- <option :selected="location === 'greenhouse'" value="greenhouse">Greenhouse</option>-->
         </select>
         <div>
             <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
-                           :currency="'rel_hum'" :color="'#46f0f0'" :unit="'%'" />
+                           :currency="currency" :color="'#46f0f0'" :unit="'%'"
+                           :currency-sensor-info="currencySensorInfo" />
         </div>
     </div>
 </template>
@@ -37,6 +38,9 @@ export default {
             // default on 'all' and 'co2_ppm'
             // (e.g. when using "Change panel")
             location: this.panelSection ?? 'all',
+            currency: 'rel_hum',
+            currencySensorInfo: {},
+
         }
     },
     computed: {
@@ -52,6 +56,22 @@ export default {
         getActivePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.location = this.getActivePanels[this.panelIndex].split(':')[1]
+        },
+        getSensorInfo() {
+            this.refreshCurrencySensorInfo()
+        },
+    },
+    mounted() {
+        this.refreshCurrencySensorInfo()
+    },
+    methods: {
+        refreshCurrencySensorInfo() {
+            this.currencySensorInfo = {}
+            Object.entries(this.getSensorInfo).forEach(([k, v]) => {
+                if (Object.keys(v.reading_info).includes(this.currency)) {
+                    this.currencySensorInfo[k] = v
+                }
+            })
         },
     },
 }
