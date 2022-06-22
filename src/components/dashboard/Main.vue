@@ -14,10 +14,6 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
             <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template #panel-menu>
                 <div class="panel-menu">
-                    <!-- the fullscreen icon, enlarge/shrink the panel when clicked -->
-                    <div class="menu-icon-wrapper" @click="resizePanel(index)">
-                        <fa-icon :icon="['fas', 'arrows-alt']" class="fa-icon menu-icon" />
-                    </div>
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
                         <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
@@ -31,6 +27,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                             <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
                             <li><button v-if="activePanels.length > 1"
                                         @click="removePanel(index)">Remove Panel</button></li>
+                            <li><button @click="resizePanel(index)">Resize Panel</button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
