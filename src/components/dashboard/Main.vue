@@ -186,8 +186,6 @@ export default {
     }
     .panel-menu {
         position: relative;
-        display: flex;
-        flex: 1 1;
     }
     .panel-menu .menu-icon-wrapper {
         text-align: right;
