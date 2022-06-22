@@ -181,6 +181,8 @@ export default {
     .dashboard-onepanel {
         grid-template-rows: 1fr;
         grid-template-columns: 1fr;
+        transition: all 0.5s ease-out;
+        transform: scale(1.01);
     }
     .panel-menu {
         position: relative;
