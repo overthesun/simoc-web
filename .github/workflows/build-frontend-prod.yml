@@ -1,10 +1,10 @@
-name: SIMOC Frontend CI Production
+name: SIMOC Frontend Check
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -26,23 +26,44 @@ jobs:
           mkdir simdata
           cd simdata
           wget -r -nH --cut-dirs=2 --no-parent --accept="*.json" -erobots=off -q --show-progress https://simoc.space/download/simdata/
+      - name: Download skybox
+        run: |
+          cd src/assets
+          mkdir skybox
+          cd skybox
+          wget -r -nH --cut-dirs=2 --no-parent --accept="*.jpg" -erobots=off -q --show-progress https://simoc.space/download/skybox/
+      - name: Download models
+        run: |
+          cd src/assets
+          mkdir models
+          cd models
+          wget -r -nH --cut-dirs=2 --no-parent --accept="*.glb" -erobots=off -q --show-progress https://simoc.space/download/models/
       - name: npm install, build, test, and lint
         run: |
           npm install
           npm run build --if-present
           npm test --if-present
           npm run lint -- --no-fix
-      - name: Create Frontend Artifacts
-        run: tar -cvf frontend_dist.tar dist/
-      - name: Save Frontend Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist-archive
-          path: frontend_dist.tar
-      - name: Backend Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository: overthesun/simoc
-          event-type: frontend-update-prod
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      # To avoid hitting the artifact quota,
+      # disable the next two steps for now.
+      # The artifact doesn't seem to be used anyway.
+#     - name: Create Frontend Artifacts
+#       run: tar -cvf frontend_dist.tar dist/
+#     - name: Save Frontend Artifacts
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: dist-archive
+#         path: frontend_dist.tar
+      # This step can be used to notify the backend
+      # that the frontend changed.  The backend can
+      # then listen to a repository_dispatch event
+      # and automatically build and deploy the
+      # changes.  Backend deployment is triggered
+      # manually now, so this step is disabled too.
+#     - name: Backend Repository Dispatch
+#       uses: peter-evans/repository-dispatch@v1
+#       with:
+#         token: ${{ secrets.ACCESS_TOKEN }}
+#         repository: overthesun/simoc
+#         event-type: frontend-update-prod
+#         client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

@@ -15,14 +15,14 @@
         </div>
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
-            <template v-slot:option-items>
+            <template #option-items>
                 <div :class="{'option-item-active': 'login'===activeOption}" class="option-item"
                      @click="activateOption('login')"> SIGN IN </div>
                 <div :class="{'option-item-active': 'register'===activeOption}" class="option-item"
                      @click="activateOption('register')"> SIGN UP </div>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
-            <template v-slot:entry-main>
+            <template #entry-main>
                 <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
                     <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
                         <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
@@ -45,16 +45,16 @@
                 </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
-            <template v-slot:entry-button>
+            <template #entry-button>
                 <div :class="{'btn-wrapper-active': activeOption==='login'}"
                      class="btn-wrapper btn-wrapper-login">
-                    <button v-if="activeGuestLogin" form="register-form" class="btn-warning"
+                    <button v-if="activeGuestLogin" form="register-form" class="btn-normal"
                             @click="guestLogin">SIGN IN AS GUEST</button>
-                    <button v-else form="login-form" class="btn-warning">SIGN IN</button>
+                    <button v-else form="login-form" class="btn-normal">SIGN IN</button>
                 </div>
                 <div :class="{'btn-wrapper-active': activeOption==='register'}"
                      class="btn-wrapper btn-wrapper-register">
-                    <button form="register-form" class="btn-warning">SIGN UP</button>
+                    <button form="register-form" class="btn-normal">SIGN UP</button>
                 </div>
             </template>
             <!--<template v-slot:entry-footer>

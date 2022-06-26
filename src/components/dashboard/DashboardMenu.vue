@@ -4,10 +4,10 @@ use some of these features.
  -->
 <template>
     <BaseMenu>
-        <template v-slot:menu-title>
+        <template #menu-title>
             Dashboard Menu
         </template>
-        <template v-slot:menu-buttons>
+        <template #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <button @click="stopSimulation">Stop Simulation</button>
             <button @click="downloadSimData">Download Simulation Data</button>
@@ -35,7 +35,8 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData']),
+        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
+                                    'getGameCurrencies', 'getCurrentMode']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
@@ -44,7 +45,7 @@ export default {
         this.PAUSETIMER()
     },
     // Called when the menu is closed, resumes the timer if it was running
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.timerWasRunning) {
             this.STARTTIMER()
         }
@@ -67,6 +68,7 @@ export default {
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
             simdata.configuration = this.getConfiguration
+            simdata.currency_desc = this.getGameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
@@ -84,7 +86,7 @@ export default {
         // Reset Panels Layout button
         resetPanelsLayout() {
             localStorage.removeItem('panels-layout')
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode)
         },
         // Logout button route
         async logout() {

@@ -26,12 +26,12 @@
                   Index is used as a key to store which plant field has been updated within the configuration
             -->
             <div v-for="(item,index) in plantSpecies" :key="index" class="input-plant-wrapper">
-                <select ref="plant_selects" v-model="plantSpecies[index].type"
+                <select :ref="el => setSelectRef(el, index)" v-model="plantSpecies[index].type"
                         class="input-field-select" @change="updatePlantSpecies(index)">
                     <option value="" selected hidden disabled>Species</option>
                     <option v-for="(name,k) in plantValue" :key="k" :value="name">{{plantFormatted[k]}}</option>
                 </select>
-                <label><input ref="plant_inputs" v-model.number="plantSpecies[index].amount"
+                <label><input :ref="el => setInputRef(el, index)" v-model.number="plantSpecies[index].amount"
                               :min="0" :max="plantMax[index]"
                               class="input-field-number" type="number" pattern="^\d+$"
                               placeholder="Quantity" @input="updatePlantSpecies(index)"> m³</label>
@@ -60,6 +60,8 @@ export default {
             plantValue: [],
             plantFormatted: [],
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
+            plant_selects: {},  // map index -> <select> for the plant type dropdown
+            plant_inputs: {},  // map index -> <input> for the plant amount
         }
     },
     computed: {
@@ -98,6 +100,18 @@ export default {
         ...mapMutations('wizard', ['SETGREENHOUSE', 'ADDPLANTSPECIES',
                                    'UPDATEPLANTSPECIES', 'REMOVEPLANTSPECIES']),
         ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
+
+        // These two methods update the objects that maps the plant index with
+        // the corresponding select/input.  Note that if the plant is removed
+        // it might still be in the object, but won't be picked up by
+        // updateAndValidate since it only looks for existing indices --
+        // see https://v3.vuejs.org/guide/migration/array-refs.html
+        setSelectRef(select, index) {
+            this.plant_selects[index] = select
+        },
+        setInputRef(input, index) {
+            this.plant_inputs[index] = input
+        },
 
         // This method creates a new plant object within the wizard store.
         // It also makes sure that the user can't add more fields than there are options for plants.
@@ -249,8 +263,8 @@ export default {
                 plantSpecies.some((plant, i) => {
                     // return true to report the error immediately and stop and
                     // false to keep checking (only the last error will be reported)
-                    const plant_type = this.$refs.plant_selects[i]
-                    const plant_amount = this.$refs.plant_inputs[i]
+                    const plant_type = this.plant_selects[i]
+                    const plant_amount = this.plant_inputs[i]
                     // check if the plant is set but not in the list, or has an amount but no type
                     const plant_type_is_invalid = (
                         (plant.type && !this.plantValue.includes(plant.type)) ||

@@ -7,7 +7,8 @@
             </option>
         </select>
         <div>
-            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage" />
+            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage"
+                         :storages-mapping="storagesMapping" />
         </div>
     </div>
 </template>
@@ -19,6 +20,7 @@ import {LevelsGraph} from '../graphs'
 
 export default {
     panelTitle: 'Storage Ratios',
+    modes: ['sim'],
     components: {
         LevelsGraph,
     },
@@ -29,17 +31,20 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    emits: ['panel-section-changed'],
     data() {
         return {
             storage: undefined,
+            storagesMapping: {},
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig', 'getCurrencyDict']),
         getMultiCurrencyStorages() {
             const {storages} = this.getGameConfig
+            const allCurrencies = Object.keys(this.getCurrencyDict)
             // The storages var looks like:
-            // {air_storage: {0: {atmo_o2:..., atmo_co2,...}, 1: {...}}, food_storage: {...}, ...}
+            // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
             // Some storages (e.g. power_storage) only have 1 currency in the inner object,
             // so it doesn't make much sense to calculate the ratios for those storages.
             // This function takes all the storages that have at least 2 currencies,
@@ -47,9 +52,11 @@ export default {
             const filtered = []
             Object.entries(storages).forEach(([stor_name, stor_group]) => {
                 stor_group.forEach((stor, stor_id) => {
+                    // TODO: Revert ABM Workaround
                     // each stor has an additional id key, so we need >2 keys to have
                     // two currencies (one id key + two or more currency keys)
-                    if (Object.keys(stor).length > 2) {
+                    const currencies = Object.keys(stor).filter(c => allCurrencies.includes(c))
+                    if (currencies.length > 2) {
                         filtered.push([stor_name, stor_id+1])
                     }
                 })
@@ -71,6 +78,13 @@ export default {
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
         this.storage = this.panelSection ?? this.getMultiCurrencyStorages[0].join('/')
+        Object.entries(this.getGameConfig.storages).forEach(([storage_name, storage]) => {
+            if (storage[0].storageType) {
+                this.storagesMapping[storage_name] = storage[0].storageType[0]
+            } else {
+                this.storagesMapping[storage_name] = storage_name
+            }
+        })
     },
     methods: {
         stringFormatter: StringFormatter,

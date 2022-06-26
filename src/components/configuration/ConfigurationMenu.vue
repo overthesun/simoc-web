@@ -1,9 +1,9 @@
 <template>
     <BaseMenu>
-        <template v-slot:menu-title>
+        <template #menu-title>
             Configuration Menu
         </template>
-        <template v-slot:menu-buttons>
+        <template #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
                 :config="getConfiguration"

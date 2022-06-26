@@ -42,7 +42,7 @@ export default {
         }
         window.addEventListener('keydown', this.keyListener.bind(this))
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {

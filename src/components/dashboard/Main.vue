@@ -11,8 +11,8 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
          class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
                    :key="index" :class="fullscreenStatus[index]">
-            <template v-slot:panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
-            <template v-slot:panel-menu>
+            <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
+            <template #panel-menu>
                 <div class="panel-menu">
                     <!-- the fullscreen icon, enlarge/shrink the panel when clicked -->
                     <div class="menu-icon-wrapper" @click="resizePanel(index)">
@@ -44,7 +44,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                     </div>
                 </div>
             </template>
-            <template v-slot:panel-content>
+            <template #panel-content>
                 <component :is="panelName" :canvas-number="index"
                            :panel-index="index" :panel-section="panelSection"
                            @panel-section-changed="updatePanelSection" />
@@ -77,12 +77,14 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getActivePanels']),
+        ...mapGetters('dashboard', ['getActivePanels', 'getCurrentMode']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                sorted.push([panel.panelTitle, panelName])
+                if (panel.modes.includes(this.getCurrentMode)) {
+                    sorted.push([panel.panelTitle, panelName])
+                }
             })
             return sorted.sort()
         },
@@ -99,7 +101,7 @@ export default {
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
         } else {
-            this.SETDEFAULTPANELS()
+            this.SETDEFAULTPANELS(this.getCurrentMode)
         }
     },
     methods: {

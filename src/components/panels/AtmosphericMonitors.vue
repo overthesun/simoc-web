@@ -2,37 +2,37 @@
     <div class="panel-graph-gauge">
         <div class="gauge-wrapper">
             <Gauge :id="'canvas1'+canvasNumber" :maximum="3"
-                   :getter="airStorageGetter('atmo_co2')"
+                   :getter="airStorageGetter('co2')"
                    color="#e6194b" label="CO₂" />
             <div class="gauge-text">CO₂ (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas2'+canvasNumber" :maximum="100"
-                   :getter="airStorageGetter('atmo_o2')"
+                   :getter="airStorageGetter('o2')"
                    color="#3cb44b" label="O₂" />
             <div class="gauge-text">O₂ (0-100%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas3'+canvasNumber" :maximum="3"
-                   :getter="airStorageGetter('atmo_h2o')"
+                   :getter="airStorageGetter('h2o')"
                    color="#46f0f0" label="H₂O Vapor" />
             <div class="gauge-text">H₂O Vapor (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas4'+canvasNumber" :maximum="3"
-                   :getter="airStorageGetter('atmo_h2')"
+                   :getter="airStorageGetter('h2')"
                    color="#ffe119" label="H₂" />
             <div class="gauge-text">H₂ (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas5'+canvasNumber" :maximum="100"
-                   :getter="airStorageGetter('atmo_n2')"
+                   :getter="airStorageGetter('n2')"
                    color="#4363d8" label="N₂" />
             <div class="gauge-text">N₂ (0-100%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas6'+canvasNumber" :maximum="3"
-                   :getter="airStorageGetter('atmo_ch4')"
+                   :getter="airStorageGetter('ch4')"
                    color="#f58231" label="CH₄" />
             <div class="gauge-text">CH₄ (0-3%)</div>
         </div>
@@ -45,6 +45,7 @@ import {Gauge} from '../graphs'
 
 export default {
     panelTitle: 'Atmospheric Monitors',
+    modes: ['sim'],
     components: {
         Gauge,
     },
@@ -53,9 +54,13 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig']),
+        ...mapGetters('dashboard', ['getStorageCapacities', 'getHumanAtmosphere', 'getGameConfig']),
         total_storage_capacity() {
-            return this.getGameConfig.storages.air_storage[0].total_capacity.value
+            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            // TODO: Revert ABM Workaround
+            // gameConfig structure has been updated in the backend, but presets use old structure.
+            storage = Array.isArray(storage) ? storage[0] : storage
+            return storage.total_capacity.value
         },
     },
     methods: {
@@ -63,7 +68,8 @@ export default {
             // TODO: handle multiple air_storages with an optional dropdown
             const {total_storage_capacity} = this
             return step => {
-                const amount = this.getStorageCapacities(step).air_storage[1][currency].value
+                const atm = this.getHumanAtmosphere
+                const amount = this.getStorageCapacities(step)[atm][1][currency].value
                 return amount / total_storage_capacity * 100
             }
         },

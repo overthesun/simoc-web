@@ -1,7 +1,5 @@
 // Contains the shared state for ACE agent editor.
 
-import Vue from 'vue'
-
 function get_template_agent_desc() {
     // return the basic structure agent_desc,
     // used to validate user-uploaded agent_desc files
@@ -191,7 +189,7 @@ export default {
                 console.log(`Cannot remove ${agent}: agent not found.`)
                 return false
             } else {
-                Vue.delete(state.activeAgentDesc[section], agent)
+                delete state.activeAgentDesc[section][agent]
                 state.activeSection = null
                 state.activeAgent = null
                 return true

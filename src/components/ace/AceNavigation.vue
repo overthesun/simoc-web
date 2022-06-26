@@ -46,7 +46,7 @@ export default {
     },
     mounted() {
         this.sections.forEach(section => {
-            this.$set(this.isOpen, section, false)
+            this.isOpen[section] = !this.isOpen[section]
         })
     },
     methods: {
@@ -56,7 +56,7 @@ export default {
         stringFormatter: StringFormatter,
 
         toggle(section) {
-            this.$set(this.isOpen, section, !this.isOpen[section])
+            this.isOpen[section] = !this.isOpen[section]
         },
 
         handleAgent(section, agent) {

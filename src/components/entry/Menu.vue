@@ -4,10 +4,10 @@
 <template>
     <div class="entry-wrapper">
         <BaseEntry>
-            <template v-slot:option-items>
+            <template #option-items>
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
-            <template v-slot:entry-main>
+            <template #entry-main>
                 <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
@@ -16,7 +16,7 @@
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
-            <template v-slot:entry-button>
+            <template #entry-button>
                 <div class="btn-wrapper">
                     <button form="login-form" class="btn-warning" @click="logout">Log Out</button>
                 </div>
@@ -43,11 +43,12 @@ export default {
     mounted() {
         window.addEventListener('keydown', this.keyListener)
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX']),
+        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
+                                      'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -55,7 +56,6 @@ export default {
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
-
             this.SETACTIVECONFIGTYPE('Custom')
             this.$router.push('configuration')
         },
@@ -80,13 +80,14 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_data.configuration)
-                this.SETSIMULATIONDATA(json_data)
+                this.SETSIMULATIONDATA({simdata: json_data, currency_desc: json_data.currency_desc})
                 this.SETBUFFERMAX(json_data.steps)
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')
                 return
             }
+            this.SETCURRENTMODE('sim')
             this.SETLOADFROMSIMDATA(true)
             this.$router.push('dashboard')
         },
@@ -102,17 +103,8 @@ export default {
         },
         // Adapted from '../views/DashboardView.vue'
         keyListener(e) {
-            let key_matched = true
-            switch (e.key) {
-                case 'a':
-                    this.showAgentEditor = true
-                    break
-                default:
-                    key_matched = false  // no key matched
-                    break
-            }
-            if (key_matched) {
-                e.preventDefault()
+            if (e.ctrlKey && e.key === 'a') {
+                this.showAgentEditor = true
             }
         },
     },

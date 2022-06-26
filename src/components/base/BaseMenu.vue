@@ -35,5 +35,4 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../sass/components/menu';
-
 </style>

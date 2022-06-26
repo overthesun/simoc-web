@@ -26,6 +26,15 @@ import {Timeline, PlayButton, StepControls,
 import {TheTopBar} from '../bars'
 
 export default {
+    components: {
+        TheTopBar,
+        DashboardMenu,
+        PlayButton,
+        Timeline,
+        StepControls,
+        SpeedControls,
+        Main,
+    },
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
         // This might happen when the user starts a new sim or logs off,
@@ -50,15 +59,6 @@ export default {
                 confirmExit()
             }
         }
-    },
-    components: {
-        TheTopBar,
-        DashboardMenu,
-        PlayButton,
-        Timeline,
-        StepControls,
-        SpeedControls,
-        Main,
     },
     data() {
         return {

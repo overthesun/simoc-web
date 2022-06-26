@@ -1,9 +1,9 @@
 <template>
     <BaseMenu>
-        <template v-slot:menu-title>
+        <template #menu-title>
             Agent Editor Menu
         </template>
-        <template v-slot:menu-buttons>
+        <template #menu-buttons>
             <DownloadConfig
                 :is-valid="getEditorValid"
                 :config="getActiveAgentDesc"

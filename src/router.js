@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
 import {EntryView, ConfigurationView, DashboardView, AceView} from './views'
 import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
@@ -7,11 +6,8 @@ import {BaseConfiguration, BaseDashboard} from './components/base'
 // import {Login,Welcome,MainMenu} from './components/entry'
 // import {MainMenu,ConfigurationMenu} from './components/mainmenu'
 
-Vue.use(Router)
-
-export default new Router({
-    mode: 'history',
-    base: process.env.BASE_URL,
+export default createRouter({
+    history: createWebHistory(process.env.BASE_URL),
     routes: [
         {
             path: '/',
@@ -40,7 +36,7 @@ export default new Router({
             ],
         },
         {
-            path: 'menuconfig',
+            path: '/menuconfig',
             name: 'menuconfig',
             component: EntryMenuConfig,
         },
