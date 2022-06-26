@@ -2,37 +2,23 @@
 
 <template>
     <div id="dashboard-play-icon">
-        <span v-if="getIsTimerRunning" title="Pause" @click="pauseTimer">
+        <span v-if="state.isTimerRunning" title="Pause" @click="state.pauseTimer()">
             <fa-icon :icon="['fas','pause']" class="fa-icon" />
         </span>
-        <span v-else title="Play" @click="resumeTimer">
+        <span v-else title="Play" @click="state.startTimer()">
             <fa-icon :icon="['fas','play']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {dashboardState as state} from '../../state/dashboard'
 
 export default {
     data() {
         return {
-
+            state,
         }
-    },
-    computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning']),
-    },
-    methods: {
-        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer() {
-            // pause the timer when the user clicks on the pause button
-            this.PAUSETIMER()
-        },
-        resumeTimer() {
-            // start/resume the timer when the user clicks on the play button
-            this.STARTTIMER()
-        },
     },
 }
 </script>

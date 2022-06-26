@@ -18,11 +18,12 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {StepTimer} from '../../javascript/stepTimer'
+import {dashboardState as state} from '../../state/dashboard'
 
 export default {
     data() {
         return {
+            state,
             currentPercentage: 1,
             bufferPercentage: 1,
             currentStep: 1,
@@ -31,74 +32,52 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getMaxStepBuffer', 'getTimerID',
-                                    'getIsTimerRunning', 'getStepInterval']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     watch: {
         // update scrubber percentages when the current and/or max step change
-        getCurrentStepBuffer() { this.updatePercentages() },
-        getMaxStepBuffer() { this.updatePercentages() },
+        'state.currentStepBuffer'() { this.updatePercentages() },
+        'state.maxStepBuffer'() { this.updatePercentages() },
     },
     mounted() {
         // start the timer when the component is mounted, the actual
         // visualization will start only when the buffer has enough data
-        this.startTimer()
+        this.state.initTimer()
     },
     methods: {
-        ...mapMutations('dashboard', ['SETTIMERID', 'STARTTIMER', 'PAUSETIMER',
-                                      'STOPTIMER', 'UPDATEBUFFERCURRENT']),
-
-        startTimer() {
-            // initialize and return the step timer that updates the
-            // current step and triggers watches that update the panels
-            this.STOPTIMER()  // if a timer exists already, stop it
-            const stepTimer = new StepTimer(() => {
-                // increment the step only if we have enough buffered steps
-                // TODO check the number of steps requests so we can still
-                // run simulations with a number of steps <= the limit
-                if (this.getMaxStepBuffer >= 30) {
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
-                }
-            }, this.getStepInterval)
-            this.SETTIMERID(stepTimer)
-            this.STARTTIMER()
-            return stepTimer
-        },
-
         // called when the user starts dragging the timeline slider to
         // prevent updates while the user is interacting with the slider
         pauseBuffer() {
             // update the graphs in real-time while the user drags
-            this.UPDATEBUFFERCURRENT(this.currentStep)
+            this.state.setCurrentStepBuffer(this.currentStep)
             if (this.userIsDragging) {
                 // the user is still dragging, do nothing else
                 return
             }
             // save the current state before pausing
-            this.timerWasRunning = this.getIsTimerRunning
+            this.timerWasRunning = state.isTimerRunning
             this.userIsDragging = true
-            if (this.getTimerID !== null) {
-                this.PAUSETIMER()
+            if (this.state.timerId !== null) {
+                this.state.pauseTimer()
             }
         },
 
         // called when the user selects a new step on the timeline slider
         updateBuffer() {
             this.userIsDragging = false  // the user released the slider
-            this.UPDATEBUFFERCURRENT(this.currentStep)
+            this.state.setCurrentStepBuffer(this.currentStep)
             // when the timer is paused and the slider moved beyond the max
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
-                this.startTimer()
+                this.state.startTimer()
             }
         },
 
         updatePercentages() {
-            this.currentStep = this.getCurrentStepBuffer
-            this.currentPercentage = (this.getCurrentStepBuffer / this.getTotalMissionHours) * 100
-            this.bufferPercentage = (this.getMaxStepBuffer / this.getTotalMissionHours) * 100
+            this.currentStep = this.state.currentStepBuffer
+            this.currentPercentage = (this.state.currentStepBuffer / this.getTotalMissionHours) * 100
+            this.bufferPercentage = (this.state.maxStepBuffer / this.getTotalMissionHours) * 100
         },
     },
 }

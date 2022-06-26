@@ -9,10 +9,12 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
 
 import io from 'socket.io-client'
+import {dashboardState as state} from '../state/dashboard'
 
 export default {
     data() {
         return {
+            state,
             socket: null,  // the websocket used to get the steps
         }
     },
@@ -20,7 +22,7 @@ export default {
     computed: {
         // getters from the vuex stores
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
-                                    'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
+                                    'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
@@ -34,7 +36,7 @@ export default {
             // the timer when current/max are set to 0 at the beginning
             if ((this.getMaxStepBuffer > 1) &&
                 (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
-                this.PAUSETIMER()
+                this.state.pauseTimer()
             }
         },
         getStopped() {
@@ -49,7 +51,7 @@ export default {
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
-        this.STOPTIMER()
+        this.state.stopTimer()
         // do the same with the get_steps timer
         if (this.getGetStepsTimerID) {
             window.clearTimeout(this.getGetStepsTimerID)
@@ -105,7 +107,7 @@ export default {
     beforeUnmount() {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
-        this.STOPTIMER()   // stop the step timer
+        this.state.stopTimer()   // stop the step timer
         this.SETMENUACTIVE(false)  // close the menu if it was open
         if (!this.getTerminated) {
             this.killGame()
@@ -119,14 +121,11 @@ export default {
     },
 
     methods: {
-        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER', 'STOPTIMER', 'SETTIMERID',
+        ...mapMutations('dashboard', ['SETTIMERID',
                                       'SETGETSTEPSTIMERID', 'SETMINSTEPNUMBER', 'INITGAME',
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
-        // Action used for parsing the get_step response on completion of retrieval.
-        // See the store/modules/dashboard.js.
-        ...mapActions('dashboard', ['parseStep']),
 
         setupWebsocket() {
             const socket = io()
@@ -151,7 +150,7 @@ export default {
             })
             socket.on('step_data_handler', msg => {
                 // console.log('step_data_handler called, received:', msg)
-                this.parseStep(Object.values(msg.data))
+                this.state.parseStep(msg.data)
                 // console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
             })
             socket.on('steps_sent', msg => {
@@ -285,37 +284,41 @@ export default {
             // console.log('key:', e.key)
 
             let key_matched = true
+            const sb = this.state.currentStepBuffer
+            const setStep = (v) => {
+                this.state.setCurrentStepBuffer(v)
+            }
             switch (e.key) {
                 case ' ':
-                    if (this.getIsTimerRunning) {
-                        this.PAUSETIMER()
+                    if (this.state.isTimerRunning) {
+                        this.state.pauseTimer()
                     } else {
-                        this.STARTTIMER()
+                        this.state.startTimer()
                     }
                     break
                 case 'ArrowLeft':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-1)
+                    setStep(sb - 1)
                     break
                 case 'ArrowRight':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+1)
+                    setStep(sb + 1)
                     break
                 case 'ArrowUp':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-10)
+                    setStep(sb - 10)
                     break
                 case 'ArrowDown':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+10)
+                    setStep(sb + 10)
                     break
                 case 'PageUp':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer-24)
+                    setStep(sb - 24)
                     break
                 case 'PageDown':
-                    this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer+24)
+                    setStep(sb + 24)
                     break
                 case 'Home':
-                    this.UPDATEBUFFERCURRENT(1)
+                    setStep(1)
                     break
                 case 'End':
-                    this.UPDATEBUFFERCURRENT(this.getMaxStepBuffer)
+                    setStep(this.state.maxStepBuffer)
                     break
                 default:
                     key_matched = false  // no key matched
