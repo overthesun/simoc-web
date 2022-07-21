@@ -50,15 +50,8 @@ def run_sim(browser, days):
 
     driver.find_element(By.XPATH, '//button[text()="PROCEED"]').click()
 
-<<<<<<< Updated upstream
-    driver.implicitly_wait(2)
     driver.find_element(By.ID, 'guest-login').click()
 
-    wait = WebDriverWait(driver, 10)
-=======
-    driver.find_element(By.ID, 'guest-login').click()
-
->>>>>>> Stashed changes
     sign_in_path = '//button[text()="SIGN IN AS GUEST"]'
     cond = EC.element_to_be_clickable((By.XPATH, sign_in_path))
     sign_in_button = wait.until(cond)
