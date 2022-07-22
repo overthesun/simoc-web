@@ -19,10 +19,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import BaseMenu from '@/components/base/BaseMenu.vue'
-import DownloadConfig from '@/components/menu/DownloadConfig.vue'
-import UploadConfig from '@/components/menu/UploadConfig.vue'
-import Logout from '@/components/menu/Logout.vue'
+import {BaseMenu} from '../base'
+import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
 export default {
     components: {

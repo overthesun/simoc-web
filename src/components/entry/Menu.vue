@@ -29,7 +29,7 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import BaseEntry from '@/components/base/BaseEntry.vue'
+import {BaseEntry} from '../base'
 
 export default {
     components: {

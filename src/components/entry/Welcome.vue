@@ -54,7 +54,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 </template>
 
 <script>
-import BaseEntry from '@/components/base/BaseEntry.vue'
+import {BaseEntry} from '../base'
 
 export default {
     components: {

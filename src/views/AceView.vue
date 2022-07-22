@@ -24,10 +24,8 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import TheTopBar from '@/components/bars/TheTopBar.vue'
-import AceMenu from '@/components/ace/AceMenu.vue'
-import AceEditor from '@/components/ace/AceEditor.vue'
-import AceNavigation from '@/components/ace/AceNavigation.vue'
+import {TheTopBar} from '../components/bars'
+import {AceMenu, AceEditor, AceNavigation} from '../components/ace'
 
 export default {
     components: {
