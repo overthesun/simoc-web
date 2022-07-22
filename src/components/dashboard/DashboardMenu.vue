@@ -22,7 +22,7 @@ use some of these features.
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {BaseMenu} from '../base'
+import BaseMenu from '@/components/base/BaseMenu.vue'
 
 export default {
     components: {

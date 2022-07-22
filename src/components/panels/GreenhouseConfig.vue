@@ -6,7 +6,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {GreenhouseDoughnut} from '../graphs'
+import GreenhouseDoughnut from '@/components/graphs/GreenhouseDoughnut.vue'
 
 export default {
     panelTitle: 'Greenhouse Configuration',

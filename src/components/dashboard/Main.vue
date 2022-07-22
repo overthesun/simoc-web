@@ -49,7 +49,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {BasePanel} from '../basepanel'
+import BasePanel from '@/components/basepanel/BasePanel.vue'
 import panels from '../panels'  // import all panels
 
 export default {

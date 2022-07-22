@@ -16,7 +16,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {VersusGraph} from '../graphs'
+import VersusGraph from '@/components/graphs/VersusGraph.vue'
 
 export default {
     panelTitle: 'Production / Consumption',

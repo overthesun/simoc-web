@@ -1,17 +1,11 @@
-const requireModule = require.context('.', false, /\.js$/)
+const requireModule = import.meta.glob('./dir/*.js')
 const modules = {}
 
-requireModule.keys().forEach(fileName => {
-    if (fileName === './index.js') {
-        return
-    }
-
-    const moduleName = fileName.replace(/(\.\/|\.js)/g, '')
-
-    modules[moduleName] = {
-        namespaced: true,
-        ...requireModule(fileName).default,
-    }
-})
+for (const path in requireModule) {
+  requireModule[path]().then((mod) => {
+    modules[moduleName] = mod.default
+  })
+}
 
 export default modules
+

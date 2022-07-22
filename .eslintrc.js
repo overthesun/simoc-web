@@ -12,18 +12,14 @@ module.exports = {
     root: true,
     env: {
         browser: true,
-        node: true,
-        es6: true,
+        // es6: true,
+        es2021: true,
     },
     extends: [
         'plugin:vue/vue3-recommended',  // rules list: https://eslint.vuejs.org/rules/
         '@vue/airbnb',  // rules list: https://github.com/airbnb/javascript
     ],
     parser: 'vue-eslint-parser',
-    parserOptions: {
-        parser: 'babel-eslint',
-        sourceType: 'module',
-    },
     plugins: [
         'vue',
     ],

@@ -41,7 +41,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Gauge} from '../graphs'
+import Gauge from '@/components/graphs/Gauge.vue'
 
 export default {
     panelTitle: 'Atmospheric Monitors',

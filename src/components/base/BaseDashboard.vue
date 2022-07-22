@@ -21,9 +21,13 @@ future dashboard views
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Timeline, PlayButton, StepControls,
-        SpeedControls, Main, DashboardMenu} from '../dashboard'
-import {TheTopBar} from '../bars'
+import Timeline from '@/components/dashboard/Timeline.vue'
+import PlayButton from '@/components/dashboard/PlayButton.vue'
+import StepControls from '@/components/dashboard/StepControls.vue'
+import SpeedControls from '@/components/dashboard/SpeedControls.vue'
+import Main from '@/components/dashboard/Main.vue'
+import DashboardMenu from '@/components/dashboard/DashboardMenu.vue'
+import TheTopBar from '@/components/bars/TheTopBar.vue'
 
 export default {
     components: {

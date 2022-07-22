@@ -1,4 +1,4 @@
-export {default as EntryView} from './EntryView'
-export {default as ConfigurationView} from './ConfigurationView'
-export {default as DashboardView} from './DashboardView'
-export {default as AceView} from './AceView'
+export {default as EntryView} from './EntryView.vue'
+export {default as ConfigurationView} from './ConfigurationView.vue'
+export {default as DashboardView} from './DashboardView.vue'
+export {default as AceView} from './AceView.vue'

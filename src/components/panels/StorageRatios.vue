@@ -16,7 +16,7 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
-import {LevelsGraph} from '../graphs'
+import LevelsGraph from '@/components/graphs/LevelsGraph.vue'
 
 export default {
     panelTitle: 'Storage Ratios',

@@ -13,7 +13,7 @@
 <script>
 import * as THREE from 'three'
 
-import Tooltip from './components/Tooltip'
+import Tooltip from '@/threejs/components/Tooltip.vue'
 import StatsBox from './systems/stats'
 import {buildCamera} from './systems/camera'
 import {buildRenderer} from './systems/renderer'

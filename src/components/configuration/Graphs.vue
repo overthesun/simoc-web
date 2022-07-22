@@ -21,7 +21,8 @@ This component would have a similar functionality to that of the reference wiki.
 
 <script>
 import {mapGetters} from 'vuex'
-import {GreenhouseConfig, PowerUsage} from '../graphs'
+import GreenhouseConfig from '@/components/graphs/GreenhouseConfig.vue'
+import PowerUsage from '@/components/graphs/PowerUsage.vue'
 
 export default {
     components: {

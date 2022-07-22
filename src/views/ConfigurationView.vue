@@ -72,9 +72,16 @@
 import axios from 'axios'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {TheTopBar} from '../components/bars'
-import {ConfigurationMenu, Presets, Initial, Inhabitants,
-        Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+import TheTopBar from '@/components/bars/TheTopBar.vue'
+import ConfigurationMenu from '@/components/configuration/ConfigurationMenu.vue'
+import Presets from '@/components/configuration/Presets.vue'
+import Initial from '@/components/configuration/Initial.vue'
+import Inhabitants from '@/components/configuration/Inhabitants.vue'
+import Greenhouse from '@/components/configuration/Greenhouse.vue'
+import Energy from '@/components/configuration/Energy.vue'
+import Reference from '@/components/configuration/Reference.vue'
+import Graphs from '@/components/configuration/Graphs.vue'
+import Layout from '@/components/configuration/Layout.vue'
 
 export default {
     components: {

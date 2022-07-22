@@ -68,13 +68,12 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {BaseEntry} from '../base'
+import BaseEntry from '@/components/base/BaseEntry.vue'
 
 export default {
     components: {
         BaseEntry,
     },
-
     data() {
         // Initialize all the values that will be used for v-model
         return {

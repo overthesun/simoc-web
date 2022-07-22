@@ -11,14 +11,8 @@
 </template>
 
 
-<script>
-import {ModalWindow} from './components/menu'
-
-export default {
-    components: {
-        ModalWindow,
-    },
-}
+<script setup>
+import ModalWindow from '@/components/menu/ModalWindow.vue'
 </script>
 
 

@@ -1,10 +1,20 @@
 // extract all vue files from the panels/ dir
-const requireModule = require.context('.', false, /\.vue$/)
+const requireModule = import.meta.glob('./*.vue')
 const panels = {}
 
+for (const panel in requireModule) {
+  requireModule[panel]().then((mod) => {
+    const panelTitle = mod.panelTitle
+    // TODO: Perform check for title existing as seen below
+    console.log(mod)
+    panels[panelTitle]
+  })
+}
+
+/*
 // create an object that maps file names (without extension)
 // to the corresponding components and export it
-requireModule.keys().forEach(fileName => {
+requireModule.forEach(fileName => {
     // remove leading ./ and trailing .vue
     const panelName = fileName.replace(/(^\.\/|\.vue$)/g, '')
     const panel = requireModule(fileName).default
@@ -15,5 +25,6 @@ requireModule.keys().forEach(fileName => {
     }
     panels[panelName] = panel
 })
+*/
 
 export default panels
