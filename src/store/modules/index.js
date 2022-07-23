@@ -1,11 +1,9 @@
-const requireModule = import.meta.glob('./dir/*.js')
+const requireModule = import.meta.glob('./*.js', { eager: true })
 const modules = {}
 
 for (const path in requireModule) {
-  requireModule[path]().then((mod) => {
-    modules[moduleName] = mod.default
-  })
+    modules[path.replace(/(\.\/|\.js)/g, "")] = requireModule[path].default; 
 }
 
+console.log(modules)
 export default modules
-

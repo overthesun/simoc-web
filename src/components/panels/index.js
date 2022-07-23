@@ -2,12 +2,15 @@
 const requireModule = import.meta.glob('./*.vue')
 const panels = {}
 
-for (const panel in requireModule) {
-  requireModule[panel]().then((mod) => {
-    const panelTitle = mod.panelTitle
-    // TODO: Perform check for title existing as seen below
-    console.log(mod)
-    panels[panelTitle]
+for (const path in requireModule) {
+  requireModule[path]().then((mod) => {
+    const panelName = path.replace(/(^\.\/|\.vue$)/g, '')
+    const panel = mod.default
+    if (!panel.panelTitle) {
+            console.error('* Missin panelTitle in panel', panelName)
+            panel.panelTitle = panelName
+        }
+        panels[panelName] = panel
   })
 }
 
@@ -26,5 +29,4 @@ requireModule.forEach(fileName => {
     panels[panelName] = panel
 })
 */
-
 export default panels
