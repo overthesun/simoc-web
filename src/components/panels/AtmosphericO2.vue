@@ -17,6 +17,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 import {AveragesGraph} from '../graphs'
 
 export default {
@@ -33,6 +34,10 @@ export default {
         panelSection: {type: String, default: null},
     },
     emits: ['panel-section-changed'],
+    setup() {
+        const liveData = useLiveDataStore()
+        return {liveData}
+    },
     data() {
         return {
             // default on 'all' and 'co2_ppm'
@@ -44,7 +49,9 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getActivePanels']),
-        ...mapGetters('livedata', ['getSensorInfo']),
+        getSensorInfo() {
+            return this.liveData.sensorInfo
+        },
     },
     watch: {
         location() {

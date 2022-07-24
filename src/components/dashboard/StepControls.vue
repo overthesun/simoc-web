@@ -17,11 +17,15 @@
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
+import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 
 export default {
+    setup() {
+        const liveData = useLiveDataStore()
+        return {liveData}
+    },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getCurrentMode']),
-        ...mapGetters('livedata', ['getTimestamp']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {
@@ -40,7 +44,7 @@ export default {
          *  @returns {string} The time from the bundle at some step.
          */
         getTime() {
-            const time = this.getTimestamp(this.getCurrentStepBuffer)
+            const time = this.liveData.getTimestamp(this.getCurrentStepBuffer)
             return (time === undefined) ? '00:00:00' : time.time
         },
         /** Get the date at some step. When the live dashboard is initialized the date is undefined
@@ -51,7 +55,7 @@ export default {
          *  @returns {string} The date from the bundle at some step.
          */
         getDate() {
-            const date = this.getTimestamp(this.getCurrentStepBuffer)
+            const date = this.liveData.getTimestamp(this.getCurrentStepBuffer)
             return (date === undefined) ? '0000-00-00' : date.date
         },
     },

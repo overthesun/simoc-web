@@ -16,6 +16,7 @@ The visual difference between minor and major lines are in there opacity with mi
 <script>
 import Chart from 'chart.js'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 
 const getColorRange = (baseColor, n=1) => {
     // Given a hex color, return a list of shades lighter/darker
@@ -46,6 +47,10 @@ export default {
         unit: {type: String, required: true},
         currencySensorInfo: {type: Object, required: true},
     },
+    setup() {
+        const liveData = useLiveDataStore()
+        return {liveData}
+    },
     data() {
         return {
             prevStep: 0,
@@ -55,7 +60,6 @@ export default {
 
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
     },
 
     watch: {
@@ -181,7 +185,7 @@ export default {
                 data.labels.shift()
                 if (step > 0) {
                     this.activeSensors.forEach((sensor_id, i) => {
-                        const r = this.getReadings(step)
+                        const r = this.liveData.getReading(step)
                         let value
                         if (sensor_id === 'Average') {
                             const values = Object.keys(r).map(key => r[key][this.currency])

@@ -1,10 +1,10 @@
 <template>
     <section class="panel-dl-wrapper">
-        <template v-if="getDataBundles.length === 0">
+        <template v-if="liveData.dataBundles.length === 0">
             <div class="no-data">[Awaiting data...]</div>
         </template>
         <template v-else>
-            <template v-for="(info, id) in getSensorInfo" :key="`tmpl_${id}`">
+            <template v-for="(info, id) in liveData.sensorInfo" :key="`tmpl_${id}`">
                 <div class="sensor-name">{{info.sensor_name}}</div>
                 <dl>
                     <dt>Sensor ID</dt>
@@ -22,19 +22,23 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 
 export default {
     panelTitle: 'Sensors',
     modes: ['live'],
+    setup() {
+        const liveData = useLiveDataStore()
+        return {liveData}
+    },
     computed: {
         ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-        ...mapGetters('livedata', ['getSensorInfo', 'getReadings', 'getDataBundles']),
     },
     methods: {
         /** Extracts the sensor name from the sensorInfo object and returns it setting the
          *  sensor name viewable on the Sensors panel e.g. MockSensor
          *
-         *  @param info The sensorInfo object form the livedata store.
+         *  @param info The sensorInfo object form the LiveDataStore.
          *  @returns {string} The name of the sensor.
          */
         sensorName(info) {
@@ -45,7 +49,7 @@ export default {
         /** Extracts the sensor type from the sensorInfo object and returns it setting the
          *  sensor type viewable on the Sensors panel e.g. Mock
          *
-         *  @param info The sensorInfo object form the livedata store.
+         *  @param info The sensorInfo object form the LiveDataStore.
          *  @returns {string} The type of the sensor.
          */
         sensorType(info) {
@@ -56,7 +60,7 @@ export default {
         /** Extracts the sensor items from the sensorInfo object and returns it setting the
          *  sensor items viewable on the Sensors panel. e.g. {CO2, Temperature, Relative Humidity}
          *
-         *  @param info The sensorInfo object form the livedata store.
+         *  @param info The sensorInfo object form the LiveDataStore.
          *  @returns {object} The items of the sensor.
          */
         sensorItems(info) {
@@ -64,7 +68,7 @@ export default {
 
             return items
         },
-        /** Gets a sensor's readings from the livedata store at the currentStepBuffer of the
+        /** Gets a sensor's readings from the LiveDataStore at the currentStepBuffer of the
          *  scrubber and returns a single item from the reading.
          *
          *  @param currentStepBuffer The step the scrubber is currently on.
@@ -73,7 +77,7 @@ export default {
          *  @returns {string|float} A dash '-' indicating no value or the value from the item.
          */
         sensorReading(currentStepBuffer, sensorId, itemName) {
-            const r = this.getReadings(currentStepBuffer)
+            const r = this.liveData.getReading(currentStepBuffer)
 
             let value = '-'
             Object.entries(r).forEach(reading => {

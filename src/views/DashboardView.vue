@@ -12,6 +12,11 @@ import io from 'socket.io-client'
 import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 
 export default {
+    setup() {
+        const liveData = useLiveDataStore()
+        return {liveData}
+    },
+
     data() {
         return {
             socket: null,  // the websocket used to get the steps
@@ -23,7 +28,6 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
-        ...mapGetters('livedata', ['getBundleNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -80,7 +84,7 @@ export default {
             console.log('Starting live dashboard')
 
             this.SETBUFFERMAX(0)  // Reset the max buffer value
-            this.SETINITBUNDLENUM(null) // Reset initBundleNum to null
+            this.liveData.initBundleNum = null // // Reset initBundleNum to null
 
             this.setupLiveWebsocket()
 
@@ -137,15 +141,11 @@ export default {
                                       'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
                                       'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
                                       'SETPLANTSPECIESPARAM']),
-        ...mapMutations('livedata', ['SETSENSORINFO', 'SETINITBUNDLENUM']),
         // Action used for parsing the get_step response on completion of retrieval.
         // See the store/modules/dashboard.js.
         ...mapActions('dashboard', ['parseStep']),
         // Increment the duration of the mission based on the step number
         ...mapActions('wizard', ['SETLIVECONFIG']),
-        // parseData Action parses the sensor data sent from the simoc-sam.
-        // See store/modules/livedata.js
-        ...mapActions('livedata', ['parseData']),
 
         setupWebsocket() {
             const socket = io()
@@ -190,7 +190,6 @@ export default {
         setupLiveWebsocket() {
             // Connect to the simoc-sam SocketIO Server
             const socket = io(`http://${window.location.hostname}:8081`)
-            const liveData = useLiveDataStore()
 
             this.socket = socket
             console.log('Live socket created:', this.socket)
@@ -207,7 +206,12 @@ export default {
             })
             socket.on('sensor-info', info => {
                 console.log('Received sensor info:', info)
-                this.SETSENSORINFO(info)
+
+                // Sets the sensorInfo object in the LiveDataStore containing a list of all
+                // sensors that did or are currently receiving readings on the backend.
+                // If sensors are removed from the sensorInfo object the info is still available
+                // to display past info.
+                this.liveData.sensorInfo = {...this.liveData.sensorInfo, ...info}
 
                 console.log('Requesting step data')
                 this.socket.emit('send-step-data')
@@ -217,21 +221,20 @@ export default {
 
                 // If initBundleNum is null set it to the first n sent in the bundle of data.
                 // This indicates that a client has made an initial connection to the live dashboard.
-                if (liveData.initBundleNum === null) {
+                if (this.liveData.initBundleNum === null) {
                     console.log(`Initial bundle_num: ${data[0].n}`)
-                    this.SETINITBUNDLENUM(data[0].n)
-                    liveData.initBundleNum = data[0].n
+                    this.liveData.initBundleNum = data[0].n
                 }
 
-                // Send bundle to parseData in the livedata store for parsing
-                this.parseData(data)
+                // Send bundle to parseData in the liveData store for parsing
+                this.liveData.parseData(data)
 
-                this.SETLIVECONFIG({duration: {amount: this.getBundleNum}})  // Sets the totalMissionHours
-                this.SETBUFFERMAX(this.getBundleNum)
+                this.SETLIVECONFIG({duration: {amount: this.liveData.bundleNum}})  // Sets the totalMissionHours
+                this.SETBUFFERMAX(this.liveData.bundleNum)
             })
             socket.on('disconnect', msg => {
                 console.log('Server disconnected')
-                this.SETINITBUNDLENUM(null)
+                this.liveData.initBundleNum = null
 
                 this.SETBUFFERCURRENT(0)
                 this.SETBUFFERMAX(0)
