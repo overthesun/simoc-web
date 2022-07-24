@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import VueGtag from 'vue-gtag-next'
+import {createPinia} from 'pinia'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
@@ -23,6 +24,7 @@ createApp(App)
             config: {id: 'UA-29092818-6'},
             enabled: process.env.NODE_ENV === 'production',
         }, router)
+        .use(createPinia())
         .component('FaIcon', FontAwesomeIcon)
         .component('FaLayers', FontAwesomeLayers)
         .mount('#app')

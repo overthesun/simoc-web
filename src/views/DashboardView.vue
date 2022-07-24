@@ -9,6 +9,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
 
 import io from 'socket.io-client'
+import {useLiveDataStore} from '@/store/modules/LiveDataStore'
 
 export default {
     data() {
@@ -22,7 +23,7 @@ export default {
         ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
                                     'getIsTimerRunning', 'getStepParams', 'getCurrentStepBuffer',
                                     'getMaxStepBuffer', 'getLoadFromSimData', 'getCurrentMode']),
-        ...mapGetters('livedata', ['getBundleNum', 'getInitBundleNum']),
+        ...mapGetters('livedata', ['getBundleNum']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -189,6 +190,7 @@ export default {
         setupLiveWebsocket() {
             // Connect to the simoc-sam SocketIO Server
             const socket = io(`http://${window.location.hostname}:8081`)
+            const liveData = useLiveDataStore()
 
             this.socket = socket
             console.log('Live socket created:', this.socket)
@@ -215,9 +217,10 @@ export default {
 
                 // If initBundleNum is null set it to the first n sent in the bundle of data.
                 // This indicates that a client has made an initial connection to the live dashboard.
-                if (this.getInitBundleNum === null) {
+                if (liveData.initBundleNum === null) {
                     console.log(`Initial bundle_num: ${data[0].n}`)
                     this.SETINITBUNDLENUM(data[0].n)
+                    liveData.initBundleNum = data[0].n
                 }
 
                 // Send bundle to parseData in the livedata store for parsing
