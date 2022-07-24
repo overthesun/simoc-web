@@ -7,12 +7,13 @@ for (const path in requireModule) {
     const panelName = path.replace(/(^\.\/|\.vue$)/g, '')
     const panel = mod.default
     if (!panel.panelTitle) {
-            console.error('* Missin panelTitle in panel', panelName)
+            console.error('* Missing panelTitle in panel', panelName)
             panel.panelTitle = panelName
         }
         panels[panelName] = panel
   })
 }
+
 
 /*
 // create an object that maps file names (without extension)

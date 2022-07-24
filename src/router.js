@@ -1,15 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
-import EntryView from '@/views/EntryView.vue'
-import ConfigurationView from '@/views/ConfigurationView.vue'
-import DashboardView from '@/views/DashboardView.vue'
-import AceView from '@/views/AceView.vue'
-import EntryWelcome from '@/components/entry/Welcome.vue'
-import EntryLogin from '@/components/entry/Login.vue'
-import EntryMenu from '@/components/entry/Menu.vue'
-import EntryMenuConfig from '@/components/entry/MenuConfig.vue'
-import BaseConfiguration from '@/components/base/BaseConfiguration.vue'
-import BaseDashboard from '@/components/base/BaseDashboard.vue'
+import {EntryView, ConfigurationView, DashboardView, AceView} from './views'
+import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
+import {BaseConfiguration, BaseDashboard} from './components/base'
 // import {Login,Welcome,MainMenu} from './components/entry'
 // import {MainMenu,ConfigurationMenu} from './components/mainmenu'
 
