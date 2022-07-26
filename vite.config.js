@@ -5,21 +5,24 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  resolve: { 
+    plugins: [vue()],
+    resolve: { 
         alias: { 
             '@': path.resolve(__dirname, '/src') 
         } 
     },
-  server: {
+
+    server: {
         host: true,
         port: 8080,
         proxy: {
             '/*': 'http:nginx:8000'
         },
-
-  },
-  css: {
+    },
+    build: {
+     assetsDir: 'static',
+    },
+    css: {
         postcss: {
             plugins: [
                 postcssNesting

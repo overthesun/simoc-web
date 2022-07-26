@@ -22,7 +22,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
   /* Use Nasalization for the logo */
   @font-face{
       font-family:'Nasalization';
-      src: url('~@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
+      src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
   }
   body{
     font-family: "Open Sans", sans-serif;
