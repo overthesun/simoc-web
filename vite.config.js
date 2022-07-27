@@ -11,13 +11,16 @@ export default defineConfig({
             '@': path.resolve(__dirname, '/src') 
         } 
     },
-
     server: {
         host: true,
         port: 8080,
         proxy: {
-            '/*': 'http:nginx:8000'
-        },
+            '/*': {
+                target: 'http://nginx:8000',
+                changeOrigin: true,
+                secure: false,
+            }
+        }
     },
     build: {
      assetsDir: 'static',
