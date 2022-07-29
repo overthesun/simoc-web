@@ -200,7 +200,7 @@ export default {
                 // imported dynamically and lazily and that they shoultn't be bundled
                 // (note: template strings don't work here, so add a linter exception)
                 // eslint-disable-next-line prefer-template
-                const simdata = await import('../assets/simdata/' + fname + '.json')
+                const simdata = await import(`../assets/simdata/${fname}.json`)
                 return simdata.default  // get the actual data out of the module object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
