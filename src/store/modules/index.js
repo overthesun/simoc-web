@@ -8,5 +8,4 @@ for (const path in requireModule) {
     }
 }
 
-console.log(modules)
 export default modules
