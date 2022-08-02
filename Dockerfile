@@ -11,6 +11,16 @@ RUN apt-get update && \
     inetutils-ping \
     npm
 
+# Install specific version of Node as Node version included with 22.04 is outdated
+ENV NODE_VERSION=16.16.0
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+
 WORKDIR /frontend
 
 # COPY . ./

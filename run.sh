@@ -17,5 +17,5 @@ wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent\
 echo '* Simdata/models/skybox files downloaded to <src/assets>'
 cd ../..
 
-echo '* To start the dev server use: npm run serve'
+echo '* To start the dev server use: npm run dev'
 /bin/bash
