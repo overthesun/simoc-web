@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { createProxyMiddleware } from "http-proxy-middleware";
 import vue from '@vitejs/plugin-vue';
 import postcssNesting from 'postcss-nesting';
 import path from 'path';

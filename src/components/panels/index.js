@@ -1,19 +1,16 @@
 // extract all vue files from the panels/ dir
-const requireModule = import.meta.glob('./*.vue')
+const requireModule = import.meta.glob('./*.vue', { eager: true })
 const panels = {}
 
 for (const path in requireModule) {
-  requireModule[path]().then((mod) => {
-    const panelName = path.replace(/(^\.\/|\.vue$)/g, '')
-    const panel = mod.default
+    const panelName = path.replace(/(\.\/|\.vue)/g, "")
+    const panel = requireModule[path].default
     if (!panel.panelTitle) {
             console.error('* Missing panelTitle in panel', panelName)
             panel.panelTitle = panelName
         }
         panels[panelName] = panel
-  })
-}
-
+  }
 
 /*
 // create an object that maps file names (without extension)
