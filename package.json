@@ -30,10 +30,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.0",
+    "@vue/eslint-config-airbnb": "^6.0.0",
     "eslint": "^8.20.0",
     "eslint-formatter-summary": "^1.1.0",
     "eslint-plugin-vue": "^8.7.1",
-    "@vue/eslint-config-airbnb": "^6.0.0",
     "postcss-nesting": "^10.1.10",
     "sass": "^1.50.1",
     "vite": "^3.0.0"
