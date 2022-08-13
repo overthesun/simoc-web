@@ -1,8 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
-import {EntryView, ConfigurationView, DashboardView, AceView} from './views'
-import {EntryWelcome, EntryLogin, EntryMenu, EntryMenuConfig} from './components/entry'
-import {BaseConfiguration, BaseDashboard} from './components/base'
+import EntryView from '@/views/EntryView.vue'
 // import {Login,Welcome,MainMenu} from './components/entry'
 // import {MainMenu,ConfigurationMenu} from './components/mainmenu'
 
@@ -16,51 +14,51 @@ export default createRouter({
                 {
                     path: '',
                     name: 'initial',
-                    component: EntryWelcome,
+                    component: () => import('@/components/entry/Welcome.vue'),
                 },
                 {
                     path: 'entry',
                     name: 'entry',
-                    component: EntryLogin,
+                    component: () => import('@/components/entry/Login.vue'),
                 },
                 {
                     path: 'menu',
                     name: 'menu',
-                    component: EntryMenu,
+                    component: () => import('@/components/entry/Menu.vue'),
                 },
                 {
                     path: 'menuconfig',
                     name: 'menuconfig',
-                    component: EntryMenuConfig,
+                    component: () => import('@/components/entry/MenuConfig.vue'),
                 },
             ],
         },
         {
             path: '/menuconfig',
             name: 'menuconfig',
-            component: EntryMenuConfig,
+            component: () => import('@/components/entry/MenuConfig.vue'),
         },
         {
             path: '/ace',
             name: 'ace',
-            component: AceView,
+            conponent: () => import('@/views/AceView.vue'),
         },
         {
             path: '/configuration',
             name: 'configuration',
-            component: ConfigurationView,
+            component: () => import('@/views/ConfigurationView.vue'),
             children: [{
                 path: '/configuration',
-                component: BaseConfiguration,
+                component: () => import('@/components/base/BaseConfiguration.vue'),
             }],
         },
         {
             path: '/dashboard',
             name: 'dashboard',
-            component: DashboardView,
+            component: () => import('@/views/DashboardView.vue'),
             children: [{
                 path: '/dashboard',
-                component: BaseDashboard,
+                component: () => import('@/components/base/BaseDashboard.vue'),
             }],
         },
     ],
