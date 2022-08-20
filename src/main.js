@@ -1,5 +1,6 @@
 import {createApp} from 'vue'
 import VueGtag, {trackRouter} from 'vue-gtag-next'
+import {createPinia} from 'pinia'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
@@ -31,6 +32,7 @@ createApp(App)
             isEnabled: process.env.NODE_ENV === 'production',
             property: {id: tracking_id},
         })
+        .use(createPinia())
         .component('FaIcon', FontAwesomeIcon)
         .component('FaLayers', FontAwesomeLayers)
         .mount('#app')
