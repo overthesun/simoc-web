@@ -5,7 +5,7 @@ future dashboard views
 <template>
     <div id="dashboard-wrapper">
         <!-- Show the dashboard menu component when getMenuActive is true. -->
-        <DashboardMenu v-if="getMenuActive" />
+        <DashboardMenu v-if="menuActive" />
         <TheTopBar />
         <section class="main-wrapper">
             <Main />
@@ -20,7 +20,9 @@ future dashboard views
 </template>
 
 <script>
+import {storeToRefs} from 'pinia'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
@@ -41,8 +43,8 @@ export default {
         // but also when clicking on the browser back button.
         // Cases where the user closes the tab or refreshes are handled
         // in DashboardView.
-        if (this.getLeaveWithoutConfirmation) {
-            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
+        if (this.leaveWithoutConfirmation) {
+            this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Make user to confirm before exiting.
@@ -60,6 +62,28 @@ export default {
             }
         }
     },
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            menuActive, // Vuex: getMenuActive
+            leaveWithoutConfirmation, // Vuex: getLeaveWithoutConfirmation, SETLEAVEWITHOUTCONFIRMATION
+            isTimerRunning, // Vuex: getIsTimerRunning
+        } = storeToRefs(dashboard)
+
+        const {
+            pauseTimer, // Vuex: PAUSETIMER
+            startTimer, // Vuex: STARTTIMER
+        } = dashboard
+
+        return {
+            menuActive,
+            leaveWithoutConfirmation,
+            isTimerRunning,
+            pauseTimer,
+            startTimer,
+        }
+    },
     data() {
         return {
             pausedForModal: false,
@@ -74,11 +98,11 @@ export default {
         // If a modal opens while the timer is on,
         // pause it, then start it again after modal closes.
         getModalActive(newActive, oldActive) {
-            if (oldActive === false && this.getIsTimerRunning === true) {
-                this.PAUSETIMER()
+            if (oldActive === false && this.isTimerRunning === true) {
+                this.pauseTimer()
                 this.pausedForModal = true
             } else if (newActive === false && this.pausedForModal) {
-                this.STARTTIMER()
+                this.startTimer()
                 this.pausedForModal = false
             }
         },
