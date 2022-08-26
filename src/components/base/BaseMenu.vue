@@ -1,7 +1,7 @@
 <!-- Base menu component -->
 
 <template>
-    <div id="main-menu-wrapper" @click="closeMenu">
+    <div id="main-menu-wrapper" @click="menuActive = false">
         <div id="menu-wrapper">
             <header>
                 <img src="../../assets/simoc-logo.svg" class="simoc-logo">
@@ -18,17 +18,17 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
-    methods: {
+    setup() {
         // TODO this should be moved out of the dashboard store
-        ...mapMutations('dashboard', ['SETMENUACTIVE']),
-        closeMenu() {
-            // if the other menus want to perform additional
-            // actions they can use beforeDestroy
-            this.SETMENUACTIVE(false)
-        },
+        const dashboard = useDashboardStore()
+        const {menuActive} = storeToRefs(dashboard)
+        // if the other menus want to perform additional
+        // actions they can use beforeDestroy
+        return {menuActive}
     },
 }
 </script>

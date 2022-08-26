@@ -12,7 +12,6 @@ import {storeToRefs} from 'pinia'
 
 import io from 'socket.io-client'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
-import {dashboardState as state} from '../state/dashboard'
 
 export default {
     setup() {
@@ -25,12 +24,16 @@ export default {
             parameters, // Vuex: getStepParams
             currentStepBuffer, // Vuex: getCurrentStepBuffer, SETBUFFERCURRENT
             maxStepBuffer, // Vuex: getMaxStepBuffer, SETBUFFERMAX
+            isTimerRunning,
             loadFromSimData, // Vuex: getLoadFromSimData
-            timerID, // Vuex: SETTIMERID
+            timerId, // Vuex: SETTIMERID
             menuActive, // Vuex: SETMENUACTIVE
         } = storeToRefs(dashboard)
 
         const {
+            pauseTimer,
+            stopTimer,
+            parseStep,
             setMinStepNumber, // Vuex: SETMINSTEPNUMBER
             initGame, // Vuex: INITGAME
             updateBufferCurrent, // Vuex: UPDATEBUFFERCURRENT
@@ -44,10 +47,14 @@ export default {
             terminated,
             parameters,
             currentStepBuffer,
+            isTimerRunning,
             maxStepBuffer,
             loadFromSimData,
-            timerID,
+            timerId,
             menuActive,
+            pauseTimer,
+            stopTimer,
+            parseStep,
             setMinStepNumber,
             initGame,
             updateBufferCurrent,
@@ -57,7 +64,6 @@ export default {
     },
     data() {
         return {
-            state,
             socket: null,  // the websocket used to get the steps
         }
     },
@@ -75,7 +81,7 @@ export default {
             // the timer when current/max are set to 0 at the beginning
             if ((this.maxStepBuffer > 1) &&
                 (this.currentStepBuffer >= this.maxStepBuffer)) {
-                this.state.pauseTimer()
+                this.pauseTimer()
             }
         },
         stopped() {
@@ -90,14 +96,14 @@ export default {
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
-        this.state.stopTimer()
+        this.stopTimer()
         // do the same with the get_steps timer
         if (this.getStepsTimerID) {
             window.clearTimeout(this.getStepsTimerID)
         }
         // reset more variables
         // the buffer current should be 0 so its value is updated when step 1 is received
-        this.timerID = null
+        this.timerId = null
         this.getStepsTimerID = null
         this.currentStepBuffer = 0
         this.setMinStepNumber(0)
@@ -146,7 +152,7 @@ export default {
     beforeUnmount() {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
-        this.state.stopTimer()   // stop the step timer
+        this.stopTimer()   // stop the step timer
         this.menuActive = false  // close the menu if it was open
         if (!this.terminated) {
             this.killGame()
@@ -189,7 +195,7 @@ export default {
             })
             socket.on('step_data_handler', msg => {
                 // console.log('step_data_handler called, received:', msg)
-                this.state.parseStep(msg.data)
+                this.parseStep(msg.data)
                 // console.log('Received and parsed', Object.keys(msg.data).length, 'steps')
             })
             socket.on('steps_sent', msg => {
@@ -323,16 +329,16 @@ export default {
             // console.log('key:', e.key)
 
             let key_matched = true
-            const sb = this.state.currentStepBuffer
+            const sb = this.currentStepBuffer
             const setStep = (v) => {
-                this.state.setCurrentStepBuffer(v)
+                this.setCurrentStepBuffer(v)
             }
             switch (e.key) {
                 case ' ':
-                    if (this.state.isTimerRunning) {
-                        this.state.pauseTimer()
+                    if (this.isTimerRunning) {
+                        this.pauseTimer()
                     } else {
-                        this.state.startTimer()
+                        this.startTimer()
                     }
                     break
                 case 'ArrowLeft':
@@ -357,7 +363,7 @@ export default {
                     setStep(1)
                     break
                 case 'End':
-                    setStep(this.state.maxStepBuffer)
+                    setStep(this.maxStepBuffer)
                     break
                 default:
                     key_matched = false  // no key matched

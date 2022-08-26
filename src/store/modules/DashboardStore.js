@@ -36,6 +36,8 @@
  */
 import {defineStore} from 'pinia'
 import {parseUpdatedGameVars} from '@/javascript/gameVars'
+import {StepTimer} from '@/javascript/stepTimer'
+import _ from 'lodash'
 
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
@@ -48,14 +50,9 @@ export const useDashboardStore = defineStore('DashboardStore', {
         storageRatio: {},
         storageCapacities: {},
         detailsPerAgent: {},
-        maxStepBuffer: 0,      // the number of steps in the buffer
-        currentStepBuffer: 0,  // the step the simulation is displaying
-        stepInterval: 1000,    // the time between the steps, in milliseconds
         stopped: false,        // true if we forced termination, also set terminated
         terminated: false,     // true if we stopped or retrieved all steps from the server
-        timerID: null,
         getStepsTimerID: null,
-        isTimerRunning: false,
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
@@ -65,6 +62,16 @@ export const useDashboardStore = defineStore('DashboardStore', {
         humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
         activePanels: [],
         currentMode: '',
+
+        // Time Control
+        stepInterval: 1000,    // the time between the steps, in milliseconds
+        isTimerRunning: false,
+        timerId: null,
+
+        // Data Handling
+        data: {},              // Initialize state empty
+        currentStepBuffer: 0,  // the step the simulation is displaying
+        maxStepBuffer: 0,      // the number of steps in the buffer
     }),
 
     getters: {
@@ -126,35 +133,73 @@ export const useDashboardStore = defineStore('DashboardStore', {
             this.detailsPerAgent = simdata.details_per_agent
         },
 
-        /**
-         * Starts the step timer. This object is created within the DashboardView component on
-         * mounted. The timer is not started until the conditions are met for a reasonable buffer
-         * amount.
-         */
+        // Time Control
+        initTimer() {
+            // initialize and return the step timer that updates the
+            // current step and triggers watchers that update the panels
+            this.stopTimer()
+            this.timerId = new StepTimer(() => {
+                // increment the step only if we have enough buffered steps
+                // TODO (old) check the number of steps requests so we can still
+                // run simulations with a number of steps <= the limit
+                if (this.maxStepBuffer >= 30) {
+                    this.setCurrentStepBuffer(this.currentStepBuffer + 1)
+                }
+            }, this.stepInterval)
+            this.startTimer()
+        },
         startTimer() {
-        // if((this.maxStepBuffer >= 100 || this.terminated ) && !this.isTimerRunning){
-        // console.log("Step Timer running")
-            this.timerID.resume()
+            this.timerId.resume()
             this.isTimerRunning = true
-        // }
         },
-        /**
-         * Pauses the step timer.
-         */
         pauseTimer() {
-            // console.log("Step Timer paused")
-            this.timerID.pause()
+            this.timerId.pause()
             this.isTimerRunning = false
         },
-        /**
-         * Stops the step timer.
-         */
         stopTimer() {
-            if (this.timerID !== null) {
-                // console.log("Step Timer stopped")
-                this.timerID.stop()
+            if (this.timerId !== null) {
+                this.timerId.stop()
             }
-            this.isTimerRunning = false
+            this.isTimerRunning = true
+        },
+        setStepInterval(value) {
+            this.stepInterval = value
+            if (this.timerId !== null) {
+                this.timerId.changeInterval(this.stepInterval)
+            }
+        },
+
+        // Data Handling
+        setCurrentStepBuffer(value) {
+            this.currentStepBuffer = Math.min(Math.max(0, value), this.maxStepBuffer)
+        },
+        parseStep(value) {
+            const {
+                game_id,       // Same for each batch
+                n_steps,       // N steps contained in this batch
+                step_num,      // Latest step sent
+                ...agent_data  // Agent-specific data
+            } = value
+            if (!this.gameId) {
+                this.gameId = game_id
+            }
+            console.log(`Received ${n_steps} new steps (${step_num} total).`)
+            this.maxStepBuffer = step_num
+
+            // For arrays (timeseries data), concatenate value to state
+            /* eslint-disable consistent-return */
+            _.mergeWith(this.data, agent_data, (a, b) => {
+                // Define custom handler to for arrays
+                if (_.isArray(a)) {
+                    return a.concat(b)
+                }
+                // Others types are overwritten
+            })
+        },
+        getData(path, range=null) {
+            // Return a subset of data using lodash path and (optional) range
+            const fromPath = _.get(this.data, path)
+            return range ? fromPath.slice(range[0], range[1]) : fromPath
         },
 
         /**
@@ -162,7 +207,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param value
          */
-        setStopped(value) {
+         setStopped(value) {
             // this var should be set only when we interrupt the
             // simulation before receiving all the steps
             this.stopped = value
@@ -170,7 +215,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
             // but it could terminate cleanly without being stopped
             this.terminated = value
         },
-
         /**
          * Accesses game_id key in parameters and sets it to id.
          *
@@ -222,35 +266,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
             this.parameters.n_steps = this.maxStepBuffer > 100 ? 100 : 10
         },
 
-        /**
-         * Conditionally update the maxStepBuffer.
-         *
-         * @param max
-         */
-        updateBufferMax(max) {
-            const {step_num: step} = max
-            this.maxStepBuffer = Math.max(step, this.maxStepBuffer)
-        },
-        /**
-         * Update the currentStepBuffer, making sure it's <= maxStepBuffer.
-         *
-         * @param value
-         */
-        updateBufferCurrent(value) {
-            this.currentStepBuffer = Math.max(1, Math.min(value, this.maxStepBuffer))
-        },
-
-        /**
-         * Sets the step interval of the simulation.
-         *
-         * @param value
-         */
-        setStepInterval(value) {
-            this.stepInterval = value
-            if (this.timerID !== null) {
-                this.timerID.changeInterval(this.stepInterval)
-            }
-        },
 
         /**
          * Sets the agent type.

@@ -128,7 +128,6 @@ export default {
             validating: false,
             // true while waiting for a response after clicking on "Launch Simulation"
             awaiting_response: false,
-            menuActive: false, // Used with class binding to display the menu.
             stepMax: 1,
             greenhouseSize: {
                 none: 0,

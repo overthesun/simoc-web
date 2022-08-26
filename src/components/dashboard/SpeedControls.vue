@@ -14,13 +14,16 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {dashboardState as state} from '../../state/dashboard'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {setStepInterval} = dashboard
+        return {setStepInterval}
+    },
     data() {
         return {
-            state,
             speeds: [0.25, 0.5, 1, 2, 4, 8],  // available speeds
             speedIndex: null,
         }
@@ -53,7 +56,7 @@ export default {
             // offset can be -1 or +1 to use the previous/next speed in the array
             this.speedIndex = Math.max(0, Math.min(this.speeds.length-1, this.speedIndex+offset))
             // if the speed is e.g. 4x, the interval must be 250ms
-            this.state.setStepInterval(1 / this.speeds[this.speedIndex] * 1000)
+            this.setStepInterval(1 / this.speeds[this.speedIndex] * 1000)
         },
     },
 }

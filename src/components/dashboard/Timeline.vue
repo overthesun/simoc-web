@@ -18,12 +18,23 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {dashboardState as state} from '../../state/dashboard'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer, maxStepBuffer, timerId, isTimerRunning
+            } = storeToRefs(dashboard)
+        const {initTimer, pauseTimer, startTimer, setCurrentStepBuffer
+            } = dashboard
+        return {
+            currentStepBuffer, maxStepBuffer, timerId, isTimerRunning,
+            initTimer, pauseTimer, startTimer, setCurrentStepBuffer
+        }
+    },
     data() {
         return {
-            state,
             currentPercentage: 1,
             bufferPercentage: 1,
             currentStep: 1,
@@ -36,48 +47,48 @@ export default {
     },
     watch: {
         // update scrubber percentages when the current and/or max step change
-        'state.currentStepBuffer'() { this.updatePercentages() },
-        'state.maxStepBuffer'() { this.updatePercentages() },
+        currentStepBuffer() { this.updatePercentages() },
+        maxStepBuffer() { this.updatePercentages() },
     },
     mounted() {
         // start the timer when the component is mounted, the actual
         // visualization will start only when the buffer has enough data
-        this.state.initTimer()
+        this.initTimer()
     },
     methods: {
         // called when the user starts dragging the timeline slider to
         // prevent updates while the user is interacting with the slider
         pauseBuffer() {
             // update the graphs in real-time while the user drags
-            this.state.setCurrentStepBuffer(this.currentStep)
+            this.setCurrentStepBuffer(this.currentStep)
             if (this.userIsDragging) {
                 // the user is still dragging, do nothing else
                 return
             }
             // save the current state before pausing
-            this.timerWasRunning = state.isTimerRunning
+            this.timerWasRunning = this.isTimerRunning
             this.userIsDragging = true
-            if (this.state.timerId !== null) {
-                this.state.pauseTimer()
+            if (this.timerId !== null) {
+                this.pauseTimer()
             }
         },
 
         // called when the user selects a new step on the timeline slider
         updateBuffer() {
             this.userIsDragging = false  // the user released the slider
-            this.state.setCurrentStepBuffer(this.currentStep)
+            this.setCurrentStepBuffer(this.currentStep)
             // when the timer is paused and the slider moved beyond the max
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
-                this.state.startTimer()
+                this.startTimer()
             }
         },
 
         updatePercentages() {
-            this.currentStep = this.state.currentStepBuffer
-            this.currentPercentage = (this.state.currentStepBuffer / this.getTotalMissionHours) * 100
-            this.bufferPercentage = (this.state.maxStepBuffer / this.getTotalMissionHours) * 100
+            this.currentStep = this.currentStepBuffer
+            this.currentPercentage = (this.currentStepBuffer / this.getTotalMissionHours) * 100
+            this.bufferPercentage = (this.maxStepBuffer / this.getTotalMissionHours) * 100
         },
     },
 }

@@ -49,6 +49,10 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
@@ -56,6 +60,11 @@ export default {
     components: {
         BasePanel,
         ...panels,  // add all panels as components
+    },
+    setup() {
+        const {dashboard} = useDashboardStore()
+        const {currentMode} = storeToRefs(dashboard)
+        return {currentMode}
     },
     data() {
         return {
@@ -70,12 +79,12 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getActivePanels', 'getCurrentMode']),
+        ...mapGetters('dashboard', ['getActivePanels']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                if (panel.modes.includes(this.getCurrentMode)) {
+                if (panel.modes.includes(this.currentMode)) {
                     sorted.push([panel.panelTitle, panelName])
                 }
             })
@@ -93,7 +102,7 @@ export default {
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
         } else {
-            this.SETDEFAULTPANELS(this.getCurrentMode)
+            this.SETDEFAULTPANELS(this.currentMode)
         }
     },
     methods: {
