@@ -6,69 +6,34 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-
 import axios from 'axios'
-import {storeToRefs} from 'pinia'
 
 import io from 'socket.io-client'
+
+import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
-
-        const {
-            getStepsTimerID, // Vuex: getGetStepsTimerID, SETGETSTEPSTIMERID
-            stopped, // Vuex: getStopped
-            terminated, // Vuex: getTerminated, SETTERMINATED
-            parameters, // Vuex: getStepParams
-            currentStepBuffer, // Vuex: getCurrentStepBuffer, SETBUFFERCURRENT
-            maxStepBuffer, // Vuex: getMaxStepBuffer, SETBUFFERMAX
-            isTimerRunning,
-            loadFromSimData, // Vuex: getLoadFromSimData
-            timerId, // Vuex: SETTIMERID
-            menuActive, // Vuex: SETMENUACTIVE
-        } = storeToRefs(dashboard)
-
-        const {
-            pauseTimer,
-            stopTimer,
-            parseStep,
-            setMinStepNumber, // Vuex: SETMINSTEPNUMBER
-            initGame, // Vuex: INITGAME
-            updateBufferCurrent, // Vuex: UPDATEBUFFERCURRENT
-            setStopped, // Vuex: SETSTOPPED
-            setPlantSpeciesParam, // Vuex: SETPLANTSPECIESPARAM
-        } = dashboard
-
-        return {
-            getStepsTimerID,
-            stopped,
-            terminated,
-            parameters,
-            currentStepBuffer,
-            isTimerRunning,
-            maxStepBuffer,
-            loadFromSimData,
-            timerId,
-            menuActive,
-            pauseTimer,
-            stopTimer,
-            parseStep,
-            setMinStepNumber,
-            initGame,
-            updateBufferCurrent,
-            setStopped,
-            setPlantSpeciesParam,
-        }
+        const {isTimerRunning, currentStepBuffer,
+               maxStepBuffer} = storeToRefs(dashboard)
+        const {parseStep, startTimer, pauseTimer, stopTimer,
+               setCurrentStepBuffer} = dashboard
+        return {isTimerRunning, currentStepBuffer, maxStepBuffer, parseStep,
+                startTimer, pauseTimer, stopTimer, setCurrentStepBuffer}
     },
     data() {
         return {
             socket: null,  // the websocket used to get the steps
         }
     },
+
     computed: {
         // getters from the vuex stores
+        ...mapGetters('dashboard', ['getGetStepsTimerID', 'getStopped', 'getTerminated',
+                                    'getStepParams', 'getCurrentStepBuffer',
+                                    'getMaxStepBuffer', 'getLoadFromSimData']),
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
@@ -76,17 +41,17 @@ export default {
     watch: {
         // this method pauses the current simulation if the current step
         // is at or beyond the amount of steps that are currently buffered
-        currentStepBuffer() {
+        getCurrentStepBuffer() {
             // check that we have values in the buffer to avoid pausing
             // the timer when current/max are set to 0 at the beginning
-            if ((this.maxStepBuffer > 1) &&
-                (this.currentStepBuffer >= this.maxStepBuffer)) {
+            if ((this.getMaxStepBuffer > 1) &&
+                (this.getCurrentStepBuffer >= this.getMaxStepBuffer)) {
                 this.pauseTimer()
             }
         },
-        stopped() {
+        getStopped() {
             // if the simulation got stopped, tell the server
-            if (this.stopped) {
+            if (this.getStopped) {
                 this.killGame()
             }
         },
@@ -98,16 +63,16 @@ export default {
         // Kill the timer if there is still one running somehow
         this.stopTimer()
         // do the same with the get_steps timer
-        if (this.getStepsTimerID) {
-            window.clearTimeout(this.getStepsTimerID)
+        if (this.getGetStepsTimerID) {
+            window.clearTimeout(this.getGetStepsTimerID)
         }
         // reset more variables
         // the buffer current should be 0 so its value is updated when step 1 is received
-        this.timerId = null
-        this.getStepsTimerID = null
-        this.currentStepBuffer = 0
-        this.setMinStepNumber(0)
-        this.setStopped(false)
+        this.SETTIMERID(null)          // Set the timerID to null
+        this.SETGETSTEPSTIMERID(null)  // Set the getStepsTimerID to null
+        this.SETBUFFERCURRENT(0)       // Reset the current buffer value
+        this.SETMINSTEPNUMBER(0)       // Reset the starting step
+        this.SETSTOPPED(false)         // Reset stopped and terminated flags
 
         // TODO: we switched from using a timer to request steps via HTTP to
         // websockets, but for now all the old code is still there.
@@ -120,14 +85,14 @@ export default {
 
         // if we load the simulation data, there's nothing else to do, otherwise
         // we have to reset a few more values, init the game, and request steps
-        if (!this.loadFromSimData) {
-            this.maxStepBuffer = 0  // Reset the max buffer value
+        if (!this.getLoadFromSimData) {
+            this.SETBUFFERMAX(0)  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
-            this.initGame(this.getGameID)
+            this.INITGAME(this.getGameID)
             // This sets the get_step parameter for the agentGrowth filter.
             // TODO: this should actually be done in tandem with the config wizard plant updates.
             // This must be done after INITGAME or it will be reset
-            this.setPlantSpeciesParam(this.getConfiguration)
+            this.SETPLANTSPECIESPARAM(this.getConfiguration)
 
             console.log('Starting simulation', this.getGameID)
 
@@ -153,8 +118,8 @@ export default {
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
         this.stopTimer()   // stop the step timer
-        this.menuActive = false  // close the menu if it was open
-        if (!this.terminated) {
+        this.SETMENUACTIVE(false)  // close the menu if it was open
+        if (!this.getTerminated) {
             this.killGame()
         }
         // disconnect and destroy the websocket
@@ -180,7 +145,7 @@ export default {
             socket.on('connect', () => {
                 // This is triggered when the websocket is first connected but also
                 // if the websocket gets disconnected and reconnects automatically
-                const req = {data: this.parameters}
+                const req = {data: this.getStepParams}
                 // TODO: before using websockets, we requested a batch of n_steps steps,
                 // but now this is no longer necessary since we request them all at once,
                 // so the store should be updated to match getTotalMissionHours,
@@ -242,9 +207,9 @@ export default {
 
         async stepBufferTimer() {
             // replaced by websockets
-            const stepParams = this.parameters  // filter parameters stored in dashboard store
+            const stepParams = this.getStepParams  // filter parameters stored in dashboard store
 
-            if (!this.terminated) {
+            if (!this.getTerminated) {
                 // if the sim is not terminated, set a timer that will
                 // retrieve and parse a batch of step
                 const getStepsTimerID = setTimeout(async() => {
@@ -256,7 +221,7 @@ export default {
                         this.stepBufferTimer()  // retry
                     }
                 }, 2000)
-                this.getStepsTimerID = getStepsTimerID
+                this.SETGETSTEPSTIMERID(getStepsTimerID)
             }
         },
 
@@ -268,10 +233,10 @@ export default {
             await this.parseStep(Object.values(step_data))
 
             // keep requesting steps until we retrieved them all, then terminate
-            if (this.maxStepBuffer < parseInt(this.getTotalMissionHours, 10)) {
+            if (this.getMaxStepBuffer < parseInt(this.getTotalMissionHours, 10)) {
                 this.stepBufferTimer()
             } else {
-                this.terminated = true
+                this.SETTERMINATED(true)
             }
         },
 
@@ -287,7 +252,7 @@ export default {
             // for some background on this method.
             // Stop the get_steps timer and tell the server
             // to stop calculating steps.
-            if (!this.loadFromSimData) {
+            if (!this.getLoadFromSimData) {
                 // tell the server to kill the game, unless we loaded simdata
                 const params = {game_id: this.getGameID}
                 try {
@@ -297,11 +262,11 @@ export default {
                     console.log(error)
                 }
             }
-            this.terminated = true  // terminate the sim
+            this.SETTERMINATED(true)  // terminate the sim
             // stop timer that sends requests to get_steps
-            if (this.getStepsTimerID !== null) {
-                window.clearTimeout(this.getStepsTimerID)
-                this.getStepsTimerID = null
+            if (this.getGetStepsTimerID !== null) {
+                window.clearTimeout(this.getGetStepsTimerID)
+                this.SETGETSTEPSTIMERID(null)
             }
         },
 

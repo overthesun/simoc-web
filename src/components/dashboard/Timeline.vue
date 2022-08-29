@@ -18,20 +18,19 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
-        const {currentStepBuffer, maxStepBuffer, timerId, isTimerRunning
-            } = storeToRefs(dashboard)
-        const {initTimer, pauseTimer, startTimer, setCurrentStepBuffer
-            } = dashboard
-        return {
-            currentStepBuffer, maxStepBuffer, timerId, isTimerRunning,
-            initTimer, pauseTimer, startTimer, setCurrentStepBuffer
-        }
+        const {isTimerRunning, timerId, currentStepBuffer,
+               maxStepBuffer} = storeToRefs(dashboard)
+        const {initTimer, pauseTimer, startTimer,
+               setCurrentStepBuffer} = dashboard
+        return {isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
+                initTimer, pauseTimer, startTimer, setCurrentStepBuffer}
     },
     data() {
         return {

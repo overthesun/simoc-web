@@ -37,6 +37,7 @@
 import {defineStore} from 'pinia'
 import {parseUpdatedGameVars} from '@/javascript/gameVars'
 import {StepTimer} from '@/javascript/stepTimer'
+import {parseData} from '@/javascript/parseData'
 import _ from 'lodash'
 
 export const useDashboardStore = defineStore('DashboardStore', {
@@ -196,10 +197,9 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 // Others types are overwritten
             })
         },
-        getData(path, range=null) {
-            // Return a subset of data using lodash path and (optional) range
-            const fromPath = _.get(this.data, path)
-            return range ? fromPath.slice(range[0], range[1]) : fromPath
+        getData(path) {
+            // Return a subset of data from path
+            return parseData(this.data, path)
         },
 
         /**
@@ -419,28 +419,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
             this.storageRatio = {}
             this.storageCapacities = {}
             this.detailsPerAgent = {}
-        },
-        /**
-         * Sets all state variables for each step in the simulation. Sends a batch of step data to
-         * each step object and is destructured into their associated state variables.
-         *
-         * @param stepData
-         */
-        parseStep(stepData) {
-            console.log(stepData)
-
-            stepData.forEach(item => {
-                this.setTotalConsumption(item)
-                this.setTotalProduction(item)
-                this.setAgentType(item)
-                this.setAgentGrowth(item)
-                this.setStorageRatios(item)
-                this.setStorageCapacities(item)
-                this.setDetailsPerAgent(item)
-                this.updateBufferMax(item)
-                this.setNSteps(item)
-                this.updateMinStepNumber(item)
-            })
         },
     },
 })

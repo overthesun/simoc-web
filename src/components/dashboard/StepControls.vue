@@ -14,9 +14,9 @@
 </template>
 
 <script>
+import {mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
-import {mapGetters} from 'vuex'
 
 export default {
     setup() {
@@ -30,10 +30,10 @@ export default {
     },
     methods: {
         prevStep() {
-            this.setCurrentStepBuffer(currentStepBuffer - 1)
+            this.setCurrentStepBuffer(this.currentStepBuffer - 1)
         },
         nextStep() {
-            this.setCurrentStepBuffer(currentStepBuffer + 1)
+            this.setCurrentStepBuffer(this.currentStepBuffer + 1)
         },
     },
 }
