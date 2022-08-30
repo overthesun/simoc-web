@@ -38,6 +38,8 @@ CMD ["run.sh"]
 #
 # Run the container using:
 #   docker run --rm --network simoc_simoc-net -p 8080:8080 -v `pwd`:/frontend -it frontend-dev
+#
+# Omit the --network arg if you don't need to connect to the backend.
 
 
 # To automatically run the frontend the dockerfile can be changed to:
