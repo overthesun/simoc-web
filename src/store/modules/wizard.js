@@ -166,7 +166,7 @@ export default {
         // array of component names used within the ConfigurationView. Used to display by index
         formOrder: ['Initial', 'Inhabitants', 'Greenhouse', 'Energy', 'Finalize'],
         // which window on the reference side is active
-        activeReference: 'Reference',
+        activeReference: 'Layout',
         // which entry is currently active within the reference
         activeRefEntry: 'Welcome',
         // true if the preset dropdown and the config form should be reset
