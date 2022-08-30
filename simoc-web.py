@@ -28,8 +28,13 @@ def run(args):
 
 def docker_run(*args):
     """Run an arbitrary docker-compose command."""
-    return run(['docker', 'run', '--rm', '--network', 'simoc_simoc-net',
-                '-p', '8080:8080', '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
+    # detect and connect to the network if it's available
+    net_name = 'simoc_simoc-net'
+    cp = subprocess.run(['docker', 'network', 'inspect', net_name],
+                        capture_output=True)
+    net_args = ['--network', net_name] if cp.returncode == 0 else []
+    return run(['docker', 'run', '--rm', *net_args, '-p', '8080:8080',
+                '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
 
 
 @cmd
