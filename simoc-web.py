@@ -73,6 +73,11 @@ def build_image():
     return run(['docker', 'build', '.', '-t', IMGNAME])
 
 @cmd
+def setup_deps():
+    """Install frontend dependencies and download files."""
+    return docker_run('--entrypoint', 'bash', IMGNAME, 'run.sh')
+
+@cmd
 def shell():
     """Run an interactive shell in the frontend-dev container."""
     return docker_run('-it', IMGNAME)
@@ -99,13 +104,13 @@ def copy_dist_dir():
         simoc_server_dir = pathlib.Path(p).resolve()
     ans = input(f'* Copy <{simoc_web_dist_dir}> into <{simoc_server_dir}>? [Y/n] ')
     if ans.lower().strip() == 'n':
-        print('* Aborting')
+        print(f'* <{simoc_web_dist_dir}> not copied')
         return False
     simoc_dist_dir = simoc_server_dir / 'dist'
     if simoc_dist_dir.exists():
         ans = input(f'* <{simoc_dist_dir}> already exist, remove it? [Y/n] ')
         if ans.lower().strip() == 'n':
-            print('* Aborting')
+            print(f'* <{simoc_web_dist_dir}> not copied')
             return False
         shutil.rmtree(simoc_dist_dir)
         print(f'* <{simoc_dist_dir}> removed.')
@@ -117,6 +122,12 @@ def copy_dist_dir():
 def build_and_copy():
     """Build the frontend and copy the dist dir in the simoc repo."""
     return build() and copy_dist_dir()
+
+@cmd
+def setup():
+    """Set up the docker image, build the frontend, and copy the dist dir."""
+    return (install_docker() and build_image() and setup_deps() and
+            build_and_copy())
 
 
 def create_help(cmds):
