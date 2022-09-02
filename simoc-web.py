@@ -26,8 +26,14 @@ def run(args):
     print()
     return not result.returncode
 
+def docker_available():
+    """Return True if docker is installed."""
+    return shutil.which('docker')
+
 def docker_run(*args):
-    """Run an arbitrary docker-compose command."""
+    """Run an arbitrary docker command."""
+    if not docker_available():
+        install_docker()
     # detect and connect to the network if it's available
     net_name = 'simoc_simoc-net'
     cp = subprocess.run(['docker', 'network', 'inspect', net_name],
@@ -36,6 +42,30 @@ def docker_run(*args):
     return run(['docker', 'run', '--rm', *net_args, '-p', '8080:8080',
                 '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
 
+def install_docker():
+    """Install docker and docker-compose."""
+    # technically we don't need docker-compose, but we might as well
+    # install it, since it's needed by the backend
+    return install_docker_linux()
+
+def install_docker_linux():
+    # this function is duplicated in overthesun/simoc/simoc.py,
+    # changes to this function should be ported there too
+    if docker_available():
+        return True
+    # `apt` already creates a `docker` group, but we need to manually
+    # add the current user to it and ask the user to log out/log in
+    # for the change to take place and for `docker` to work without `sudo`
+    print('Installing docker and docker-compose:')
+    user = os.getenv('USER')
+    if not (run(['sudo', 'apt', 'install', '-y', 'docker', 'docker-compose']) and
+            run(['sudo', 'usermod', '-aG', 'docker', user])):
+        return False
+    print('Please log out and log in again (or restart the machine) '
+          'to complete the Docker installation.')
+    print('After logging back in, you can resume the installation of SIMOC.')
+    print()
+    return False
 
 @cmd
 def build_image():
