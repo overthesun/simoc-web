@@ -1,5 +1,6 @@
 """Script to setup and run the SIMOC frontend through Docker."""
 
+import os
 import shutil
 import pathlib
 import argparse
