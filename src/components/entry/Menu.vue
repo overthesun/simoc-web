@@ -106,6 +106,11 @@ export default {
             if (e.ctrlKey && e.key === 'a') {
                 this.showAgentEditor = true
             }
+
+            if (e.ctrlKey && e.key === 'k') {
+                this.SETCURRENTMODE('kiosk')
+                this.$router.push('/')
+            }
         },
     },
 }
