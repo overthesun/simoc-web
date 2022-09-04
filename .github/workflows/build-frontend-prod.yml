@@ -40,6 +40,7 @@ jobs:
           wget -r -nH --cut-dirs=2 --no-parent --accept="*.glb" -erobots=off -q --show-progress https://simoc.space/download/models/
       - name: npm install, build, test, and lint
         run: |
+          npm install -g npm@latest
           npm install
           npm run build --if-present
           npm test --if-present
