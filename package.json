@@ -38,7 +38,7 @@
     "eslint-plugin-vue": "^7.14.0",
     "sass": "^1.50.1",
     "sass-loader": "^12.1.0",
-    "webpack": "^5.52.0"
+    "webpack": "^5.74.0"
   },
   "postcss": {
     "plugins": {
