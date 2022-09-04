@@ -109,7 +109,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
+        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams', 'getCurrentMode']),
         ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
                                  'getActiveConfigType', 'getActiveForm',
                                  'getFormLength', 'getTotalMissionHours',
@@ -243,7 +243,7 @@ export default {
                         this.SETCONFIGURATION(simdata.configuration)
                         this.SETSIMULATIONDATA({simdata, currency_desc})
                         this.SETBUFFERMAX(simdata.steps)
-                        this.SETCURRENTMODE('sim')
+                        this.SETCURRENTMODE(this.getCurrentMode !== 'kiosk' ? 'sim' : 'kiosk')
                         this.SETLOADFROMSIMDATA(true)
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
@@ -276,7 +276,7 @@ export default {
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.SETCURRENTMODE('sim')
+                this.SETCURRENTMODE(this.getCurrentMode !== 'kiosk' ? 'sim' : 'kiosk')
                 this.SETLOADFROMSIMDATA(false)
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')

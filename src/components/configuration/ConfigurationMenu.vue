@@ -3,7 +3,7 @@
         <template #menu-title>
             Configuration Menu
         </template>
-        <template #menu-buttons>
+        <template v-if="getCurrentMode !== 'kiosk'" #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
                 :config="getConfiguration"
@@ -12,6 +12,11 @@
             <UploadConfig :handle-file="handleUpload" />
             <button @click="resetConfig">Reset Configuration</button>
             <Logout />
+        </template>
+        <template v-else #menu-buttons>
+            <h4> Are you sure you want to quit? </h4>
+            <button @click="resetConfig">New Mission</button>
+            <button class="btn-warning" @click="stop">Cancel</button>
         </template>
     </BaseMenu>
 </template>
@@ -29,6 +34,7 @@ export default {
         Logout,
     },
     computed: {
+        ...mapGetters('dashboard', ['getCurrentMode']),
         ...mapGetters('wizard', ['getConfiguration']),
 
         isValid() {
@@ -51,7 +57,13 @@ export default {
         resetConfig() {
             this.confirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => this.SETRESETCONFIG(true),
+                confirmCallback: () => {
+                    if (this.getCurrentMode !== 'kiosk') {
+                        this.SETRESETCONFIG(true)
+                    } else {
+                        this.$router.push('/')
+                    }
+                },
             })
         },
     },
