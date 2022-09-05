@@ -16,7 +16,7 @@ use some of these features.
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
         <template v-else #menu-buttons>
-            <h4> Are you sure you want to quit? </h4>
+            <p> Are you sure you want to quit? </p>
             <button @click="toConfiguration">New Mission</button>
             <button class="btn-warning" @click="stop">Cancel</button>
         </template>
