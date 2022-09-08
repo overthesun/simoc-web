@@ -2,7 +2,7 @@
     <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
-        <ConfigurationMenu v-if="getMenuActive" />
+        <ConfigurationMenu v-if="menuActive" />
         <router-view v-slot="{Component}">
             <component :is="Component">
                 <!-- Wizard Jump Options, only available in Guided Configuration -->
@@ -70,8 +70,10 @@
 
 <script>
 import axios from 'axios'
+import {storeToRefs} from 'pinia'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
@@ -88,6 +90,32 @@ export default {
         Reference,
         Graphs,
         Layout,
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            menuActive, // Vuex: getMenuActive
+            parameters, // Vuex: getStepParams UNUSED
+            loadFromSimData, // Vuex: SETLOADFROMSIMDATA
+            maxStepBuffer, // Vuex: SETBUFFERMAX
+            currentMode, // Vuex: SETCURRENTMODE
+        } = storeToRefs(dashboard)
+
+        const {
+            setGameParams, // Vuex: SETGAMEPARAMS
+            setSimulationData, // Vuex: SETSIMULATIONDATA
+        } = dashboard
+
+        return {
+            menuActive,
+            parameters, // UNUSED
+            loadFromSimData,
+            maxStepBuffer,
+            currentMode,
+            setGameParams,
+            setSimulationData,
+        }
     },
     data() {
         return {
@@ -109,7 +137,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
         ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
                                  'getActiveConfigType', 'getActiveForm',
                                  'getFormLength', 'getTotalMissionHours',
@@ -149,8 +176,6 @@ export default {
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
@@ -241,10 +266,10 @@ export default {
                 if (simdata) {
                     try {
                         this.SETCONFIGURATION(simdata.configuration)
-                        this.SETSIMULATIONDATA({simdata, currency_desc})
-                        this.SETBUFFERMAX(simdata.steps)
-                        this.SETCURRENTMODE('sim')
-                        this.SETLOADFROMSIMDATA(true)
+                        this.setSimulationData({simdata, currency_desc})
+                        this.maxStepBuffer = simdata.steps
+                        this.currentMode = 'sim'
+                        this.loadFromSimData = true
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
                     } catch (error) {
@@ -272,12 +297,12 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
-                this.SETGAMEPARAMS({
+                this.setGameParams({
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.SETCURRENTMODE('sim')
-                this.SETLOADFROMSIMDATA(false)
+                this.currentMode = 'sim'
+                this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
             } catch (error) {
