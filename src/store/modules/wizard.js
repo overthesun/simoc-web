@@ -1,6 +1,6 @@
 // Contains the shared state for all things related to the wizard.
 // User selected configuration
-// Currently active reference selections - Reference / Graphs / Recommended
+// Currently active reference selections - Layout / Graphs / Reference
 // Currently selected reference entry - this is used to set which entry should be active within
 // the encylopedia. Mostly used for clicking the form section headers to activate the approriate.
 
@@ -166,9 +166,9 @@ export default {
         // array of component names used within the ConfigurationView. Used to display by index
         formOrder: ['Initial', 'Inhabitants', 'Greenhouse', 'Energy', 'Finalize'],
         // which window on the reference side is active
-        activeReference: 'Reference',
+        activeReference: 'Layout',  // see also RESETCONFIG below
         // which entry is currently active within the reference
-        activeRefEntry: 'Welcome',
+        activeRefEntry: 'Welcome',  // see also RESETCONFIG below
         // true if the preset dropdown and the config form should be reset
         resetConfig: false,
         // default presets
@@ -351,10 +351,10 @@ export default {
             state.activeReference = value
         },
         SETACTIVEREFENTRY: (state, value) => {
-            state.activeRefEntry = value
             // This is set here so I don't have to call it on every link.
             // It is redundant for the table of contents navigation.
             state.activeReference = 'Reference'
+            state.activeRefEntry = value
         },
         SETRESETCONFIG: (state, value) => {
             state.resetConfig = value
@@ -362,7 +362,7 @@ export default {
         RESETCONFIG(state) {
             state.configuration = get_default_config()
             state.activeFormIndex = 0
-            state.activeReference = 'Reference'
+            state.activeReference = 'Layout'
             state.activeRefEntry = 'Welcome'
         },
     },
