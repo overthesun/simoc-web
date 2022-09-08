@@ -33,11 +33,38 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Inhabitants Status',
     modes: ['sim'],
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            currentStepBuffer,
+            gameConfig,
+            gameCurrencies,
+            humanAtmosphere,
+        } = storeToRefs(dashboard)
+
+        const {
+            getAgentType,
+            getStorageCapacities,
+        } = dashboard
+
+        return {
+            currentStepBuffer,
+            gameConfig,
+            gameCurrencies,
+            humanAtmosphere,
+            getAgentType,
+            getStorageCapacities,
+        }
+    },
     data() {
         return {
             // shades of red to warn the user when values pass the threshold
@@ -51,15 +78,12 @@ export default {
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
-                                    'getStorageCapacities', 'getGameConfig',
-                                    'getGameCurrencies', 'getHumanAtmosphere']),
         step() {
-            return this.getCurrentStepBuffer
+            return this.currentStepBuffer
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
-            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            let storage = this.gameConfig.storages[this.humanAtmosphere]
             // TODO: Revert ABM Workaround
             // gameConfig structure has been updated in the backend, but presets use old structure.
             storage = Array.isArray(storage) ? storage[0] : storage
@@ -125,7 +149,7 @@ export default {
             })
         },
         humans() {
-            const agents = this.getAgentType(this.getCurrentStepBuffer)
+            const agents = this.getAgentType(this.currentStepBuffer)
             if (agents !== undefined && agents.human_agent !== undefined) {
                 return agents.human_agent
             } else {
@@ -137,8 +161,8 @@ export default {
     mounted() {
         // TODO: ABM Redesign Workaround
         // Compile a list of storages that include food, and which food currencies they contain.
-        const {storages} = this.getGameConfig
-        const foodTypes = Object.keys(this.getGameCurrencies.food)
+        const {storages} = this.gameConfig
+        const foodTypes = Object.keys(this.gameCurrencies.food)
         Object.entries(storages).forEach(([storageName, storageData]) => {
             const foodCurrencies = []
             if (storageData[0].storageType.includes('food_storage')) {
@@ -157,7 +181,7 @@ export default {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step)[this.getHumanAtmosphere][1]
+            const air_storage = this.getStorageCapacities(this.step)[this.humanAtmosphere][1]
             return air_storage[currency].value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {

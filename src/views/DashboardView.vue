@@ -64,7 +64,6 @@ export default {
     computed: {
         // getters from the vuex stores
         ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
-        ...mapGetters(['getGameID']),
     },
 
     watch: {
@@ -117,13 +116,13 @@ export default {
         if (!this.loadFromSimData) {
             this.maxStepBuffer = 0  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
-            this.initGame(this.getGameID)
+            this.initGame(this.parameters.game_id)
             // This sets the get_step parameter for the agentGrowth filter.
             // TODO: this should actually be done in tandem with the config wizard plant updates.
             // This must be done after INITGAME or it will be reset
             this.setPlantSpeciesParam(this.getConfiguration)
 
-            console.log('Starting simulation', this.getGameID)
+            console.log('Starting simulation', this.parameters.game_id)
 
             // Ask the user confirmation if they try to leave (by closing
             // the tab/window, by refreshing, or by navigating elsewhere)
@@ -160,12 +159,6 @@ export default {
     },
 
     methods: {
-        ...mapMutations('dashboard', ['SETTIMERID',
-                                      'SETGETSTEPSTIMERID', 'SETMINSTEPNUMBER', 'INITGAME',
-                                      'SETBUFFERCURRENT', 'UPDATEBUFFERCURRENT', 'SETBUFFERMAX',
-                                      'SETSTOPPED', 'SETTERMINATED', 'SETMENUACTIVE',
-                                      'SETPLANTSPECIESPARAM']),
-
         setupWebsocket() {
             const socket = io()
             this.socket = socket
@@ -220,7 +213,7 @@ export default {
             // tell the backend how many steps we need for this game
 
             // use the total number of mission hours as the number of steps to be calculated
-            const stepToParams = {step_num: this.getTotalMissionHours, game_id: this.getGameID}
+            const stepToParams = {step_num: this.getTotalMissionHours, game_id: this.parameters.game_id}
             try {
                 // begin creating the step buffer on the backend using
                 // the entire length of the simulation as the base
@@ -283,7 +276,7 @@ export default {
             // to stop calculating steps.
             if (!this.loadFromSimData) {
                 // tell the server to kill the game, unless we loaded simdata
-                const params = {game_id: this.getGameID}
+                const params = {game_id: this.parameters.game_id}
                 try {
                     axios.post('/kill_game', params)  // kill the game
                     console.log('Simulation stopped.')
@@ -301,7 +294,7 @@ export default {
 
         killGameOnUnload() {
             // use sendBeacon to reliably send a kill_game during unload
-            const params = {game_id: this.getGameID}
+            const params = {game_id: this.parameters.game_id}
             const status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
             if (status) {
                 console.log('Simulation terminated.')

@@ -1,7 +1,7 @@
 <!--
 Energy versus chart component used within the dashboard.
 
-Updates values from the approriate step data getters when the getCurrentStepBuffer value changes.
+Updates values from the approriate step data getters when the currentStepBuffer value changes.
 
 See chart.js documentation for further details on the related mounted functions.
 -->
@@ -12,7 +12,10 @@ See chart.js documentation for further details on the related mounted functions.
 
 <script>
 import Chart from 'chart.js'
+import {storeToRefs} from 'pinia'
+
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     props: {
@@ -20,21 +23,38 @@ export default {
         plottedValue: {type: String, required: true},
         unit: {type: String, required: true},
     },
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            isTimerRunning,
+            currentStepBuffer,
+            maxStepBuffer,
+        } = storeToRefs(dashboard)
+
+        const {
+            getTotalProduction,
+            getTotalConsumption,
+        } = dashboard
+
+        return {
+            isTimerRunning,
+            currentStepBuffer,
+            maxStepBuffer,
+            getTotalProduction,
+            getTotalConsumption,
+        }
+    },
     data() {
         return {
             prevStep: 0,
         }
     },
 
-    computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer',
-                                    'getTotalProduction', 'getTotalConsumption']),
-    },
-
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer() {
+        currentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
@@ -122,7 +142,7 @@ export default {
             this.updateChart()
         },
         updateChart() {
-            const currentStep = this.getCurrentStepBuffer
+            const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
