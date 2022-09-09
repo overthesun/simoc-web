@@ -48,11 +48,19 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 </template>
 
 <script>
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentMode, activePanels} = storeToRefs(dashboard)
+        const {setDefaultPanels} = dashboard
+        return {currentMode, setDefaultPanels, getActivePanels: activePanels}
+    },
     components: {
         BasePanel,
         ...panels,  // add all panels as components
@@ -70,12 +78,11 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getActivePanels', 'getCurrentMode']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                if (panel.modes.includes(this.getCurrentMode)) {
+                if (panel.modes.includes(this.currentMode)) {
                     sorted.push([panel.panelTitle, panelName])
                 }
             })
@@ -89,15 +96,15 @@ export default {
     },
     beforeMount() {
         // load saved panels from local storage or use default layout
+        localStorage.removeItem('panels-layout')
         const savedPanels = localStorage.getItem('panels-layout')
-        if (false) {
-            this.SETACTIVEPANELS(JSON.parse(savedPanels))
+        if (savedPanels) {
+            this.activePanels = JSON.parse(savedPanels)
         } else {
-            this.SETDEFAULTPANELS(this.getCurrentMode)
+            this.setDefaultPanels(this.currentMode)
         }
     },
     methods: {
-        ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
 
         openPanelMenu(index) {
             // open the panel menu at index or close it if it's already open
@@ -126,19 +133,19 @@ export default {
             // replace or add the selected panel
             const panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
             this.closePanelMenu()
         },
         updatePanelSection(index, section) {
             // update the section of the panel at index
             const panelName = this.activePanels[index].split(':')[0]
             this.activePanels[index] = [panelName, section].join(':')
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
         },
         removePanel(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
             this.closePanelMenu()
         },
     },

@@ -55,6 +55,9 @@ export default {
         // update the chart datasets and labels
         // when the current step buffer changes
         currentStepBuffer() {
+            return
+            // The variable this chart uses isn't updated anymore, but currentStepBuffer
+            // is, so it throws an error here. Skipping for now.
             this.updateChart()
         },
         // re-init the chart when we plot something else
