@@ -4,8 +4,8 @@ future dashboard views
 
 <template>
     <div id="dashboard-wrapper">
-        <!-- Show the dashboard menu component when getMenuActive is true. -->
-        <DashboardMenu v-if="getMenuActive" />
+        <!-- Show the dashboard menu component when menuActive is true. -->
+        <DashboardMenu v-if="menuActive" />
         <TheTopBar />
         <section class="main-wrapper">
             <Main />
@@ -24,6 +24,8 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 
 export default {
     components: {
@@ -35,14 +37,36 @@ export default {
         SpeedControls,
         Main,
     },
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            isTimerRunning,
+            menuActive,
+            leaveWithoutConfirmation,
+        } = storeToRefs(dashboard)
+
+        const {
+            startTimer,
+            pauseTimer,
+        } = dashboard
+
+        return {
+            isTimerRunning,
+            menuActive,
+            leaveWithoutConfirmation,
+            startTimer,
+            pauseTimer,
+        }
+    },
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
         // This might happen when the user starts a new sim or logs off,
         // but also when clicking on the browser back button.
         // Cases where the user closes the tab or refreshes are handled
         // in DashboardView.
-        if (this.getLeaveWithoutConfirmation) {
-            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
+        if (this.leaveWithoutConfirmation) {
+            this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Make user to confirm before exiting.
@@ -66,25 +90,22 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
-                                    'getIsTimerRunning']),
         ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
     },
     watch: {
         // If a modal opens while the timer is on,
         // pause it, then start it again after modal closes.
         getModalActive(newActive, oldActive) {
-            if (oldActive === false && this.getIsTimerRunning === true) {
-                this.PAUSETIMER()
+            if (oldActive === false && this.isTimerRunning === true) {
+                this.pauseTimer()
                 this.pausedForModal = true
             } else if (newActive === false && this.pausedForModal) {
-                this.STARTTIMER()
+                this.startTimer()
                 this.pausedForModal = false
             }
         },
     },
     methods: {
-        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
         ...mapActions('modal', ['confirm', 'showSurvey']),
     },
 }

@@ -24,9 +24,46 @@ import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseMenu} from '../base'
 
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
+
 export default {
     components: {
         BaseMenu,
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+
+        const {
+            isTimerRunning,
+            activePanels,
+            gameCurrencies,
+            currentMode,
+            menuActive,
+            leaveWithoutConfirmation,
+        } = storeToRefs(dashboard)
+
+        const {
+            getSimulationData,
+            setStopped,
+            startTimer,
+            pauseTimer,
+            setDefaultPanels,
+        } = dashboard
+
+        return {
+            isTimerRunning,
+            activePanels,
+            gameCurrencies,
+            currentMode,
+            menuActive,
+            leaveWithoutConfirmation,
+            getSimulationData,
+            setStopped,
+            startTimer,
+            pauseTimer,
+            setDefaultPanels,
+        }
     },
     data() {
         return {
@@ -35,32 +72,28 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
-                                    'getGameCurrencies', 'getCurrentMode']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
-        this.timerWasRunning = this.getIsTimerRunning
-        this.PAUSETIMER()
+        this.timerWasRunning = this.isTimerRunning
+        this.pauseTimer()
     },
     // Called when the menu is closed, resumes the timer if it was running
     beforeUnmount() {
         if (this.timerWasRunning) {
-            this.STARTTIMER()
+            this.startTimer()
         }
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
-                                      'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
         ...mapActions('modal', ['confirm']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
-            this.PAUSETIMER()  // pause the step timer
+            this.pauseTimer()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
-            this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
+            this.setStopped(true)  // this will call DashboardView.stopSimulation
         },
         // Download Simulation button
         downloadSimData() {
@@ -68,7 +101,7 @@ export default {
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
             simdata.configuration = this.getConfiguration
-            simdata.currency_desc = this.getGameCurrencies
+            simdata.currency_desc = this.gameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
@@ -80,13 +113,13 @@ export default {
         },
         // Save Panels Layout button
         savePanelsLayout() {
-            const panelsLayout = JSON.stringify(this.getActivePanels)
+            const panelsLayout = JSON.stringify(this.activePanels)
             localStorage.setItem('panels-layout', panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
             localStorage.removeItem('panels-layout')
-            this.SETDEFAULTPANELS(this.getCurrentMode)
+            this.setDefaultPanels(this.currentMode)
         },
         // Logout button route
         async logout() {
@@ -100,7 +133,7 @@ export default {
                         console.log(error)
                     }
                     // the user already confirmed, don't ask twice
-                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
                     this.$router.push('entry')
                 },
@@ -118,7 +151,7 @@ export default {
                     this.SETACTIVECONFIGTYPE('Custom')
 
                     // the user already confirmed, don't ask twice
-                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
                     this.$router.push('menu')
                 },

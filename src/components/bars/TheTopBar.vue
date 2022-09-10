@@ -5,7 +5,7 @@
             <span class="simoc-logo-title">SIMOC</span>
         </div>
         <div id="dashboard-menu-icon">
-            <span title="Open menu" @click="SETMENUACTIVE(true)">
+            <span title="Open menu" @click="menuActive = true">
                 <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
             </span>
         </div>
@@ -13,11 +13,14 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 
 export default {
-    methods: {
-        ...mapMutations('dashboard', ['SETMENUACTIVE']),
+    setup() {
+        const dashboard = useDashboardStore()
+        const { menuActive, } = storeToRefs(dashboard)
+        return { menuActive, }
     },
 }
 </script>
