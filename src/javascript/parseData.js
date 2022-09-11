@@ -4,6 +4,7 @@ export const parseData = (data, path) => {
     if (!data && data !== 0) {
         return
     } else if (path.length === 0) {
+        data = data === null ? 0 : data
         return data
     }
 
@@ -30,7 +31,7 @@ export const parseData = (data, path) => {
 
     // OBJECTS
     else if (typeof data === "object") {
-        if (index === "*") {  // All Items
+        if (index === "*" || index === "SUM") {  // All Items
             const output = {}
             Object.keys(data).forEach((key) => {
                 const res = parseData(data[key], remainder)
@@ -39,7 +40,12 @@ export const parseData = (data, path) => {
                 }
             })
             if (Object.keys(output).length > 0) {
-                return output
+                if (index === "*") {
+                    return output
+                } else {
+                    // Return the sum of all entries (value only)
+                    return Object.values(output).reduce((a, b) => a + b)
+                }
             }
         } else if (Object.keys(data).includes(index)) {  // One key
             return parseData(data[index], remainder)

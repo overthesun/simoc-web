@@ -33,16 +33,14 @@ export default {
         } = storeToRefs(dashboard)
 
         const {
-            getTotalProduction,
-            getTotalConsumption,
+            getData,
         } = dashboard
 
         return {
             isTimerRunning,
             currentStepBuffer,
             maxStepBuffer,
-            getTotalProduction,
-            getTotalConsumption,
+            getData,
         }
     },
     data() {
@@ -55,9 +53,6 @@ export default {
         // update the chart datasets and labels
         // when the current step buffer changes
         currentStepBuffer() {
-            return
-            // The variable this chart uses isn't updated anymore, but currentStepBuffer
-            // is, so it throws an error here. Skipping for now.
             this.updateChart()
         },
         // re-init the chart when we plot something else
@@ -162,8 +157,10 @@ export default {
                 data.datasets[1].data.shift()
                 data.labels.shift()
                 if (step > 0) {
-                    const production = this.getTotalProduction(step)[this.plottedValue].value
-                    const consumption = this.getTotalConsumption(step)[this.plottedValue].value
+                    const productionPath = ['SUM', 'flows', 'out', this.plottedValue, 'SUM', step]
+                    const consumptionPath = ['SUM', 'flows', 'in', this.plottedValue, 'SUM', step]
+                    const production = this.getData(productionPath)
+                    const consumption = this.getData(consumptionPath)
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)
