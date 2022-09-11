@@ -22,7 +22,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),

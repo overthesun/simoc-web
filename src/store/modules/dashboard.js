@@ -368,11 +368,14 @@ export default {
             state.activePanels = panels
         },
         SETDEFAULTPANELS(state, mode) {
+            const defaultPanels = [
+                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+            ]
+
             state.activePanels = {
-                sim: [
-                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
-                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
-                ],
+                sim: defaultPanels,
+                kiosk: defaultPanels,
             }[mode]
         },
         // Set current mode
