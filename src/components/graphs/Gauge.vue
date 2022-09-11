@@ -16,7 +16,8 @@ See chart.js documentation for further explantion of below fucntionality.
 <script>
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
-import {mapState, mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     props: {
@@ -26,16 +27,16 @@ export default {
         label: {type: String, required: true},
         getter: {type: Function, required: true},
     },
-
-    computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        return {currentStepBuffer}
     },
-
     watch: {
         // update the chart datasets and labels when the current step buffer has changed.
-        getCurrentStepBuffer: {
+        currentStepBuffer: {
             handler() {
-                const current = this.getCurrentStepBuffer
+                const current = this.currentStepBuffer
                 const value = this.getter(current)
                 const gauge_value = Math.min(value, this.maximum) // clip at max
                 const gauge_remainder = this.maximum - gauge_value

@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 
 import {useDashboardStore} from '@/store/modules/DashboardStore'
@@ -54,7 +53,7 @@ export default {
     },
     props: {
         canvasNumber: {type: Number, required: true},
-  },
+    },
     setup() {
         const dashboard = useDashboardStore()
 
@@ -64,17 +63,15 @@ export default {
         } = storeToRefs(dashboard)
 
         const {
-            getStorageCapacities,
+            getData,
         } = dashboard
-
         return {
             humanAtmosphere,
             gameConfig,
-            getStorageCapacities,
+            getData,
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
         total_storage_capacity() {
             let storage = this.gameConfig.storages[this.humanAtmosphere]
             // TODO: Revert ABM Workaround
@@ -88,8 +85,8 @@ export default {
             // TODO: handle multiple air_storages with an optional dropdown
             const {total_storage_capacity} = this
             return step => {
-                const atm = this.humanAtmosphere
-                const amount = this.getStorageCapacities(step)[atm][1][currency].value
+                const path = [this.humanAtmosphere, 'storage', currency, step]
+                const amount = this.getData(path)
                 return amount / total_storage_capacity * 100
             }
         },
