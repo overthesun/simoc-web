@@ -160,11 +160,9 @@ export default {
                 data.labels.shift()
                 // add the new values
                 if (step > 0) {
-                    console.log('fetching step', step)
                     const storagePath = [this.storage_name, 'storage', '*', step]
                     const storage = this.getData(storagePath)
                     const tot_storage = Object.values(storage).reduce((a, b) => a + b)
-                    console.log(storage)
                     Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
