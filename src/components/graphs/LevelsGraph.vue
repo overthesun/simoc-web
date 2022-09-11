@@ -1,7 +1,7 @@
 <!--
 Storage Levels chart component used within the dashboard.
 
-Updates values from the approriate step data getters when the getCurrentStepBuffer value changes.
+Updates values from the approriate step data getters when the currentStepBuffer value changes.
 
 See chart.js documentation for further details on the related mounted functions.
 -->
@@ -12,13 +12,20 @@ See chart.js documentation for further details on the related mounted functions.
 
 <script>
 import Chart from 'chart.js'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 
 export default {
     props: {
         id: {type: String, required: true},
         plottedStorage: {type: String, required: true},
         storagesMapping: {type: Object, required: true},  // TODO: Revert ABM Workaround
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {currentStepBuffer, getData}
     },
     data() {
         return {
@@ -41,22 +48,18 @@ export default {
                     order: {potable: 0, treated: 1, urine: 2, feces: 3},
                 },
                 nutrient_storage: {
-                    labels_colors: [['Biomass Total', '#3cb44b'], ['Waste', '#f58231'],
+                    labels_colors: [['Inedible Biomass', '#3cb44b'], ['Waste', '#f58231'],
                                     ['Fertilizer', '#46f0f0']],
-                    order: {biomass: 0, waste: 1, fertilizer: 2},
+                    order: {inedible_biomass: 0, waste: 1, fertilizer: 2},
                 },
             },
         }
     },
 
-    computed: {
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getCurrentStepBuffer']),
-    },
-
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer() {
+        currentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
@@ -140,7 +143,7 @@ export default {
             this.updateChart()
         },
         updateChart() {
-            const currentStep = this.getCurrentStepBuffer
+            const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
@@ -157,16 +160,16 @@ export default {
                 data.labels.shift()
                 // add the new values
                 if (step > 0) {
-                    const storage_capacities = this.getStorageCapacities(step)
-                    const storage = storage_capacities[this.storage_name][this.storage_num]
-                    const tot_storage = Object.values(storage).reduce(
-                        (acc, elem) => acc + elem.value, 0  // start from 0
-                    )
+                    console.log('fetching step', step)
+                    const storagePath = [this.storage_name, 'storage', '*', step]
+                    const storage = this.getData(storagePath)
+                    const tot_storage = Object.values(storage).reduce((a, b) => a + b)
+                    console.log(storage)
                     Object.entries(storage).forEach(
                         ([key, elem]) => {
                             // find dataset index, calc ratio, and add the ratio to the dataset
                             const index = this.setsinfo[this.storage_type].order[key]
-                            const ratio = (elem.value * 100 / tot_storage).toFixed(4)
+                            const ratio = (elem * 100 / tot_storage).toFixed(4)
                             data.datasets[index].data.push(ratio)
                         }
                     )
