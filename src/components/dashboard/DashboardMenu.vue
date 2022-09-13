@@ -16,9 +16,8 @@ use some of these features.
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
         </template>
         <template v-else #menu-buttons>
-            <p> Are you sure you want to quit? </p>
             <button @click="toConfiguration">New Mission</button>
-            <button class="btn-warning" @click="stop">Cancel</button>
+            <button class="btn-warning" @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
@@ -129,10 +128,15 @@ export default {
                     if (this.getCurrentMode !== 'kiosk') {
                         this.$router.push('menu')
                     } else {
-                        this.$router.push('/')
+                        this.$router.push('configuration')
                     }
                 },
             })
+        },
+
+        // To Welcome Screen button
+        toEntry() {
+            this.$router.push('/')
         },
     },
 }
