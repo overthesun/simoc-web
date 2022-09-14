@@ -16,6 +16,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 import {VersusGraph} from '../graphs'
 
 export default {
@@ -31,6 +33,11 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {activePanels} = storeToRefs(dashboard)
+        return {activePanels}
+    },
     emits: ['panel-section-changed'],
     data() {
         return {
@@ -45,18 +52,15 @@ export default {
             },
         }
     },
-    computed: {
-        ...mapGetters('dashboard', ['getActivePanels']),
-    },
     watch: {
         currency() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, this.currency)
         },
-        getActivePanels() {
+        activePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
-            this.currency = this.getActivePanels[this.panelIndex].split(':')[1]
+            this.currency = this.activePanels[this.panelIndex].split(':')[1]
         },
     },
 }

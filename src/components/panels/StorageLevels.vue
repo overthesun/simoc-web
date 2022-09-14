@@ -1,7 +1,7 @@
 <template>
     <section class="panel-dl-wrapper">
-        <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
-        <template v-for="(stor_obj, stor_name) in storage(getCurrentStepBuffer)" v-else>
+        <div v-if="currentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
+        <template v-for="(stor_obj, stor_name) in storage(currentStepBuffer)" v-else>
             <template v-for="(stor_values, stor_num) in stor_obj" :key="`tmpl_${stor_name}/${stor_num}`">
                 <div class="storage-name">
                     {{stringFormatter(stor_name)}} {{stor_num}}
@@ -24,15 +24,21 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
+        const {getStorageCapacities} = dashboard
+        return {currentStepBuffer, currencyDict, getStorageCapacities}
+    },
     modes: ['sim'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities',
-                                    'getCurrencyDict']),
     },
     methods: {
         stringFormatter: StringFormatter,
@@ -76,7 +82,7 @@ export default {
                 biomass: 'Biomass (edible, inedible)',
                 kwh: 'Energy (battery)',
             }
-            return definedLocally[label] ?? this.getCurrencyDict[label].label
+            return definedLocally[label] ?? this.currencyDict[label].label
         },
     },
 }

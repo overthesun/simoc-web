@@ -19,13 +19,20 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getAgentGrowth, getAgentType} = dashboard
+        return {currentStepBuffer, getAgentGrowth, getAgentType}
+    },
     modes: ['sim'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),
         getPlants() {
             // filter out plants that don't have a type set
             return this.getConfiguration.plantSpecies.filter(plant => !!plant.type)
@@ -34,7 +41,7 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
         getAgentGrowthPerc(index) {
-            const agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
+            const agentGrowth = this.getAgentGrowth(this.currentStepBuffer)
             if (agentGrowth === undefined) {
                 return '[loading data...]'
             } else {

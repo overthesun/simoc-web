@@ -12,11 +12,11 @@
             <dt>Location:</dt>
             <dd>{{stringFormatter(getConfiguration.location)}}</dd>
             <dt>Duration:</dt>
-            <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
             <dt>Mars days:</dt>
-            <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcSols(currentStepBuffer-1)}}</dd>
             <dt>Earth days:</dt>
-            <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcDays(currentStepBuffer-1)}}</dd>
             <dt>Inhabitants:</dt>
             <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
             <!-- TODO: restore this when we get the value from the backend
@@ -67,9 +67,17 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {StringFormatter} from '../../javascript/utils'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 
 export default {
     panelTitle: 'Mission Information',
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getAgentType} = dashboard
+        return {currentStepBuffer, getAgentType}
+    },
     modes: ['sim'],
     data() {
         return {
@@ -79,12 +87,11 @@ export default {
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer']),
     },
     methods: {
         stringFormatter: StringFormatter,
         humanCount() {
-            const agents = this.getAgentType(this.getCurrentStepBuffer)
+            const agents = this.getAgentType(this.currentStepBuffer)
             if (agents !== undefined && agents.human_agent !== undefined) {
                 return agents.human_agent
             } else {

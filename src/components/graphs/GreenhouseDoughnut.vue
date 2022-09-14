@@ -16,11 +16,18 @@ See chart.js documentation for more details.
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {storeToRefs} from 'pinia'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     props: {
         id: {type: String, required: true},
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        return {currentStepBuffer}
     },
     data() {
         return {
@@ -45,8 +52,6 @@ export default {
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-
 
         /*
         No longer used
@@ -75,9 +80,9 @@ export default {
         }*/
     },
     watch: {
-        // Watches for changes in getCurrentStepBuffer within the
+        // Watches for changes in currentStepBuffer within the
         // dashboard store to update the graph in the dashboard
-        getCurrentStepBuffer() {
+        currentStepBuffer() {
             this.updateChart()
         },
 

@@ -29,11 +29,19 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
 import {BaseEntry} from '../base'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     components: {
         BaseEntry,
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {maxStepBuffer, loadFromSimData, currentMode} = storeToRefs(dashboard)
+        const {setSimulationData} = dashboard
+        return {maxStepBuffer, loadFromSimData, currentMode, setSimulationData}
     },
     data() {
         return {
@@ -47,8 +55,6 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSIMULATIONDATA', 'SETLOADFROMSIMDATA', 'SETBUFFERMAX',
-                                      'SETCURRENTMODE']),
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
@@ -80,15 +86,15 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 this.SETCONFIGURATION(json_data.configuration)
-                this.SETSIMULATIONDATA({simdata: json_data, currency_desc: json_data.currency_desc})
-                this.SETBUFFERMAX(json_data.steps)
+                this.setSimulationData({simdata: json_data, currency_desc: json_data.currency_desc})
+                this.maxStepBuffer(json_data.steps)
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')
                 return
             }
-            this.SETCURRENTMODE('sim')
-            this.SETLOADFROMSIMDATA(true)
+            this.currentMode('sim')
+            this.loadFromSimData(true)
             this.$router.push('dashboard')
         },
 
