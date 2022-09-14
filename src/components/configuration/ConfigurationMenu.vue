@@ -14,9 +14,8 @@
             <Logout />
         </template>
         <template v-else #menu-buttons>
-            <p> Are you sure you want to quit? </p>
-            <button @click="resetConfig">New Mission</button>
-            <button class="btn-warning" @click="stop">Cancel</button>
+            <button @click="resetConfig">Reset Configuration</button>
+            <button class="btn-warning" @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
@@ -58,13 +57,14 @@ export default {
             this.confirm({
                 message: 'Reset the current configuration?',
                 confirmCallback: () => {
-                    if (this.getCurrentMode !== 'kiosk') {
-                        this.SETRESETCONFIG(true)
-                    } else {
-                        this.$router.push('/')
-                    }
+                    this.SETRESETCONFIG(true)
                 },
             })
+        },
+
+      // To Welcome Screen button
+      toEntry() {
+            this.$router.push('/')
         },
     },
 }
