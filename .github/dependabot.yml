@@ -8,6 +8,7 @@ updates:
       interval: "daily"
     assignees:
       - "ezio-melotti"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -16,3 +17,4 @@ updates:
       interval: "daily"
     assignees:
       - "ezio-melotti"
+    open-pull-requests-limit:
