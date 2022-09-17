@@ -62,8 +62,8 @@ export default {
             })
         },
 
-      // To Welcome Screen button
-      toEntry() {
+        // To Welcome Screen button
+        toEntry() {
             this.$router.push('/')
         },
     },
