@@ -18,27 +18,27 @@ export default {
         const dashboard = useDashboardStore()
 
         const {
-            getStepsTimerID, // Vuex: getGetStepsTimerID, SETGETSTEPSTIMERID
-            stopped, // Vuex: getStopped
-            terminated, // Vuex: getTerminated, SETTERMINATED
-            parameters, // Vuex: getStepParams
+            getStepsTimerID,
+            stopped,
+            terminated,
+            parameters,
             isTimerRunning,
-            currentStepBuffer, // Vuex: getCurrentStepBuffer, SETBUFFERCURRENT
-            maxStepBuffer, // Vuex: getMaxStepBuffer, SETBUFFERMAX
-            loadFromSimData, // Vuex: getLoadFromSimData
-            timerID, // Vuex: SETTIMERID
-            menuActive, // Vuex: SETMENUACTIVE
+            currentStepBuffer,
+            maxStepBuffer,
+            loadFromSimData,
+            timerID,
+            menuActive,
         } = storeToRefs(dashboard)
 
         const {
-            setMinStepNumber, // Vuex: SETMINSTEPNUMBER
-            initGame, // Vuex: INITGAME
+            setMinStepNumber,
+            initGame,
             parseStep,
             startTimer,
             pauseTimer,
             stopTimer,
-            setCurrentStepBuffer, // Vuex: UPDATEBUFFERCURRENT
-            setStopped, // Vuex: SETSTOPPED
+            setCurrentStepBuffer,
+            setStopped,
         } = dashboard
 
         return {

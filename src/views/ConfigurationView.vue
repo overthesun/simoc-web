@@ -95,21 +95,21 @@ export default {
         const dashboard = useDashboardStore()
 
         const {
-            menuActive, // Vuex: getMenuActive
-            parameters, // Vuex: getStepParams UNUSED
-            loadFromSimData, // Vuex: SETLOADFROMSIMDATA
-            maxStepBuffer, // Vuex: SETBUFFERMAX
-            currentMode, // Vuex: SETCURRENTMODE
+            menuActive,
+            parameters,
+            loadFromSimData,
+            maxStepBuffer,
+            currentMode,
         } = storeToRefs(dashboard)
 
         const {
-            setGameParams, // Vuex: SETGAMEPARAMS
-            setSimulationData, // Vuex: SETSIMULATIONDATA
+            setGameParams,
+            setSimulationData,
         } = dashboard
 
         return {
             menuActive,
-            parameters, // UNUSED
+            parameters,
             loadFromSimData,
             maxStepBuffer,
             currentMode,
