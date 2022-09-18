@@ -75,8 +75,8 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
-        const {getAgentType} = dashboard
-        return {currentStepBuffer, getAgentType}
+        const {getData} = dashboard
+        return {currentStepBuffer, getData}
     },
     modes: ['sim'],
     data() {
@@ -91,9 +91,11 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
         humanCount() {
-            const agents = this.getAgentType(this.currentStepBuffer)
-            if (agents !== undefined && agents.human_agent !== undefined) {
-                return agents.human_agent
+            const agents = this.getData(
+                ['human_agent', 'amount', this.currentStepBuffer]
+            )
+            if (agents !== undefined && agents !== null) {
+                return agents
             } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount

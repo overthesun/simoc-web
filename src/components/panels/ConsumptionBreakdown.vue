@@ -34,7 +34,7 @@ export default {
     },
     data() {
         return {
-            activeCurrency: null,
+            activeCurrency: 'co2',
             activeData: {},
             currencies: {
                 kwh: 'Energy',
