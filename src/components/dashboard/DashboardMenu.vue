@@ -22,10 +22,10 @@ use some of these features.
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
 import {BaseMenu} from '../base'
 
 import {useDashboardStore} from '@/store/modules/DashboardStore'
-import {storeToRefs} from 'pinia'
 
 export default {
     components: {

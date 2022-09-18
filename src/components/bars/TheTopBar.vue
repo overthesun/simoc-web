@@ -13,14 +13,14 @@
 </template>
 
 <script>
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
-        const { menuActive, } = storeToRefs(dashboard)
-        return { menuActive, }
+        const {menuActive} = storeToRefs(dashboard)
+        return {menuActive}
     },
 }
 </script>

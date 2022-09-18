@@ -49,21 +49,21 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <script>
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
 export default {
+    components: {
+        BasePanel,
+        ...panels,  // add all panels as components
+    },
     setup() {
         const dashboard = useDashboardStore()
         const {currentMode, activePanels} = storeToRefs(dashboard)
         const {setDefaultPanels} = dashboard
         return {currentMode, setDefaultPanels, getActivePanels: activePanels}
-    },
-    components: {
-        BasePanel,
-        ...panels,  // add all panels as components
     },
     data() {
         return {

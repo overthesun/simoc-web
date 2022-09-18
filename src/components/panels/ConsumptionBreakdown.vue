@@ -14,10 +14,10 @@
 
 
 <script>
+import {storeToRefs} from 'pinia'
 import {StringFormatter} from '../../javascript/utils'
 import {DataDisplay} from '../basepanel'
 
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
@@ -47,29 +47,26 @@ export default {
             },
         }
     },
+    watch: {
+        currentStepBuffer(newBuffer) {
+            this.setActiveData(this.activeCurrency, newBuffer)
+        },
+        activeCurrency(newCurrency) {
+            this.setActiveData(newCurrency, this.currentStepBuffer)
+        },
+    },
     methods: {
         setActiveData(currency, buffer) {
             if (!currency || !buffer) {
                 return
             }
-            const csb = buffer ? buffer : this.currentStepBuffer
-            const path = ["*", "flows", "in", currency, "*", csb]
+            const csb = buffer || this.currentStepBuffer
+            const path = ['*', 'flows', 'in', currency, 'SUM', csb]
 
-            const rawData = this.getData(path)
-            const activeData = {}
-            Object.entries(rawData).forEach(([key, value]) => {
-                const connections = Object.keys(value)
-                for (let conn of connections) {
-                    if (Object.keys(activeData).includes(key)) {
-                        activeData[key] += value[conn] || 0
-                    } else {
-                        activeData[key] = value[conn] || 0
-                    }
-                }
-            })
+            const activeData = this.getData(path)
             Object.keys(activeData).forEach(key => {
                 let value = activeData[key]
-                 value = Math.round(value*10000)/10000
+                value = Math.round(value*10000)/10000
                 activeData[key] = `${value} ${this.units[currency]}`
             })
             this.activeData = {}
@@ -83,14 +80,6 @@ export default {
             return unit.split(' ')[1] || this.units[this.selected_currency]
         },
     },
-    watch: {
-        currentStepBuffer(newBuffer) {
-            this.setActiveData(this.activeCurrency, newBuffer)
-        },
-        activeCurrency(newCurrency) {
-            this.setActiveData(newCurrency, this.currentStepBuffer)
-        }
-    }
 }
 </script>
 

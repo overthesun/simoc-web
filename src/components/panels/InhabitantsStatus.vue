@@ -141,7 +141,7 @@ export default {
         },
         humans() {
             const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
-            if (isNaN(agents)) {
+            if (Number.isNaN(agents)) {
                 return this.getConfiguration.humans.amount
             } else {
                 return agents
@@ -164,8 +164,8 @@ export default {
             const air_storage_value = this.getData(
                 [this.humanAtmosphere, 'storage', currency, this.step]
             )
-            if (isNaN(air_storage_value)) {
-                throw Error("Nothing here yet..")
+            if (Number.isNaN(air_storage_value)) {
+                throw Error('Nothing here yet..')
             }
             return air_storage_value / this.total_air_storage_capacity * 100
         },

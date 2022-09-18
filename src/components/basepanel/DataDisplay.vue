@@ -9,14 +9,14 @@ The 'data' prop (required):
     - List: inline in columns, right-aligned
     - Object: key becomes a subheading, value displayed below (recursively)
 
-The 'title' prop (optional):
+TODO: A 'title' prop :
 - A JS Object of key:value pairs, mirroring structure of 'data'
 - As matching Keys are rendered by 'data', Values added as 'title' (tooltip)
 
 NOTE: Test color/style and updates should be handled *externally*. This
 component just displays the values it gets.
  -->
- <template>
+<template>
     <section class="data-display-wrapper">
         <table class="data-display">
             <template v-for="(item, index) in data" :key="`data_display_${index}`">
@@ -31,8 +31,8 @@ component just displays the values it gets.
                     </td>
                 </tr>
                 <template v-else-if="typeof(item) === 'object'">
-                    <DataDisplay :data="item" :title="title[item]" :key="index + 'sub'"
-                                 :indent="indent + '  '"/>
+                    <DataDisplay :key="index + 'sub'" :data="item"
+                                 :indent="indent + '  '" />
                 </template>
             </template>
         </table>
@@ -46,12 +46,11 @@ export default {
     name: 'DataDisplay',
     props: {
         data: {type: Object, required: true},
-        title: {type: Object, required: false},
         indent: {type: String, default: ''},
     },
     methods: {
         stringFormatter: StringFormatter,
-    }
+    },
 }
 </script>
 

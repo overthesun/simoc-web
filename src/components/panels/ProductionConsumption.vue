@@ -16,8 +16,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {VersusGraph} from '../graphs'
 
 export default {
@@ -33,12 +33,12 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    emits: ['panel-section-changed'],
     setup() {
         const dashboard = useDashboardStore()
         const {activePanels} = storeToRefs(dashboard)
         return {activePanels}
     },
-    emits: ['panel-section-changed'],
     data() {
         return {
             // default on 'co2' if we don't get anything

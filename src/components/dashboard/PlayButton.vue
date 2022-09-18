@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import  {storeToRefs} from 'pinia'
-import {useDashboardStore} from '../../store/modules/DashboardStore';
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     setup() {
@@ -21,7 +21,7 @@ export default {
         const {isTimerRunning} = storeToRefs(dashboard)
         const {pauseTimer, startTimer} = dashboard
         return {isTimerRunning, pauseTimer, startTimer}
-    }
+    },
 }
 </script>
 

@@ -15,8 +15,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 import {LevelsGraph} from '../graphs'
 
@@ -33,12 +33,12 @@ export default {
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
     },
+    emits: ['panel-section-changed'],
     setup() {
         const dashboard = useDashboardStore()
         const {gameConfig, currencyDict} = storeToRefs(dashboard)
         return {gameConfig, currencyDict}
     },
-    emits: ['panel-section-changed'],
     data() {
         return {
             storage: undefined,

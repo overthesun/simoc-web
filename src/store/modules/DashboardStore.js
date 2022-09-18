@@ -40,10 +40,10 @@
  * @since August 20, 2022
  */
 import {defineStore} from 'pinia'
+import _ from 'lodash'
 import {parseUpdatedGameVars} from '@/javascript/gameVars'
 import {StepTimer} from '@/javascript/stepTimer'
 import {parseData} from '@/javascript/parseData'
-import _ from 'lodash'
 
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
@@ -190,7 +190,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param value
          */
-         setStopped(value) {
+        setStopped(value) {
             // this var should be set only when we interrupt the
             // simulation before receiving all the steps
             this.stopped = value

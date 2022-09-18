@@ -2,7 +2,7 @@
     <section class="panel-dl-wrapper">
         <div v-if="currentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <template v-for="(stor_obj, stor_name) in storage(currentStepBuffer)" v-else
-                 :key="`tmpl_${stor_name}_storage`">
+                  :key="`tmpl_${stor_name}_storage`">
             <div class="storage-name">
                 {{stringFormatter(stor_name)}}
             </div>
@@ -23,8 +23,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {

@@ -321,7 +321,7 @@ export default {
 
             let key_matched = true
             const sb = this.currentStepBuffer
-            const setStep = (v) => {
+            const setStep = v => {
                 this.setCurrentStepBuffer(v)
             }
             switch (e.key) {
