@@ -17,4 +17,4 @@ updates:
       interval: "daily"
     assignees:
       - "ezio-melotti"
-    open-pull-requests-limit:
+    open-pull-requests-limit: 10
