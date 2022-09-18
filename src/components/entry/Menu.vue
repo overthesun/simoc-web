@@ -85,16 +85,16 @@ export default {
         readSimData(e) {
             try {
                 const json_data = JSON.parse(e.target.result)
-                this.SETCONFIGURATION(json_data.configuration)
-                this.setSimulationData({simdata: json_data, currency_desc: json_data.currency_desc})
-                this.maxStepBuffer(json_data.steps)
+                const {configuration, currency_desc, ...simdata} = json_data
+                this.SETCONFIGURATION(configuration)
+                this.setSimulationData({simdata, currency_desc})
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')
                 return
             }
-            this.currentMode('sim')
-            this.loadFromSimData(true)
+            this.currentMode = 'sim'
+            this.loadFromSimData = true
             this.$router.push('dashboard')
         },
 

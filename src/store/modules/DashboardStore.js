@@ -86,6 +86,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 game_config: state.gameConfig,
                 steps: state.maxStepBuffer,
                 parameters: state.parameters,
+                data: state.data,
             }
         },
     },
@@ -96,25 +97,18 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param value
          */
-        setSimulationData(value) {
-            const {simdata, currency_desc} = value
-            this.gameCurrencies = currency_desc
+        setSimulationData({simdata, currency_desc}) {
+            this.gameCurrencies = currency_desc   // TODO: Duplicated by currencyDict
+            this.maxStepBuffer = simdata.steps
+            this.parameters = simdata.parameters  // TODO: Unnecessary with websocket
+            this.data = simdata.data
 
             // TODO: Revert ABM Workaround
             const game_vars = parseUpdatedGameVars(simdata.game_config, currency_desc)
             const {humanAtmosphere, currencyDict, gameConfig} = game_vars
             this.humanAtmosphere = humanAtmosphere
             this.currencyDict = currencyDict
-            this.gameConfig = gameConfig
-
-            this.parameters = simdata.parameters
-            // this.totalConsumption = simdata.total_consumption
-            // this.totalProduction = simdata.total_production
-            // this.agentCount = simdata.total_agent_count
-            // this.agentGrowth = simdata.agent_growth
-            // this.storageRatio = simdata.storage_ratios
-            // this.storageCapacities = simdata.storage_capacities
-            // this.detailsPerAgent = simdata.details_per_agent
+            this.gameConfig = gameConfig          // TODO: Use only one copy of config
         },
 
         // Time Control
