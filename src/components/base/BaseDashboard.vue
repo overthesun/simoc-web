@@ -22,10 +22,10 @@ future dashboard views
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '@/store/modules/DashboardStore'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Main, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
 
 export default {
     components: {

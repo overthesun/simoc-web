@@ -30,8 +30,8 @@
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {BaseEntry} from '../base'
 import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {BaseEntry} from '../base'
 
 export default {
     components: {
