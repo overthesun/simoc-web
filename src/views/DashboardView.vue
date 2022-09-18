@@ -39,7 +39,6 @@ export default {
             stopTimer,
             setCurrentStepBuffer, // Vuex: UPDATEBUFFERCURRENT
             setStopped, // Vuex: SETSTOPPED
-            setPlantSpeciesParam, // Vuex: SETPLANTSPECIESPARAM
         } = dashboard
 
         return {
@@ -61,7 +60,6 @@ export default {
             stopTimer,
             setCurrentStepBuffer,
             setStopped,
-            setPlantSpeciesParam,
         }
     },
     data() {
@@ -109,7 +107,7 @@ export default {
         this.timerID = null
         this.getStepsTimerID = null
         this.currentStepBuffer = 0
-        this.setMinStepNumber(0)
+        this.setMinStepNumber(0)  // Currently unused
         this.setStopped(false)
 
         // TODO: we switched from using a timer to request steps via HTTP to
@@ -127,10 +125,6 @@ export default {
             this.maxStepBuffer = 0  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
             this.initGame(this.getGameID)
-            // This sets the get_step parameter for the agentGrowth filter.
-            // TODO: this should actually be done in tandem with the config wizard plant updates.
-            // This must be done after INITGAME or it will be reset
-            this.setPlantSpeciesParam(this.getConfiguration)
 
             console.log('Starting simulation', this.getGameID)
 

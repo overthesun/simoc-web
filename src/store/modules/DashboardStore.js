@@ -5,10 +5,15 @@
  * get_step route.
  *
  * In-Depth
- * Step data: broken down into objects based on filter type.
- * These can be accessed via the getters below using the scrubber on the Timeline to select a step.
- * Object deconstruction is used to set the variables for the individual parts within the calling
- * methods for: agentCount | agentGrowth | totalProduction | totalConsumption | storageRatio
+ * Step data: stored as timeseries arrays in a nested Object in 'dashboard.data'.
+ * These can be accessed with the 'getData' function, which accepts a lodash-style
+ * path and returns the data in the appropriate format. The data structure follows
+ * the 'Model Data' format described in:
+ *   https://simoc.space/docs/user_guide/api/data-objects.html#model-data
+ *
+ * Examples:
+ *  - Number of radishes: getData(['radish', 'amount', this.currentStepBuffer])
+ *  - All o2 exchanges: getData(['*', 'flows', 'o2', 'SUM', this.currentStepBuffer])
  *
  * currentStepBuffer/maxStepBuffer: indicate the current step in the buffer being visualized,
  * and the highest step in the buffer. A number of watcher functions within components reference
@@ -42,27 +47,15 @@ import _ from 'lodash'
 
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
-        parameters: {},  // parameters for the get_steps route
-        agentCount: {1: {human_agent: 0}},
-        agentGrowth: {},
-        lastAgentGrowth: {},  // store the last non-null growth
-        totalProduction: {},
-        totalConsumption: {},
-        storageRatio: {},
-        storageCapacities: {},
-        detailsPerAgent: {},
-        stopped: false,        // true if we forced termination, also set terminated
-        terminated: false,     // true if we stopped or retrieved all steps from the server
+        // Game Management
+        currentMode: '',
+        activePanels: [],
+        loadFromSimData: false,  // if true, load from imported sim data, not from the server
+        terminated: false,       // true if we stopped or retrieved all steps from the server
+        stopped: false,          // true if we forced termination, also set terminated
         getStepsTimerID: null,
         menuActive: false,
         leaveWithoutConfirmation: false,  // if true, don't ask confirmation while leaving
-        loadFromSimData: false,  // if true, load from imported sim data, not from the server
-        gameConfig: {},  // the full game_config returned by /new_game
-        gameCurrencies: {},  // the active list of currencies, grouped by class
-        currencyDict: {},  // all gameCurrencies not grouped, but with 'currencyClass' param added
-        humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
-        activePanels: [],
-        currentMode: '',
 
         // Time Control
         stepInterval: 1000,    // the time between the steps, in milliseconds
@@ -70,20 +63,17 @@ export const useDashboardStore = defineStore('DashboardStore', {
         timerId: null,
 
         // Data Handling
-        data: {},              // Initialize state empty
+        parameters: {},  // parameters for the get_steps route
+        gameConfig: {},  // the full game_config returned by /new_game
+        gameCurrencies: {},  // the active list of currencies, grouped by class
+        currencyDict: {},  // all gameCurrencies not grouped, but with 'currencyClass' param added
+        humanAtmosphere: 'air_storage',  // the storage humans breathe; TODO: Revert ABM Workaround
+        data: {},              // holds all step data; access with getData
         currentStepBuffer: 0,  // the step the simulation is displaying
         maxStepBuffer: 0,      // the number of steps in the buffer
     }),
 
     getters: {
-        getAgentType: state => stepNumber => state.agentCount[stepNumber],
-        getAgentGrowth: state => stepNumber => state.agentGrowth[stepNumber],
-        getTotalProduction: state => stepNumber => state.totalProduction[stepNumber],
-        getTotalConsumption: state => stepNumber => state.totalConsumption[stepNumber],
-        getStorageRatio: state => stepNumber => state.storageRatio[stepNumber],
-        getAirStorageRatio: state => stepNumber => state.storageRatio[stepNumber].air_storage_1,
-        getStorageCapacities: state => stepNumber => state.storageCapacities[stepNumber],
-        getDetailsPerAgent: state => stepNumber => state.detailsPerAgent[stepNumber],
 
         /**
          * Returns a json obj that contains all the simulation data.
@@ -96,13 +86,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 game_config: state.gameConfig,
                 steps: state.maxStepBuffer,
                 parameters: state.parameters,
-                total_consumption: state.totalConsumption,
-                total_production: state.totalProduction,
-                total_agent_count: state.agentCount,
-                agent_growth: state.agentGrowth,
-                storage_ratios: state.storageRatio,
-                storage_capacities: state.storageCapacities,
-                details_per_agent: state.detailsPerAgent,
             }
         },
     },
@@ -125,13 +108,13 @@ export const useDashboardStore = defineStore('DashboardStore', {
             this.gameConfig = gameConfig
 
             this.parameters = simdata.parameters
-            this.totalConsumption = simdata.total_consumption
-            this.totalProduction = simdata.total_production
-            this.agentCount = simdata.total_agent_count
-            this.agentGrowth = simdata.agent_growth
-            this.storageRatio = simdata.storage_ratios
-            this.storageCapacities = simdata.storage_capacities
-            this.detailsPerAgent = simdata.details_per_agent
+            // this.totalConsumption = simdata.total_consumption
+            // this.totalProduction = simdata.total_production
+            // this.agentCount = simdata.total_agent_count
+            // this.agentGrowth = simdata.agent_growth
+            // this.storageRatio = simdata.storage_ratios
+            // this.storageCapacities = simdata.storage_capacities
+            // this.detailsPerAgent = simdata.details_per_agent
         },
 
         // Time Control
@@ -259,120 +242,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
             this.parameters.min_step_num = Math.max(step+1, this.parameters.min_step_num)
         },
         /**
-         * Used for the number of steps to grab from get_step_to, after 100 steps have been
-         * buffered. Updated after every get_step call.
-         */
-        setNSteps() {
-            this.parameters.n_steps = this.maxStepBuffer > 100 ? 100 : 10
-        },
-
-
-        /**
-         * Sets the agent type.
-         *
-         * @param value
-         */
-        setAgentType(value) {
-            const {step_num: step} = value
-            const {total_agent_count} = value
-            this.agentCount[step] = total_agent_count
-        },
-        /**
-         * Sets the agent growth.
-         *
-         * @param value
-         */
-        setAgentGrowth(value) {
-            const {step_num: step, agent_growth} = value
-            // If the plant skips a step we get a null, indicating that it didn't grow.
-            // Instead of storing null, reuse the last value stored in lastAgentGrowth
-            Object.entries(agent_growth).forEach(([name, val]) => {
-                if (val === null) {
-                    if (name in this.lastAgentGrowth) {  // use last value
-                        agent_growth[name] = this.lastAgentGrowth[name]
-                    } else {  // no value available, use 0 instead
-                        agent_growth[name] = 0
-                        this.lastAgentGrowth[name] = 0
-                    }
-                } else {  // save the last non-null value
-                    this.lastAgentGrowth[name] = val
-                }
-            })
-            this.agentGrowth[step] = agent_growth
-        },
-
-        /**
-         * Sets the total consumption.
-         *
-         * @param value
-         */
-        setTotalConsumption(value) {
-            const {step_num: step} = value
-            const {total_consumption} = value
-
-            this.totalConsumption[step] = total_consumption
-        },
-        /**
-         * Sets the total production.
-         *
-         * @param value
-         */
-        setTotalProduction(value) {
-            const {step_num: step} = value
-            const {total_production} = value
-
-            this.totalProduction[step] = total_production
-        },
-        /**
-         * Sets the storage ratios.
-         *
-         * @param value
-         */
-        setStorageRatios(value) {
-            const {step_num: step} = value
-            const {storage_ratios} = value
-
-            this.storageRatio[step] = storage_ratios
-        },
-        /**
-         * Sets the storage capacities.
-         *
-         * @param value
-         */
-        setStorageCapacities(value) {
-            const {step_num: step} = value
-            const {storage_capacities} = value
-
-            this.storageCapacities[step] = storage_capacities
-        },
-        /**
-         * Sets details per agent.
-         *
-         * @param value
-         */
-        setDetailsPerAgent(value) {
-            const {step_num: step} = value
-            const {details_per_agent} = value
-
-            this.detailsPerAgent[step] = details_per_agent
-        },
-
-        /**
-         * Populates the parameters object with the selected plants from the configuration wizard.
-         * This is called and updated similar to how the wizard store updates its plants list on the
-         * fly.
-         *
-         * @param value
-         */
-        setPlantSpeciesParam(value) {
-            const {plantSpecies} = value
-
-            plantSpecies.forEach(item => {
-                this.parameters.agent_growth.push(item.type)
-                this.agentGrowth[item.type] = 0
-            })
-        },
-        /**
          * Sets the default panels.
          *
          * @param mode
@@ -397,28 +266,9 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 // the game is set before reaching the dashboard and
                 // resetting, so preserve its value
                 game_id: value,
-                min_step_num: 0,
+                min_step_num: 0,  // Only supported value
                 n_steps: 10,
-                total_agent_count: ['human_agent'],
-                agent_growth: [],
-                total_production: ['co2', 'o2', 'potable', 'kwh'],
-                total_consumption: ['co2', 'o2', 'potable', 'kwh'],
-                // we now calculate the ratios on the frontend
-                // "storage_ratios": {"air_storage_1": ["co2", "o2", "ch4",
-                //                                     "n2", "h2", "h2o"],},
-                storage_capacities: {}, // empty obj == get all values
-                details_per_agent: {agent_types: [], // empty obj == get all agents
-                                    currency_types: ['kwh', 'co2'],
-                                    directions: ['in']},
-                parse_filters: [],
-                single_agent: 1,
             }
-            this.agentGrowth = {}
-            this.totalProduction = {}
-            this.totalConsumption = {}
-            this.storageRatio = {}
-            this.storageCapacities = {}
-            this.detailsPerAgent = {}
         },
     },
 })
