@@ -17,7 +17,7 @@ use some of these features.
         </template>
         <template v-else #menu-buttons>
             <button @click="toConfiguration">New Mission</button>
-            <button class="btn-warning" @click="toEntry">To Welcome Screen</button>
+            <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
