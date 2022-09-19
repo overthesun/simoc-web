@@ -6,7 +6,7 @@ const panels = {}
 // to the corresponding components and export it
 for (const path in requireModule) {
     // remove leading ./ and trailing .vue
-    const panelName = path.replace(/(\.\/|\.vue)/g, '')
+    const panelName = path.replace(/(^\.\/|\.vue$)/g, '')
     const panel = requireModule[path].default
     if (!panel.panelTitle) {
         // show an error and use the name if the title is missing
