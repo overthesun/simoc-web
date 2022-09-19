@@ -12,11 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          ref: master
+        uses: actions/checkout@v3
       - name: Setup Node Environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '12'
           check-latest: true
@@ -38,12 +36,16 @@ jobs:
           mkdir models
           cd models
           wget -r -nH --cut-dirs=2 --no-parent --accept="*.glb" -erobots=off -q --show-progress https://simoc.space/download/models/
-      - name: npm install, build, test, and lint
+      - name: npm install
         run: |
+          npm install -g npm@latest
           npm install
-          npm run build --if-present
-          npm test --if-present
-          npm run lint -- --no-fix
+      - name: build
+        run: npm run build --if-present
+      - name: test
+        run: npm run test --if-present
+      - name: lint
+        run: npm run lint -- --no-fix
       # To avoid hitting the artifact quota,
       # disable the next two steps for now.
       # The artifact doesn't seem to be used anyway.
