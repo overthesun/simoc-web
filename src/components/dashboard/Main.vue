@@ -89,8 +89,7 @@ export default {
     },
     beforeMount() {
         // load saved panels from local storage or use default layout
-        const storage = `panels-layout-${this.getCurrentMode}`
-        const savedPanels = localStorage.getItem(storage)
+        const savedPanels = localStorage.getItem('panels-layout-sim')
         if (savedPanels) {
             this.SETACTIVEPANELS(JSON.parse(savedPanels))
         } else {
