@@ -1,8 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 import EntryView from '@/views/EntryView.vue'
-// import {Login,Welcome,MainMenu} from './components/entry'
-// import {MainMenu,ConfigurationMenu} from './components/mainmenu'
 
 export default createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
