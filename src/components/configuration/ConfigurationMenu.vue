@@ -15,7 +15,7 @@
         </template>
         <template v-else #menu-buttons>
             <button @click="resetConfig">Reset Configuration</button>
-            <button class="btn-warning" @click="toEntry">To Welcome Screen</button>
+            <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
@@ -56,9 +56,7 @@ export default {
         resetConfig() {
             this.confirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => {
-                    this.SETRESETCONFIG(true)
-                },
+                confirmCallback: () => this.SETRESETCONFIG(true),
             })
         },
 
