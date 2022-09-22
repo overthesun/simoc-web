@@ -47,7 +47,7 @@ jobs:
           npm install
       - name: Print info
         run: |
-          echo "Current branch: $GITHUB_REF_NAME"
+          echo "Current branch: $GITHUB_HEAD_REF"
           echo "node $(node --version); npm $(npm --version)"
       - name: Build
         run: npm run build --if-present
