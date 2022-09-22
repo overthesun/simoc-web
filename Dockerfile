@@ -8,8 +8,7 @@ RUN apt-get update && \
     python3-setuptools \
     curl \
     wget \
-    inetutils-ping \
-    npm
+    inetutils-ping
 
 # Install specific version of Node as Node version included with 22.04 is outdated
 ENV NODE_VERSION=16.16.0
