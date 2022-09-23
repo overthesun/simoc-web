@@ -37,7 +37,7 @@
     "eslint-formatter-summary": "^1.1.0",
     "eslint-plugin-vue": "^7.14.0",
     "file-loader": "^6.2.0",
-    "sass": "^1.54.8",
+    "sass": "^1.55.0",
     "sass-loader": "^12.1.0",
     "webpack": "^5.74.0"
   },
