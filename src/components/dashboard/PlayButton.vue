@@ -3,10 +3,10 @@
 <template>
     <div id="dashboard-play-icon">
         <span v-if="getIsTimerRunning" title="Pause" @click="pauseTimer">
-            <fa-icon :icon="['fas','pause']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','pause']" class="fa-icon" />
         </span>
         <span v-else title="Play" @click="resumeTimer">
-            <fa-icon :icon="['fas','play']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','play']" class="fa-icon" />
         </span>
     </div>
 </template>

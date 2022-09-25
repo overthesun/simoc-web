@@ -2,17 +2,17 @@ import {createApp} from 'vue'
 import VueGtag, {trackRouter} from 'vue-gtag-next'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faPause, faPlay, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
-        faBars, faArrowLeft, faArrowRight, faInfoCircle, faListUl, faCircle,
-        faPlusCircle, faMale, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
+        faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
+        faCirclePlus, faPersonSimple, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 import router from './router'
 import App from './App'
 
-library.add(faPlay, faPause, faStepBackward, faStepForward, faMinus, faPlus, faTimes,
-            faBars, faArrowLeft, faArrowRight, faInfoCircle, faListUl, faCircle,
-            faPlusCircle, faMale, faTrash)
+library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
+            faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
+            faCirclePlus, faPersonSimple, faTrash)
 
 // Gtag/Analytics tracking
 // Beta and NGS have two different tracking ids

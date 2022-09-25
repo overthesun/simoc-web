@@ -6,7 +6,7 @@
              for displaying or hiding
         -->
         <div :class="{'warning-active': activeWarning}" class="warning-wrapper">
-            <fa-icon :icon="['fas','times']" class="fa-icon dismiss-icon" @click="dismissWarning" />
+            <fa-icon :icon="['fa-solid','xmark']" class="fa-icon dismiss-icon" @click="dismissWarning" />
             <div v-for="(item,index) in activeWarnings" :key="index" class="warning-item">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
