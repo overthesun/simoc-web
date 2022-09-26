@@ -1,5 +1,5 @@
 // extract all vue files from the panels/ dir
-const requireModule = import.meta.glob('./*.vue', { eager: true })
+const requireModule = import.meta.glob('./*.vue', {eager: true})
 const panels = {}
 
 // create an object that maps file names (without extension)
