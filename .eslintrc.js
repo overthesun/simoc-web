@@ -184,7 +184,7 @@ module.exports = {
         'import/newline-after-import': 'error',
         'import/first': 'error',
         'import/order': 'error',
-        'import/extensions': ['error', 'never'],
+        'import/extensions': ['error', 'always', {'js': 'never'}],
         'import/no-dynamic-require': 'warn',
         'import/no-extraneous-dependencies': 'error',
         'import/no-useless-path-segments': 'error',
