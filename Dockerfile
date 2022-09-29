@@ -8,21 +8,18 @@ RUN apt-get update && \
     python3-setuptools \
     curl \
     wget \
-    inetutils-ping \
-    npm
+    inetutils-ping
 
-# Install specific version of Node as Node version included with 22.04 is outdated
-ENV NODE_VERSION=16.16.0
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+# Install latest LTS version of Node as Node version included with 22.04 is outdated
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs && \
+    npm install --no-fund --no-audit -g npm@latest
 
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && nvm use v${NODE_VERSION} && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+# workaround to prevent node/vite crashes during the build step
+# see https://github.com/vitejs/vite/issues/2433#issuecomment-831399876
+# assume 8GB - 512MB
+ENV NODE_OPTIONS='--max-old-space-size=7680'
 
 WORKDIR /frontend
-
-# COPY . ./
-# RUN npm install --global
 
 EXPOSE 8080
 
@@ -46,6 +43,8 @@ CMD ["run.sh"]
 #
 # Run the container using:
 #   docker run --rm --network simoc_simoc-net -p 8080:8080 -v `pwd`:/frontend -it frontend-dev
+#
+# Omit the --network arg if you don't need to connect to the backend.
 
 
 # To automatically run the frontend the dockerfile can be changed to:
