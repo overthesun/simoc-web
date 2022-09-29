@@ -197,9 +197,9 @@ export default {
 
     methods: {
         // TODO request all data as a single json, do math client-side
-        retrievePower(agent, amount=1, callback) {
+        retrievePower(agent, amount, callback) {
             axios.defaults.withCredentials = true
-            const params = {agent_name: agent, quantity: amount}
+            const params = {agent_name: agent, quantity: amount ?? 1}
             return axios.get('/get_energy', {params})
                     .then(response => {
                         if (response.status === 200) {

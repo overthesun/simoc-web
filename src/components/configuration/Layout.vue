@@ -7,7 +7,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import World from '../../threejs/World'
+import World from '@/threejs/World.vue'
 
 export default {
     components: {

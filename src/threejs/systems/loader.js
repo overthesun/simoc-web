@@ -24,7 +24,7 @@ class Loader {
 
     async loadModel(assetName, place) {
         // eslint-disable-next-line prefer-template
-        const asset = await import('../../assets/models/' + assetName + '.glb')
+        const asset = await import(`../../assets/models/${assetName}.glb`)
         let model = await this.loader.loadAsync(asset.default)
         model = model.scene
         model.name = place

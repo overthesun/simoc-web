@@ -216,12 +216,12 @@ export default {
 
         verifyUsername() {
             const {username} = this.register
-            const userRegex = RegExp('^[a-zA-Z0-9_.-]{4,}$')
+            const userRegex = /^[a-zA-Z0-9_.-]{4,}$/
             return userRegex.test(username)
         },
         verifyPassword() {
             const {password} = this.register
-            const passRegex = RegExp('.{8,}')
+            const passRegex = /.{8,}/
             return passRegex.test(password)
         },
 
