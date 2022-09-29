@@ -228,6 +228,7 @@ export default {
             // 10ms seem to be enough to give time to Vue to see the change
             // but it's not 100% reliable.  I couldn't find a way to make
             // it work reliably with await this.$nextTick()
+            // eslint-disable-next-line no-promise-executor-return
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset

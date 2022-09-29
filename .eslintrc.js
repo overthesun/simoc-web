@@ -42,6 +42,7 @@ module.exports = {
         'space-in-parens': ['error', 'never'],
         'space-before-function-paren': ['error', 'never'],
         'function-paren-newline': ['error', 'consistent'],
+        'function-call-argument-newline': 'off',
         'key-spacing': ['error', {beforeColon: false, afterColon: true}],
         'space-before-blocks': 'error',
         'keyword-spacing': ['error', {before: true, after: true}],
@@ -172,16 +173,25 @@ module.exports = {
         'vue/no-side-effects-in-computed-properties': 'error',
 
         'vue/comment-directive': 'off',
+        'vue/first-attribute-linebreak': 'off',
         'vue/max-attributes-per-line': 'off',
         'vue/singleline-html-element-content-newline': 'off',
         'vue/multiline-html-element-content-newline': 'off',
+        'vue/multi-word-component-names': 'off',
 
 
         // IMPORT
         'import/newline-after-import': 'error',
         'import/first': 'error',
         'import/order': 'error',
-        'import/extensions': ['error', 'never'],
+        'import/extensions': ['error', 'always', {'js': 'never'}],
+        // eslint-import-resolver-alias has a way to specify an alias for '@'
+        // that supposedly fixes some "Unable to resolve path to module" errors:
+        //   settings: {'import/resolver': {alias: ['@', 'src']}}
+        // However installing this requires eslint-plugin-import too,
+        // which apparently enables several other checks that fail (particularly
+        // in threejs/) so just disable the `import/no-unresolved` rule altogether.
+        'import/no-unresolved': 'off',
         'import/no-dynamic-require': 'warn',
         'import/no-extraneous-dependencies': 'error',
         'import/no-useless-path-segments': 'error',
