@@ -8,7 +8,7 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 import router from './router'
-import App from './App'
+import App from './App.vue'
 
 library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
             faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
@@ -28,7 +28,7 @@ createApp(App)
         .use(router)
         .use(store)
         .use(VueGtag, {
-            isEnabled: process.env.NODE_ENV === 'production',
+            isEnabled: import.meta.env.NODE_ENV === 'production',
             property: {id: tracking_id},
         })
         .component('FaIcon', FontAwesomeIcon)

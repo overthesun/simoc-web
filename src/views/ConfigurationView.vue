@@ -200,7 +200,7 @@ export default {
                 // imported dynamically and lazily and that they shoultn't be bundled
                 // (note: template strings don't work here, so add a linter exception)
                 // eslint-disable-next-line prefer-template
-                const simdata = await import('../assets/simdata/' + fname + '.json')
+                const simdata = await import(`../assets/simdata/${fname}.json`)
                 return simdata.default  // get the actual data out of the module object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
@@ -228,6 +228,7 @@ export default {
             // 10ms seem to be enough to give time to Vue to see the change
             // but it's not 100% reliable.  I couldn't find a way to make
             // it work reliably with await this.$nextTick()
+            // eslint-disable-next-line no-promise-executor-return
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset
