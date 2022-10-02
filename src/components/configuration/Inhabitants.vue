@@ -2,7 +2,7 @@
     <div>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('CrewQuarters')">
-                Crew Quarters <fa-icon :icon="['fas','info-circle']" />
+                Crew Quarters <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Select the size of your crew quarters.</div>
             <select ref="crew_quarters_type" v-model="crewQuarters.type"
@@ -16,7 +16,7 @@
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('Inhabitants')">
-                Inhabitants <fa-icon :icon="['fas','info-circle']" />
+                Inhabitants <fa-icon :icon="['fa-solid','circle-info']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">The number of astronaut explorers to live in your habitat.</div>
             <input ref="humans" v-model="humans.amount" :min="ranges.humans.min" :max="ranges.humans.max"
@@ -25,7 +25,7 @@
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('Food')">
-                Food Supply <fa-icon :icon="['fas','info-circle']" />
+                Food Supply <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Make certain you have <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('Food')">ample food</a> for an <a class="reference-link" href="#" @click="SETACTIVEREFENTRY('ECLSS')">ECLSS</a> only mission, or until the plants are ready to harvest. Humans consume 1.5kg food per day.</div>
             <label><input ref="food" v-model="food.amount" :min="ranges.food.min" :max="ranges.food.max"
@@ -34,7 +34,7 @@
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('ECLSS')">
-                Life Support <fa-icon :icon="['fas','info-circle']" />
+                Life Support <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
             <label><input ref="eclss" v-model="eclss.amount" :min="ranges.eclss.min"

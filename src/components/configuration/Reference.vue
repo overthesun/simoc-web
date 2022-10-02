@@ -10,7 +10,7 @@ using v-for to populate all links with the title and the approriate value for th
     <div class="encyclopedia-wrapper">
         <div v-if="getActiveRefEntry === 'Welcome'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Welcome To SIMOC
             </div>
             <div class="reference-item-entry">
@@ -19,14 +19,14 @@ using v-for to populate all links with the title and the approriate value for th
                 <p><i>Sound easy?</i> Let’s see how your design works on Mars...</p>
             </div>
             <div class="reference-item-entry">
-                <i>You can click on the <fa-icon :icon="['fas','info-circle']" />
+                <i>You can click on the <fa-icon :icon="['fa-solid','circle-info']" />
                     icons on the left to navigate to the corresponding entries.</i>
             </div>
         </div>
 
         <div v-if="getActiveRefEntry === 'Presets'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Presets
             </div>
             <div class="reference-item-entry">
@@ -39,7 +39,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'Location'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Location
             </div>
             <div class="reference-item-entry">
@@ -51,7 +51,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'Duration'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Mission Duration
             </div>
             <div class="reference-item-entry">
@@ -64,7 +64,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'Inhabitants'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Inhabitants
             </div>
             <div class="reference-item-entry">
@@ -75,7 +75,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'Food'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Food Supply
             </div>
             <div class="reference-item-entry">
@@ -96,7 +96,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'CrewQuarters'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Crew Quarters
             </div>
             <div class="reference-item-entry">
@@ -108,7 +108,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'ECLSS'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> ECLSS
             </div>
             <div class="reference-item-entry">
@@ -122,7 +122,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'Greenhouse'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Greenhouse
             </div>
             <div class="reference-item-entry">
@@ -134,7 +134,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'PlantSpecies'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Plant Species
             </div>
             <div class="reference-item-entry">
@@ -148,7 +148,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'PowerGeneration'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Power Generation
             </div>
             <div class="reference-item-entry">
@@ -162,7 +162,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <div v-if="getActiveRefEntry === 'PowerStorage'" class="reference-item">
             <div class="reference-item-title">
-                <fa-icon :icon="['fas','list-ul']" title="Go to Table of Contents"
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
                          @click="SETACTIVEREFENTRY('Table')" /> Power Storage
             </div>
             <div class="reference-item-entry">

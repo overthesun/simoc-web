@@ -2,7 +2,7 @@
     <div>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('Location')">
-                Location <fa-icon :icon="['fas','info-circle']" />
+                Location <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
             <select ref="location" v-model="location" class="input-field-select" required @change="setInitial">
@@ -12,7 +12,7 @@
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('Duration')">
-                Mission Duration <fa-icon :icon="['fas','info-circle']" />
+                Mission Duration <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Select the duration of your stay on Mars.</div>
             <div class="input-duration-wrapper">

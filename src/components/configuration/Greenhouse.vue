@@ -2,7 +2,7 @@
     <div>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('Greenhouse')">
-                Greenhouse <fa-icon :icon="['fas','info-circle']" />
+                Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
             <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
@@ -17,7 +17,7 @@
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="SETACTIVEREFENTRY('PlantSpecies')">
-                Plant Species <fa-icon :icon="['fas','info-circle']" />
+                Plant Species <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
 
             <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
@@ -36,11 +36,11 @@
                               class="input-field-number" type="number" pattern="^\d+$"
                               placeholder="Quantity" @input="updatePlantSpecies(index)"> m³</label>
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
-                    <fa-icon :icon="['fas','plus-circle']" />
+                    <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)">
                     <!-- Deletes the object at the specicied key within the wizard store. -->
-                    <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
+                    <fa-icon :icon="['fa-solid','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>
             </div>
         </label>

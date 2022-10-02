@@ -8,7 +8,7 @@ future dashboard views
         <DashboardMenu v-if="getMenuActive" />
         <TheTopBar />
         <section class="main-wrapper">
-            <Main />
+            <Dashboard />
         </section>
         <section id="footer-wrapper">
             <PlayButton />
@@ -22,7 +22,7 @@ future dashboard views
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {Timeline, PlayButton, StepControls,
-        SpeedControls, Main, DashboardMenu} from '../dashboard'
+        SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
 
 export default {
@@ -33,7 +33,7 @@ export default {
         Timeline,
         StepControls,
         SpeedControls,
-        Main,
+        Dashboard,
     },
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
