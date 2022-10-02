@@ -11,14 +11,14 @@
                          class="agent" @click="handleAgent(section, agent)">
                         <fa-layers :class="{'hidden': section === 'simulation_variables'}"
                                    class="fa-1x agent-icon-remove" @click="handleRemoveAgent(section, agent)">
-                            <fa-icon :icon="['fas','trash']" mask="circle" transform="shrink-7" />
+                            <fa-icon :icon="['fa-solid','trash']" mask="circle" transform="shrink-7" />
                         </fa-layers>
                         <span class="agent-label">{{stringFormatter(agent)}}</span>
                     </div>
                 </div>
                 <fa-layers :class="{'hidden': section === 'simulation_variables'}"
                            class="fa-1x agent-icon-add" @click="handleAddAgent(section)">
-                    <fa-icon :icon="['fas','plus-circle']" />
+                    <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
             </div>
         </div>

@@ -6,7 +6,7 @@
              for displaying or hiding
         -->
         <div :class="{'warning-active': activeWarning}" class="warning-wrapper">
-            <fa-icon :icon="['fas','times']" class="fa-icon dismiss-icon" @click="dismissWarning" />
+            <fa-icon :icon="['fa-solid','xmark']" class="fa-icon dismiss-icon" @click="dismissWarning" />
             <div v-for="(item,index) in activeWarnings" :key="index" class="warning-item">
                 <!-- removed because of missing pro-light-svg-icon dependency
                      <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
@@ -216,12 +216,12 @@ export default {
 
         verifyUsername() {
             const {username} = this.register
-            const userRegex = RegExp('^[a-zA-Z0-9_.-]{4,}$')
+            const userRegex = /^[a-zA-Z0-9_.-]{4,}$/
             return userRegex.test(username)
         },
         verifyPassword() {
             const {password} = this.register
-            const passRegex = RegExp('.{8,}')
+            const passRegex = /.{8,}/
             return passRegex.test(password)
         },
 

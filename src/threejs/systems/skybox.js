@@ -8,7 +8,7 @@ const buildSkybox = async(scene, settings) => {
         // image source: https://opengameart.org/content/mayhems-skyboxes-more
         // ref: (acdcjunior's answer) https://stackoverflow.com/a/49080214
         // eslint-disable-next-line prefer-template
-        const image = await import('../../assets/skybox/' + angle + '.jpg')
+        const image = await import(`../../assets/skybox/${angle}.jpg`)
         images[angle] = image.default
     }))
 

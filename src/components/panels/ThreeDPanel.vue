@@ -4,7 +4,7 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import World from '../../threejs/World'
+import World from '@/threejs/World.vue'
 
 export default {
     panelTitle: 'Habitat View',

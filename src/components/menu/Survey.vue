@@ -58,7 +58,7 @@
             <input v-model="joinList" name="joinList" type="checkbox">
             Join our mailing list
             <a class="input-title" href="#" :title="MLHelpText">
-                <fa-icon :icon="['fas','info-circle']" />
+                <fa-icon :icon="['fa-solid','circle-info']" />
             </a>
             <div id="menu-buttons" class="buttons-horiz">
                 <button class="btn-warning" @click="handleCancel">
