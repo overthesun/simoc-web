@@ -1,1 +1,1 @@
-export {default as BasePanel} from './BasePanel'
+export {default as BasePanel} from './BasePanel.vue'

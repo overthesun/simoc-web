@@ -11,14 +11,8 @@
 </template>
 
 
-<script>
-import {ModalWindow} from './components/menu'
-
-export default {
-    components: {
-        ModalWindow,
-    },
-}
+<script setup>
+import ModalWindow from '@/components/menu/ModalWindow.vue'
 </script>
 
 
@@ -28,7 +22,7 @@ export default {
   /* Use Nasalization for the logo */
   @font-face{
       font-family:'Nasalization';
-      src: url('~@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
+      src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
   }
   body{
     font-family: "Open Sans", sans-serif;
