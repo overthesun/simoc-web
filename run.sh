@@ -1,9 +1,10 @@
 echo '* Running <run.sh>...'
-echo '* Current working directory is:' `pwd`
+echo "* Current working directory: $(pwd)"
+echo "* Current node/npm versions: node $(node --version); npm $(npm --version)"
 
 if [ ! -e node_modules ]; then
     echo '* No node_modules/ dir found, installing dependencies...'
-    npm install
+    npm install --no-fund
     echo '* Dependencies installed'
 fi
 
@@ -17,5 +18,5 @@ wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent\
 echo '* Simdata/models/skybox files downloaded to <src/assets>'
 cd ../..
 
-echo '* To start the dev server use: npm run serve'
+echo '* To start the dev server use: npm run dev'
 /bin/bash

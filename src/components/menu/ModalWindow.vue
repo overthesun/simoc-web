@@ -34,7 +34,7 @@ to activate and populate it.
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
-import Survey from './Survey'
+import Survey from './Survey.vue'
 
 export default {
     components: {

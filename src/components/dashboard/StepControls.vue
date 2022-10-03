@@ -4,11 +4,11 @@
     <div id="step-controls">
         <!-- Looks like: |< 25/100 >| -->
         <span class="icon-wrapper" title="Previous step" @click="prevStep">
-            <fa-icon :icon="['fas','step-backward']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','backward-step']" class="fa-icon" />
         </span>
         <span>{{currentStepBuffer}}/{{getTotalMissionHours}}</span>
         <span class="icon-wrapper" title="Next step" @click="nextStep">
-            <fa-icon :icon="['fas','step-forward']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','forward-step']" class="fa-icon" />
         </span>
     </div>
 </template>

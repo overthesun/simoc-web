@@ -1,4 +1,4 @@
-export {default as BaseMenu} from './BaseMenu'
-export {default as BaseEntry} from './BaseEntry'
-export {default as BaseConfiguration} from './BaseConfiguration'
-export {default as BaseDashboard} from './BaseDashboard'
+export {default as BaseMenu} from './BaseMenu.vue'
+export {default as BaseEntry} from './BaseEntry.vue'
+export {default as BaseConfiguration} from './BaseConfiguration.vue'
+export {default as BaseDashboard} from './BaseDashboard.vue'

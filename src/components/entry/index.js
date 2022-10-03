@@ -1,4 +1,4 @@
-export {default as EntryWelcome} from './Welcome'
-export {default as EntryLogin} from './Login'
-export {default as EntryMenu} from './Menu'
-export {default as EntryMenuConfig} from './MenuConfig'
+export {default as EntryWelcome} from './Welcome.vue'
+export {default as EntryLogin} from './Login.vue'
+export {default as EntryMenu} from './Menu.vue'
+export {default as EntryMenuConfig} from './MenuConfig.vue'
