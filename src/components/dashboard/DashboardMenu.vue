@@ -23,7 +23,7 @@ use some of these features.
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 import {BaseMenu} from '../base'
 
 export default {

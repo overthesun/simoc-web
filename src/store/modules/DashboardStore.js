@@ -41,9 +41,9 @@
  */
 import {defineStore} from 'pinia'
 import _ from 'lodash'
-import {parseUpdatedGameVars} from '@/javascript/gameVars'
-import {StepTimer} from '@/javascript/stepTimer'
-import {parseData} from '@/javascript/parseData'
+import {parseUpdatedGameVars} from '../../javascript/gameVars'
+import {StepTimer} from '../../javascript/stepTimer'
+import {parseData} from '../../javascript/parseData'
 
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({

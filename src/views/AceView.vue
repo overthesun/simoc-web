@@ -25,7 +25,7 @@
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 import {TheTopBar} from '../components/bars'
 import {AceMenu, AceEditor, AceNavigation} from '../components/ace'
 

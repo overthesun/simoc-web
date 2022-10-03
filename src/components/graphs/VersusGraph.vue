@@ -15,7 +15,7 @@ import Chart from 'chart.js'
 import {storeToRefs} from 'pinia'
 
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 
 export default {
     props: {

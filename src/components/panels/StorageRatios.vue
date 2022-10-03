@@ -16,7 +16,7 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 import {StringFormatter} from '../../javascript/utils'
 import {LevelsGraph} from '../graphs'
 

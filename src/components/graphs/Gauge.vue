@@ -17,7 +17,7 @@ See chart.js documentation for further explantion of below fucntionality.
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 
 export default {
     props: {

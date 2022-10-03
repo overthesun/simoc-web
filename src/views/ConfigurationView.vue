@@ -73,7 +73,7 @@ import axios from 'axios'
 import {storeToRefs} from 'pinia'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'

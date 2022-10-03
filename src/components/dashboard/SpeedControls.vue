@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {useDashboardStore} from '@/store/modules/DashboardStore'
+import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
 
 export default {
     setup() {
