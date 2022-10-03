@@ -16,7 +16,7 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     setup() {

@@ -22,7 +22,7 @@ future dashboard views
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'

@@ -17,7 +17,7 @@ import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {

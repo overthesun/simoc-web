@@ -11,7 +11,7 @@ import axios from 'axios'
 import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
+import {useDashboardStore} from '../store/modules/DashboardStore'
 
 export default {
     setup() {

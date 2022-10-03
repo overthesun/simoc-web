@@ -15,7 +15,7 @@
 
 <script>
 import {storeToRefs} from 'pinia'
-import {useDashboardStore} from '@/store/modules/DashboardStore.vue'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 import {DataDisplay} from '../basepanel'
 
