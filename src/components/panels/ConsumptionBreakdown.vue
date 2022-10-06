@@ -25,7 +25,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Consumption Breakdown',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     data() {
         return {
             selected_currency: null,

@@ -373,6 +373,10 @@ export default {
                     'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
+                kiosk: [
+                    'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
+                    'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
+                ],
             }[mode]
         },
         // Set current mode

@@ -9,7 +9,8 @@ to the entry screens to prevent this from popping up on repeat vistors.
 
 <template>
     <div class="entry-wrapper">
-        <BaseEntry>
+        <!-- Normal Mode -->
+        <BaseEntry v-if="getCurrentMode !== 'kiosk'">
             <template #entry-main>
                 <div class="welcome-wrapper">
                     <p class="welcome-title">WELCOME TO SIMOC</p>
@@ -50,19 +51,48 @@ to the entry screens to prevent this from popping up on repeat vistors.
                 <button class="btn-normal" @click="toLogin">PROCEED</button>
             </template>
         </BaseEntry>
+        <!-- Kiosk Mode -->
+        <BaseEntry v-else>
+            <template #entry-main>
+                <div class="welcome-wrapper">
+                    <p class="welcome-title">WELCOME TO MARS!</p>
+
+                    <p>To live on Mars you will need to carefully manager your air, water, food,
+                        and energy generation to survive. In this computer simulation of a Mars
+                        habitat, you choose the number of astronauts, the size of your habitat, the
+                        plants in your greenhouse, solar panels and batteries.</p>
+
+                    <p>Will you have enough electricity to make it through the night? Enough food
+                        to last for a month? Can you survive on Mars?</p>
+                </div>
+            </template>
+
+            <template #entry-button>
+                <button class="btn-normal" @click="toConfiguration">NEW MISSION</button>
+            </template>
+        </BaseEntry>
     </div>
 </template>
 
 <script>
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {BaseEntry} from '../base'
 
 export default {
     components: {
         BaseEntry,
     },
+    computed: {
+        ...mapGetters('dashboard', ['getCurrentMode']),
+    },
     methods: {
+        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         toLogin() {
             this.$router.push('entry')
+        },
+        toConfiguration() {
+            this.SETACTIVECONFIGTYPE('Custom')
+            this.$router.push('configuration')
         },
     },
 }

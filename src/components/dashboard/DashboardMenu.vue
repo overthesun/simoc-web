@@ -7,13 +7,17 @@ use some of these features.
         <template #menu-title>
             Dashboard Menu
         </template>
-        <template #menu-buttons>
+        <template v-if="getCurrentMode !== 'kiosk'" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <button @click="stopSimulation">Stop Simulation</button>
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
+        </template>
+        <template v-else #menu-buttons>
+            <button @click="toConfiguration">New Mission</button>
+            <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
@@ -81,11 +85,11 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.getActivePanels)
-            localStorage.setItem('panels-layout', panelsLayout)
+            localStorage.setItem('panels-layout-sim', panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            localStorage.removeItem('panels-layout')
+            localStorage.removeItem('panels-layout-sim')
             this.SETDEFAULTPANELS(this.getCurrentMode)
         },
         // Logout button route
@@ -119,10 +123,20 @@ export default {
 
                     // the user already confirmed, don't ask twice
                     this.SETLEAVEWITHOUTCONFIRMATION(true)
+
                     // rely on DashboardView.beforeDestroy to stop the sim
-                    this.$router.push('menu')
+                    if (this.getCurrentMode !== 'kiosk') {
+                        this.$router.push('menu')
+                    } else {
+                        this.$router.push('configuration')
+                    }
                 },
             })
+        },
+
+        // To Welcome Screen button
+        toEntry() {
+            this.$router.push('/')
         },
     },
 }
