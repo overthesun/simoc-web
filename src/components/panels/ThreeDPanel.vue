@@ -8,7 +8,7 @@ import World from '@/threejs/World.vue'
 
 export default {
     panelTitle: 'Habitat View',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     components: {
         World: World,
     },
