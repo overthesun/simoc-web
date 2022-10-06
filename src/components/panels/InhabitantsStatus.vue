@@ -38,6 +38,17 @@ import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
+/*
+TODO: If the data hasn't been sent, we want to display "[loading..]" as
+a placeholder. On this panel, several fields use the 'attempt_read' method,
+which displays "[loading...]" if an error is raised while fetching the data.
+
+The new getData method doesn't raise an error if an index is out of range, it
+returns 0 (long story), so the "[loading...]" wasn't shown. I changed it to show
+when "currentStepBuffer === 0", which should only ever happen at the beginning.
+This is probably a more appropriate method and should be implemented everywhere.
+*/
+
 export default {
     panelTitle: 'Inhabitants Status',
     modes: ['sim'],
@@ -141,7 +152,7 @@ export default {
         },
         humans() {
             const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
-            if (Number.isNaN(agents)) {
+            if (Number.isNaN(agents) || this.currentStepBuffer === 0) {
                 return this.getConfiguration.humans.amount
             } else {
                 return agents
@@ -164,7 +175,7 @@ export default {
             const air_storage_value = this.getData(
                 [this.humanAtmosphere, 'storage', currency, this.step]
             )
-            if (Number.isNaN(air_storage_value)) {
+            if (Number.isNaN(air_storage_value) || this.currentStepBuffer === 0) {
                 throw Error('Nothing here yet..')
             }
             return air_storage_value / this.total_air_storage_capacity * 100

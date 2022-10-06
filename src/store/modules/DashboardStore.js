@@ -149,7 +149,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
 
         // Data Handling
         setCurrentStepBuffer(value) {
-            this.currentStepBuffer = Math.min(Math.max(0, value), this.maxStepBuffer)
+            this.currentStepBuffer = Math.min(Math.max(1, value), this.maxStepBuffer)
         },
         parseStep(value) {
             const {
