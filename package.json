@@ -32,7 +32,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^3.0.0",
+    "@vitejs/plugin-vue": "^3.1.2",
     "@vue/eslint-config-airbnb": "^6.0.0",
     "eslint": "^8.20.0",
     "eslint-formatter-summary": "^1.1.0",
