@@ -14,7 +14,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '/': {
+            '/*': {
                 target: 'http://nginx:8000',
                 changeOrigin: true,
                 secure: false,
