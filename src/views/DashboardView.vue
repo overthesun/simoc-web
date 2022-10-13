@@ -39,6 +39,7 @@ export default {
             stopTimer,
             setCurrentStepBuffer,
             setStopped,
+            resetData,
         } = dashboard
 
         return {
@@ -60,6 +61,7 @@ export default {
             stopTimer,
             setCurrentStepBuffer,
             setStopped,
+            resetData,
         }
     },
     data() {
@@ -109,6 +111,7 @@ export default {
         this.currentStepBuffer = 0
         this.setMinStepNumber(0)  // Currently unused
         this.setStopped(false)
+        this.resetData()
 
         // TODO: we switched from using a timer to request steps via HTTP to
         // websockets, but for now all the old code is still there.
