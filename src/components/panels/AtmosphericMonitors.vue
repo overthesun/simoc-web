@@ -47,7 +47,7 @@ import {Gauge} from '../graphs'
 
 export default {
     panelTitle: 'Atmospheric Monitors',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     components: {
         Gauge,
     },

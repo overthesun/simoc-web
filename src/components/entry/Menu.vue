@@ -56,6 +56,7 @@ export default {
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
+        ...mapMutations('modal', ['SETSURVEYWASPROMPTED']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
@@ -111,6 +112,12 @@ export default {
         keyListener(e) {
             if (e.ctrlKey && e.key === 'a') {
                 this.showAgentEditor = true
+            }
+
+            if (e.ctrlKey && e.key === 'k') {
+                this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
+                this.currentMode = 'kiosk'
+                this.$router.push('/')
             }
         },
     },

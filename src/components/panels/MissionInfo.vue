@@ -78,7 +78,7 @@ export default {
         const {getData} = dashboard
         return {currentStepBuffer, getData}
     },
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     data() {
         return {
             info_section: 'mission-status',

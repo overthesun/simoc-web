@@ -51,7 +51,7 @@ This is probably a more appropriate method and should be implemented everywhere.
 
 export default {
     panelTitle: 'Inhabitants Status',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     setup() {
         const dashboard = useDashboardStore()
 

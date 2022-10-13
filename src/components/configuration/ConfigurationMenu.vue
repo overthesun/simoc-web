@@ -3,7 +3,7 @@
         <template #menu-title>
             Configuration Menu
         </template>
-        <template #menu-buttons>
+        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
                 :config="getConfiguration"
@@ -13,11 +13,17 @@
             <button @click="resetConfig">Reset Configuration</button>
             <Logout />
         </template>
+        <template v-else #menu-buttons>
+            <button @click="resetConfig">Reset Configuration</button>
+            <button @click="toEntry">To Welcome Screen</button>
+        </template>
     </BaseMenu>
 </template>
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -27,6 +33,11 @@ export default {
         DownloadConfig,
         UploadConfig,
         Logout,
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentMode} = storeToRefs(dashboard)
+        return {currentMode}
     },
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
@@ -53,6 +64,11 @@ export default {
                 message: 'Reset the current configuration?',
                 confirmCallback: () => this.SETRESETCONFIG(true),
             })
+        },
+
+        // To Welcome Screen button
+        toEntry() {
+            this.$router.push('/')
         },
     },
 }

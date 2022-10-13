@@ -30,7 +30,7 @@ export default {
         const {getData} = dashboard
         return {currentStepBuffer, getData}
     },
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
         getPlants() {

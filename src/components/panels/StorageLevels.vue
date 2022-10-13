@@ -35,7 +35,7 @@ export default {
         const {getData} = dashboard
         return {currentStepBuffer, currencyDict, getData}
     },
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
     },

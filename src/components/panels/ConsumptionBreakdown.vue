@@ -24,7 +24,7 @@ export default {
     components: {
         DataDisplay,
     },
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     setup() {
         const dashboard = useDashboardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
