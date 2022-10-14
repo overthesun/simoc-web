@@ -40,7 +40,7 @@
     "eslint-formatter-summary": "^1.1.0",
     "eslint-plugin-vue": "^9.6.0",
     "sass": "^1.54.8",
-    "vite": "^3.1.7"
+    "vite": "^3.1.8"
   },
   "postcss": {
     "plugins": {
