@@ -184,15 +184,6 @@ module.exports = {
         'import/newline-after-import': 'error',
         'import/first': 'error',
         'import/order': 'error',
-        // With {'js': 'never'}, eslint will compain that
-        // * import {somefunc} from '@/somedir/somefile.js' has the extension
-        // * import {somefunc} from '@/somedir/somefile' doen't have the extension
-        //   (even though the problem is actually the @)
-        // * import {somefunc} from '/src/somedir/somefile' uses an absolute path
-        // The only solution that works is using 'import {somefunc} from '../somedir/somefile',
-        // i.e. relative path without `.js`.
-        // If {'js': 'never'} is removed, eslint will complain that imports from directories,
-        // e.g. import {somefunc} from '@/somedir', are missing the extension
         'import/extensions': ['error', 'always', {'js': 'never'}],
         // eslint-import-resolver-alias has a way to specify an alias for '@'
         // that supposedly fixes some "Unable to resolve path to module" errors:
