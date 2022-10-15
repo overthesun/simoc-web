@@ -68,7 +68,6 @@ export default {
                 value = Math.round(value*10000)/10000
                 activeData[key] = `${value} ${this.units[currency]}`
             })
-            this.activeData = {}
             this.activeData = activeData
         },
         stringFormatter: StringFormatter,
