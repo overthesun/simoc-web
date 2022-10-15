@@ -38,11 +38,11 @@ export default {
         const dashboard = useDashboardStore()
         const {
             isTimerRunning, activePanels, gameCurrencies, currentMode,
-            menuActive, leaveWithoutConfirmation
+            menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
-            setDefaultPanels
+            setDefaultPanels,
         } = dashboard
         return {
             isTimerRunning, activePanels, gameCurrencies, currentMode,

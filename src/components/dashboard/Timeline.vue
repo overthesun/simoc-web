@@ -26,14 +26,14 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const {
-            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer
+            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
         } = storeToRefs(dashboard)
         const {
-            initTimer, pauseTimer, startTimer, setCurrentStepBuffer
+            initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
         } = dashboard
         return {
             isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
-            initTimer, pauseTimer, startTimer, setCurrentStepBuffer
+            initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
         }
     },
     data() {
