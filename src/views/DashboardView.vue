@@ -16,52 +16,20 @@ import {useDashboardStore} from '../store/modules/DashboardStore'
 export default {
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            getStepsTimerID,
-            stopped,
-            terminated,
-            parameters,
-            isTimerRunning,
-            currentStepBuffer,
-            maxStepBuffer,
-            loadFromSimData,
-            timerID,
+            getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
+            currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive,
         } = storeToRefs(dashboard)
-
         const {
-            setMinStepNumber,
-            initGame,
-            parseStep,
-            startTimer,
-            pauseTimer,
-            stopTimer,
-            setCurrentStepBuffer,
-            setStopped,
-            resetData,
+            setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
+            stopTimer, setCurrentStepBuffer, setStopped, resetData,
         } = dashboard
-
         return {
-            getStepsTimerID,
-            stopped,
-            terminated,
-            parameters,
-            isTimerRunning,
-            currentStepBuffer,
-            maxStepBuffer,
-            loadFromSimData,
-            timerID,
-            menuActive,
-            setMinStepNumber,
-            initGame,
-            parseStep,
-            startTimer,
-            pauseTimer,
-            stopTimer,
-            setCurrentStepBuffer,
-            setStopped,
-            resetData,
+            getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
+            currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
+            menuActive, setMinStepNumber, initGame, parseStep, startTimer,
+            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, resetData,
         }
     },
     data() {

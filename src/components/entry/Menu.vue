@@ -39,7 +39,9 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {maxStepBuffer, loadFromSimData, currentMode} = storeToRefs(dashboard)
+        const {
+            maxStepBuffer, loadFromSimData, currentMode
+        } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
         return {maxStepBuffer, loadFromSimData, currentMode, setSimulationData}
     },

@@ -25,23 +25,11 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            isTimerRunning,
-            currentStepBuffer,
-            maxStepBuffer,
+            isTimerRunning, currentStepBuffer, maxStepBuffer
         } = storeToRefs(dashboard)
-
-        const {
-            getData,
-        } = dashboard
-
-        return {
-            isTimerRunning,
-            currentStepBuffer,
-            maxStepBuffer,
-            getData,
-        }
+        const {getData} = dashboard
+        return {isTimerRunning, currentStepBuffer, maxStepBuffer, getData}
     },
     data() {
         return {

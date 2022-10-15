@@ -54,23 +54,12 @@ export default {
     modes: ['sim', 'kiosk'],
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            currentStepBuffer,
-            gameConfig,
-            currencyDict,
-            humanAtmosphere,
+            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
         } = storeToRefs(dashboard)
-
-        const {
-            getData,
-        } = dashboard
-
+        const {getData} = dashboard
         return {
-            currentStepBuffer,
-            gameConfig,
-            currencyDict,
-            humanAtmosphere,
+            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
             getData,
         }
     },
@@ -153,6 +142,7 @@ export default {
         humans() {
             const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
             if (Number.isNaN(agents) || this.currentStepBuffer === 0) {
+                // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
             } else {
                 return agents

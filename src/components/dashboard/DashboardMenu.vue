@@ -36,36 +36,18 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            isTimerRunning,
-            activePanels,
-            gameCurrencies,
-            currentMode,
-            menuActive,
-            leaveWithoutConfirmation,
+            isTimerRunning, activePanels, gameCurrencies, currentMode,
+            menuActive, leaveWithoutConfirmation
         } = storeToRefs(dashboard)
-
         const {
-            getSimulationData,
-            setStopped,
-            startTimer,
-            pauseTimer,
-            setDefaultPanels,
+            getSimulationData, setStopped, startTimer, pauseTimer,
+            setDefaultPanels
         } = dashboard
-
         return {
-            isTimerRunning,
-            activePanels,
-            gameCurrencies,
-            currentMode,
-            menuActive,
-            leaveWithoutConfirmation,
-            getSimulationData,
-            setStopped,
-            startTimer,
-            pauseTimer,
-            setDefaultPanels,
+            isTimerRunning, activePanels, gameCurrencies, currentMode,
+            menuActive, leaveWithoutConfirmation, getSimulationData,
+            setStopped, startTimer, pauseTimer, setDefaultPanels,
         }
     },
     data() {

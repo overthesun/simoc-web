@@ -56,20 +56,9 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-
-        const {
-            humanAtmosphere,
-            gameConfig,
-        } = storeToRefs(dashboard)
-
-        const {
-            getData,
-        } = dashboard
-        return {
-            humanAtmosphere,
-            gameConfig,
-            getData,
-        }
+        const {humanAtmosphere, gameConfig} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {humanAtmosphere, gameConfig, getData}
     },
     computed: {
         total_storage_capacity() {

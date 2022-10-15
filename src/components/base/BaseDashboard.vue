@@ -64,24 +64,13 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            isTimerRunning,
-            menuActive,
-            leaveWithoutConfirmation,
+            isTimerRunning, menuActive, leaveWithoutConfirmation
         } = storeToRefs(dashboard)
-
-        const {
-            startTimer,
-            pauseTimer,
-        } = dashboard
-
+        const {startTimer, pauseTimer} = dashboard
         return {
-            isTimerRunning,
-            menuActive,
-            leaveWithoutConfirmation,
-            startTimer,
-            pauseTimer,
+            isTimerRunning, menuActive, leaveWithoutConfirmation, startTimer,
+            pauseTimer
         }
     },
     data() {

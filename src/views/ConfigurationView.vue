@@ -94,28 +94,13 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-
         const {
-            menuActive,
-            parameters,
-            loadFromSimData,
-            maxStepBuffer,
-            currentMode,
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
         } = storeToRefs(dashboard)
-
-        const {
-            setGameParams,
-            setSimulationData,
-        } = dashboard
-
+        const {setGameParams, setSimulationData} = dashboard
         return {
-            menuActive,
-            parameters,
-            loadFromSimData,
-            maxStepBuffer,
-            currentMode,
-            setGameParams,
-            setSimulationData,
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
+            setGameParams, setSimulationData,
         }
     },
     data() {
