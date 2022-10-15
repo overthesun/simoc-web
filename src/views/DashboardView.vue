@@ -23,13 +23,13 @@ export default {
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
-            stopTimer, setCurrentStepBuffer, setStopped, resetData,
+            stopTimer, setCurrentStepBuffer, setStopped,
         } = dashboard
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, setMinStepNumber, initGame, parseStep, startTimer,
-            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, resetData,
+            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped,
         }
     },
     data() {
@@ -79,7 +79,6 @@ export default {
         this.currentStepBuffer = 0
         this.setMinStepNumber(0)  // Currently unused
         this.setStopped(false)
-        this.resetData()
 
         // TODO: we switched from using a timer to request steps via HTTP to
         // websockets, but for now all the old code is still there.

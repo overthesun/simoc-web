@@ -178,10 +178,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
             // Return a subset of data from path
             return parseData(this.data, path)
         },
-        resetData() {
-            // Erase data from previous run
-            this.data = {}
-        },
 
         /**
          * Stops and terminates the simulation if the sim is interrupted before receiving all steps.
@@ -271,6 +267,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 min_step_num: 0,  // Only supported value
                 n_steps: 10,
             }
+            this.data = {}
         },
     },
 })
