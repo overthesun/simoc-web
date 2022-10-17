@@ -12,11 +12,11 @@
             <dt>Location:</dt>
             <dd>{{stringFormatter(getConfiguration.location)}}</dd>
             <dt>Duration:</dt>
-            <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
             <dt>Mars days:</dt>
-            <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcSols(currentStepBuffer-1)}}</dd>
             <dt>Earth days:</dt>
-            <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcDays(currentStepBuffer-1)}}</dd>
             <dt>Inhabitants:</dt>
             <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
             <!-- TODO: restore this when we get the value from the backend
@@ -66,10 +66,18 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Mission Information',
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {currentStepBuffer, getData}
+    },
     modes: ['sim', 'kiosk'],
     data() {
         return {
@@ -79,14 +87,15 @@ export default {
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer']),
     },
     methods: {
         stringFormatter: StringFormatter,
         humanCount() {
-            const agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents.human_agent !== undefined) {
-                return agents.human_agent
+            const agents = this.getData(
+                ['human_agent', 'amount', this.currentStepBuffer]
+            )
+            if (agents !== undefined && agents !== null) {
+                return agents
             } else {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount

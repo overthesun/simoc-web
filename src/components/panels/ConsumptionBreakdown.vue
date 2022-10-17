@@ -1,34 +1,40 @@
 <template>
     <section class="panel-dl-wrapper">
-        <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
-        <template v-else>
-            <p v-if="selected_consumption === null">[Missing data]</p>
-            <select v-else id="currency-select" v-model="selected_currency" required>
-                <option v-for="(data, name) in consumptions" :key="name" :value="name">
-                    {{currencies[name]}}
+        <div v-if="currentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
+        <div v-else class="content">
+            <select id="currency-select" v-model="activeCurrency" required>
+                <option v-for="(label, curr) in currencies" :key="curr" :value="curr">
+                    {{label}}
                 </option>
             </select>
-            <dl>
-                <template v-for="(agent_data, agent_name, k) in selected_consumption" :key="`tmpl_${agent_name}_${k}`">
-                    <dt>{{stringFormatter(agent_name)}}</dt>
-                    <dd>{{agent_data.value}} {{units[selected_currency]}}</dd>
-                </template>
-            </dl>
-        </template>
+            <DataDisplay :data="activeData" />
+        </div>
     </section>
 </template>
 
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
+import {DataDisplay} from '../basepanel'
 
 export default {
     panelTitle: 'Consumption Breakdown',
+    components: {
+        DataDisplay,
+    },
     modes: ['sim', 'kiosk'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {currentStepBuffer, getData}
+    },
     data() {
         return {
-            selected_currency: null,
+            activeCurrency: 'co2',
+            activeData: {},
             currencies: {
                 kwh: 'Energy',
                 co2: 'Carbon Dioxide (CO₂)',
@@ -40,28 +46,31 @@ export default {
             },
         }
     },
-    computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getDetailsPerAgent']),
-        selected_consumption() {
-            try {
-                if (this.selected_currency === null) {
-                    this.set_currency(Object.keys(this.consumptions)[0])
-                }
-                return this.consumptions[this.selected_currency]
-            } catch (err) {
-                return null
-            }
+    watch: {
+        currentStepBuffer(newBuffer) {
+            this.setActiveData(this.activeCurrency, newBuffer)
         },
-        consumptions() {
-            return this.getDetailsPerAgent(this.getCurrentStepBuffer).in
+        activeCurrency(newCurrency) {
+            this.setActiveData(newCurrency, this.currentStepBuffer)
         },
     },
     methods: {
-        stringFormatter: StringFormatter,
-        set_currency(currency) {
-            // the linter complains if we set this directly in the computed
-            this.selected_currency = currency
+        setActiveData(currency, buffer) {
+            if (!currency || !buffer) {
+                return
+            }
+            const csb = buffer || this.currentStepBuffer
+            const path = ['*', 'flows', 'in', currency, 'SUM', csb]
+
+            const activeData = this.getData(path)
+            Object.keys(activeData).forEach(key => {
+                let value = activeData[key]
+                value = Math.round(value*10000)/10000
+                activeData[key] = `${value} ${this.units[currency]}`
+            })
+            this.activeData = activeData
         },
+        stringFormatter: StringFormatter,
         fix_unit(unit) {
             // TODO: this is currently unused.  The server either sends the
             // unit or nothing if the value is 0, and if it's kWh we need to

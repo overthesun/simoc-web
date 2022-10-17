@@ -23,6 +23,8 @@
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
     "postcss-nesting": "^10.1.10",
+    "lodash": "^4.17.21",
+    "pinia": "^2.0.22",
     "socket.io-client": "^4.5.2",
     "three": "^0.145.0",
     "vite-plugin-eslint": "^1.8.0",

@@ -33,11 +33,36 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
+
+/*
+TODO: If the data hasn't been sent, we want to display "[loading..]" as
+a placeholder. On this panel, several fields use the 'attempt_read' method,
+which displays "[loading...]" if an error is raised while fetching the data.
+
+The new getData method doesn't raise an error if an index is out of range, it
+returns 0 (long story), so the "[loading...]" wasn't shown. I changed it to show
+when "currentStepBuffer === 0", which should only ever happen at the beginning.
+This is probably a more appropriate method and should be implemented everywhere.
+*/
 
 export default {
     panelTitle: 'Inhabitants Status',
     modes: ['sim', 'kiosk'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const {
+            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
+        } = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {
+            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
+            getData,
+        }
+    },
     data() {
         return {
             // shades of red to warn the user when values pass the threshold
@@ -45,21 +70,18 @@ export default {
             // inline styles for co2/o2
             co2_style: {color: '#eee'},
             o2_style: {color: '#eee'},
-            food_storages: {},
+            foodCurrencies: null,
         }
     },
     computed: {
         ...mapGetters(['getGameID']),
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer',
-                                    'getStorageCapacities', 'getGameConfig',
-                                    'getGameCurrencies', 'getHumanAtmosphere']),
         step() {
-            return this.getCurrentStepBuffer
+            return this.currentStepBuffer
         },
         total_air_storage_capacity() {
             // return the total capacity of the air storage
-            let storage = this.getGameConfig.storages[this.getHumanAtmosphere]
+            let storage = this.gameConfig.storages[this.humanAtmosphere]
             // TODO: Revert ABM Workaround
             // gameConfig structure has been updated in the backend, but presets use old structure.
             storage = Array.isArray(storage) ? storage[0] : storage
@@ -99,57 +121,40 @@ export default {
         },
         water() {
             return this.attempt_read(() => {
-                const storage = this.getStorageCapacities(this.step)
-                const {potable} = storage.water_storage[1]
-                return `${potable.value} ${potable.unit}`
+                const potable = this.getData(
+                    ['water_storage', 'storage', 'potable', this.step]
+                )
+                return `${potable.toFixed(3)} kg`
             })
         },
         food() {
             return this.attempt_read(() => {
-                const storage = this.getStorageCapacities(this.step)
+                const foodStorages = this.getData(
+                    ['*', 'storage', this.foodCurrencies.join(','), this.step]
+                )
                 let foodValue = 0
-                let foodUnits = null
-                // TODO: ABM Redesign Workaround
-                Object.entries(this.food_storages).forEach(([storageName, foodCurrencies]) => {
-                    if (!storage[storageName]) {
-                        return
-                    }
-                    Object.values(foodCurrencies).forEach(c => {
-                        foodValue += storage[storageName]['1'][c].value
-                        if (!foodUnits) {
-                            foodUnits = storage[storageName]['1'][c].unit
-                        }
-                    })
+                Object.values(foodStorages).forEach(store => {
+                    foodValue += Object.values(store).reduce((a, b) => a + b)
                 })
-                return `${foodValue} ${foodUnits}`
+                return `${foodValue.toFixed(3)} kg`
             })
         },
         humans() {
-            const agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents.human_agent !== undefined) {
-                return agents.human_agent
-            } else {
+            const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
+            if (Number.isNaN(agents) || this.currentStepBuffer === 0) {
                 // if we don't know the humans count, return the initial value
                 return this.getConfiguration.humans.amount
+            } else {
+                return agents
             }
         },
     },
     mounted() {
-        // TODO: ABM Redesign Workaround
-        // Compile a list of storages that include food, and which food currencies they contain.
-        const {storages} = this.getGameConfig
-        const foodTypes = Object.keys(this.getGameCurrencies.food)
-        Object.entries(storages).forEach(([storageName, storageData]) => {
-            const foodCurrencies = []
-            if (storageData[0].storageType.includes('food_storage')) {
-                Object.keys(storageData[0]).forEach(attr => {
-                    if (foodTypes.includes(attr)) {
-                        foodCurrencies.push(attr)
-                    }
-                })
-            }
-            if (foodCurrencies.length > 0) {
-                this.food_storages[storageName] = foodCurrencies
+        // Compile a list of active food currencies
+        this.foodCurrencies = []
+        Object.entries(this.currencyDict).forEach(([currency, data]) => {
+            if (data.currencyClass === 'food') {
+                this.foodCurrencies.push(currency)
             }
         })
     },
@@ -157,8 +162,13 @@ export default {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage = this.getStorageCapacities(this.step)[this.getHumanAtmosphere][1]
-            return air_storage[currency].value / this.total_air_storage_capacity * 100
+            const air_storage_value = this.getData(
+                [this.humanAtmosphere, 'storage', currency, this.step]
+            )
+            if (Number.isNaN(air_storage_value) || this.currentStepBuffer === 0) {
+                throw Error('Nothing here yet..')
+            }
+            return air_storage_value / this.total_air_storage_capacity * 100
         },
         attempt_read(func) {
             try {

@@ -4,8 +4,8 @@ future dashboard views
 
 <template>
     <div id="dashboard-wrapper">
-        <!-- Show the dashboard menu component when getMenuActive is true. -->
-        <DashboardMenu v-if="getMenuActive" />
+        <!-- Show the dashboard menu component when menuActive is true. -->
+        <DashboardMenu v-if="menuActive" />
         <TheTopBar />
         <section class="main-wrapper">
             <Dashboard />
@@ -21,6 +21,8 @@ future dashboard views
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {Timeline, PlayButton, StepControls,
         SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
@@ -41,8 +43,8 @@ export default {
         // but also when clicking on the browser back button.
         // Cases where the user closes the tab or refreshes are handled
         // in DashboardView.
-        if (this.getLeaveWithoutConfirmation) {
-            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
+        if (this.leaveWithoutConfirmation) {
+            this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Make user to confirm before exiting.
@@ -60,31 +62,39 @@ export default {
             }
         }
     },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {
+            isTimerRunning, menuActive, leaveWithoutConfirmation,
+        } = storeToRefs(dashboard)
+        const {startTimer, pauseTimer} = dashboard
+        return {
+            isTimerRunning, menuActive, leaveWithoutConfirmation, startTimer,
+            pauseTimer,
+        }
+    },
     data() {
         return {
             pausedForModal: false,
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
-                                    'getIsTimerRunning']),
         ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
     },
     watch: {
         // If a modal opens while the timer is on,
         // pause it, then start it again after modal closes.
         getModalActive(newActive, oldActive) {
-            if (oldActive === false && this.getIsTimerRunning === true) {
-                this.PAUSETIMER()
+            if (oldActive === false && this.isTimerRunning === true) {
+                this.pauseTimer()
                 this.pausedForModal = true
             } else if (newActive === false && this.pausedForModal) {
-                this.STARTTIMER()
+                this.startTimer()
                 this.pausedForModal = false
             }
         },
     },
     methods: {
-        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
         ...mapActions('modal', ['confirm', 'showSurvey']),
     },
 }

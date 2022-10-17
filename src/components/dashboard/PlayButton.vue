@@ -2,37 +2,25 @@
 
 <template>
     <div id="dashboard-play-icon">
-        <span v-if="getIsTimerRunning" title="Pause" @click="pauseTimer">
+        <span v-if="isTimerRunning" title="Pause" @click="pauseTimer()">
             <fa-icon :icon="['fa-solid','pause']" class="fa-icon" />
         </span>
-        <span v-else title="Play" @click="resumeTimer">
+        <span v-else title="Play" @click="startTimer()">
             <fa-icon :icon="['fa-solid','play']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
-    data() {
-        return {
-
-        }
-    },
-    computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning']),
-    },
-    methods: {
-        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer() {
-            // pause the timer when the user clicks on the pause button
-            this.PAUSETIMER()
-        },
-        resumeTimer() {
-            // start/resume the timer when the user clicks on the play button
-            this.STARTTIMER()
-        },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {isTimerRunning} = storeToRefs(dashboard)
+        const {pauseTimer, startTimer} = dashboard
+        return {isTimerRunning, pauseTimer, startTimer}
     },
 }
 </script>

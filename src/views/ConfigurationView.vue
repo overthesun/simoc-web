@@ -2,7 +2,7 @@
     <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
-        <ConfigurationMenu v-if="getMenuActive" />
+        <ConfigurationMenu v-if="menuActive" />
         <router-view v-slot="{Component}">
             <component :is="Component">
                 <!-- Wizard Jump Options, only available in Guided Configuration -->
@@ -70,9 +70,11 @@
 
 <script>
 import axios from 'axios'
+import {storeToRefs} from 'pinia'
 import IdleJs from 'idle-js'
 // import form components
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../store/modules/DashboardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
@@ -90,6 +92,17 @@ export default {
         Graphs,
         Layout,
     },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
+        } = storeToRefs(dashboard)
+        const {setGameParams, setSimulationData} = dashboard
+        return {
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
+            setGameParams, setSimulationData,
+        }
+    },
     data() {
         return {
             formIndex: 0, // Current index of the form that should be used from the wizard store
@@ -99,7 +112,6 @@ export default {
             validating: false,
             // true while waiting for a response after clicking on "Launch Simulation"
             awaiting_response: false,
-            menuActive: false, // Used with class binding to display the menu.
             stepMax: 1,
             greenhouseSize: {
                 none: 0,
@@ -118,7 +130,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams', 'getCurrentMode']),
         ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
                                  'getActiveConfigType', 'getActiveForm',
                                  'getFormLength', 'getTotalMissionHours',
@@ -152,7 +163,7 @@ export default {
         },
     },
     beforeMount() {
-        if (this.getCurrentMode === 'kiosk') {
+        if (this.currentMode === 'kiosk') {
             this.idle.start()
         }
         this.RESETCONFIG()
@@ -160,14 +171,12 @@ export default {
         this.activeConfigType = this.getActiveConfigType
     },
     beforeUnmount() {
-        if (this.getCurrentMode === 'kiosk') {
+        if (this.currentMode === 'kiosk') {
             this.idle.stop()
         }
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
         ...mapMutations(['SETGAMEID']),
         ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
@@ -252,17 +261,17 @@ export default {
             const presets = this.getPresets
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const simdata = await this.importPresetData(presets[preset_name])
+                const data = await this.importPresetData(presets[preset_name])
                 // Get currency_desc from backend
                 const response = await axios.get('/get_currency_desc')
                 const {currency_desc} = response.data
-                if (simdata) {
+                if (data) {
                     try {
-                        this.SETCONFIGURATION(simdata.configuration)
-                        this.SETSIMULATIONDATA({simdata, currency_desc})
-                        this.SETBUFFERMAX(simdata.steps)
-                        this.SETCURRENTMODE(this.getCurrentMode !== 'kiosk' ? 'sim' : 'kiosk')
-                        this.SETLOADFROMSIMDATA(true)
+                        const {configuration, ...simdata} = data
+                        this.SETCONFIGURATION(configuration)
+                        this.setSimulationData({simdata, currency_desc})
+                        this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                        this.loadFromSimData = true
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
                     } catch (error) {
@@ -290,12 +299,12 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
-                this.SETGAMEPARAMS({
+                this.setGameParams({
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.SETCURRENTMODE(this.getCurrentMode !== 'kiosk' ? 'sim' : 'kiosk')
-                this.SETLOADFROMSIMDATA(false)
+                this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
             } catch (error) {

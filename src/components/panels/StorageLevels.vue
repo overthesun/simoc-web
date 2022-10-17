@@ -1,22 +1,21 @@
 <template>
     <section class="panel-dl-wrapper">
-        <div v-if="getCurrentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
-        <template v-for="(stor_obj, stor_name) in storage(getCurrentStepBuffer)" v-else>
-            <template v-for="(stor_values, stor_num) in stor_obj" :key="`tmpl_${stor_name}/${stor_num}`">
-                <div class="storage-name">
-                    {{stringFormatter(stor_name)}} {{stor_num}}
-                </div>
-                <dl>
-                    <template v-for="(value, name) in stor_values" :key="`tmpl_${name}`">
-                        <dt v-if="name == 'co2'"
-                            title="CO2 exchanges to/from storage are recorded as both production and consumption">
-                            {{label2name(name)}}
-                        </dt>
-                        <dt v-else>{{label2name(name)}}</dt>
-                        <dd>{{value.value}} {{value.unit}}</dd>
-                    </template>
-                </dl>
-            </template>
+        <div v-if="currentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
+        <template v-for="(stor_obj, stor_name) in storage(currentStepBuffer)" v-else
+                  :key="`tmpl_${stor_name}_storage`">
+            <div class="storage-name">
+                {{stringFormatter(stor_name)}}
+            </div>
+            <dl>
+                <template v-for="(value, name) in stor_obj" :key="`tmpl_${name}`">
+                    <dt v-if="name == 'co2'"
+                        title="CO2 exchanges to/from storage are recorded as both production and consumption">
+                        {{label2name(name)}}
+                    </dt>
+                    <dt v-else>{{label2name(name)}}</dt>
+                    <dd>{{value.toFixed(3)}} kg</dd>
+                </template>
+            </dl>
         </template>
     </section>
 </template>
@@ -24,34 +23,39 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {currentStepBuffer, currencyDict, getData}
+    },
     modes: ['sim', 'kiosk'],
     computed: {
         ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer', 'getStorageCapacities',
-                                    'getCurrencyDict']),
     },
     methods: {
         stringFormatter: StringFormatter,
         storage(step) {
-            const storage = this.getStorageCapacities(step)
-            // TODO: this value is currently unused, so hide it for now
-            if (Object.keys(storage.nutrient_storage[1]).includes('biomass_edible')) {
-                delete storage.nutrient_storage[1].biomass_edible
-            }
+            const storage = this.getData(
+                ['*', 'storage', '*', step]
+            )
+
+            // TODO: Add units back in with a map function, pull from currencyDesc
             // Don't display storages with 0 balance.
             const filteredStorage = {}
             Object.entries(storage).forEach(([stor_name, stor_obj]) => {
-                if (!Object.keys(filteredStorage).includes(stor_name)) {
-                    filteredStorage[stor_name] = {1: {}}
-                }
-                const stor_key = Object.keys(stor_obj).includes('null') ? 'null' : 1  // TODO: ABM-redesign workaround
-                Object.entries(stor_obj[stor_key]).forEach(([currency, data]) => {
-                    if (data.value > 0) {
-                        filteredStorage[stor_name][1][currency] = data
+                Object.entries(stor_obj).forEach(([currency, value]) => {
+                    if (value > 0) {
+                        if (!Object.keys(filteredStorage).includes(stor_name)) {
+                            filteredStorage[stor_name] = {}
+                        }
+                        filteredStorage[stor_name][currency] = value
                     }
                 })
             })
@@ -76,7 +80,7 @@ export default {
                 biomass: 'Biomass (edible, inedible)',
                 kwh: 'Energy (battery)',
             }
-            return definedLocally[label] ?? this.getCurrencyDict[label].label
+            return definedLocally[label] ?? this.currencyDict[label].label
         },
     },
 }

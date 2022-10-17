@@ -3,7 +3,7 @@
         <template #menu-title>
             Configuration Menu
         </template>
-        <template v-if="getCurrentMode !== 'kiosk'" #menu-buttons>
+        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
                 :config="getConfiguration"
@@ -22,6 +22,8 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -32,8 +34,12 @@ export default {
         UploadConfig,
         Logout,
     },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentMode} = storeToRefs(dashboard)
+        return {currentMode}
+    },
     computed: {
-        ...mapGetters('dashboard', ['getCurrentMode']),
         ...mapGetters('wizard', ['getConfiguration']),
 
         isValid() {

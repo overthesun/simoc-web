@@ -10,7 +10,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 <template>
     <div class="entry-wrapper">
         <!-- Normal Mode -->
-        <BaseEntry v-if="getCurrentMode !== 'kiosk'">
+        <BaseEntry v-if="currentMode !== 'kiosk'">
             <template #entry-main>
                 <div class="welcome-wrapper">
                     <p class="welcome-title">WELCOME TO SIMOC</p>
@@ -76,14 +76,18 @@ to the entry screens to prevent this from popping up on repeat vistors.
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {BaseEntry} from '../base'
 
 export default {
     components: {
         BaseEntry,
     },
-    computed: {
-        ...mapGetters('dashboard', ['getCurrentMode']),
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentMode} = storeToRefs(dashboard)
+        return {currentMode}
     },
     methods: {
         ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),

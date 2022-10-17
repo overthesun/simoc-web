@@ -6,7 +6,7 @@
         <span class="icon-wrapper" title="Previous step" @click="prevStep">
             <fa-icon :icon="['fa-solid','backward-step']" class="fa-icon" />
         </span>
-        <span>{{getCurrentStepBuffer}}/{{getTotalMissionHours}}</span>
+        <span>{{currentStepBuffer}}/{{getTotalMissionHours}}</span>
         <span class="icon-wrapper" title="Next step" @click="nextStep">
             <fa-icon :icon="['fa-solid','forward-step']" class="fa-icon" />
         </span>
@@ -15,19 +15,25 @@
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {setCurrentStepBuffer} = dashboard
+        return {currentStepBuffer, setCurrentStepBuffer}
+    },
     computed: {
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
         ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     methods: {
-        ...mapMutations('dashboard', ['UPDATEBUFFERCURRENT']),
         prevStep() {
-            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer - 1)
+            this.setCurrentStepBuffer(this.currentStepBuffer - 1)
         },
         nextStep() {
-            this.UPDATEBUFFERCURRENT(this.getCurrentStepBuffer + 1)
+            this.setCurrentStepBuffer(this.currentStepBuffer + 1)
         },
     },
 }
