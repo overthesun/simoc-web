@@ -11,6 +11,7 @@ import axios from 'axios'
 import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
+import IdleJs from "idle-js"
 import {useDashboardStore} from '../store/modules/DashboardStore'
 
 export default {
@@ -19,7 +20,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive,
+            menuActive, currentMode,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -29,12 +30,27 @@ export default {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, setMinStepNumber, initGame, parseStep, startTimer,
-            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped,
+            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, currentMode,
         }
     },
     data() {
         return {
             socket: null,  // the websocket used to get the steps
+            // idle-js: https://www.npmjs.com/package/idle-js/v/1.2.0
+            idle: new IdleJs({
+                idle: 1000 * 60 * 3,  // idle time, 1000 ms * 60 s * 3, 180000 ms (3 min)
+                events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
+                onIdle: () => {
+                    this.SETTIMEOUTWASACTIVATED(true)
+                    this.$router.push('/')
+                },  // After idle time launch timeout modal from BaseDashboard.
+                onActive: () => {
+                    this.SETTIMEOUTWASACTIVATED(false)
+                    this.STOPTIMER()
+                },  // If activity is detected reset the countdown and hide the modal.
+                keepTracking: true,  // false tracks for idleness only once
+                startAtIdle: false,  // true starts in the idle state
+          }),
         }
     },
 
@@ -64,6 +80,9 @@ export default {
     },
 
     beforeMount() {
+        if (this.currentMode === 'kiosk') {
+            this.idle.start()
+        }
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
@@ -117,6 +136,10 @@ export default {
     },
 
     beforeUnmount() {
+        if (this.currentMode === 'kiosk') {
+            this.idle.stop()
+        }
+
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
         this.stopTimer()   // stop the step timer
@@ -133,6 +156,7 @@ export default {
     },
 
     methods: {
+        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPTIMER',]),
         setupWebsocket() {
             const socket = io()
             this.socket = socket

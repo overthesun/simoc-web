@@ -49,10 +49,18 @@ export default {
         } else {
             // Make user to confirm before exiting.
             const confirmExit = () => {
-                this.confirm({
-                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                    confirmCallback: () => next(),
-                })
+                if (this.getTimeoutWasActivated) {
+                    this.timeout({
+                        message: 'Are you still there?',
+                        time: 10,
+                        timeoutCallback: () => next(),
+                    })
+                } else {
+                    this.confirm({
+                        message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                        confirmCallback: () => next(),
+                    })
+                }
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.getSurveyWasPrompted) {
@@ -79,7 +87,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
+        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted', 'getTimeoutWasActivated']),
     },
     watch: {
         // If a modal opens while the timer is on,
@@ -95,7 +103,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions('modal', ['confirm', 'showSurvey']),
+        ...mapActions('modal', ['confirm', 'timeout', 'showSurvey']),
     },
 }
 </script>

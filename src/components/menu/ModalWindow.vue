@@ -23,6 +23,9 @@ to activate and populate it.
                         {{button.text}}
                     </button>
                 </div>
+                <p v-show="this.getTime + 1" id="modal-time">
+                    {{this.getTime > 0 ? this.getTime : "Mission terminated."}}
+                </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
                     <Survey :cleanup="cleanup" />
@@ -47,7 +50,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalParams']),
+        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getTime']),
     },
     watch: {
         // Watch params in store/modal, use to show/hide the menu and determine layout
@@ -59,12 +62,16 @@ export default {
                 }
                 // If modal is active, let it finish the cleanup() cycle before creating the new one
                 this.$nextTick(() => setModal(updatedParams))
+
+                if (this.getModalParams['type'] === 'timeout') {
+                    this.STARTTIMER()
+                }
             },
             deep: true,
         },
     },
     methods: {
-        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS', 'STARTTIMER']),
 
         async handleClick(callback) {
             callback()
