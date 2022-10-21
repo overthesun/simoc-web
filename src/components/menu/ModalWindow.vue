@@ -23,7 +23,7 @@ to activate and populate it.
                         {{button.text}}
                     </button>
                 </div>
-                <p v-show="getTime + 1" id="modal-time">
+                <p v-if="getModalParams.type === 'timeout'" id="modal-time">
                     {{getTime > 0 ? getTime : "Mission terminated."}}
                 </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
