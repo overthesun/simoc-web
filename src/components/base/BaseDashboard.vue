@@ -87,7 +87,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted', 'getTimeoutWasActivated']),
+        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted',
+                                'getTimeoutWasActivated']),
     },
     watch: {
         // If a modal opens while the timer is on,

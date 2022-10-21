@@ -23,8 +23,8 @@ to activate and populate it.
                         {{button.text}}
                     </button>
                 </div>
-                <p v-show="this.getTime + 1" id="modal-time">
-                    {{this.getTime > 0 ? this.getTime : "Mission terminated."}}
+                <p v-show="getTime + 1" id="modal-time">
+                    {{getTime > 0 ? getTime : "Mission terminated."}}
                 </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
@@ -63,7 +63,7 @@ export default {
                 // If modal is active, let it finish the cleanup() cycle before creating the new one
                 this.$nextTick(() => setModal(updatedParams))
 
-                if (this.getModalParams['type'] === 'timeout') {
+                if (this.getModalParams[.type] === 'timeout') {
                     this.STARTTIMER()
                 }
             },

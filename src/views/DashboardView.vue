@@ -11,7 +11,7 @@ import axios from 'axios'
 import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
-import IdleJs from "idle-js"
+import IdleJs from 'idle-js'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 
 export default {
@@ -50,7 +50,7 @@ export default {
                 },  // If activity is detected reset the countdown and hide the modal.
                 keepTracking: true,  // false tracks for idleness only once
                 startAtIdle: false,  // true starts in the idle state
-          }),
+            }),
         }
     },
 
@@ -156,7 +156,7 @@ export default {
     },
 
     methods: {
-        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPTIMER',]),
+        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket

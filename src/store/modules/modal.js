@@ -101,7 +101,7 @@ export default {
         // This mutator is called in the ModalWindow for modals of type timeout.
         STARTTIMER(state) {
             // Updates the time variable displayed in the ModalWindow decremented every 1 second.
-            state.timer = setInterval(function() {
+            state.timer = setInterval(() => {
                 if (state.time <= 0) {
                     clearInterval(state.timer)
                     state.modalActive = false
