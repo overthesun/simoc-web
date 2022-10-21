@@ -63,7 +63,7 @@ export default {
                 // If modal is active, let it finish the cleanup() cycle before creating the new one
                 this.$nextTick(() => setModal(updatedParams))
 
-                if (this.getModalParams[.type] === 'timeout') {
+                if (this.getModalParams.type === 'timeout') {
                     this.STARTTIMER()
                 }
             },
