@@ -30,7 +30,7 @@
     "vite-plugin-eslint": "^1.8.0",
     "vue": "^3.2.41",
     "vue-gtag-next": "^1.14.0",
-    "vue-router": "^4.1.5",
+    "vue-router": "^4.1.6",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
