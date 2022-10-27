@@ -92,7 +92,10 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => `${value} ${this.unit}`,
+                                callback: (value, index, values) => {
+                                    const val = value > 0 ? value : value.toPrecision(2)
+                                    return `${val} ${this.unit}`
+                                },
                             },
                         }],
                         xAxes: [{
