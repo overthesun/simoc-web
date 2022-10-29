@@ -49,7 +49,7 @@ export default {
         } else {
             // Make user to confirm before exiting.
             const confirmExit = () => {
-                if (this.getTimeoutWasActivated) {
+                if (this.currentMode === 'kiosk' && this.getTimeoutWasActivated) {
                     this.timeout({
                         message: 'Are you still there?',
                         time: 10,
