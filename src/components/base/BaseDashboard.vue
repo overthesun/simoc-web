@@ -52,7 +52,7 @@ export default {
                 if (this.currentMode === 'kiosk' && this.getTimeoutWasActivated) {
                     this.timeout({
                         message: 'Are you still there?',
-                        time: 10,
+                        secondsLeft: 10,
                         timeoutCallback: () => next(),
                     })
                 } else {

@@ -24,7 +24,7 @@ to activate and populate it.
                     </button>
                 </div>
                 <p v-if="getModalParams.type === 'timeout'" id="modal-time">
-                    {{getTime > 0 ? getTime : "Mission terminated."}}
+                    {{getSecondsLeft > 0 ? getSecondsLeft : "Mission terminated."}}
                 </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
@@ -50,7 +50,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getTime']),
+        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getSecondsLeft']),
     },
     watch: {
         // Watch params in store/modal, use to show/hide the menu and determine layout

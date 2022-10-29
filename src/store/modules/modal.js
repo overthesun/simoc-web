@@ -48,14 +48,14 @@ export default {
         timeoutWasActivated: false,  //  Used to prevent back navigation to load timeout modal.
         timeoutCallback: null,  //  Timeout callback next() set in BaseDashboard.
         timer: null,  //  Built-in JavaScript function setInterval shared between components.
-        time: 0,  // The total time to react if the Dashboard detects an idle state.
+        secondsLeft: 0,  // The total time to react if the Dashboard detects an idle state.
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyWasPrompted: state => state.surveyWasPrompted,
         getTimeoutWasActivated: state => state.timeoutWasActivated,
-        getTime: state => state.time,
+        getSecondsLeft: state => state.secondsLeft,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -100,15 +100,15 @@ export default {
         },
         // This mutator is called in the ModalWindow for modals of type timeout.
         STARTTIMER(state) {
-            // Updates the time variable displayed in the ModalWindow decremented every 1 second.
+            // Updates secondsLeft displayed in the ModalWindow decremented every 1 second.
             state.timer = setInterval(() => {
-                if (state.time <= 0) {
+                if (state.secondsLeft <= 0) {
                     clearInterval(state.timer)
                     state.modalActive = false
                     state.params = getParams()
                     state.timeoutCallback()
                 } else {
-                    state.time -= 1
+                    state.secondsLeft -= 1
                 }
             }, 1000)
         },
@@ -122,8 +122,8 @@ export default {
         SETTIMEOUTCALLBACK(state, value) {
             state.timeoutCallback = value
         },
-        SETTIME(state, value) {
-            state.time = value
+        SETSECONDSLEFT(state, value) {
+            state.secondsLeft = value
         },
     },
     actions: {
@@ -151,16 +151,16 @@ export default {
                 ],
             })
         },
-        // Show text with countdown, executes callback function if the time counts down to 0.
+        // Show text with countdown, executes callback function if secondsLeft counts down to 0.
         timeout({commit}, payload) {
-            const {message, time, timeoutCallback} = payload
+            const {message, secondsLeft, timeoutCallback} = payload
             commit('SETMODALPARAMS', {
                 type: 'timeout',
                 message: message,
             })
 
             commit('SETTIMEOUTCALLBACK', timeoutCallback)
-            commit('SETTIME', time)
+            commit('SETSECONDSLEFT', secondsLeft)
         },
         // Show the user survey. Typically used by a 'Give Feedback' button.
         showSurvey({commit}, payload) {
