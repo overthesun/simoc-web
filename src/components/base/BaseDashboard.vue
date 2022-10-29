@@ -78,7 +78,7 @@ export default {
         const {startTimer, pauseTimer} = dashboard
         return {
             isTimerRunning, menuActive, leaveWithoutConfirmation, startTimer,
-            pauseTimer, currentMode
+            pauseTimer, currentMode,
         }
     },
     data() {
