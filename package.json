@@ -26,7 +26,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.0.22",
     "socket.io-client": "^4.5.3",
-    "three": "^0.145.0",
+    "three": "^0.146.0",
     "vite-plugin-eslint": "^1.8.0",
     "vue": "^3.2.41",
     "vue-gtag-next": "^1.14.0",
