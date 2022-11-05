@@ -78,6 +78,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -86,16 +87,17 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentMode} = storeToRefs(dashboard)
-        return {currentMode}
+        const {activeConfigType} = storeToRefs(wizard)
+        return {currentMode, activeConfigType}
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         toLogin() {
             this.$router.push('entry')
         },
         toConfiguration() {
-            this.SETACTIVECONFIGTYPE('Custom')
+            this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
     },

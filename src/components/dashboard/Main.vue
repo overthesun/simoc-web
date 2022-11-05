@@ -51,6 +51,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 import {storeToRefs} from 'pinia'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
@@ -61,9 +62,11 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentMode, activePanels} = storeToRefs(dashboard)
         const {setDefaultPanels} = dashboard
-        return {currentMode, setDefaultPanels, getActivePanels: activePanels}
+        const {configuration} = storeToRefs(wizard)
+        return {currentMode, setDefaultPanels, getActivePanels: activePanels, configuration}
     },
     data() {
         return {
@@ -77,7 +80,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []

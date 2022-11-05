@@ -1,7 +1,7 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Location')">
+            <div class="input-title" @click="setActiveRefEntry('Location')">
                 Location <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
@@ -11,7 +11,7 @@
             </select>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Duration')">
+            <div class="input-title" @click="setActiveRefEntry('Duration')">
                 Mission Duration <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Select the duration of your stay on Mars.</div>
@@ -34,8 +34,16 @@
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration, validValues} = storeToRefs(wizard)
+        const {setInitial, setActiveRefEntry} = wizard
+        return {configuration, validValues, setInitial, setActiveRefEntry}
+    },
     data() {
         return {
             location: undefined,
@@ -44,23 +52,20 @@ export default {
             duration_max: undefined,
         }
     },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
-    },
     watch: {
-        'getConfiguration.location': function() {
+        'configuration.location': function() {
             // update location and report validity
-            const {location} = this.getConfiguration
+            const {location} = this.configuration
             this.location = location
             this.$nextTick(() => this.$refs.location.reportValidity())
         },
-        'getConfiguration.duration': {
+        'configuration.duration': {
             handler() {
                 // update and validate duration
-                const {duration} = this.getConfiguration
+                const {duration} = this.configuration
                 this.duration = duration
                 // validate duration units
-                const validValues = this.getValidValues
+                const validValues = this.validValues
                 const duration_is_valid = validValues.duration_units.includes(duration.units)
                 if (duration_is_valid) {
                     // set duration ranges
@@ -78,19 +83,16 @@ export default {
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {duration, location} = this.getConfiguration
+        const {duration, location} = this.configuration
         this.location = location
         this.duration = duration
     },
     methods: {
-        ...mapMutations('wizard', ['SETINITIAL']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY']),
-
         setInitial() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
             const value = {location: this.location, duration: this.duration}
-            this.SETINITIAL(value)  // this will change the configuration and trigger the getConfiguration watcher
+            this.setInitial(value)  // this will change the configuration and trigger the configuration watcher
         },
     },
 }

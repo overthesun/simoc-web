@@ -20,22 +20,24 @@
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
         const {getData} = dashboard
-        return {currentStepBuffer, getData}
+        const {configuration} = storeToRefs(wizard)
+        return {currentStepBuffer, getData, configuration}
     },
     modes: ['sim', 'kiosk'],
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
         getPlants() {
             // filter out plants that don't have a type set
-            return this.getConfiguration.plantSpecies.filter(plant => !!plant.type)
+            return this.configuration.plantSpecies.filter(plant => !!plant.type)
         },
     },
     methods: {

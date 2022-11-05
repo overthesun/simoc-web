@@ -17,16 +17,16 @@
 import {mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
         const {setCurrentStepBuffer} = dashboard
-        return {currentStepBuffer, setCurrentStepBuffer}
-    },
-    computed: {
-        ...mapGetters('wizard', ['getTotalMissionHours']),
+        const {getTotalMissionHours} = wizard
+        return {currentStepBuffer, setCurrentStepBuffer, getTotalMissionHours}
     },
     methods: {
         prevStep() {
