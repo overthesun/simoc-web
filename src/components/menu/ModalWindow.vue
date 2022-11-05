@@ -64,7 +64,7 @@ export default {
                 this.$nextTick(() => setModal(updatedParams))
 
                 if (this.getModalParams.type === 'timeout') {
-                    this.STARTTIMER()
+                    this.STARTCOUNTDOWNTIMER()
                 }
             },
             deep: true,
