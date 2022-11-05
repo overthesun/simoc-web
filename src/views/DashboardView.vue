@@ -48,7 +48,7 @@ export default {
                 },  // After idle time launch timeout modal from BaseDashboard.
                 onActive: () => {
                     this.SETTIMEOUTWASACTIVATED(false)
-                    this.STOPTIMER()
+                    this.STOPCOUNTDOWNTIMER()
                 },  // If activity is detected reset the countdown and hide the modal.
                 keepTracking: true,  // false tracks for idleness only once
                 startAtIdle: false,  // true starts in the idle state
