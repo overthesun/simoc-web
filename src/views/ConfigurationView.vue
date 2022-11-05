@@ -78,6 +78,7 @@ import {useDashboardStore} from '../store/modules/DashboardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+import {idleMixin} from '../javascript/mixins'
 
 export default {
     components: {
@@ -92,6 +93,7 @@ export default {
         Graphs,
         Layout,
     },
+    mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
         const {
@@ -163,17 +165,9 @@ export default {
         },
     },
     beforeMount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.start()
-        }
         this.RESETCONFIG()
         this.activeForm = this.getActiveForm
         this.activeConfigType = this.getActiveConfigType
-    },
-    beforeUnmount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.stop()
-        }
     },
     methods: {
         ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),

@@ -12,9 +12,11 @@ import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
 import IdleJs from 'idle-js'
+import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 
 export default {
+    mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
         const {
@@ -80,9 +82,6 @@ export default {
     },
 
     beforeMount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.start()
-        }
         // reinitialize everything, init a new game, and request steps num before mounting
 
         // Kill the timer if there is still one running somehow
@@ -136,10 +135,6 @@ export default {
     },
 
     beforeUnmount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.stop()
-        }
-
         // if the sim is still running upon leaving the page, stop it;
         // some methods in DashboardMenu.vue rely on this to stop the sim
         this.stopTimer()   // stop the step timer
