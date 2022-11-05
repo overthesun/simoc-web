@@ -71,7 +71,8 @@ export default {
         },
     },
     methods: {
-        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS', 'STARTTIMER']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS',
+                                  'STARTCOUNTDOWNTIMER']),
 
         async handleClick(callback) {
             callback()
