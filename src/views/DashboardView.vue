@@ -151,7 +151,7 @@ export default {
     },
 
     methods: {
-        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPTIMER']),
+        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPCOUNTDOWNTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket
