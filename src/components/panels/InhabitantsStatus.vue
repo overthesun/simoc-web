@@ -20,11 +20,11 @@
                 Food (sans 20 days):</dt>
             <dd>{{food}}</dd>
             <dt>Inhabitants:</dt>
-            <dd>{{humans}}/{{getConfiguration.humans.amount}}</dd>
+            <dd>{{humans}}/{{configuration.humans.amount}}</dd>
         </dl>
         <div id="humans">
             <fa-icon v-for="h in humans" :key="h" :icon="['fa-solid','person']" class="alive" />
-            <fa-icon v-for="h in getConfiguration.humans.amount-humans" :key="h"
+            <fa-icon v-for="h in configuration.humans.amount-humans" :key="h"
                      :icon="['fa-solid','person']" class="dead" />
         </div>
     </section>
@@ -36,6 +36,7 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 /*
@@ -54,13 +55,15 @@ export default {
     modes: ['sim', 'kiosk'],
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
         } = storeToRefs(dashboard)
         const {getData} = dashboard
+        const {configuration} = storeToRefs(wizard)
         return {
             currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
-            getData,
+            getData, configuration,
         }
     },
     data() {
@@ -75,7 +78,6 @@ export default {
     },
     computed: {
         ...mapGetters(['getGameID']),
-        ...mapGetters('wizard', ['getConfiguration']),
         step() {
             return this.currentStepBuffer
         },
@@ -143,7 +145,7 @@ export default {
             const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
             if (Number.isNaN(agents) || this.currentStepBuffer === 0) {
                 // if we don't know the humans count, return the initial value
-                return this.getConfiguration.humans.amount
+                return this.configuration.humans.amount
             } else {
                 return agents
             }

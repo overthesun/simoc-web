@@ -3,10 +3,10 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PowerGeneration')">
+            <div class="input-title" @click="setActiveRefEntry('PowerGeneration')">
                 Power Generation <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select the number of solar photo-voltaic (PV) panels required to meet your daily power consumption, and to recharge the batteries for the night. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <div>
                 <!-- Use the retrieved generator value as the value for the field.
                      On change set the configuration store value -->
@@ -22,7 +22,7 @@
             </div>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PowerStorage')">
+            <div class="input-title" @click="setActiveRefEntry('PowerStorage')">
                 Power Storage <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
@@ -41,8 +41,16 @@
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration, validValues, activeReference} = storeToRefs(wizard)
+        const {setEnergy, setActiveRefEntry} = wizard
+        return {configuration, validValues, setEnergy, setActiveRefEntry, activeReference}
+    },
     data() {
         return {
             generator: undefined,
@@ -50,21 +58,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
         generatorValues() {
-            return this.getValidValues.generator
+            return this.validValues.generator
         },
         storageValues() {
-            return this.getValidValues.storage
+            return this.validValues.storage
         },
     },
     watch: {
         // Update power generator/storage (this is necessary to update the form values
         // when e.g. a config file is uploaded and the values in the store change)
         // and show error popups if the fields are invalid while the user is typing
-        'getConfiguration.powerGeneration': {
+        'configuration.powerGeneration': {
             handler() {
-                const {powerGeneration} = this.getConfiguration
+                const {powerGeneration} = this.configuration
                 this.generator = powerGeneration
                 this.$nextTick(() => {
                     // wait for the forms to update before validating,
@@ -75,9 +82,9 @@ export default {
             },
             deep: true, // should trigger when powerGeneration.amount/type change
         },
-        'getConfiguration.powerStorage': {
+        'configuration.powerStorage': {
             handler() {
-                const {powerStorage} = this.getConfiguration
+                const {powerStorage} = this.configuration
                 this.storage = powerStorage
                 this.$nextTick(() => {
                     // same as above
@@ -89,19 +96,16 @@ export default {
         },
     },
     beforeMount() {
-        const {powerGeneration, powerStorage} = this.getConfiguration
+        const {powerGeneration, powerStorage} = this.configuration
         this.generator = powerGeneration
         this.storage = powerStorage
     },
     methods: {
-        ...mapMutations('wizard', ['SETENERGY']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
-
         // Set the selected values from above fields to the wizard store.
         // Called from all fields on change, and updates with all selected values from this form.
         setEnergy() {
             const value = {powerGeneration: this.generator, powerStorage: this.storage}
-            this.SETENERGY(value)
+            this.setEnergy(value)
         },
     },
 }

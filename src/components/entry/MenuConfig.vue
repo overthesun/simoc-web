@@ -29,26 +29,28 @@ Can be reenabled in Menu.vue if needed.
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
 import {BaseEntry} from '../base'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     components: {
         BaseEntry,
     },
-    computed: {
-        ...mapGetters('wizard', []),
+    setup() {
+        const wizard = useWizardStore()
+        const {activeConfigType} = storeToRefs(wizard)
+        return {activeConfigType}
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-
         toMainMenu() {
             this.$router.push('menu')
         },
         toGuided() {
-            this.SETACTIVECONFIGTYPE('Guided')
+            this.activeConfigType = 'Guided'
             this.$router.push('configuration')
         },
         toCustom() {
-            this.SETACTIVECONFIGTYPE('Custom')
+            this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
     },

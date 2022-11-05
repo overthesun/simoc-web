@@ -21,19 +21,22 @@ import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
         } = storeToRefs(dashboard)
         const {
             initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
         } = dashboard
+        const {getTotalMissionHours} = storeToRefs(wizard)
         return {
-            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
-            initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
+            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, initTimer,
+            pauseTimer, startTimer, setCurrentStepBuffer, getTotalMissionHours,
         }
     },
     data() {
@@ -44,9 +47,6 @@ export default {
             timerWasRunning: null,  // the status of timer before drag&dropping
             userIsDragging: false,  // true when the user is dragging the slider
         }
-    },
-    computed: {
-        ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     watch: {
         // update scrubber percentages when the current and/or max step change

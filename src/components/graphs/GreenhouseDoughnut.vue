@@ -18,6 +18,7 @@ import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
@@ -26,8 +27,10 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
-        return {currentStepBuffer}
+        const {configuration} = storeToRefs(wizard)
+        return {currentStepBuffer, configuration}
     },
     data() {
         return {
@@ -51,7 +54,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
 
         /*
         No longer used
@@ -86,9 +88,9 @@ export default {
             this.updateChart()
         },
 
-        // Watches for changes within the getConfiguration object within
+        // Watches for changes within the configuration object within
         // the wizard store to update the graph in the config wizard
-        getConfiguration: {
+        configuration: {
             handler() {
                 this.updateChart()
             },
@@ -164,7 +166,7 @@ export default {
 
         greenhouseConfiguration() {
             // get the plants and greenhouse from the configuration
-            const {greenhouse, plantSpecies} = this.getConfiguration
+            const {greenhouse, plantSpecies} = this.configuration
             // Set the first value of the dataset to the size of the greenhouse
             // and add the label free space
             const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
@@ -179,7 +181,7 @@ export default {
             return values
         },
         updateChart() {
-            const {greenhouse} = this.getConfiguration
+            const {greenhouse} = this.configuration
             const {data, labels} = this.greenhouseConfiguration()
             this.chart.data.labels = labels  // labels are always visible
             let text

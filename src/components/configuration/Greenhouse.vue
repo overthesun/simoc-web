@@ -1,11 +1,11 @@
 <template>
     <div>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Greenhouse')">
+            <div class="input-title" @click="setActiveRefEntry('Greenhouse')">
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <select ref="greenhouse_type" v-model="greenhouse.type"
                     class="input-field-select" required @change="setGreenhouse">
                 <option value="none" selected>None</option>
@@ -16,11 +16,11 @@
             </select>
         </label>
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('PlantSpecies')">
+            <div class="input-title" @click="setActiveRefEntry('PlantSpecies')">
                 Plant Species <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
 
-            <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="SETACTIVEREFERENCE('Graphs')">graph at right</a>.</div>
+            <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
                   Index is used as a key to store which plant field has been updated within the configuration
@@ -38,7 +38,7 @@
                 <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
                     <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
-                <fa-layers class="fa-2x plant-row-icon icon-trash" @click="REMOVEPLANTSPECIES(index)">
+                <fa-layers class="fa-2x plant-row-icon icon-trash" @click="removePlantSpecies(index)">
                     <!-- Deletes the object at the specicied key within the wizard store. -->
                     <fa-icon :icon="['fa-solid','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>
@@ -50,8 +50,22 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration, validValues, activeReference} = storeToRefs(wizard)
+        const {
+            setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,
+            setActiveRefEntry,
+        } = wizard
+        return {
+            configuration, validValues, setGreenhouse, addPlantSpecies, updatePlantSpecies,
+            removePlantSpecies, setActiveRefEntry, activeReference,
+        }
+    },
     data() {
         return {
             // Initialize the localized variables used for v-model
@@ -64,14 +78,12 @@ export default {
             plant_inputs: {},  // map index -> <input> for the plant amount
         }
     },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getValidValues']),
-    },
+
     watch: {
-        'getConfiguration.greenhouse.type': function() {
+        'configuration.greenhouse.type': function() {
             this.updateAndValidate()
         },
-        'getConfiguration.plantSpecies': {
+        'configuration.plantSpecies': {
             handler() {
                 this.updateAndValidate()
             },
@@ -80,14 +92,14 @@ export default {
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {plantSpecies, greenhouse} = this.getConfiguration
+        const {plantSpecies, greenhouse} = this.configuration
 
         // If there isn't a plant present object in the configuration add at least one.
         // This forces the above v-for to populate with at the very least one plant row.
         // This is done this way to prevent from having to duplicate the above HTML
         // for the plants section for the single starting plant.
         if (plantSpecies.length <= 0) {
-            this.ADDPLANTSPECIES()
+            this.addPlantSpecies()
         }
 
         this.greenhouse = greenhouse
@@ -97,10 +109,6 @@ export default {
         this.retrievePlantSpecies()
     },
     methods: {
-        ...mapMutations('wizard', ['SETGREENHOUSE', 'ADDPLANTSPECIES',
-                                   'UPDATEPLANTSPECIES', 'REMOVEPLANTSPECIES']),
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETACTIVEREFERENCE']),
-
         // These two methods update the objects that maps the plant index with
         // the corresponding select/input.  Note that if the plant is removed
         // it might still be in the object, but won't be picked up by
@@ -116,12 +124,12 @@ export default {
         // This method creates a new plant object within the wizard store.
         // It also makes sure that the user can't add more fields than there are options for plants.
         addPlantSpecies() {
-            const {plantSpecies} = this.getConfiguration
+            const {plantSpecies} = this.configuration
             const arrLength = plantSpecies.length
             const maxLength = this.plantValue.length
 
             if (arrLength < maxLength) {
-                this.ADDPLANTSPECIES()
+                this.addPlantSpecies()
             }
         },
 
@@ -131,7 +139,7 @@ export default {
         // This is done automatically by Vue
         updatePlantSpecies(index) {
             const plant = this.plantSpecies[index]
-            this.UPDATEPLANTSPECIES({index, plant})
+            this.updatePlantSpecies({index, plant})
         },
 
         // Set the greenhouse type within the wizard store. It also sets the default number of
@@ -140,13 +148,13 @@ export default {
         setGreenhouse() {
             this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
-            this.SETGREENHOUSE(value)
+            this.setGreenhouse(value)
         },
 
         /*
         //Unused method for gathering unique plant names for a particular field.
         uniquePlantNames:function(index){
-            const {plantSpecies} = this.getConfiguration
+            const {plantSpecies} = this.configuration
             //const indexType = plantSpecies[index].type
 
             let selectedValues = plantSpecies.splice(index,1)
@@ -158,7 +166,7 @@ export default {
         // It was to also add back on the actual selected value for the selection field,
         // so that it was not excluded too.
         /*uniquePlantNames:function(index){
-            let {plantSpecies} = this.getConfiguration
+            let {plantSpecies} = this.configuration
             let currentOption = plantSpecies[index].type
             let plantTypes = []
             let plantNames = []
@@ -221,8 +229,8 @@ export default {
         },
         updateAndValidate() {
             // validate and update greenhouse type
-            const {greenhouse} = this.getConfiguration
-            const gh_is_valid = this.getValidValues.greenhouse_types.includes(greenhouse.type)
+            const {greenhouse} = this.configuration
+            const gh_is_valid = this.validValues.greenhouse_types.includes(greenhouse.type)
             this.$refs.greenhouse_type.setCustomValidity(
                 gh_is_valid ? '' : 'Please select a valid greenhouse type.'
             )
@@ -230,7 +238,7 @@ export default {
             this.greenhouse = greenhouse
 
             // validate and update plants
-            const {plantSpecies} = this.getConfiguration
+            const {plantSpecies} = this.configuration
             // TODO: this is duplicated in a number of places
             const greenhouse_size = {
                 none: 0,
