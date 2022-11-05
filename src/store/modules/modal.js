@@ -99,7 +99,7 @@ export default {
             state.timeoutWasActivated = value
         },
         // This mutator is called in the ModalWindow for modals of type timeout.
-        STARTTIMER(state) {
+        STARTCOUNTDOWNTIMER(state) {
             // Updates secondsLeft displayed in the ModalWindow decremented every 1 second.
             state.timer = setInterval(() => {
                 if (state.secondsLeft <= 0) {
