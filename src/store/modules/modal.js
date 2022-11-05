@@ -113,7 +113,7 @@ export default {
             }, 1000)
         },
         // This mutator is called in DashboardView when a user reacts to the idle state.
-        STOPTIMER(state) {
+        STOPCOUNTDOWNTIMER(state) {
             // Clear the current timer and hide the modal window.
             clearInterval(state.timer)
             state.modalActive = false
