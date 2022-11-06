@@ -3,7 +3,7 @@
 <template>
     <div class="timeline-wrapper">
         <span class="timeline-item">
-            <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
+            <input v-model.number="currentStep" :min="0" :max="getTotalMissionHours"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
                             #67e300 ' + currentPercentage + '%, \
                             #d0d0d0 ' + currentPercentage +'%, \
@@ -40,7 +40,7 @@ export default {
         return {
             currentPercentage: 1,
             bufferPercentage: 1,
-            currentStep: 1,
+            currentStep: 0,
             timerWasRunning: null,  // the status of timer before drag&dropping
             userIsDragging: false,  // true when the user is dragging the slider
         }
