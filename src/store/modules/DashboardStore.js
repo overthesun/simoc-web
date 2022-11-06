@@ -120,7 +120,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 // increment the step only if we have enough buffered steps
                 // TODO (old) check the number of steps requests so we can still
                 // run simulations with a number of steps <= the limit
-                if (this.maxStepBuffer >= 30) {
+                if (this.maxStepBuffer > 0) {
                     this.setCurrentStepBuffer(this.currentStepBuffer + 1)
                 }
             }, this.stepInterval)
