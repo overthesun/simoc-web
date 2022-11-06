@@ -11,14 +11,14 @@
                 <!-- Use the retrieved generator value as the value for the field.
                      On change set the configuration store value -->
                 <select ref="generator_select" v-model="generator.type"
-                        class="input-field-select" required @change="setEnergy">
+                        class="input-field-select" required @change="setEnergyHandler">
                     <!-- <option value='none' selected>None</option>
                     TODO: this is hardcoded on Mars and is currently the only option -->
                     <option value="solar_pv_array_mars" selected>Solar PV Array</option>
                 </select>
                 <label><input ref="generator_input" v-model="generator.amount" :min="generatorValues.min"
                               :max="generatorValues.max" class="input-field-number" type="number"
-                              pattern="^\d+$" placeholder="Quantity" required @input="setEnergy"> panels</label>
+                              pattern="^\d+$" placeholder="Quantity" required @input="setEnergyHandler"> panels</label>
             </div>
         </label>
         <label class="input-wrapper">
@@ -28,19 +28,18 @@
             <div class="input-description">Power storage is measured in kilowatt-hours (kWh). Select the capacity of your battery in increments of 1000 kWh, from 0 to 10,000.</div>
             <div>
                 <select ref="power_select" v-model="storage.type"
-                        class="input-field-select" required @change="setEnergy">
+                        class="input-field-select" required @change="setEnergyHandler">
                     <option value="power_storage" selected>Battery</option>
                 </select>
                 <label><input ref="power_input" v-model="storage.amount" :min="storageValues.min"
                               :max="storageValues.max" class="input-field-number" type="number"
-                              pattern="^\d+$" placeholder="Quantity" required @input="setEnergy"> kWh</label>
+                              pattern="^\d+$" placeholder="Quantity" required @input="setEnergyHandler"> kWh</label>
             </div>
         </label>
     </div>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
@@ -103,7 +102,7 @@ export default {
     methods: {
         // Set the selected values from above fields to the wizard store.
         // Called from all fields on change, and updates with all selected values from this form.
-        setEnergy() {
+        setEnergyHandler() {
             const value = {powerGeneration: this.generator, powerStorage: this.storage}
             this.setEnergy(value)
         },

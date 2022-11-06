@@ -3,9 +3,8 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import World from '@/threejs/World.vue'
 import {storeToRefs} from 'pinia'
+import World from '@/threejs/World.vue'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
