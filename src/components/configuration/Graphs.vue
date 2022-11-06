@@ -20,9 +20,8 @@ This component would have a similar functionality to that of the reference wiki.
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import {GreenhouseConfig, PowerUsage} from '../graphs'
 import {storeToRefs} from 'pinia'
+import {GreenhouseConfig, PowerUsage} from '../graphs'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {

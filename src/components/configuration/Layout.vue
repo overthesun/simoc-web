@@ -6,9 +6,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import World from '@/threejs/World.vue'
 import {storeToRefs} from 'pinia'
+import World from '@/threejs/World.vue'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {

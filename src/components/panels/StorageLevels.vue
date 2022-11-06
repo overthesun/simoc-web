@@ -22,20 +22,16 @@
 
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
     setup() {
         const dashboard = useDashboardStore()
-        const wizard = useWizardStore()
         const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
         const {getData} = dashboard
-        const {configuration} = storeToRefs(wizard)
         return {currentStepBuffer, currencyDict, getData}
     },
     modes: ['sim', 'kiosk'],

@@ -5,7 +5,7 @@
                 Location <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
-            <select ref="location" v-model="location" class="input-field-select" required @change="setInitial">
+            <select ref="location" v-model="location" class="input-field-select" required @change="setInitialHandler">
                 <option value="none" disabled hidden>Location</option>
                 <option value="mars" selected>Mars</option>
             </select>
@@ -18,9 +18,9 @@
             <div class="input-duration-wrapper">
                 <input ref="duration" v-model="duration.amount" :min="duration_min" :max="duration_max"
                        class="input-field-number" type="number" pattern="^\d+$"
-                       placeholder="Length" required @input="setInitial">
+                       placeholder="Length" required @input="setInitialHandler">
                 <select ref="duration_unit" v-model="duration.units"
-                        class="input-field-select" required @change="setInitial">
+                        class="input-field-select" required @change="setInitialHandler">
                     <option value="none" hidden disabled>Units</option>
                     <option value="hour">Hours</option>
                     <option value="day" selected>Earth Days (24h)</option>
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
@@ -65,7 +64,7 @@ export default {
                 const {duration} = this.configuration
                 this.duration = duration
                 // validate duration units
-                const validValues = this.validValues
+                const {validValues} = this
                 const duration_is_valid = validValues.duration_units.includes(duration.units)
                 if (duration_is_valid) {
                     // set duration ranges
@@ -88,7 +87,7 @@ export default {
         this.duration = duration
     },
     methods: {
-        setInitial() {
+        setInitialHandler() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
             const value = {location: this.location, duration: this.duration}

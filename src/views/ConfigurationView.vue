@@ -73,7 +73,7 @@ import axios from 'axios'
 import {storeToRefs} from 'pinia'
 import IdleJs from 'idle-js'
 // import form components
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
@@ -173,7 +173,6 @@ export default {
         }
         this.resetConfigDefault()
         this.activeForm = this.getActiveForm
-        this.activeConfigType = this.activeConfigType
     },
     beforeUnmount() {
         if (this.currentMode === 'kiosk') {

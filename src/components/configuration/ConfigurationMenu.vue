@@ -10,18 +10,18 @@
                 :alert-user-on-invalid="false"
                 file-name="simoc-config.json" />
             <UploadConfig :handle-file="handleUpload" />
-            <button @click="resetConfig">Reset Configuration</button>
+            <button @click="resetConfigHandler">Reset Configuration</button>
             <Logout />
         </template>
         <template v-else #menu-buttons>
-            <button @click="resetConfig">Reset Configuration</button>
+            <button @click="resetConfigHandler">Reset Configuration</button>
             <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
@@ -59,10 +59,10 @@ export default {
         handleUpload(json_config) {
             this.setConfiguration(json_config)
         },
-        resetConfig() {
+        resetConfigHandler() {
             this.confirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => this.resetConfig = true,
+                confirmCallback: () => {this.resetConfig = true},
             })
         },
 

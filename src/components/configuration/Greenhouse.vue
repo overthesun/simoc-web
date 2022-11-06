@@ -7,7 +7,7 @@
 
             <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <select ref="greenhouse_type" v-model="greenhouse.type"
-                    class="input-field-select" required @change="setGreenhouse">
+                    class="input-field-select" required @change="setGreenhouseHandler">
                 <option value="none" selected>None</option>
                 <option value="greenhouse_small">Small (490 m³)</option>
                 <option value="greenhouse_medium">Medium (2452 m³)</option>
@@ -27,15 +27,15 @@
             -->
             <div v-for="(item,index) in plantSpecies" :key="index" class="input-plant-wrapper">
                 <select :ref="el => setSelectRef(el, index)" v-model="plantSpecies[index].type"
-                        class="input-field-select" @change="updatePlantSpecies(index)">
+                        class="input-field-select" @change="updatePlantSpeciesHandler(index)">
                     <option value="" selected hidden disabled>Species</option>
                     <option v-for="(name,k) in plantValue" :key="k" :value="name">{{plantFormatted[k]}}</option>
                 </select>
                 <label><input :ref="el => setInputRef(el, index)" v-model.number="plantSpecies[index].amount"
                               :min="0" :max="plantMax[index]"
                               class="input-field-number" type="number" pattern="^\d+$"
-                              placeholder="Quantity" @input="updatePlantSpecies(index)"> m³</label>
-                <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpecies">
+                              placeholder="Quantity" @input="updatePlantSpeciesHandler(index)"> m³</label>
+                <fa-layers class="fa-2x plant-row-icon icon-add" @click="addPlantSpeciesHandler">
                     <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="removePlantSpecies(index)">
@@ -49,7 +49,6 @@
 
 <script>
 import axios from 'axios'
-import {mapState, mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
@@ -123,7 +122,7 @@ export default {
 
         // This method creates a new plant object within the wizard store.
         // It also makes sure that the user can't add more fields than there are options for plants.
-        addPlantSpecies() {
+        addPlantSpeciesHandler() {
             const {plantSpecies} = this.configuration
             const arrLength = plantSpecies.length
             const maxLength = this.plantValue.length
@@ -137,7 +136,7 @@ export default {
         // The index is passed in from the above v-for index key when the fields are created.
         // Indexes are repopulated on deletion of any row. Row 3 becomes 2 if row 2 is deleted.
         // This is done automatically by Vue
-        updatePlantSpecies(index) {
+        updatePlantSpeciesHandler(index) {
             const plant = this.plantSpecies[index]
             this.updatePlantSpecies({index, plant})
         },
@@ -145,7 +144,7 @@ export default {
         // Set the greenhouse type within the wizard store. It also sets the default number of
         // greenhouses to one if any type other than 'none' is selected. Plants are not included
         // as they do their own thing differently than other form elements.
-        setGreenhouse() {
+        setGreenhouseHandler() {
             this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
             this.setGreenhouse(value)

@@ -27,9 +27,8 @@ Can be reenabled in Menu.vue if needed.
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
-import {BaseEntry} from '../base'
 import {storeToRefs} from 'pinia'
+import {BaseEntry} from '../base'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
