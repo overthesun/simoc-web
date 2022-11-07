@@ -117,9 +117,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
             // current step and triggers watchers that update the panels
             this.stopTimer()
             this.timerId = new StepTimer(() => {
-                // increment the step only if we have enough buffered steps
-                // TODO (old) check the number of steps requests so we can still
-                // run simulations with a number of steps <= the limit
+                // only start incrementing steps once we have some
                 if (this.maxStepBuffer > 0) {
                     this.setCurrentStepBuffer(this.currentStepBuffer + 1)
                 }
