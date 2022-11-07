@@ -92,9 +92,10 @@ export default {
             this.currentStep = this.currentStepBuffer
             // Before we receive steps from the server, the currentStep (and first step) is 0.
             // Once we receive the first step, the first step becomes 1, and step 0 is removed.
-            // Because of this we need to subtract 1 to all the values.
-            this.currentPercentage = ((this.currentStepBuffer-1) / (this.getTotalMissionHours-1)) * 100
-            this.bufferPercentage = ((this.maxStepBuffer-1) / (this.getTotalMissionHours-1)) * 100
+            // Because of this we need to subtract 1 from all the values.
+            const totalMissionHours = this.getTotalMissionHours - 1
+            this.currentPercentage = ((this.currentStepBuffer - 1) / totalMissionHours) * 100
+            this.bufferPercentage = ((this.maxStepBuffer - 1) / totalMissionHours) * 100
         },
     },
 }
