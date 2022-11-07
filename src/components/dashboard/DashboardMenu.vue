@@ -9,7 +9,7 @@ use some of these features.
         </template>
         <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
-            <button @click="stopSimulation">Stop Simulation</button>
+            <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
