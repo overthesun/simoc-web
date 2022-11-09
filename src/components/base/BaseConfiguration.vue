@@ -36,14 +36,14 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div :class="{'option-item-active' : activeOption === 'Layout'}"
+                <div :class="{'option-item-active' : activeReference === 'Layout'}"
                      class="option-item" @click="activeReference = 'Layout'">LAYOUT</div>
-                <div :class="{'option-item-active' : activeOption === 'Graphs'}"
+                <div :class="{'option-item-active' : activeReference === 'Graphs'}"
                      class="option-item" @click="activeReference = 'Graphs'">GRAPHS</div>
-                <div :class="{'option-item-active': activeOption === 'Reference'}"
+                <div :class="{'option-item-active': activeReference === 'Reference'}"
                      class="option-item" @click="activeReference = 'Reference'">REFERENCE</div>
                 <!--<div class='option-item' @click="activeReference = 'Recommended'"
-                         :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
+                         :class="{'option-item-active' : 'Recommended'===activeReference}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
             </nav>
@@ -67,13 +67,6 @@ export default {
         const wizard = useWizardStore()
         const {activeConfigType, activeReference} = storeToRefs(wizard)
         return {activeConfigType, activeReference}
-    },
-    computed: {
-        // used to flag which section link is active within the reference navigation
-        // uses class-binding to activate the class and underline the title
-        activeOption() {
-            return this.activeReference
-        },
     },
 }
 </script>
