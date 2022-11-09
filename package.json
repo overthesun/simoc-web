@@ -28,7 +28,7 @@
     "socket.io-client": "^4.5.3",
     "three": "^0.146.0",
     "vite-plugin-eslint": "^1.8.0",
-    "vue": "^3.2.41",
+    "vue": "^3.2.43",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
