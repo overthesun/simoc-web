@@ -62,7 +62,7 @@ export default {
         resetConfigHandler() {
             this.confirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => {this.resetConfig = true},
+                confirmCallback: () => { this.resetConfig = true },
             })
         },
 
