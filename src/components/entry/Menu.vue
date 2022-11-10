@@ -113,11 +113,12 @@ export default {
         // Adapted from '../views/DashboardView.vue'
         keyListener(e) {
             if (e.ctrlKey && e.key === 'a') {
+                e.preventDefault()  // prevent event from propagating to browser
                 this.showAgentEditor = true
             }
 
             if (e.ctrlKey && e.key === 'k') {
-                e.stopPropagation()  // prevent event from propagating to browser
+                e.preventDefault()  // prevent event from propagating to browser
                 this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
                 this.currentMode = 'kiosk'
                 this.$router.push('/')
