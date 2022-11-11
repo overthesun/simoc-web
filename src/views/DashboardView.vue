@@ -12,10 +12,12 @@ import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../store/modules/DashboardStore'
+import {useWizardStore} from '../store/modules/WizardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
@@ -25,11 +27,13 @@ export default {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
         } = dashboard
+        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, setMinStepNumber, initGame, parseStep, startTimer,
-            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped,
+            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, configuration,
+            getTotalMissionHours,
         }
     },
     data() {
@@ -40,7 +44,6 @@ export default {
 
     computed: {
         // getters from the vuex stores
-        ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
 

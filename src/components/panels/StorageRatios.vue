@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'

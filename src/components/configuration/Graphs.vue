@@ -6,12 +6,12 @@ This component would have a similar functionality to that of the reference wiki.
 <template>
     <section class="graphs-wrapper"><!--
         <PowerUsage class="power-config-graph" :id="'pu-config-canvas-'+ canvasNumber"
-            v-if="(getActiveConfigType === 'Custom' ||
-                   (getActiveReference === 'Graphs' &&
+            v-if="(activeConfigType === 'Custom' ||
+                   (activeReference === 'Graphs' &&
                     (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
         <GreenhouseDoughnut class="greenhouse-config-graph" :id="'gh-config-canvas-'+ canvasNumber"
-            v-if="(getActiveConfigType === 'Custom' ||
-                   (getActiveReference === 'Graphs' &&
+            v-if="(activeConfigType === 'Custom' ||
+                   (activeReference === 'Graphs' &&
                     (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
         <!-- The wrapper divs make ChartJS happy. -->
         <div><PowerUsage id="pu-config-canvas" class="power-config-graph" /></div>
@@ -20,16 +20,19 @@ This component would have a similar functionality to that of the reference wiki.
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
 import {GreenhouseConfig, PowerUsage} from '../graphs'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     components: {
         GreenhouseConfig,
         PowerUsage,
     },
-    computed: {
-        // ...mapGetters('wizard',['getActiveConfigType','getActiveReference','getActiveForm']),
+    setup() {
+        const wizard = useWizardStore()
+        const {activeConfigType, activeReference, getActiveForm} = storeToRefs(wizard)
+        return {activeConfigType, activeReference, getActiveForm}
     },
 }
 </script>
