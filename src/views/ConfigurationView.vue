@@ -172,6 +172,7 @@ export default {
             this.idle.start()
         }
         this.resetConfigDefault()
+        this.menuActive = false
         this.activeForm = this.getActiveForm
     },
     beforeUnmount() {
