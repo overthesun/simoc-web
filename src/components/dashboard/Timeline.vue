@@ -1,7 +1,22 @@
 <!-- Timeline component -->
 
 <template>
-    <div class="timeline-wrapper">
+    <!-- Timeline visualization for live mode -->
+    <div v-if="isLive" class="timeline-wrapper">
+        <span class="timeline-item">
+            <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
+                   :style="{'background-image': 'linear-gradient(to right, #fc0303 0%, \
+                            #fc0303 ' + currentPercentage + '%, \
+                            #d0d0d0 ' + currentPercentage +'%, \
+                            #d0d0d0 '+ bufferPercentage +'%, \
+                            #444343 ' + bufferPercentage + '%, \
+                            #444343 100%)'}"
+                   class="live-timeline" type="range"
+                   @input="pauseBuffer" @change="updateBuffer">
+        </span>
+    </div>
+    <!-- Timeline visualization for step mode -->
+    <div v-else class="timeline-wrapper">
         <span class="timeline-item">
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
@@ -26,15 +41,17 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
+            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, isLive,
         } = storeToRefs(dashboard)
         const {
             initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
+            setStepInterval,
         } = dashboard
         const {getTotalMissionHours} = storeToRefs(wizard)
         return {
-            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, initTimer,
-            pauseTimer, startTimer, setCurrentStepBuffer, getTotalMissionHours,
+            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, isLive,
+            initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
+            setStepInterval, getTotalMissionHours,
         }
     },
     data() {
@@ -52,6 +69,10 @@ export default {
         maxStepBuffer() { this.updatePercentages() },
     },
     mounted() {
+        // if the Dashboard is in live mode set the delay for the timer to 0
+        if (this.currentMode === 'live') {
+            this.setStepInterval(0)
+        }
         // start the timer when the component is mounted, the actual
         // visualization will start only when the buffer has enough data
         this.initTimer()
@@ -82,6 +103,12 @@ export default {
             // the position is not updated unless we call updatePercentages()
             this.updatePercentages()
             if (this.timerWasRunning) {
+                // If in live-mode set to "not live" (i.e. not retrieving the latest readings),
+                // and ensure the interval is set to 1000 ms after the user releases the slider.
+                if (this.currentMode === 'live') {
+                    this.isLive = false
+                    this.setStepInterval(1000)
+                }
                 this.startTimer()
             }
         },
@@ -122,7 +149,7 @@ export default {
         font-weight: 200;
     }
 
-    .timeline{
+    .timeline, .live-timeline{
         z-index:99;
         appearance:none;
         border-radius: 2px;
@@ -133,7 +160,11 @@ export default {
         background-repeat:no-repeat;
     }
 
-    .timeline::-webkit-slider-thumb{
+    .live-timeline:hover::-webkit-slider-thumb, .live-timeline:hover::-moz-range-thumb{
+        visibility: visible;
+    }
+
+    .timeline::-webkit-slider-thumb, .live-timeline::-webkit-slider-thumb{
         appearance:none;
         width: 8px;
         height: 16px;
@@ -141,11 +172,21 @@ export default {
         background-color: #67e300;
     }
 
-    .timeline::-moz-range-thumb{
+    .live-timeline::-webkit-slider-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
+    }
+
+    .timeline::-moz-range-thumb, .live-timeline::-moz-range-thumb{
         width: 16px;
         height: 16px;
         border-radius:50%;
         background-color: #67e300;
         cursor:pointer;
+    }
+
+    .live-timeline::-moz-range-thumb{
+        visibility: hidden;
+        background-color: #fc0303;
     }
 </style>
