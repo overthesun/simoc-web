@@ -47,7 +47,7 @@ export default {
          *
          *  @returns {string} The time from the bundle at some step.
          */
-         getTime() {
+        getTime() {
             const time = this.getTimestamp(this.currentStepBuffer)
             return (time === undefined) ? '00:00:00' : time.time
         },

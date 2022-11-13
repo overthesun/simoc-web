@@ -32,14 +32,14 @@ export default {
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         const {setLiveConfig} = wizard
         const {bundleNum, initBundleNum} = storeToRefs(liveStore)
-        const {setSensorInfo, parseData} = liveStore
+        const {setHabitatInfo, setSensorInfo, parseData} = liveStore
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, setMinStepNumber, initGame, parseStep, startTimer,
             pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, configuration,
             getTotalMissionHours, setLiveConfig, bundleNum, initBundleNum,
-            setSensorInfo, parseData,
+            setHabitatInfo, setSensorInfo, parseData,
         }
     },
     data() {
@@ -202,7 +202,7 @@ export default {
             })
             socket.on('hab-info', config => {
                 console.log('Received habitat info:', config)
-                console.log('Requesting step data')
+                this.setHabitatInfo(config)
             })
             socket.on('sensor-info', info => {
                 console.log('Received sensor info:', info)

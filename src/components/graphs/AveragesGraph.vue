@@ -38,14 +38,6 @@ const getColorRange = (baseColor, n=1) => {
     return output
 }
 export default {
-    setup() {
-        const dashboard = useDashboardStore()
-        const liveStore = useLiveStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
-        const {sensorInfo} = storeToRefs(liveStore)
-        const {getReadings} = liveStore
-        return {currentStepBuffer, sensorInfo, getReadings}
-    },
     props: {
         id: {type: String, required: true},
         plottedValue: {type: String, required: true},
@@ -53,6 +45,14 @@ export default {
         color: {type: String, required: true},
         unit: {type: String, required: true},
         currencySensorInfo: {type: Object, required: true},
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const liveStore = useLiveStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {sensorInfo} = storeToRefs(liveStore)
+        const {getReadings} = liveStore
+        return {currentStepBuffer, sensorInfo, getReadings}
     },
     data() {
         return {

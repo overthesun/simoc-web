@@ -8,14 +8,11 @@ import {defineStore} from 'pinia'
  * stored here into "live data" objects read by the Dashboard. The function
  * parseData in the action block assigns the state variables in this store by
  * parsing the object formed from the raw sensor data on the backend.
- *
- * @author  Ryan Meneses
- * @version 1.6.1
- * @since   March 15, 2022
  */
 export const useLiveStore = defineStore('LiveStore', {
     state: () => ({
         initBundleNum: null,  // initial bundle number received by this client
+        habitatInfo: {},
         sensorInfo: {},  // set from initial callback sensor-info sent by the server
 
         bundleNum: 0,  // n sent by the server
@@ -30,6 +27,12 @@ export const useLiveStore = defineStore('LiveStore', {
         },
         getTimestamp(bundleNum) {
             return this.timestamp[bundleNum]
+        },
+        /** Sets habitat info. TODO: Build on this; integrate with dashboard?
+         *
+         */
+        setHabitatInfo(value) {
+            this.habitatInfo = value
         },
         /** Sets the sensor_info object sent by the server containing a list of all sensors
          *  that did or are currently receiving readings on the backend. Use spread syntax

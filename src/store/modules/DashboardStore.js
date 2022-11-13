@@ -261,7 +261,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 live: [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
-                ]
+                ],
             }[mode]
         },
         /**

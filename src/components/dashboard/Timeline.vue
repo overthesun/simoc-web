@@ -8,7 +8,7 @@
                    :style="{'background-image': 'linear-gradient(to right, #fc0303 0%, \
                             #fc0303 ' + currentPercentage + '%, \
                             #d0d0d0 ' + currentPercentage +'%, \
-                            #d0d0d0 '+ bufferPercentage +'%, \
+                            #d0d0d0 ' + bufferPercentage + '%, \
                             #444343 ' + bufferPercentage + '%, \
                             #444343 100%)'}"
                    class="live-timeline" type="range"

@@ -90,7 +90,7 @@ export default {
          *  this Menu, but in live mode that menu is bypassed and they must be manually set here
          *  before the Dashboard components can be rendered.
          */
-         toLiveDashboard() {
+        toLiveDashboard() {
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
             this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store

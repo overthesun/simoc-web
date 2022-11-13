@@ -32,7 +32,6 @@ export default {
             }
             // pause the timer when the user clicks on the pause button
             this.pauseTimer()
-
         },
         startTimerHandler() {
             // If the user selects play while in the live Dashboard, the stepInterval is
@@ -43,8 +42,8 @@ export default {
             }
             // start/resume the timer when the user clicks on the play button
             this.startTimer()
-        }
-    }
+        },
+    },
 }
 </script>
 

@@ -100,11 +100,13 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.activePanels)
-            localStorage.setItem(`panels-layout-${this.currentMode}`, panelsLayout)
+            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            localStorage.setItem(`panels-layout-${layout}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            localStorage.removeItem(`panels-layout-${this.currentMode}`)
+            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            localStorage.removeItem(`panels-layout-${layout}`)
             this.setDefaultPanels(this.currentMode)
         },
         // Logout button route
