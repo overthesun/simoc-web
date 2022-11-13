@@ -14,7 +14,6 @@ See chart.js documentation for further details on the related mounted functions.
 import Chart from 'chart.js'
 import {storeToRefs} from 'pinia'
 
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
@@ -92,7 +91,10 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => `${value} ${this.unit}`,
+                                callback: (value, index, values) => {
+                                    const val = value > 0 ? value : value.toPrecision(2)
+                                    return `${val} ${this.unit}`
+                                },
                             },
                         }],
                         xAxes: [{

@@ -6,24 +6,25 @@
         <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
-                :config="getConfiguration"
+                :config="configuration"
                 :alert-user-on-invalid="false"
                 file-name="simoc-config.json" />
             <UploadConfig :handle-file="handleUpload" />
-            <button @click="resetConfig">Reset Configuration</button>
+            <button @click="resetConfigHandler">Reset Configuration</button>
             <Logout />
         </template>
         <template v-else #menu-buttons>
-            <button @click="resetConfig">Reset Configuration</button>
+            <button @click="resetConfigHandler">Reset Configuration</button>
             <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -36,12 +37,13 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {currentMode} = storeToRefs(dashboard)
-        return {currentMode}
+        const {configuration, resetConfig} = storeToRefs(wizard)
+        const {setConfiguration} = wizard
+        return {currentMode, configuration, resetConfig, setConfiguration}
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-
         isValid() {
             const {form} = this.$parent.$refs
             if (!form.checkValidity()) {
@@ -53,16 +55,14 @@ export default {
         },
     },
     methods: {
-        ...mapMutations('wizard', ['SETRESETCONFIG']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['confirm']),
         handleUpload(json_config) {
-            this.SETCONFIGURATION(json_config)
+            this.setConfiguration(json_config)
         },
-        resetConfig() {
+        resetConfigHandler() {
             this.confirm({
                 message: 'Reset the current configuration?',
-                confirmCallback: () => this.SETRESETCONFIG(true),
+                confirmCallback: () => { this.resetConfig = true },
             })
         },
 

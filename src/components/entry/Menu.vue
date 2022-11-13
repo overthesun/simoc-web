@@ -31,6 +31,7 @@ import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -39,11 +40,17 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             maxStepBuffer, loadFromSimData, currentMode,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
-        return {maxStepBuffer, loadFromSimData, currentMode, setSimulationData}
+        const {activeConfigType} = storeToRefs(wizard)
+        const {setConfiguration} = wizard
+        return {
+            maxStepBuffer, loadFromSimData, currentMode, setSimulationData,
+            activeConfigType, setConfiguration,
+        }
     },
     data() {
         return {
@@ -57,20 +64,18 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapMutations('modal', ['SETSURVEYWASPROMPTED']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration() {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
-            this.SETACTIVECONFIGTYPE('Custom')
+            this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
         // Send the user to the ACE Configuration Editor
         toAce() {
-            this.SETACTIVECONFIGTYPE('Custom')
+            this.activeConfigType = 'Custom'
             this.$router.push('ace')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
@@ -89,7 +94,7 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 const {configuration, currency_desc, ...simdata} = json_data
-                this.SETCONFIGURATION(configuration)
+                this.setConfiguration(configuration)
                 this.setSimulationData({simdata, currency_desc})
             } catch (error) {
                 console.error(error)  // report full error in the console

@@ -56,7 +56,7 @@
                 <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
                     <keep-alive>
-                        <component :is="getActiveReference" />
+                        <component :is="activeReference" />
                     </keep-alive>
                     <!--<Reference/>-->
                     <!--<GreenhouseDoughnut/>-->
@@ -73,8 +73,9 @@ import axios from 'axios'
 import {storeToRefs} from 'pinia'
 import IdleJs from 'idle-js'
 // import form components
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
+import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
@@ -96,13 +97,23 @@ export default {
     mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
+        const {
+            configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
+            activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
+            getPresets, simdataLocation,
+        } = storeToRefs(wizard)
+        const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
-            setGameParams, setSimulationData,
+            setGameParams, setSimulationData, configuration, getFormattedConfiguration,
+            activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
+            activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
+            setConfiguration,
         }
     },
     data() {
@@ -132,15 +143,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
-                                 'getActiveConfigType', 'getActiveForm',
-                                 'getFormLength', 'getTotalMissionHours',
-                                 'getActiveReference', 'getActiveRefEntry',
-                                 'getPresets', 'getSimdataLocation']),
-
         // Used to hide the normal button and display the active button
         isFinalForm() {
-            return (this.getFormLength-1) === this.formIndex
+            return (this.formOrder.length-1) === this.formIndex
         },
         // Hides the prvevious button if the active form is the first one.
         isFirstForm() {
@@ -159,20 +164,18 @@ export default {
         // Mostly used for when either the buttons or the select menu or used to navigate
         formIndex: {
             handler() {
-                this.SETACTIVEFORMINDEX(this.formIndex)
+                this.activeFormIndex = this.formIndex
                 this.activeForm = this.getActiveForm
             },
         },
     },
     beforeMount() {
-        this.RESETCONFIG()
+        this.resetConfigDefault()
+        this.menuActive = false
         this.activeForm = this.getActiveForm
-        this.activeConfigType = this.getActiveConfigType
     },
     methods: {
-        ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
         ...mapMutations(['SETGAMEID']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
 
         toggleMenu() {
@@ -192,7 +195,7 @@ export default {
         },
 
         incrementIndex() {
-            const max = this.getFormLength-1
+            const max = this.formOrder.length-1
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
@@ -262,7 +265,7 @@ export default {
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
-                        this.SETCONFIGURATION(configuration)
+                        this.setConfiguration(configuration)
                         this.setSimulationData({simdata, currency_desc})
                         this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
                         this.loadFromSimData = true

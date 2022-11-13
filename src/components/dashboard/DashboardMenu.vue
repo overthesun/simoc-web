@@ -9,7 +9,7 @@ use some of these features.
         </template>
         <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
-            <button @click="stopSimulation">Stop Simulation</button>
+            <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
@@ -28,6 +28,7 @@ import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseMenu} from '../base'
 
 export default {
@@ -36,6 +37,7 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             isTimerRunning, activePanels, gameCurrencies, currentMode,
             menuActive, leaveWithoutConfirmation,
@@ -44,10 +46,11 @@ export default {
             getSimulationData, setStopped, startTimer, pauseTimer,
             setDefaultPanels,
         } = dashboard
+        const {configuration, activeConfigType} = storeToRefs(wizard)
         return {
             isTimerRunning, activePanels, gameCurrencies, currentMode,
-            menuActive, leaveWithoutConfirmation, getSimulationData,
-            setStopped, startTimer, pauseTimer, setDefaultPanels,
+            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped,
+            startTimer, pauseTimer, setDefaultPanels, configuration, activeConfigType,
         }
     },
     data() {
@@ -56,7 +59,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
@@ -71,7 +73,6 @@ export default {
         }
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
         ...mapActions('modal', ['confirm']),
 
         // Stop Simulation button, this stops the timers and the simulation
@@ -85,7 +86,7 @@ export default {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
-            simdata.configuration = this.getConfiguration
+            simdata.configuration = this.configuration
             simdata.currency_desc = this.gameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
@@ -133,7 +134,7 @@ export default {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
                     // menuconfig is currently skipped, we default on Custom config
                     // this.$router.push("menuconfig")
-                    this.SETACTIVECONFIGTYPE('Custom')
+                    this.activeConfigType = 'Custom'
 
                     // the user already confirmed, don't ask twice
                     this.leaveWithoutConfirmation = true

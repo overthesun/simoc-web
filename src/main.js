@@ -29,7 +29,7 @@ createApp(App)
         .use(router)
         .use(store)
         .use(VueGtag, {
-            isEnabled: import.meta.env.NODE_ENV === 'production',
+            isEnabled: import.meta.env.MODE === 'production',
             property: {id: tracking_id},
         })
         .use(createPinia())

@@ -43,6 +43,9 @@ export default {
         // but also when clicking on the browser back button.
         // Cases where the user closes the tab or refreshes are handled
         // in DashboardView.
+
+        // Ensure the menu on the Dashboard is closed before showing any modal.
+        this.menuActive = false
         if (this.leaveWithoutConfirmation) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions

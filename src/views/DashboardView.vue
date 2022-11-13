@@ -14,11 +14,13 @@ import {storeToRefs} from 'pinia'
 import IdleJs from 'idle-js'
 import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
+import {useWizardStore} from '../store/modules/WizardStore'
 
 export default {
     mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
@@ -28,11 +30,13 @@ export default {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
         } = dashboard
+        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, setMinStepNumber, initGame, parseStep, startTimer,
             pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, currentMode,
+            configuration, getTotalMissionHours,
         }
     },
     data() {
@@ -58,7 +62,6 @@ export default {
 
     computed: {
         // getters from the vuex stores
-        ...mapGetters('wizard', ['getTotalMissionHours', 'getConfiguration']),
         ...mapGetters(['getGameID']),
     },
 
@@ -95,6 +98,7 @@ export default {
         this.timerID = null
         this.getStepsTimerID = null
         this.currentStepBuffer = 0
+        this.menuActive = false
         this.setMinStepNumber(0)  // Currently unused
         this.setStopped(false)
 

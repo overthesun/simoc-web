@@ -6,8 +6,8 @@
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
                    :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
                             #67e300 ' + currentPercentage + '%, \
-                            #d0d0d0 ' + currentPercentage +'%, \
-                            #d0d0d0 '+ bufferPercentage +'%, \
+                            #d0d0d0 ' + currentPercentage + '%, \
+                            #d0d0d0 ' + bufferPercentage + '%, \
                             #444343 ' + bufferPercentage + '%, \
                             #444343 100%)'}"
                    class="timeline" type="range"
@@ -17,23 +17,24 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {
             isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
         } = storeToRefs(dashboard)
         const {
             initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
         } = dashboard
+        const {getTotalMissionHours} = storeToRefs(wizard)
         return {
-            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer,
-            initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
+            isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, initTimer,
+            pauseTimer, startTimer, setCurrentStepBuffer, getTotalMissionHours,
         }
     },
     data() {
@@ -44,9 +45,6 @@ export default {
             timerWasRunning: null,  // the status of timer before drag&dropping
             userIsDragging: false,  // true when the user is dragging the slider
         }
-    },
-    computed: {
-        ...mapGetters('wizard', ['getTotalMissionHours']),
     },
     watch: {
         // update scrubber percentages when the current and/or max step change
@@ -90,8 +88,12 @@ export default {
 
         updatePercentages() {
             this.currentStep = this.currentStepBuffer
-            this.currentPercentage = (this.currentStepBuffer / this.getTotalMissionHours) * 100
-            this.bufferPercentage = (this.maxStepBuffer / this.getTotalMissionHours) * 100
+            // Before we receive steps from the server, the currentStep (and first step) is 0.
+            // Once we receive the first step, the first step becomes 1, and step 0 is removed.
+            // Because of this we need to subtract 1 from all the values.
+            const totalMissionHours = this.getTotalMissionHours - 1
+            this.currentPercentage = ((this.currentStepBuffer - 1) / totalMissionHours) * 100
+            this.bufferPercentage = ((this.maxStepBuffer - 1) / totalMissionHours) * 100
         },
     },
 }
