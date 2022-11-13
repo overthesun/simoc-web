@@ -80,6 +80,7 @@ export default {
         this.timerID = null
         this.getStepsTimerID = null
         this.currentStepBuffer = 0
+        this.menuActive = false
         this.setMinStepNumber(0)  // Currently unused
         this.setStopped(false)
 

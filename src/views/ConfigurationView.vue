@@ -172,16 +172,13 @@ export default {
             this.idle.start()
         }
         this.resetConfigDefault()
+        this.menuActive = false
         this.activeForm = this.getActiveForm
     },
     beforeUnmount() {
         if (this.currentMode === 'kiosk') {
             this.idle.stop()
         }
-
-        // Menu will malfunction if user hits back on browser.
-        // Setting this false ensures menu is inactive on unmount.
-        this.menuActive = false
     },
     methods: {
         ...mapMutations(['SETGAMEID']),

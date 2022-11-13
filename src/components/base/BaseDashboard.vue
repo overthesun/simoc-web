@@ -38,14 +38,14 @@ export default {
         Dashboard,
     },
     beforeRouteLeave(to, from, next) {
-        // Ensure the menu on the Dashboard is closed before showing modal.
-        this.menuActive = false
-
         // Triggered when leaving the dashboard to go to another page.
         // This might happen when the user starts a new sim or logs off,
         // but also when clicking on the browser back button.
         // Cases where the user closes the tab or refreshes are handled
         // in DashboardView.
+
+        // Ensure the menu on the Dashboard is closed before showing any modal.
+        this.menuActive = false
         if (this.leaveWithoutConfirmation) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
