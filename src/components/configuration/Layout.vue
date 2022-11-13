@@ -2,27 +2,30 @@
 -->
 
 <template>
-    <World :game-config="getConfiguration" :is-active="active" />
+    <World :game-config="configuration" :is-active="active" />
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
 import World from '@/threejs/World.vue'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     components: {
         World,
+    },
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration, activeReference} = storeToRefs(wizard)
+        return {configuration, activeReference}
     },
     data() {
         return {
             active: true,
         }
     },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getActiveReference']),
-    },
     watch: {
-        getActiveReference(newRef, oldRef) {
+        activeReference(newRef, oldRef) {
             this.active = (newRef === 'Layout')
         },
     },

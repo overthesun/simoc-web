@@ -8,12 +8,18 @@
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     props: {
         id: {type: String, required: true},
     },
-
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration} = storeToRefs(wizard)
+        return {configuration}
+    },
     data() {
         return {
             greenhouseSizes: {
@@ -29,13 +35,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-
         plantSpecies() {
-            return this.getConfiguration.plantSpecies
+            return this.configuration.plantSpecies
         },
         greenhouseSize() {
-            return this.greenhouseSizes[this.getConfiguration.greenhouse.type]
+            return this.greenhouseSizes[this.configuration.greenhouse.type]
         },
     },
 

@@ -12,7 +12,7 @@
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
-    "@fortawesome/vue-fontawesome": "^3.0.1",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
     "@json-editor/json-editor": "^2.8.0",
     "@vue/eslint-config-airbnb": "^7.0.0",
     "0g": "^0.0.9",
@@ -40,7 +40,7 @@
     "eslint-formatter-summary": "^1.1.0",
     "eslint-plugin-vue": "^9.7.0",
     "sass": "^1.54.8",
-    "vite": "^3.2.2"
+    "vite": "^3.2.3"
   },
   "postcss": {
     "plugins": {

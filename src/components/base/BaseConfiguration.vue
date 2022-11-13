@@ -12,10 +12,10 @@ menu button being present on other unrelated configurations.
 <template>
     <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
-        <section :class="{'no-form-select-dropdown': getActiveConfigType === 'Custom'}" class="wizard-wrapper">
+        <section :class="{'no-form-select-dropdown': activeConfigType === 'Custom'}" class="wizard-wrapper">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
-            <nav v-if="getActiveConfigType === 'Guided'" class="navigation-wrapper">
+            <nav v-if="activeConfigType === 'Guided'" class="navigation-wrapper">
                 <slot name="navigation-section-select" />
             </nav>
             <main class="main main-wizard">
@@ -36,14 +36,14 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div :class="{'option-item-active' : activeOption === 'Layout'}"
-                     class="option-item" @click="SETACTIVEREFERENCE('Layout')">LAYOUT</div>
-                <div :class="{'option-item-active' : activeOption === 'Graphs'}"
-                     class="option-item" @click="SETACTIVEREFERENCE('Graphs')">GRAPHS</div>
-                <div :class="{'option-item-active': activeOption === 'Reference'}"
-                     class="option-item" @click="SETACTIVEREFERENCE('Reference')">REFERENCE</div>
-                <!--<div class='option-item' @click="SETACTIVEREFERENCE('Recommended')"
-                         :class="{'option-item-active' : 'Recommended'===activeOption}">RECOMMENDED</div>
+                <div :class="{'option-item-active' : activeReference === 'Layout'}"
+                     class="option-item" @click="activeReference = 'Layout'">LAYOUT</div>
+                <div :class="{'option-item-active' : activeReference === 'Graphs'}"
+                     class="option-item" @click="activeReference = 'Graphs'">GRAPHS</div>
+                <div :class="{'option-item-active': activeReference === 'Reference'}"
+                     class="option-item" @click="activeReference = 'Reference'">REFERENCE</div>
+                <!--<div class='option-item' @click="activeReference = 'Recommended'"
+                         :class="{'option-item-active' : 'Recommended'===activeReference}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
                 <div class='option-item option-item-disabled'>RECOMMENDED</div>-->
             </nav>
@@ -59,19 +59,14 @@ menu button being present on other unrelated configurations.
 
 <script>
 import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
-    computed: {
-        ...mapGetters('wizard', ['getActiveConfigType', 'getActiveReference']),
-
-        // used to flag which section link is active within the reference navigation
-        // uses class-binding to activate the class and underline the title
-        activeOption() {
-            return this.getActiveReference
-        },
-    },
-    methods: {
-        ...mapMutations('wizard', ['SETACTIVEREFERENCE']),
+    setup() {
+        const wizard = useWizardStore()
+        const {activeConfigType, activeReference} = storeToRefs(wizard)
+        return {activeConfigType, activeReference}
     },
 }
 </script>
