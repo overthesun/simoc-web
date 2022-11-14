@@ -11,6 +11,7 @@ future dashboard views
             <Dashboard />
         </section>
         <section id="footer-wrapper">
+            <LiveButton v-if="currentMode === 'live'" />
             <PlayButton />
             <Timeline />
             <StepControls />
@@ -23,7 +24,7 @@ future dashboard views
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {Timeline, PlayButton, StepControls,
+import {Timeline, LiveButton, PlayButton, StepControls,
         SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
 
@@ -31,6 +32,7 @@ export default {
     components: {
         TheTopBar,
         DashboardMenu,
+        LiveButton,
         PlayButton,
         Timeline,
         StepControls,
@@ -39,9 +41,9 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {isTimerRunning, menuActive} = storeToRefs(dashboard)
+        const {isTimerRunning, menuActive, currentMode} = storeToRefs(dashboard)
         const {startTimer, pauseTimer} = dashboard
-        return {isTimerRunning, menuActive, startTimer, pauseTimer}
+        return {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer}
     },
     data() {
         return {
@@ -91,12 +93,22 @@ export default {
     background: linear-gradient(#444, #333);
 }
 
-#dashboard-play-icon span {
+#dashboard-live-text div {
+    margin-left: 6px;
+    font-size: 14px;
+    cursor: default;
+}
+#dashboard-play-icon span, #dashboard-live-icon span {
     font-size: 24px;
     width: 36px;
     height: 36px;
 }
-#dashboard-play-icon span:hover {
+#dashboard-live-circle {
+    font-size: 6px;
+    transform: translateY(-50%);
+    color: #fc0303;
+}
+#dashboard-play-icon span:hover, #dashboard-live-icon span:hover {
     font-size: 26px;
 }
 #speed-controls,
