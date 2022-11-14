@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "vite --host --port 8080",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-formatter-summary": "^1.1.0",
     "eslint-plugin-vue": "^9.7.0",
     "sass": "^1.54.8",
