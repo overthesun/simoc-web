@@ -147,6 +147,7 @@ export default {
             }
 
             if (e.ctrlKey && e.key === 's') {
+                e.preventDefault()  // prevent event from propagating to browser
                 this.showLiveMode = true
             }
         },
