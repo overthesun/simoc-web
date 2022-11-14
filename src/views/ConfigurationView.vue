@@ -72,7 +72,7 @@
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
 // import form components
-import {mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
@@ -94,6 +94,16 @@ export default {
         Layout,
     },
     mixins: [idleMixin],
+    beforeRouteLeave(to, from, next) {
+        // Triggered when leaving the config wizard to go to another page.
+        if (this.currentMode === 'kiosk' && this.getTimeoutWasActivated) {
+            // in kiosk mode, show a countdown before actually leaving
+            this.showIdleCountdown(next)
+        } else {
+            // otherwise proceed to the destination page
+            next()
+        }
+    },
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
@@ -134,6 +144,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('modal', ['getTimeoutWasActivated']),
         // Used to hide the normal button and display the active button
         isFinalForm() {
             return (this.formOrder.length-1) === this.formIndex

@@ -7,14 +7,16 @@
  *
  * ref: https://v2.vuejs.org/v2/guide/mixins.html?redirect=true
  *
- * @author Ryan Meneses
+ * @author Ezio Melotti, Ryan Meneses
  * @version 1.0
  * @since November 5, 2022
  */
 
-import {mapMutations} from 'vuex'
-
 import IdleJs from 'idle-js'
+
+import {storeToRefs} from 'pinia'
+import {mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../store/modules/DashboardStore'
 
 // idleMixin is used to start and stop the IdleJS object.
 export const idleMixin = {
@@ -52,6 +54,15 @@ export const idleMixin = {
         }
     },
     methods: {
+        ...mapActions('modal', ['timeout']),
         ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPCOUNTDOWNTIMER']),
+        showIdleCountdown(next) {
+            this.timeout({
+                message: ('Terminating mission due to inactivity.\n' +
+                          'Move the cursor to continue the mission.'),
+                secondsLeft: 10,
+                timeoutCallback: () => next(),
+            })
+        },
     },
 }

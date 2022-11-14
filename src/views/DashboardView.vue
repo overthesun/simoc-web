@@ -18,6 +18,40 @@ import {useLiveStore} from '../store/modules/LiveStore'
 
 export default {
     mixins: [idleMixin],
+
+    beforeRouteLeave(to, from, next) {
+        // Triggered when leaving the dashboard to go to another page.
+        // This might happen when the user starts a new sim or logs off,
+        // but also when clicking on the browser back button.
+        // Cases where the user closes the tab or refreshes are handled
+        // in DashboardView.
+
+        // Ensure the menu on the Dashboard is closed before showing any modal.
+        this.menuActive = false
+        if (this.leaveWithoutConfirmation) {
+            this.leaveWithoutConfirmation = false  // reset value
+            next()  // proceed without asking questions
+        } else {
+            // Make user to confirm before exiting.
+            const confirmExit = () => {
+                if (this.currentMode === 'kiosk' && this.getTimeoutWasActivated) {
+                    this.showIdleCountdown(next)
+                } else {
+                    this.confirm({
+                        message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                        confirmCallback: () => next(),
+                    })
+                }
+            }
+            // Prompt user to take the feedback survey *only* the first time (per session)
+            if (!this.getSurveyWasPrompted) {
+                this.showSurvey({prompt: true, onUnload: confirmExit})
+            } else {
+                confirmExit()
+            }
+        }
+    },
+
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
@@ -25,7 +59,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode,
+            menuActive, currentMode, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -38,12 +72,15 @@ export default {
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, setMinStepNumber, initGame, parseStep, startTimer,
-            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, configuration,
-            getTotalMissionHours, setLiveConfig, bundleNum, initBundleNum,
+            menuActive, currentMode, leaveWithoutConfirmation,
+            setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
+            stopTimer, setCurrentStepBuffer, setStopped,
+            configuration, getTotalMissionHours,
+            setLiveConfig, bundleNum, initBundleNum,
             setHabitatInfo, setSensorInfo, parseData,
         }
     },
+
     data() {
         return {
             socket: null,  // the websocket used to get the steps
@@ -53,6 +90,7 @@ export default {
     computed: {
         // getters from the vuex stores
         ...mapGetters(['getGameID']),
+        ...mapGetters('modal', ['getSurveyWasPrompted', 'getTimeoutWasActivated']),
     },
 
     watch: {
@@ -151,6 +189,7 @@ export default {
     },
 
     methods: {
+        ...mapActions('modal', ['confirm', 'showSurvey']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket
