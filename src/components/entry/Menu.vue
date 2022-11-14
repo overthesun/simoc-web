@@ -13,6 +13,8 @@
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
+                <button :class="{'hidden': !showLiveMode}" form="login-form" class="btn-normal"
+                        @click="toLiveDashboard">LIVE MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
                        accept="application/json" @change="handleSimData">
             </template>
@@ -42,19 +44,21 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            maxStepBuffer, loadFromSimData, currentMode,
+            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
         const {activeConfigType} = storeToRefs(wizard)
-        const {setConfiguration} = wizard
+        const {setConfiguration, setLiveConfig} = wizard
         return {
-            maxStepBuffer, loadFromSimData, currentMode, setSimulationData,
-            activeConfigType, setConfiguration,
+            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
+            setSimulationData, activeConfigType, setConfiguration,
+            setLiveConfig,
         }
     },
     data() {
         return {
             showAgentEditor: false,
+            showLiveMode: false,
         }
     },
     mounted() {
@@ -77,6 +81,20 @@ export default {
         toAce() {
             this.activeConfigType = 'Custom'
             this.$router.push('ace')
+        },
+        /** Routes the user to the live Dashboard. The minimum configuration required for any
+         *  Dashboard instance to open without error is the min_step_num and a duration object
+         *  composed of an 'amount' key-value pairing. Both of these values can be 0, but the
+         *  wizard store parses those two keys. Note that in sim mode these key-values are set in
+         *  the Configuration Menu which is rendered after the user selects New Configuration in
+         *  this Menu, but in live mode that menu is bypassed and they must be manually set here
+         *  before the Dashboard components can be rendered.
+         */
+        toLiveDashboard() {
+            this.currentMode = 'live'  // set 'live' mode
+            this.parameters = {min_step_num: 0}  // create min_step_num parameter
+            this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
+            this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
         uploadSimData() {
@@ -102,6 +120,7 @@ export default {
                 return
             }
             this.currentMode = 'sim'
+            this.isLive = false
             this.loadFromSimData = true
             this.$router.push('dashboard')
         },
@@ -125,6 +144,11 @@ export default {
                 this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
                 this.currentMode = 'kiosk'
                 this.$router.push('/')
+            }
+
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault()  // prevent event from propagating to browser
+                this.showLiveMode = true
             }
         },
     },

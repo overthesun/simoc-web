@@ -97,7 +97,7 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
         const {
@@ -107,7 +107,7 @@ export default {
         } = storeToRefs(wizard)
         const {resetConfigDefault, setConfiguration} = wizard
         return {
-            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode,
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             setGameParams, setSimulationData, configuration, getFormattedConfiguration,
             activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
             activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
@@ -274,6 +274,7 @@ export default {
                         this.setConfiguration(configuration)
                         this.setSimulationData({simdata, currency_desc})
                         this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                        this.isLive = false
                         this.loadFromSimData = true
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
@@ -307,6 +308,7 @@ export default {
                     currency_desc: response.data.currency_desc,
                 })
                 this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                this.isLive = false
                 this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
