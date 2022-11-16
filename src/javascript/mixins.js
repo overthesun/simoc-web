@@ -14,7 +14,7 @@ export const idleMixin = {
     data() {
         return {
             idle: new IdleJs({
-                idle: 3 * 1000,  // 3 min idle time (60s * 3m, in ms)
+                idle: 60 * 3 * 1000,  // 3 min idle time (60s * 3m, in ms)
                 events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
                 onIdle: () => {
                     // start the countdown modal on idle
