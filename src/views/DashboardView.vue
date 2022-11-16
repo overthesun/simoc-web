@@ -35,10 +35,10 @@ export default {
         } else {
             // Make user to confirm before exiting.
             const confirmExit = () => {
-                  this.confirm({
-                      message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                      confirmCallback: () => next(),
-                  })
+                this.confirm({
+                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                    confirmCallback: () => next(),
+                })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.getSurveyWasPrompted) {
