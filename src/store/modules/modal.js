@@ -54,6 +54,7 @@ export default {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyWasPrompted: state => state.surveyWasPrompted,
+        getCountdownIsRunning: state => state.secondsLeft !== null,
         getCountdownEnded: state => state.countdownEnded,
         getSecondsLeft: state => state.secondsLeft,
     },
@@ -117,6 +118,7 @@ export default {
             // Clear the current timer and hide the modal window.
             clearInterval(state.timer)
             state.countdownEnded = false
+            state.secondsLeft = null
             state.modalActive = false
             state.params = getParams()
         },
