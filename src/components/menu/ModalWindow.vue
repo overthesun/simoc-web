@@ -104,6 +104,7 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 500;
 }
 
 #menu-wrapper {
@@ -162,6 +163,7 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
         width: 100%;
     }
 }
+
 #modal-message {
     white-space: pre-wrap;
 }

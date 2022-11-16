@@ -28,20 +28,17 @@ export default {
 
         // Ensure the menu on the Dashboard is closed before showing any modal.
         this.menuActive = false
-        if (this.leaveWithoutConfirmation) {
+        if (this.leaveWithoutConfirmation ||
+            (this.currentMode === 'kiosk' && this.getCountdownEnded)) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Make user to confirm before exiting.
             const confirmExit = () => {
-                if (this.currentMode === 'kiosk' && this.getTimeoutWasActivated) {
-                    this.showIdleCountdown(next)
-                } else {
-                    this.confirm({
-                        message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                        confirmCallback: () => next(),
-                    })
-                }
+                  this.confirm({
+                      message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                      confirmCallback: () => next(),
+                  })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.getSurveyWasPrompted) {
@@ -90,7 +87,7 @@ export default {
     computed: {
         // getters from the vuex stores
         ...mapGetters(['getGameID']),
-        ...mapGetters('modal', ['getSurveyWasPrompted', 'getTimeoutWasActivated']),
+        ...mapGetters('modal', ['getSurveyWasPrompted', 'getCountdownEnded']),
     },
 
     watch: {
