@@ -33,6 +33,11 @@ export default {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
+            // Stop/close the countdown modal if it's still open
+            // (e.g. when the user press the back button during the countdown)
+            if (this.currentMode === 'kiosk') {
+                this.STOPCOUNTDOWNTIMER()
+            }
             // Make user to confirm before exiting.
             const confirmExit = () => {
                 this.confirm({
@@ -41,7 +46,7 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted) {
+            if (!this.getSurveyWasPrompted && this.currentMode !== 'kiosk') {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
                 confirmExit()
@@ -187,6 +192,7 @@ export default {
 
     methods: {
         ...mapActions('modal', ['confirm', 'showSurvey']),
+        ...mapMutations('modal', ['STOPCOUNTDOWNTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket

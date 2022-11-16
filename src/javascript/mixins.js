@@ -1,7 +1,7 @@
 import IdleJs from 'idle-js'
 
 import {storeToRefs} from 'pinia'
-import {mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 
 // mixin used to handle idle timeouts in kiosk mode
@@ -25,12 +25,18 @@ export const idleMixin = {
                 },
                 onActive: () => {
                     // abort the countdown on activity
-                    this.STOPCOUNTDOWNTIMER()
+                    if (this.getCountdownIsRunning) {
+                        this.STOPCOUNTDOWNTIMER()
+                    }
                 },
                 keepTracking: true,  // false tracks for idleness only once
                 startAtIdle: false,  // true starts in the idle state
             }),
         }
+    },
+
+    computed: {
+        ...mapGetters('modal', ['getCountdownIsRunning']),
     },
     beforeMount() {
         if (this.currentMode === 'kiosk') {
