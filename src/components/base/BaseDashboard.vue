@@ -66,9 +66,6 @@ export default {
             }
         },
     },
-    methods: {
-        ...mapActions('modal', ['confirm', 'timeout', 'showSurvey']),
-    },
 }
 </script>
 
