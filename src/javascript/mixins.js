@@ -19,8 +19,8 @@ export const idleMixin = {
                 onIdle: () => {
                     // start the countdown modal on idle
                     this.showIdleCountdown(() => {
-                      this.SETCOUNTDOWNENDED(true)
-                      this.$router.push('/')
+                        this.SETCOUNTDOWNENDED(true)
+                        this.$router.push('/')
                     })
                 },
                 onActive: () => {
