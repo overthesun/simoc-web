@@ -1,24 +1,10 @@
-/**
- * Mixins (mixins.js)
- *
- * Mixins prevent the same code required through several components from being
- * repeated within that component. See reference below for usage. Note that if
- * an option in a mixin is already defined in a component, the two will be merged.
- *
- * ref: https://v2.vuejs.org/v2/guide/mixins.html?redirect=true
- *
- * @author Ezio Melotti, Ryan Meneses
- * @version 1.0
- * @since November 5, 2022
- */
-
 import IdleJs from 'idle-js'
 
 import {storeToRefs} from 'pinia'
 import {mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 
-// idleMixin is used to start and stop the IdleJS object.
+// mixin used to handle idle timeouts in kiosk mode
 export const idleMixin = {
     setup() {
         const dashboard = useDashboardStore()
@@ -28,16 +14,19 @@ export const idleMixin = {
     data() {
         return {
             idle: new IdleJs({
-                idle: 60 * 3 * 1000,  // 3 min idle time (60s * 3m, in ms)
+                idle: 3 * 1000,  // 3 min idle time (60s * 3m, in ms)
                 events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
                 onIdle: () => {
-                    this.SETTIMEOUTWASACTIVATED(true)
-                    this.$router.push('/')
-                },  // After idle time launch timeout modal from BaseDashboard.
+                    // start the countdown modal on idle
+                    this.showIdleCountdown(() => {
+                      this.SETCOUNTDOWNENDED(true)
+                      this.$router.push('/')
+                    })
+                },
                 onActive: () => {
-                    this.SETTIMEOUTWASACTIVATED(false)
+                    // abort the countdown on activity
                     this.STOPCOUNTDOWNTIMER()
-                },  // If activity is detected reset the countdown and hide the modal.
+                },
                 keepTracking: true,  // false tracks for idleness only once
                 startAtIdle: false,  // true starts in the idle state
             }),
@@ -50,12 +39,13 @@ export const idleMixin = {
     },
     beforeUnmount() {
         if (this.currentMode === 'kiosk') {
+            this.STOPCOUNTDOWNTIMER()
             this.idle.stop()
         }
     },
     methods: {
         ...mapActions('modal', ['timeout']),
-        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPCOUNTDOWNTIMER']),
+        ...mapMutations('modal', ['SETCOUNTDOWNENDED', 'STOPCOUNTDOWNTIMER']),
         showIdleCountdown(next) {
             this.timeout({
                 message: ('Terminating mission due to inactivity.\n' +
