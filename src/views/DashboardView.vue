@@ -11,11 +11,14 @@ import axios from 'axios'
 import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
+import IdleJs from 'idle-js'
+import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {useLiveStore} from '../store/modules/LiveStore'
 
 export default {
+    mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
@@ -45,6 +48,21 @@ export default {
     data() {
         return {
             socket: null,  // the websocket used to get the steps
+            // idle-js: https://www.npmjs.com/package/idle-js/v/1.2.0
+            idle: new IdleJs({
+                idle: 1000 * 60 * 3,  // idle time, 1000 ms * 60 s * 3, 180000 ms (3 min)
+                events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
+                onIdle: () => {
+                    this.SETTIMEOUTWASACTIVATED(true)
+                    this.$router.push('/')
+                },  // After idle time launch timeout modal from BaseDashboard.
+                onActive: () => {
+                    this.SETTIMEOUTWASACTIVATED(false)
+                    this.STOPCOUNTDOWNTIMER()
+                },  // If activity is detected reset the countdown and hide the modal.
+                keepTracking: true,  // false tracks for idleness only once
+                startAtIdle: false,  // true starts in the idle state
+            }),
         }
     },
 
@@ -149,6 +167,7 @@ export default {
     },
 
     methods: {
+        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPCOUNTDOWNTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket

@@ -79,6 +79,7 @@ import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+import {idleMixin} from '../javascript/mixins'
 
 export default {
     components: {
@@ -93,6 +94,7 @@ export default {
         Graphs,
         Layout,
     },
+    mixins: [idleMixin],
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
@@ -168,17 +170,9 @@ export default {
         },
     },
     beforeMount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.start()
-        }
         this.resetConfigDefault()
         this.menuActive = false
         this.activeForm = this.getActiveForm
-    },
-    beforeUnmount() {
-        if (this.currentMode === 'kiosk') {
-            this.idle.stop()
-        }
     },
     methods: {
         ...mapMutations(['SETGAMEID']),

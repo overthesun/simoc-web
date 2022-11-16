@@ -43,11 +43,19 @@ export default {
 
         // Prompt user to take survey once, the first time they navigate back from the dashboard.
         surveyWasPrompted: false,
+
+        // Dashboard has gone idle, present timeout modal
+        timeoutWasActivated: false,  //  Used to prevent back navigation to load timeout modal.
+        timeoutCallback: null,  //  Timeout callback next() set in BaseDashboard.
+        timer: null,  //  Built-in JavaScript function setInterval shared between components.
+        secondsLeft: 0,  // The total time to react if the Dashboard detects an idle state.
     },
     getters: {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyWasPrompted: state => state.surveyWasPrompted,
+        getTimeoutWasActivated: state => state.timeoutWasActivated,
+        getSecondsLeft: state => state.secondsLeft,
     },
     mutations: {
         SETMODALACTIVE(state, value) {
@@ -87,6 +95,36 @@ export default {
         SETSURVEYWASPROMPTED(state, value) {
             state.surveyWasPrompted = value
         },
+        SETTIMEOUTWASACTIVATED(state, value) {
+            state.timeoutWasActivated = value
+        },
+        // This mutator is called in the ModalWindow for modals of type timeout.
+        STARTCOUNTDOWNTIMER(state) {
+            // Updates secondsLeft displayed in the ModalWindow decremented every 1 second.
+            state.timer = setInterval(() => {
+                if (state.secondsLeft <= 0) {
+                    clearInterval(state.timer)
+                    state.modalActive = false
+                    state.params = getParams()
+                    state.timeoutCallback()
+                } else {
+                    state.secondsLeft -= 1
+                }
+            }, 1000)
+        },
+        // This mutator is called in DashboardView when a user reacts to the idle state.
+        STOPCOUNTDOWNTIMER(state) {
+            // Clear the current timer and hide the modal window.
+            clearInterval(state.timer)
+            state.modalActive = false
+            state.params = getParams()
+        },
+        SETTIMEOUTCALLBACK(state, value) {
+            state.timeoutCallback = value
+        },
+        SETSECONDSLEFT(state, value) {
+            state.secondsLeft = value
+        },
     },
     actions: {
         // Show top-level navigation. Typically used by menu icon in nav bar.
@@ -112,6 +150,17 @@ export default {
                     {text: 'Ok', callback: confirmCallback},
                 ],
             })
+        },
+        // Show text with countdown, executes callback function if secondsLeft counts down to 0.
+        timeout({commit}, payload) {
+            const {message, secondsLeft, timeoutCallback} = payload
+            commit('SETMODALPARAMS', {
+                type: 'timeout',
+                message: message,
+            })
+
+            commit('SETTIMEOUTCALLBACK', timeoutCallback)
+            commit('SETSECONDSLEFT', secondsLeft)
         },
         // Show the user survey. Typically used by a 'Give Feedback' button.
         showSurvey({commit}, payload) {
