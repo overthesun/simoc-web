@@ -11,7 +11,6 @@ import axios from 'axios'
 import io from 'socket.io-client'
 
 import {storeToRefs} from 'pinia'
-import IdleJs from 'idle-js'
 import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
@@ -19,6 +18,42 @@ import {useLiveStore} from '../store/modules/LiveStore'
 
 export default {
     mixins: [idleMixin],
+
+    beforeRouteLeave(to, from, next) {
+        // Triggered when leaving the dashboard to go to another page.
+        // This might happen when the user starts a new sim or logs off,
+        // but also when clicking on the browser back button.
+        // Cases where the user closes the tab or refreshes are handled
+        // in DashboardView.
+
+        // Ensure the menu on the Dashboard is closed before showing any modal.
+        this.menuActive = false
+        if (this.leaveWithoutConfirmation ||
+            (this.currentMode === 'kiosk' && this.getCountdownEnded)) {
+            this.leaveWithoutConfirmation = false  // reset value
+            next()  // proceed without asking questions
+        } else {
+            // Stop/close the countdown modal if it's still open
+            // (e.g. when the user press the back button during the countdown)
+            if (this.currentMode === 'kiosk') {
+                this.STOPCOUNTDOWNTIMER()
+            }
+            // Make user to confirm before exiting.
+            const confirmExit = () => {
+                this.confirm({
+                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
+                    confirmCallback: () => next(),
+                })
+            }
+            // Prompt user to take the feedback survey *only* the first time (per session)
+            if (!this.getSurveyWasPrompted && this.currentMode !== 'kiosk') {
+                this.showSurvey({prompt: true, onUnload: confirmExit})
+            } else {
+                confirmExit()
+            }
+        }
+    },
+
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
@@ -26,7 +61,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode,
+            menuActive, currentMode, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -39,36 +74,25 @@ export default {
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, setMinStepNumber, initGame, parseStep, startTimer,
-            pauseTimer, stopTimer, setCurrentStepBuffer, setStopped, configuration,
-            getTotalMissionHours, setLiveConfig, bundleNum, initBundleNum,
+            menuActive, currentMode, leaveWithoutConfirmation,
+            setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
+            stopTimer, setCurrentStepBuffer, setStopped,
+            configuration, getTotalMissionHours,
+            setLiveConfig, bundleNum, initBundleNum,
             setHabitatInfo, setSensorInfo, parseData,
         }
     },
+
     data() {
         return {
             socket: null,  // the websocket used to get the steps
-            // idle-js: https://www.npmjs.com/package/idle-js/v/1.2.0
-            idle: new IdleJs({
-                idle: 1000 * 60 * 3,  // idle time, 1000 ms * 60 s * 3, 180000 ms (3 min)
-                events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
-                onIdle: () => {
-                    this.SETTIMEOUTWASACTIVATED(true)
-                    this.$router.push('/')
-                },  // After idle time launch timeout modal from BaseDashboard.
-                onActive: () => {
-                    this.SETTIMEOUTWASACTIVATED(false)
-                    this.STOPCOUNTDOWNTIMER()
-                },  // If activity is detected reset the countdown and hide the modal.
-                keepTracking: true,  // false tracks for idleness only once
-                startAtIdle: false,  // true starts in the idle state
-            }),
         }
     },
 
     computed: {
         // getters from the vuex stores
         ...mapGetters(['getGameID']),
+        ...mapGetters('modal', ['getSurveyWasPrompted', 'getCountdownEnded']),
     },
 
     watch: {
@@ -167,7 +191,8 @@ export default {
     },
 
     methods: {
-        ...mapMutations('modal', ['SETTIMEOUTWASACTIVATED', 'STOPCOUNTDOWNTIMER']),
+        ...mapActions('modal', ['confirm', 'showSurvey']),
+        ...mapMutations('modal', ['STOPCOUNTDOWNTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket

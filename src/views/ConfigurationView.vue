@@ -71,9 +71,8 @@
 <script>
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
-import IdleJs from 'idle-js'
 // import form components
-import {mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
@@ -132,14 +131,6 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
             },
-            // idle-js: https://www.npmjs.com/package/idle-js/v/1.2.0
-            idle: new IdleJs({
-                idle: 1000 * 60 * 3, // idle time, 1000 ms * 60 s * 3, 180000 ms (3 min)
-                events: ['mousemove', 'keydown', 'mousedown', 'touchstart'], // re-trigger events
-                onIdle: () => { this.$router.push('/') }, // after idle time return to Welcome page
-                keepTracking: true, // false tracks for idleness only once
-                startAtIdle: false, // true starts in the idle state
-            }),
         }
     },
     computed: {

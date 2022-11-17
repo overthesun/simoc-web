@@ -45,7 +45,7 @@ export default {
         surveyWasPrompted: false,
 
         // Dashboard has gone idle, present timeout modal
-        timeoutWasActivated: false,  //  Used to prevent back navigation to load timeout modal.
+        countdownEnded: false,  //  Used to prevent back navigation to load timeout modal.
         timeoutCallback: null,  //  Timeout callback next() set in BaseDashboard.
         timer: null,  //  Built-in JavaScript function setInterval shared between components.
         secondsLeft: 0,  // The total time to react if the Dashboard detects an idle state.
@@ -54,7 +54,8 @@ export default {
         getModalActive: state => state.modalActive,
         getModalParams: state => state.modalParams,
         getSurveyWasPrompted: state => state.surveyWasPrompted,
-        getTimeoutWasActivated: state => state.timeoutWasActivated,
+        getCountdownIsRunning: state => state.secondsLeft !== null,
+        getCountdownEnded: state => state.countdownEnded,
         getSecondsLeft: state => state.secondsLeft,
     },
     mutations: {
@@ -95,8 +96,8 @@ export default {
         SETSURVEYWASPROMPTED(state, value) {
             state.surveyWasPrompted = value
         },
-        SETTIMEOUTWASACTIVATED(state, value) {
-            state.timeoutWasActivated = value
+        SETCOUNTDOWNENDED(state, value) {
+            state.countdownEnded = value
         },
         // This mutator is called in the ModalWindow for modals of type timeout.
         STARTCOUNTDOWNTIMER(state) {
@@ -116,6 +117,8 @@ export default {
         STOPCOUNTDOWNTIMER(state) {
             // Clear the current timer and hide the modal window.
             clearInterval(state.timer)
+            state.countdownEnded = false
+            state.secondsLeft = null
             state.modalActive = false
             state.params = getParams()
         },

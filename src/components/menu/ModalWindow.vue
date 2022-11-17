@@ -24,7 +24,7 @@ to activate and populate it.
                     </button>
                 </div>
                 <p v-if="getModalParams.type === 'timeout'" id="modal-time">
-                    {{getSecondsLeft > 0 ? getSecondsLeft : "Mission terminated."}}
+                    {{getSecondsLeft > 0 ? `${getSecondsLeft} second(s) left` : "Mission terminated."}}
                 </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
@@ -104,6 +104,7 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 500;
 }
 
 #menu-wrapper {
@@ -161,6 +162,10 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
         transition: width .2s ease;
         width: 100%;
     }
+}
+
+#modal-message {
+    white-space: pre-wrap;
 }
 
 #menu-content {
