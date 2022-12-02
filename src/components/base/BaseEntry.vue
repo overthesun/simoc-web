@@ -224,6 +224,39 @@ export default {
         }
     }
 
+    .btn-mars, .btn-biosphere2 {
+        width: 128px;
+        height: 128px;
+        min-height: 128px;
+        margin-bottom: 32px;
+        margin-right: 5px;
+        border-radius: 5px;
+        padding: 12px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        //background-size: 100%;
+        //background-image: url(../../assets/simoc-logo.svg);
+        //background-color: #0099ee;
+        border:none;
+        color: #eee;
+
+        &:hover{
+            cursor: pointer;
+        }
+
+        &:focus{
+            outline:none;
+        }
+    }
+
+    .btn-mars {
+        background-image: url(../../assets/mars-small.jpg);
+    }
+
+    .btn-biosphere2 {
+        background-image: url(../../assets/biosphere-small.jpg);
+    }
+
     .btn-warning {
         margin-top:auto;
         width: 256px;
