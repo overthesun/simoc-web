@@ -228,7 +228,7 @@ export default {
         width: 128px;
         height: 128px;
         min-height: 128px;
-        margin-bottom: 32px;
+        margin-bottom: 0px;
         margin-right: 5px;
         border-radius: 5px;
         padding: 12px 16px;
@@ -255,6 +255,21 @@ export default {
 
     .btn-biosphere2 {
         background-image: url(../../assets/biosphere-small.jpg);
+    }
+
+    .div-parent {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .div-child {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 12px 12px;
+        border-radius: 5px;
+        background: rgba(92,92,92,0.3);
+        background-size: contain;
+        margin: 5px;
     }
 
     .btn-warning {

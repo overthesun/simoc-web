@@ -8,10 +8,16 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template #entry-main>
-                <b-button-group>
-                    <button form="login-form" class="btn-mars" @click="toConfiguration">Mars</button>
-                    <button form="login-form" class="btn-biosphere2" @click="toConfiguration">Biosphere 2</button>
-                </b-button-group>
+                <div class="div-parent">
+                    <div class="div-child">
+                        <button form="login-form" class="btn-mars" @click="toConfiguration"/>
+                        <h3>Mars</h3>
+                    </div>
+                    <div class="div-child">
+                        <button form="login-form" class="btn-biosphere2" @click="toConfiguration"/>
+                        <h3>Biosphere 2</h3>
+                    </div>
+                </div>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
