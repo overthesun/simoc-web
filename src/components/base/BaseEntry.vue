@@ -228,20 +228,15 @@ export default {
         width: 122px;
         height: 122px;
         min-height: 122px;
-        margin-bottom: 12px;
         margin-right: 12px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        //background-size: 100%;
-        //background-image: url(../../assets/simoc-logo.svg);
-        //background-color: #0099ee;
-        border:none;
-        color: #eee;
+        font-size: 14px;
+        color: transparent;
+        background: transparent;
 
         &:hover{
             cursor: pointer;
+            color: rgba(255,255,255,1);
+            transition: color 0.5s;
         }
 
         &:focus{
@@ -250,11 +245,19 @@ export default {
     }
 
     .btn-mars {
-        background-image: url(../../assets/mars-small.jpg);
+        background-image: url(../../assets/Mars-Ft-Calgary-small.jpg);
+
+        &:hover{
+            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary-small.jpg);
+        }
     }
 
     .btn-biosphere2 {
-        background-image: url(../../assets/biosphere-small.jpg);
+        background-image: url(../../assets/biosphere2-small.jpg);
+
+        &:hover{
+            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/biosphere2-small.jpg);
+        }
     }
 
     .btn-warning {
