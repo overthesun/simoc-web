@@ -225,11 +225,11 @@ export default {
     }
 
     .btn-mars, .btn-biosphere2 {
-        width: 128px;
-        height: 128px;
-        min-height: 128px;
-        margin-bottom: 32px;
-        margin-right: 5px;
+        width: 122px;
+        height: 122px;
+        min-height: 122px;
+        margin-bottom: 12px;
+        margin-right: 12px;
         border-radius: 5px;
         padding: 12px 16px;
         font-size: 16px;
