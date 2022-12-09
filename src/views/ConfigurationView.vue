@@ -191,6 +191,8 @@ export default {
         },
 
         handleAxiosError(error) {
+            const errmsg = error.response.data.message || error.message
+            this.$gtag.exception({description: `Launch simulation: ${errmsg}`})
             console.error(error)
             if (error.response && error.response.status === 401) {
                 this.alert('Please log in again to continue.')
