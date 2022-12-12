@@ -167,7 +167,7 @@ export default {
     },
     methods: {
         ...mapMutations(['SETGAMEID']),
-        ...mapActions('modal', ['alert']),
+        ...mapActions('modal', ['alert', 'timeout']),
 
         toggleMenu() {
             this.menuActive = !this.menuActive
@@ -192,9 +192,18 @@ export default {
 
         handleAxiosError(error) {
             console.error(error)
-            if (error.response && error.response.status === 401) {
-                this.alert('Please log in again to continue.')
-                this.$router.push('entry')
+            if (error.response) {
+                if (error.response.status === 401) {
+                    this.alert('Please log in again to continue.')
+                    this.$router.push('entry')
+                } else if (error.response.status === 500) {
+                    this.timeout({
+                        message: 'Our servers are currently busy right now.\n' +
+                                 'Retrying in 10',
+                        secondsLeft: 10,
+                        timeoutCallback: async () => {await this.launchSimulation()}
+                    })
+                }
             } else {
                 this.alert(error)
             }
