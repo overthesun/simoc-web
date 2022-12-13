@@ -201,7 +201,7 @@ export default {
                         message: 'Our servers are currently busy right now.\n' +
                                  'Retrying in 10',
                         secondsLeft: 10,
-                        timeoutCallback: async() => { await this.launchSimulation() },
+                        timeoutCallback: () => { this.launchSimulation() },
                     })
                 }
             } else {
