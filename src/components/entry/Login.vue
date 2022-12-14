@@ -68,13 +68,22 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
     components: {
         BaseEntry,
     },
-
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {currentMode, parameters} = storeToRefs(dashboard)
+        const {setLiveConfig} = wizard
+        return {currentMode, parameters, setLiveConfig}
+    },
     data() {
         // Initialize all the values that will be used for v-model
         return {
@@ -101,6 +110,12 @@ export default {
         guestLoginLinkText() {
             return this.activeGuestLogin ? 'Return to SIGN IN.' : 'Sign in as a Guest.'
         },
+    },
+    mounted() {
+        window.addEventListener('keydown', this.keyListener)
+    },
+    beforeUnmount() {
+        window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
 
@@ -146,6 +161,19 @@ export default {
             if (loginCorrect) {
                 const params = this.user
                 await this.entryHandler(params, '/login')  // Attempt the route
+            }
+        },
+        toLiveDashboard() {
+            // duplicated in Menu.vue
+            this.currentMode = 'live'  // set 'live' mode
+            this.parameters = {min_step_num: 0}  // create min_step_num parameter
+            this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
+            this.$router.push('dashboard')
+        },
+        keyListener(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault()  // prevent event from propagating to browser
+                this.toLiveDashboard()
             }
         },
 

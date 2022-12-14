@@ -91,6 +91,7 @@ export default {
          *  before the Dashboard components can be rendered.
          */
         toLiveDashboard() {
+            // duplicated in Login.vue
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
             this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
