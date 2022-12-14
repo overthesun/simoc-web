@@ -7,8 +7,9 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div class="dashboard-view-wrapper">
-        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))" :key="index">
+    <div :class="{'dashboard-onepanel': isFullscreen}" class="dashboard-view-wrapper">
+        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
+                   :key="index" :class="fullscreenStatus[index]">
             <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template #panel-menu>
                 <div class="panel-menu">
@@ -18,13 +19,17 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                     </div>
                     <!-- the options menu -->
                     <div v-if="index === visibleMenu" class="panel-menu-options">
-                        <!-- this menu has two steps: first shows the add/change/remove options;
+                        <!-- this menu has two steps: first shows the add/remove/change/resize options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
-                            <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
-                            <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                            <li><button v-if="activePanels.length > 1"
+                            <li><button v-if="!isFullscreen"
+                                        @click="showPanelSelect(index, 0)">Add Panel</button></li>
+                            <li><button v-if="activePanels.length > 1 && !isFullscreen"
                                         @click="removePanel(index)">Remove Panel</button></li>
+                            <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
+                            <li><button @click="resizePanel(index)">
+                                {{isFullscreen?'Minimize panel':'Maximize panel'}}
+                            </button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
@@ -73,6 +78,7 @@ export default {
             // list of default panels; update this to change the initial panels displayed
             activePanels: [],
             panels: panels,  // object mapping all available panel names with their corresponding object
+            fullscreenStatus: [],  // list of CSS classes for each panel's fullscreen status
             visibleMenu: null,  // the index of the visible panel menu, null if no panel menu is open
             visiblePanelSelect: null,  // the index of the visible panel select dropdown
             selectedPanel: null,  // store the name of the panel selected through the dropdown
@@ -90,10 +96,15 @@ export default {
             })
             return sorted.sort()
         },
+
+        isFullscreen() {
+            return this.fullscreenStatus.includes('panel-fullscreen')
+        },
     },
     watch: {
         getActivePanels() {
             this.activePanels = this.getActivePanels
+            this.resetFullscreenStatus()
         },
     },
     beforeMount() {
@@ -107,6 +118,18 @@ export default {
         }
     },
     methods: {
+        resetFullscreenStatus() {
+            this.fullscreenStatus = new Array(this.activePanels.length).fill('')
+        },
+        resizePanel(index) {
+            if (this.fullscreenStatus[index] === 'panel-fullscreen') {
+                this.resetFullscreenStatus()
+            } else {
+                this.fullscreenStatus = new Array(this.activePanels.length).fill('panel-hidden')
+                this.fullscreenStatus[index] = 'panel-fullscreen'
+            }
+            this.closePanelMenu()
+        },
 
         openPanelMenu(index) {
             // open the panel menu at index or close it if it's already open
@@ -171,10 +194,13 @@ export default {
         grid-column-gap: 16px;
         overflow: auto;
     }
+    .dashboard-onepanel {
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+    }
 
     .panel-menu {
         position: relative;
-
     }
     .panel-menu .menu-icon-wrapper {
         text-align: right;
