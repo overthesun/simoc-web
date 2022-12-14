@@ -7,8 +7,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div :class="{'dashboard-onepanel': isFullscreen}"
-         class="dashboard-view-wrapper">
+    <div :class="{'dashboard-onepanel': isFullscreen}" class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
                    :key="index" :class="fullscreenStatus[index]">
             <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
