@@ -20,7 +20,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                     </div>
                     <!-- the options menu -->
                     <div v-if="index === visibleMenu" class="panel-menu-options">
-                        <!-- this menu has two steps: first shows the add/change/remove/resize options;
+                        <!-- this menu has two steps: first shows the add/remove/change/resize options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
                             <li><button v-if="!isFullscreen"

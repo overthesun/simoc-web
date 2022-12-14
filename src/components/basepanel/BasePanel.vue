@@ -77,7 +77,7 @@ export default {
     display: grid;
     /* maybe using a single grid layout for
         title/icon/content would be better */
-    grid-template-columns: 1fr 52px;
+    grid-template-columns: 1fr 26px;
 }
 
 .panel select {

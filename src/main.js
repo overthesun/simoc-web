@@ -4,7 +4,7 @@ import {createPinia} from 'pinia'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
-        faBars, faArrowsAlt, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
+        faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
         faCircleDot, faCirclePlus, faPerson, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import store from './store/index'
@@ -12,7 +12,7 @@ import router from './router'
 import App from './App.vue'
 
 library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
-            faBars, faArrowsAlt, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
+            faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
             faCircleDot, faCirclePlus, faPerson, faTrash)
 
 // Gtag/Analytics tracking
