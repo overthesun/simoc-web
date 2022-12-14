@@ -9,7 +9,7 @@
             <tr v-for="(item, index) in getPlants" :key="index">
                 <td>{{stringFormatter(item.type)}}</td>
                 <td>{{item.amount}}</td>
-                <td>{{getAgentGrowthPerc(index)}}</td>
+                <td>{{getAgentGrowthPerc(item.type)}}</td>
             </tr>
         </table>
     </section>
@@ -18,27 +18,38 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Greenhouse Plant Growth',
-    modes: ['sim'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        const {configuration} = storeToRefs(wizard)
+        return {currentStepBuffer, getData, configuration}
+    },
+    modes: ['sim', 'kiosk'],
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getAgentGrowth', 'getCurrentStepBuffer', 'getAgentType']),
         getPlants() {
             // filter out plants that don't have a type set
-            return this.getConfiguration.plantSpecies.filter(plant => !!plant.type)
+            return this.configuration.plantSpecies.filter(plant => !!plant.type)
         },
     },
     methods: {
         stringFormatter: StringFormatter,
-        getAgentGrowthPerc(index) {
-            const agentGrowth = this.getAgentGrowth(this.getCurrentStepBuffer)
-            if (agentGrowth === undefined) {
+        getAgentGrowthPerc(plant) {
+            const agentGrowth = this.getData(
+                [plant, 'growth', 'growth_rate', this.currentStepBuffer]
+            )
+            if (agentGrowth === undefined || agentGrowth === null) {
                 return '[loading data...]'
             } else {
-                const perc = agentGrowth[this.getConfiguration.plantSpecies[index].type] * 100
+                const perc = agentGrowth * 100
                 return `${perc.toFixed(4)}%`
             }
         },

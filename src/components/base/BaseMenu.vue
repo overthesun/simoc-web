@@ -18,16 +18,21 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {menuActive} = storeToRefs(dashboard)
+        return {menuActive}
+    },
     methods: {
         // TODO this should be moved out of the dashboard store
-        ...mapMutations('dashboard', ['SETMENUACTIVE']),
         closeMenu() {
             // if the other menus want to perform additional
             // actions they can use beforeDestroy
-            this.SETMENUACTIVE(false)
+            this.menuActive = false
         },
     },
 }

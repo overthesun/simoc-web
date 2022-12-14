@@ -2,7 +2,7 @@
     <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
-        <ConfigurationMenu v-if="getMenuActive" />
+        <ConfigurationMenu v-if="menuActive" />
         <router-view v-slot="{Component}">
             <component :is="Component">
                 <!-- Wizard Jump Options, only available in Guided Configuration -->
@@ -56,7 +56,7 @@
                 <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
                     <keep-alive>
-                        <component :is="getActiveReference" />
+                        <component :is="activeReference" />
                     </keep-alive>
                     <!--<Reference/>-->
                     <!--<GreenhouseDoughnut/>-->
@@ -70,11 +70,15 @@
 
 <script>
 import axios from 'axios'
+import {storeToRefs} from 'pinia'
 // import form components
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../store/modules/DashboardStore'
+import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+import {idleMixin} from '../javascript/mixins'
 
 export default {
     components: {
@@ -89,6 +93,28 @@ export default {
         Graphs,
         Layout,
     },
+    mixins: [idleMixin],
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
+        } = storeToRefs(dashboard)
+        const {setGameParams, setSimulationData} = dashboard
+        const {
+            configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
+            activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
+            getPresets, simdataLocation,
+        } = storeToRefs(wizard)
+        const {resetConfigDefault, setConfiguration} = wizard
+        return {
+            menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
+            setGameParams, setSimulationData, configuration, getFormattedConfiguration,
+            activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
+            activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
+            setConfiguration,
+        }
+    },
     data() {
         return {
             formIndex: 0, // Current index of the form that should be used from the wizard store
@@ -98,7 +124,6 @@ export default {
             validating: false,
             // true while waiting for a response after clicking on "Launch Simulation"
             awaiting_response: false,
-            menuActive: false, // Used with class binding to display the menu.
             stepMax: 1,
             greenhouseSize: {
                 none: 0,
@@ -109,16 +134,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getStepParams']),
-        ...mapGetters('wizard', ['getConfiguration', 'getFormattedConfiguration',
-                                 'getActiveConfigType', 'getActiveForm',
-                                 'getFormLength', 'getTotalMissionHours',
-                                 'getActiveReference', 'getActiveRefEntry',
-                                 'getPresets', 'getSimdataLocation']),
-
         // Used to hide the normal button and display the active button
         isFinalForm() {
-            return (this.getFormLength-1) === this.formIndex
+            return (this.formOrder.length-1) === this.formIndex
         },
         // Hides the prvevious button if the active form is the first one.
         isFirstForm() {
@@ -137,22 +155,18 @@ export default {
         // Mostly used for when either the buttons or the select menu or used to navigate
         formIndex: {
             handler() {
-                this.SETACTIVEFORMINDEX(this.formIndex)
+                this.activeFormIndex = this.formIndex
                 this.activeForm = this.getActiveForm
             },
         },
     },
     beforeMount() {
-        this.RESETCONFIG()
+        this.resetConfigDefault()
+        this.menuActive = false
         this.activeForm = this.getActiveForm
-        this.activeConfigType = this.getActiveConfigType
     },
     methods: {
-        ...mapMutations('wizard', ['RESETCONFIG', 'SETACTIVEFORMINDEX']),
-        ...mapMutations('dashboard', ['SETGAMEPARAMS', 'SETSIMULATIONDATA',
-                                      'SETLOADFROMSIMDATA', 'SETBUFFERMAX', 'SETCURRENTMODE']),
         ...mapMutations(['SETGAMEID']),
-        ...mapActions('wizard', ['SETCONFIGURATION']),
         ...mapActions('modal', ['alert']),
 
         toggleMenu() {
@@ -172,11 +186,13 @@ export default {
         },
 
         incrementIndex() {
-            const max = this.getFormLength-1
+            const max = this.formOrder.length-1
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
         handleAxiosError(error) {
+            const errmsg = error.response.data.message || error.message
+            this.$gtag.exception({description: `Launch simulation: ${errmsg}`})
             console.error(error)
             if (error.response && error.response.status === 401) {
                 this.alert('Please log in again to continue.')
@@ -200,7 +216,7 @@ export default {
                 // imported dynamically and lazily and that they shoultn't be bundled
                 // (note: template strings don't work here, so add a linter exception)
                 // eslint-disable-next-line prefer-template
-                const simdata = await import('../assets/simdata/' + fname + '.json')
+                const simdata = await import(`../assets/simdata/${fname}.json`)
                 return simdata.default  // get the actual data out of the module object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
@@ -228,23 +244,25 @@ export default {
             // 10ms seem to be enough to give time to Vue to see the change
             // but it's not 100% reliable.  I couldn't find a way to make
             // it work reliably with await this.$nextTick()
+            // eslint-disable-next-line no-promise-executor-return
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset
             const presets = this.getPresets
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const simdata = await this.importPresetData(presets[preset_name])
+                const data = await this.importPresetData(presets[preset_name])
                 // Get currency_desc from backend
                 const response = await axios.get('/get_currency_desc')
                 const {currency_desc} = response.data
-                if (simdata) {
+                if (data) {
                     try {
-                        this.SETCONFIGURATION(simdata.configuration)
-                        this.SETSIMULATIONDATA({simdata, currency_desc})
-                        this.SETBUFFERMAX(simdata.steps)
-                        this.SETCURRENTMODE('sim')
-                        this.SETLOADFROMSIMDATA(true)
+                        const {configuration, ...simdata} = data
+                        this.setConfiguration(configuration)
+                        this.setSimulationData({simdata, currency_desc})
+                        this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                        this.isLive = false
+                        this.loadFromSimData = true
                         this.$router.push('dashboard')
                         return  // nothing else to do if this worked
                     } catch (error) {
@@ -272,12 +290,13 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.SETGAMEID(response.data.game_id)
-                this.SETGAMEPARAMS({
+                this.setGameParams({
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.SETCURRENTMODE('sim')
-                this.SETLOADFROMSIMDATA(false)
+                this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                this.isLive = false
+                this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
             } catch (error) {

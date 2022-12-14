@@ -8,13 +8,18 @@ RUN apt-get update && \
     python3-setuptools \
     curl \
     wget \
-    inetutils-ping \
-    npm
+    inetutils-ping
+
+# Install latest LTS version of Node as Node version included with 22.04 is outdated
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs && \
+    npm install --no-fund --no-audit -g npm@latest
+
+# workaround to prevent node/vite crashes during the build step
+# see https://github.com/vitejs/vite/issues/2433#issuecomment-831399876
+# assume 8GB - 512MB
+ENV NODE_OPTIONS='--max-old-space-size=7680'
 
 WORKDIR /frontend
-
-# COPY . ./
-# RUN npm install --global
 
 EXPOSE 8080
 
@@ -38,6 +43,8 @@ CMD ["run.sh"]
 #
 # Run the container using:
 #   docker run --rm --network simoc_simoc-net -p 8080:8080 -v `pwd`:/frontend -it frontend-dev
+#
+# Omit the --network arg if you don't need to connect to the backend.
 
 
 # To automatically run the frontend the dockerfile can be changed to:

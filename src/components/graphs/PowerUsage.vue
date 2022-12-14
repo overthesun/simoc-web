@@ -9,10 +9,17 @@ import axios from 'axios'
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     props: {
         id: {type: String, required: true},
+    },
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration} = storeToRefs(wizard)
+        return {configuration}
     },
     data() {
         return {
@@ -36,25 +43,24 @@ export default {
     },
 
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
 
         crewQuarters() {
-            return this.getConfiguration.crewQuarters
+            return this.configuration.crewQuarters
         },
         eclss() {
-            return this.getConfiguration.eclss
+            return this.configuration.eclss
         },
         powerGenerator() {
-            return this.getConfiguration.powerGeneration
+            return this.configuration.powerGeneration
         },
         powerStorage() {
-            return this.getConfiguration.powerStorage
+            return this.configuration.powerStorage
         },
         greenhouse() {
-            return this.getConfiguration.greenhouse
+            return this.configuration.greenhouse
         },
         plantSpecies() {
-            return this.getConfiguration.plantSpecies
+            return this.configuration.plantSpecies
         },
     },
 
@@ -197,9 +203,9 @@ export default {
 
     methods: {
         // TODO request all data as a single json, do math client-side
-        retrievePower(agent, amount=1, callback) {
+        retrievePower(agent, amount, callback) {
             axios.defaults.withCredentials = true
-            const params = {agent_name: agent, quantity: amount}
+            const params = {agent_name: agent, quantity: amount ?? 1}
             return axios.get('/get_energy', {params})
                     .then(response => {
                         if (response.status === 200) {

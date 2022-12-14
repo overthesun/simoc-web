@@ -3,8 +3,8 @@
 <template>
     <div class="ace-wrapper">
         <TheTopBar />
-        <!-- Show the ACE menu component when getMenuActive is true. -->
-        <AceMenu v-if="getMenuActive" />
+        <!-- Show the ACE menu component when menuActive is true. -->
+        <AceMenu v-if="menuActive" />
 
         <div class="ace-container">
             <header>AGENT EDITOR</header>
@@ -24,6 +24,8 @@
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../store/modules/DashboardStore'
 import {TheTopBar} from '../components/bars'
 import {AceMenu, AceEditor, AceNavigation} from '../components/ace'
 
@@ -34,8 +36,10 @@ export default {
         AceEditor: AceEditor,
         AceNavigation: AceNavigation,
     },
-    computed: {
-        ...mapGetters('dashboard', ['getMenuActive']),
+    setup() {
+        const dashboard = useDashboardStore()
+        const {menuActive} = storeToRefs(dashboard)
+        return {menuActive}
     },
     async created() {
         axios.defaults.withCredentials = true

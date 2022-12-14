@@ -15,12 +15,13 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {VersusGraph} from '../graphs'
 
 export default {
     panelTitle: 'Production / Consumption',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     components: {
         VersusGraph,
     },
@@ -32,6 +33,11 @@ export default {
         panelSection: {type: String, default: null},
     },
     emits: ['panel-section-changed'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const {activePanels} = storeToRefs(dashboard)
+        return {activePanels}
+    },
     data() {
         return {
             // default on 'co2' if we don't get anything
@@ -45,18 +51,15 @@ export default {
             },
         }
     },
-    computed: {
-        ...mapGetters('dashboard', ['getActivePanels']),
-    },
     watch: {
         currency() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, this.currency)
         },
-        getActivePanels() {
+        activePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
-            this.currency = this.getActivePanels[this.panelIndex].split(':')[1]
+            this.currency = this.activePanels[this.panelIndex].split(':')[1]
         },
     },
 }

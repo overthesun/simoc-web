@@ -8,18 +8,25 @@
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     props: {
         id: {type: String, required: true},
     },
-
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration} = storeToRefs(wizard)
+        return {configuration}
+    },
     data() {
         return {
             greenhouseSizes: {
                 greenhouse_small: 490,
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
+                greenhouse_sam: 272,
             },
             // colors used for the plants in the graphs
             colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',
@@ -29,13 +36,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-
         plantSpecies() {
-            return this.getConfiguration.plantSpecies
+            return this.configuration.plantSpecies
         },
         greenhouseSize() {
-            return this.greenhouseSizes[this.getConfiguration.greenhouse.type]
+            return this.greenhouseSizes[this.configuration.greenhouse.type]
         },
     },
 

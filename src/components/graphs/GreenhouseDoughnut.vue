@@ -16,11 +16,21 @@ See chart.js documentation for more details.
 import Chart from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     props: {
         id: {type: String, required: true},
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {configuration} = storeToRefs(wizard)
+        return {currentStepBuffer, configuration}
     },
     data() {
         return {
@@ -44,9 +54,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getCurrentStepBuffer']),
-
 
         /*
         No longer used
@@ -75,15 +82,15 @@ export default {
         }*/
     },
     watch: {
-        // Watches for changes in getCurrentStepBuffer within the
+        // Watches for changes in currentStepBuffer within the
         // dashboard store to update the graph in the dashboard
-        getCurrentStepBuffer() {
+        currentStepBuffer() {
             this.updateChart()
         },
 
-        // Watches for changes within the getConfiguration object within
+        // Watches for changes within the configuration object within
         // the wizard store to update the graph in the config wizard
-        getConfiguration: {
+        configuration: {
             handler() {
                 this.updateChart()
             },
@@ -159,7 +166,7 @@ export default {
 
         greenhouseConfiguration() {
             // get the plants and greenhouse from the configuration
-            const {greenhouse, plantSpecies} = this.getConfiguration
+            const {greenhouse, plantSpecies} = this.configuration
             // Set the first value of the dataset to the size of the greenhouse
             // and add the label free space
             const values = {data: [this.greenhouseSize[greenhouse.type]], labels: ['Free Space']}
@@ -174,7 +181,7 @@ export default {
             return values
         },
         updateChart() {
-            const {greenhouse} = this.getConfiguration
+            const {greenhouse} = this.configuration
             const {data, labels} = this.greenhouseConfiguration()
             this.chart.data.labels = labels  // labels are always visible
             let text

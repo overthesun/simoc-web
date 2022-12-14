@@ -7,13 +7,17 @@ use some of these features.
         <template #menu-title>
             Dashboard Menu
         </template>
-        <template #menu-buttons>
+        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
-            <button @click="stopSimulation">Stop Simulation</button>
+            <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
             <button class="btn-warning btn-logout" @click="logout">Log Out</button>
+        </template>
+        <template v-else #menu-buttons>
+            <button @click="toConfiguration">New Mission</button>
+            <button @click="toEntry">To Welcome Screen</button>
         </template>
     </BaseMenu>
 </template>
@@ -22,11 +26,32 @@ use some of these features.
 <script>
 import axios from 'axios'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseMenu} from '../base'
 
 export default {
     components: {
         BaseMenu,
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {
+            isTimerRunning, activePanels, gameCurrencies, currentMode,
+            menuActive, leaveWithoutConfirmation,
+        } = storeToRefs(dashboard)
+        const {
+            getSimulationData, setStopped, startTimer, pauseTimer,
+            setDefaultPanels,
+        } = dashboard
+        const {configuration, activeConfigType} = storeToRefs(wizard)
+        return {
+            isTimerRunning, activePanels, gameCurrencies, currentMode,
+            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped,
+            startTimer, pauseTimer, setDefaultPanels, configuration, activeConfigType,
+        }
     },
     data() {
         return {
@@ -34,41 +59,35 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getActivePanels', 'getSimulationData',
-                                    'getGameCurrencies', 'getCurrentMode']),
         ...mapGetters(['getGameID']),
     },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
-        this.timerWasRunning = this.getIsTimerRunning
-        this.PAUSETIMER()
+        this.timerWasRunning = this.isTimerRunning
+        this.pauseTimer()
     },
     // Called when the menu is closed, resumes the timer if it was running
     beforeUnmount() {
         if (this.timerWasRunning) {
-            this.STARTTIMER()
+            this.startTimer()
         }
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVECONFIGTYPE']),
-        ...mapMutations('dashboard', ['SETMENUACTIVE', 'SETSTOPPED', 'STARTTIMER', 'PAUSETIMER',
-                                      'SETDEFAULTPANELS', 'SETLEAVEWITHOUTCONFIRMATION']),
         ...mapActions('modal', ['confirm']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
-            this.PAUSETIMER()  // pause the step timer
+            this.pauseTimer()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
-            this.SETSTOPPED(true)  // this will call DashboardView.stopSimulation
+            this.setStopped(true)  // this will call DashboardView.stopSimulation
         },
         // Download Simulation button
         downloadSimData() {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
             const simdata = this.getSimulationData
-            simdata.configuration = this.getConfiguration
-            simdata.currency_desc = this.getGameCurrencies
+            simdata.configuration = this.configuration
+            simdata.currency_desc = this.gameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})
@@ -80,13 +99,15 @@ export default {
         },
         // Save Panels Layout button
         savePanelsLayout() {
-            const panelsLayout = JSON.stringify(this.getActivePanels)
-            localStorage.setItem('panels-layout', panelsLayout)
+            const panelsLayout = JSON.stringify(this.activePanels)
+            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            localStorage.setItem(`panels-layout-${layout}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            localStorage.removeItem('panels-layout')
-            this.SETDEFAULTPANELS(this.getCurrentMode)
+            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            localStorage.removeItem(`panels-layout-${layout}`)
+            this.setDefaultPanels(this.currentMode)
         },
         // Logout button route
         async logout() {
@@ -100,7 +121,7 @@ export default {
                         console.log(error)
                     }
                     // the user already confirmed, don't ask twice
-                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
                     this.$router.push('entry')
                 },
@@ -115,14 +136,23 @@ export default {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
                     // menuconfig is currently skipped, we default on Custom config
                     // this.$router.push("menuconfig")
-                    this.SETACTIVECONFIGTYPE('Custom')
+                    this.activeConfigType = 'Custom'
 
                     // the user already confirmed, don't ask twice
-                    this.SETLEAVEWITHOUTCONFIRMATION(true)
+                    this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
-                    this.$router.push('menu')
+                    if (this.currentMode !== 'kiosk') {
+                        this.$router.push('menu')
+                    } else {
+                        this.$router.push('configuration')
+                    }
                 },
             })
+        },
+
+        // To Welcome Screen button
+        toEntry() {
+            this.$router.push('/')
         },
     },
 }

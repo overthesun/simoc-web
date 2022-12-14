@@ -1,7 +1,7 @@
 <!--
 Energy versus chart component used within the dashboard.
 
-Updates values from the approriate step data getters when the getCurrentStepBuffer value changes.
+Updates values from the approriate step data getters when the currentStepBuffer value changes.
 
 See chart.js documentation for further details on the related mounted functions.
 -->
@@ -12,7 +12,9 @@ See chart.js documentation for further details on the related mounted functions.
 
 <script>
 import Chart from 'chart.js'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     props: {
@@ -20,21 +22,24 @@ export default {
         plottedValue: {type: String, required: true},
         unit: {type: String, required: true},
     },
+    setup() {
+        const dashboard = useDashboardStore()
+        const {
+            isTimerRunning, currentStepBuffer, maxStepBuffer,
+        } = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {isTimerRunning, currentStepBuffer, maxStepBuffer, getData}
+    },
     data() {
         return {
             prevStep: 0,
         }
     },
 
-    computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning', 'getCurrentStepBuffer', 'getMaxStepBuffer',
-                                    'getTotalProduction', 'getTotalConsumption']),
-    },
-
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
-        getCurrentStepBuffer() {
+        currentStepBuffer() {
             this.updateChart()
         },
         // re-init the chart when we plot something else
@@ -86,7 +91,10 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: (value, index, values) => `${value} ${this.unit}`,
+                                callback: (value, index, values) => {
+                                    const val = value > 0 ? value : value.toPrecision(2)
+                                    return `${val} ${this.unit}`
+                                },
                             },
                         }],
                         xAxes: [{
@@ -122,7 +130,7 @@ export default {
             this.updateChart()
         },
         updateChart() {
-            const currentStep = this.getCurrentStepBuffer
+            const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
             // we need to redraw the previous 24 steps, otherwise we just add one step
@@ -139,8 +147,10 @@ export default {
                 data.datasets[1].data.shift()
                 data.labels.shift()
                 if (step > 0) {
-                    const production = this.getTotalProduction(step)[this.plottedValue].value
-                    const consumption = this.getTotalConsumption(step)[this.plottedValue].value
+                    const productionPath = ['SUM', 'flows', 'out', this.plottedValue, 'SUM', step]
+                    const consumptionPath = ['SUM', 'flows', 'in', this.plottedValue, 'SUM', step]
+                    const production = this.getData(productionPath)
+                    const consumption = this.getData(consumptionPath)
                     // add the new values
                     data.datasets[0].data.push(production)
                     data.datasets[1].data.push(consumption)

@@ -2,36 +2,46 @@
 
 <template>
     <div id="dashboard-play-icon">
-        <span v-if="getIsTimerRunning" title="Pause" @click="pauseTimer">
-            <fa-icon :icon="['fas','pause']" class="fa-icon" />
+        <span v-if="isTimerRunning" title="Pause" @click="pauseTimerHandler()">
+            <fa-icon :icon="['fa-solid','pause']" class="fa-icon" />
         </span>
-        <span v-else title="Play" @click="resumeTimer">
-            <fa-icon :icon="['fas','play']" class="fa-icon" />
+        <span v-else title="Play" @click="startTimerHandler()">
+            <fa-icon :icon="['fa-solid','play']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
-    data() {
-        return {
-
-        }
-    },
-    computed: {
-        ...mapGetters('dashboard', ['getIsTimerRunning']),
+    setup() {
+        const dashboard = useDashboardStore()
+        const {isTimerRunning, currentMode, isLive} = storeToRefs(dashboard)
+        const {pauseTimer, startTimer, setStepInterval} = dashboard
+        return {isTimerRunning, currentMode, isLive, pauseTimer, startTimer,
+                setStepInterval}
     },
     methods: {
-        ...mapMutations('dashboard', ['STARTTIMER', 'PAUSETIMER']),
-        pauseTimer() {
+        pauseTimerHandler() {
+            // If the user selects pause while in the live Dashboard, the Dashboard is no
+            // longer showing live data thus isLive is set to false in the dashboard store.
+            if (this.currentMode === 'live') {
+                this.isLive = false
+            }
             // pause the timer when the user clicks on the pause button
-            this.PAUSETIMER()
+            this.pauseTimer()
         },
-        resumeTimer() {
+        startTimerHandler() {
+            // If the user selects play while in the live Dashboard, the stepInterval is
+            // set using the dashboard store mutator SETSTEPINTERVAL to increment the scrubber
+            // at 1000 ms.
+            if (this.currentMode === 'live') {
+                this.setStepInterval(1000)
+            }
             // start/resume the timer when the user clicks on the play button
-            this.STARTTIMER()
+            this.startTimer()
         },
     },
 }

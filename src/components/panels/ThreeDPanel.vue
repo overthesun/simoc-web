@@ -1,19 +1,22 @@
 <template>
-    <World :game-config="getConfiguration" :is-active="true" />
+    <World :game-config="configuration" :is-active="true" />
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import World from '../../threejs/World'
+import {storeToRefs} from 'pinia'
+import World from '@/threejs/World.vue'
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     panelTitle: 'Habitat View',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     components: {
         World: World,
     },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration} = storeToRefs(wizard)
+        return {configuration}
     },
 }
 </script>

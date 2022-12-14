@@ -23,6 +23,9 @@ to activate and populate it.
                         {{button.text}}
                     </button>
                 </div>
+                <p v-if="getModalParams.type === 'timeout'" id="modal-time">
+                    {{getSecondsLeft > 0 ? `${getSecondsLeft} second(s) left` : "Mission terminated."}}
+                </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
                     <Survey :cleanup="cleanup" />
@@ -34,7 +37,7 @@ to activate and populate it.
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
-import Survey from './Survey'
+import Survey from './Survey.vue'
 
 export default {
     components: {
@@ -47,7 +50,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalParams']),
+        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getSecondsLeft']),
     },
     watch: {
         // Watch params in store/modal, use to show/hide the menu and determine layout
@@ -59,12 +62,17 @@ export default {
                 }
                 // If modal is active, let it finish the cleanup() cycle before creating the new one
                 this.$nextTick(() => setModal(updatedParams))
+
+                if (this.getModalParams.type === 'timeout') {
+                    this.STARTCOUNTDOWNTIMER()
+                }
             },
             deep: true,
         },
     },
     methods: {
-        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS',
+                                  'STARTCOUNTDOWNTIMER']),
 
         async handleClick(callback) {
             callback()
@@ -96,6 +104,7 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 500;
 }
 
 #menu-wrapper {
@@ -153,6 +162,10 @@ Styling is *not* scoped, so that Survey can use the menu-button css.
         transition: width .2s ease;
         width: 100%;
     }
+}
+
+#modal-message {
+    white-space: pre-wrap;
 }
 
 #menu-content {

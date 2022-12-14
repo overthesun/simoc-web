@@ -16,7 +16,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 <div class="panel-menu">
                     <!-- the menu icon, shows the options menu when clicked -->
                     <div class="menu-icon-wrapper" @click="openPanelMenu(index)">
-                        <fa-icon :icon="['fas','bars']" class="fa-icon menu-icon" />
+                        <fa-icon :icon="['fa-solid','bars']" class="fa-icon menu-icon" />
                     </div>
                     <!-- the options menu -->
                     <div v-if="index === visibleMenu" class="panel-menu-options">
@@ -51,7 +51,10 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 </template>
 
 <script>
+import {storeToRefs} from 'pinia'
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
 
@@ -59,6 +62,14 @@ export default {
     components: {
         BasePanel,
         ...panels,  // add all panels as components
+    },
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {currentMode, activePanels} = storeToRefs(dashboard)
+        const {setDefaultPanels} = dashboard
+        const {configuration} = storeToRefs(wizard)
+        return {currentMode, setDefaultPanels, getActivePanels: activePanels, configuration}
     },
     data() {
         return {
@@ -73,13 +84,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('wizard', ['getConfiguration']),
-        ...mapGetters('dashboard', ['getActivePanels', 'getCurrentMode']),
         sortedPanels() {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                if (panel.modes.includes(this.getCurrentMode)) {
+                if (panel.modes.includes(this.currentMode)) {
                     sorted.push([panel.panelTitle, panelName])
                 }
             })
@@ -94,15 +103,15 @@ export default {
     },
     beforeMount() {
         // load saved panels from local storage or use default layout
-        const savedPanels = localStorage.getItem('panels-layout')
+        const layout = this.currentMode === 'live' ? 'live' : 'sim'
+        const savedPanels = localStorage.getItem(`panels-layout-${layout}`)
         if (savedPanels) {
-            this.SETACTIVEPANELS(JSON.parse(savedPanels))
+            this.activePanels = JSON.parse(savedPanels)
         } else {
-            this.SETDEFAULTPANELS(this.getCurrentMode)
+            this.setDefaultPanels(this.currentMode)
         }
     },
     methods: {
-        ...mapMutations('dashboard', ['SETACTIVEPANELS', 'SETDEFAULTPANELS']),
 
         resetFullscreenStatus() {
             this.fullscreenStatus = new Array(this.activePanels.length).fill('')
@@ -143,19 +152,19 @@ export default {
             // replace or add the selected panel
             const panelName = this.selectedPanel
             this.activePanels.splice(replace?index:index+1, replace, panelName)
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
             this.closePanelMenu()
         },
         updatePanelSection(index, section) {
             // update the section of the panel at index
             const panelName = this.activePanels[index].split(':')[0]
             this.activePanels[index] = [panelName, section].join(':')
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
         },
         removePanel(index) {
             // remove the selected panel
             this.activePanels.splice(index, 1)
-            this.SETACTIVEPANELS(this.activePanels)
+            this.getActivePanels = this.activePanels
             this.closePanelMenu()
         },
     },

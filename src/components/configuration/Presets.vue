@@ -1,5 +1,5 @@
 <!-- This particular component has one job and that is to populate and create the PRESETS field at the top of the finalization screen. This would also be at the
-top of the custom (finalized screen only) configuration screen too. Selecting one of these will trigger the getConfiguration watcher in all configuration form components.
+top of the custom (finalized screen only) configuration screen too. Selecting one of these will trigger the configuration watcher in all configuration form components.
 
 Presets should really be stored within the database and retrieved similar to that of the plant names.
 
@@ -11,8 +11,8 @@ Future version should also automatically switch the selected preset to 'custom' 
 <template>
     <form class="form-wrapper form-presets" @submit.prevent="">
         <label class="input-wrapper">
-            <div class="input-title" @click="SETACTIVEREFENTRY('Presets')">
-                Presets <fa-icon :icon="['fas','info-circle']" />
+            <div class="input-title" @click="setActiveRefEntry('Presets')">
+                Presets <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div>
@@ -35,10 +35,25 @@ Future version should also automatically switch the selected preset to 'custom' 
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useWizardStore} from '../../store/modules/WizardStore'
+
 // global constants used to mark the empty and custom presets
 const EMPTY = 'empty'
 const CUSTOM = 'custom'
 export default {
+    setup() {
+        const wizard = useWizardStore()
+        const {configuration, resetConfig, getPresets} = storeToRefs(wizard)
+        const {
+            setActiveRefEntry, resetConfigDefault,
+            setConfiguration, setPreset,
+        } = wizard
+        return {
+            configuration, resetConfig, getPresets, setActiveRefEntry,
+            resetConfigDefault, setConfiguration, setPreset,
+        }
+    },
     data() {
         return {
             // copied constants to access them in html template
@@ -50,24 +65,21 @@ export default {
             dont_set_custom: false,  // when true, avoids setting the custom preset
         }
     },
-    computed: {
-        ...mapGetters('wizard', ['getConfiguration', 'getResetConfig', 'getPresets']),
-    },
     watch: {
-        getResetConfig() {
+        resetConfig() {
             // someone changed the resetconfig var, so we have to reset the form
-            if (!this.getResetConfig) {
+            if (!this.resetConfig) {
                 return  // only reset it when it's true
             }
             // avoid changing the selected preset to custom
             this.dont_set_custom = true
             // reset the config to the empty preset
             this.selected = EMPTY
-            this.RESETCONFIG()
+            this.resetConfigDefault()
             // restore the var to false
-            this.SETRESETCONFIG(false)
+            this.resetConfig = false
         },
-        getConfiguration: {
+        configuration: {
             handler() {
                 // Triggered when the configuration changed.
                 // This happens either when the user selected a new preset
@@ -84,8 +96,6 @@ export default {
         },
     },
     methods: {
-        ...mapMutations('wizard', ['SETACTIVEREFENTRY', 'SETRESETCONFIG', 'RESETCONFIG']),
-        ...mapActions('wizard', ['SETCONFIGURATION', 'SETPRESET']),
         ...mapActions('modal', ['alert', 'confirm']),
 
         updateConfig(name) {
@@ -94,7 +104,7 @@ export default {
             if (name === CUSTOM) {
                 this.loadFromLocalStorage()
             } else {
-                this.SETPRESET(name)
+                this.setPreset(name)
             }
         },
         saveToLocalStorage() {
@@ -103,7 +113,7 @@ export default {
                 message: 'Save the current configuration as a custom preset?',
                 confirmCallback: () => {
                     try {
-                        const config = JSON.stringify(this.getConfiguration)
+                        const config = JSON.stringify(this.configuration)
                         localStorage.setItem('custom-config', config)
                         this.alert('Custom preset saved.')
                     } catch (e) {
@@ -119,7 +129,7 @@ export default {
             const loadPreset = () => {
                 const config = localStorage.getItem('custom-config')
                 if (config) {
-                    this.SETCONFIGURATION(JSON.parse(config))
+                    this.setConfiguration(JSON.parse(config))
                 } else {
                     this.alert('No Custom preset found. Use the Save button to save one.')
                 }

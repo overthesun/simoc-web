@@ -10,44 +10,44 @@
             <dt v-if="getGameID">Mission ID:</dt>
             <dd v-if="getGameID">{{getGameID}}</dd>
             <dt>Location:</dt>
-            <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dd>{{stringFormatter(configuration.location)}}</dd>
             <dt>Duration:</dt>
-            <dd>{{getCurrentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+            <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
             <dt>Mars days:</dt>
-            <dd>{{calcSols(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcSols(currentStepBuffer-1)}}</dd>
             <dt>Earth days:</dt>
-            <dd>{{calcDays(getCurrentStepBuffer-1)}}</dd>
+            <dd>{{calcDays(currentStepBuffer-1)}}</dd>
             <dt>Inhabitants:</dt>
-            <dd>{{humanCount()}}/{{getConfiguration.humans.amount}}</dd>
+            <dd>{{humanCount()}}/{{configuration.humans.amount}}</dd>
             <!-- TODO: restore this when we get the value from the backend
             <dt>Food:</dt>
-                <dd>{{getConfiguration.food.amount}}/{{getConfiguration.food.amount}}</dd>-->
+                <dd>{{configuration.food.amount}}/{{configuration.food.amount}}</dd>-->
         </dl>
 
         <dl v-if="info_section == 'mission-config'">
             <dt>Location:</dt>
             <dd>Mars</dd>
             <dt>Duration:</dt>
-            <dd>{{getConfiguration.duration.amount}} {{stringFormatter(getConfiguration.duration.units)}}</dd>
+            <dd>{{configuration.duration.amount}} {{stringFormatter(configuration.duration.units)}}</dd>
             <dt>Food:</dt>
-            <dd>{{getConfiguration.food.amount}} {{getConfiguration.food.units}}</dd>
+            <dd>{{configuration.food.amount}} {{configuration.food.units}}</dd>
             <dt>Crew Quarters:</dt>
-            <dd>{{stringFormatter(getConfiguration.crewQuarters.type).split(' ').pop()}}</dd>
+            <dd>{{stringFormatter(configuration.crewQuarters.type).split(' ').pop()}}</dd>
             <dt>Greenhouse:</dt>
-            <dd>{{stringFormatter(getConfiguration.greenhouse.type).split(' ').pop()}}</dd>
+            <dd>{{stringFormatter(configuration.greenhouse.type).split(' ').pop()}}</dd>
             <dt>Solar PV Array:</dt>
-            <dd>{{getConfiguration.powerGeneration.amount}} panels</dd>
+            <dd>{{configuration.powerGeneration.amount}} panels</dd>
             <dt>Batteries:</dt>
-            <dd>{{getConfiguration.powerStorage.amount}} {{getConfiguration.powerStorage.units}}</dd>
+            <dd>{{configuration.powerStorage.amount}} {{configuration.powerStorage.units}}</dd>
             <dt>ECLSS:</dt>
-            <dd>{{getConfiguration.eclss.amount}}</dd>
+            <dd>{{configuration.eclss.amount}}</dd>
             <dt>Inhabitants:</dt>
-            <dd>{{getConfiguration.humans.amount}}</dd>
+            <dd>{{configuration.humans.amount}}</dd>
         </dl>
 
         <dl v-if="info_section == 'location-info'">
             <dt>Location:</dt>
-            <dd>{{stringFormatter(getConfiguration.location)}}</dd>
+            <dd>{{stringFormatter(configuration.location)}}</dd>
             <dt>Day length:</dt>
             <dd>24h 37m 23s</dd>
             <dt>Surface Temperature:</dt>
@@ -66,11 +66,22 @@
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Mission Information',
-    modes: ['sim'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
+        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
+        return {currentStepBuffer, getData, configuration, getTotalMissionHours}
+    },
+    modes: ['sim', 'kiosk'],
     data() {
         return {
             info_section: 'mission-status',
@@ -78,18 +89,18 @@ export default {
     },
     computed: {
         ...mapGetters(['getGameID']),
-        ...mapGetters('wizard', ['getConfiguration', 'getTotalMissionHours']),
-        ...mapGetters('dashboard', ['getAgentType', 'getCurrentStepBuffer']),
     },
     methods: {
         stringFormatter: StringFormatter,
         humanCount() {
-            const agents = this.getAgentType(this.getCurrentStepBuffer)
-            if (agents !== undefined && agents.human_agent !== undefined) {
-                return agents.human_agent
+            const agents = this.getData(
+                ['human_agent', 'amount', this.currentStepBuffer]
+            )
+            if (agents !== undefined && agents !== null) {
+                return agents
             } else {
                 // if we don't know the humans count, return the initial value
-                return this.getConfiguration.humans.amount
+                return this.configuration.humans.amount
             }
         },
         calcDays(totalHours) {

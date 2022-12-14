@@ -4,19 +4,24 @@
     <div id="speed-controls">
         <!-- Looks like: - 1x + -->
         <span class="icon-wrapper" title="Decrease speed" @click="changeSpeed(-1)">
-            <fa-icon :icon="['fas','minus']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','minus']" class="fa-icon" />
         </span>
         <span title="Current speed">{{speeds[speedIndex]}}x</span>
         <span class="icon-wrapper" title="Increase speed" @click="changeSpeed(+1)">
-            <fa-icon :icon="['fas','plus']" class="fa-icon" />
+            <fa-icon :icon="['fa-solid','plus']" class="fa-icon" />
         </span>
     </div>
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {setStepInterval} = dashboard
+        return {setStepInterval}
+    },
     data() {
         return {
             speeds: [0.25, 0.5, 1, 2, 4, 8],  // available speeds
@@ -46,13 +51,12 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('dashboard', ['SETSTEPINTERVAL']),
         changeSpeed(offset) {
             // Change the speed of the step timer.
             // offset can be -1 or +1 to use the previous/next speed in the array
             this.speedIndex = Math.max(0, Math.min(this.speeds.length-1, this.speedIndex+offset))
             // if the speed is e.g. 4x, the interval must be 250ms
-            this.SETSTEPINTERVAL(1 / this.speeds[this.speedIndex] * 1000)
+            this.setStepInterval(1 / this.speeds[this.speedIndex] * 1000)
         },
     },
 }

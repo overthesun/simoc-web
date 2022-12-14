@@ -4,13 +4,14 @@ future dashboard views
 
 <template>
     <div id="dashboard-wrapper">
-        <!-- Show the dashboard menu component when getMenuActive is true. -->
-        <DashboardMenu v-if="getMenuActive" />
+        <!-- Show the dashboard menu component when menuActive is true. -->
+        <DashboardMenu v-if="menuActive" />
         <TheTopBar />
         <section class="main-wrapper">
-            <Main />
+            <Dashboard />
         </section>
         <section id="footer-wrapper">
+            <LiveButton v-if="currentMode === 'live'" />
             <PlayButton />
             <Timeline />
             <StepControls />
@@ -21,44 +22,28 @@ future dashboard views
 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import {Timeline, PlayButton, StepControls,
-        SpeedControls, Main, DashboardMenu} from '../dashboard'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {Timeline, LiveButton, PlayButton, StepControls,
+        SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
 
 export default {
     components: {
         TheTopBar,
         DashboardMenu,
+        LiveButton,
         PlayButton,
         Timeline,
         StepControls,
         SpeedControls,
-        Main,
+        Dashboard,
     },
-    beforeRouteLeave(to, from, next) {
-        // Triggered when leaving the dashboard to go to another page.
-        // This might happen when the user starts a new sim or logs off,
-        // but also when clicking on the browser back button.
-        // Cases where the user closes the tab or refreshes are handled
-        // in DashboardView.
-        if (this.getLeaveWithoutConfirmation) {
-            this.SETLEAVEWITHOUTCONFIRMATION(false)  // reset value
-            next()  // proceed without asking questions
-        } else {
-            // Make user to confirm before exiting.
-            const confirmExit = () => {
-                this.confirm({
-                    message: 'Terminate simulation and leave?  All unsaved data will be lost.',
-                    confirmCallback: () => next(),
-                })
-            }
-            // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted) {
-                this.showSurvey({prompt: true, onUnload: confirmExit})
-            } else {
-                confirmExit()
-            }
-        }
+    setup() {
+        const dashboard = useDashboardStore()
+        const {isTimerRunning, menuActive, currentMode} = storeToRefs(dashboard)
+        const {startTimer, pauseTimer} = dashboard
+        return {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer}
     },
     data() {
         return {
@@ -66,26 +51,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getMenuActive', 'getLeaveWithoutConfirmation',
-                                    'getIsTimerRunning']),
-        ...mapGetters('modal', ['getModalActive', 'getSurveyWasPrompted']),
+        ...mapGetters('modal', ['getModalActive']),
     },
     watch: {
         // If a modal opens while the timer is on,
         // pause it, then start it again after modal closes.
         getModalActive(newActive, oldActive) {
-            if (oldActive === false && this.getIsTimerRunning === true) {
-                this.PAUSETIMER()
+            if (oldActive === false && this.isTimerRunning === true) {
+                this.pauseTimer()
                 this.pausedForModal = true
             } else if (newActive === false && this.pausedForModal) {
-                this.STARTTIMER()
+                this.startTimer()
                 this.pausedForModal = false
             }
         },
-    },
-    methods: {
-        ...mapMutations('dashboard', ['SETLEAVEWITHOUTCONFIRMATION', 'PAUSETIMER', 'STARTTIMER']),
-        ...mapActions('modal', ['confirm', 'showSurvey']),
     },
 }
 </script>
@@ -111,12 +90,22 @@ export default {
     background: linear-gradient(#444, #333);
 }
 
-#dashboard-play-icon span {
+#dashboard-live-text div {
+    margin-left: 6px;
+    font-size: 14px;
+    cursor: default;
+}
+#dashboard-play-icon span, #dashboard-live-icon span {
     font-size: 24px;
     width: 36px;
     height: 36px;
 }
-#dashboard-play-icon span:hover {
+#dashboard-live-circle {
+    font-size: 6px;
+    transform: translateY(-50%);
+    color: #fc0303;
+}
+#dashboard-play-icon span:hover, #dashboard-live-icon span:hover {
     font-size: 26px;
 }
 #speed-controls,

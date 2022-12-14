@@ -14,13 +14,14 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 import {LevelsGraph} from '../graphs'
 
 export default {
     panelTitle: 'Storage Ratios',
-    modes: ['sim'],
+    modes: ['sim', 'kiosk'],
     components: {
         LevelsGraph,
     },
@@ -32,6 +33,11 @@ export default {
         panelSection: {type: String, default: null},
     },
     emits: ['panel-section-changed'],
+    setup() {
+        const dashboard = useDashboardStore()
+        const {gameConfig, currencyDict} = storeToRefs(dashboard)
+        return {gameConfig, currencyDict}
+    },
     data() {
         return {
             storage: undefined,
@@ -39,10 +45,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('dashboard', ['getStorageCapacities', 'getGameConfig', 'getCurrencyDict']),
         getMultiCurrencyStorages() {
-            const {storages} = this.getGameConfig
-            const allCurrencies = Object.keys(this.getCurrencyDict)
+            const {storages} = this.gameConfig
+            const allCurrencies = Object.keys(this.currencyDict)
             // The storages var looks like:
             // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
             // Some storages (e.g. power_storage) only have 1 currency in the inner object,
@@ -78,7 +83,7 @@ export default {
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
         this.storage = this.panelSection ?? this.getMultiCurrencyStorages[0].join('/')
-        Object.entries(this.getGameConfig.storages).forEach(([storage_name, storage]) => {
+        Object.entries(this.gameConfig.storages).forEach(([storage_name, storage]) => {
             if (storage[0].storageType) {
                 this.storagesMapping[storage_name] = storage[0].storageType[0]
             } else {
