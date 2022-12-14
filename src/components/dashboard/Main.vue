@@ -7,7 +7,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div :class="{'dashboard-onepanel': fullscreenStatus.includes('panel-fullscreen')}"
+    <div :class="{'dashboard-onepanel': isFullscreen}"
          class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
                    :key="index" :class="fullscreenStatus[index]">
@@ -23,11 +23,14 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                         <!-- this menu has two steps: first shows the add/change/remove/resize options;
                              if the user selects add/change, hide the options and show the dropdown -->
                         <ul v-if="index !== visiblePanelSelect">
-                            <li><button @click="showPanelSelect(index, 0)">Add Panel</button></li>
-                            <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
-                            <li><button v-if="activePanels.length > 1"
+                            <li><button v-if="!isFullscreen"
+                                        @click="showPanelSelect(index, 0)">Add Panel</button></li>
+                            <li><button v-if="activePanels.length > 1 && !isFullscreen"
                                         @click="removePanel(index)">Remove Panel</button></li>
-                            <li><button @click="resizePanel(index)">Resize Panel</button></li>
+                            <li><button @click="showPanelSelect(index, 1)">Change Panel</button></li>
+                            <li><button @click="resizePanel(index)">
+                                {{isFullscreen?'Minimize panel':'Maximize panel'}}
+                            </button></li>
                         </ul>
                         <!-- panel select dropdown: on change, update the activePanels list by changing
                              the panel name at index or by adding the panel name at index+1 -->
@@ -94,6 +97,10 @@ export default {
             })
             return sorted.sort()
         },
+
+        isFullscreen() {
+            return this.fullscreenStatus.includes('panel-fullscreen')
+        },
     },
     watch: {
         getActivePanels() {
@@ -112,7 +119,6 @@ export default {
         }
     },
     methods: {
-
         resetFullscreenStatus() {
             this.fullscreenStatus = new Array(this.activePanels.length).fill('')
         },
@@ -123,6 +129,7 @@ export default {
                 this.fullscreenStatus = new Array(this.activePanels.length).fill('panel-hidden')
                 this.fullscreenStatus[index] = 'panel-fullscreen'
             }
+            this.closePanelMenu()
         },
 
         openPanelMenu(index) {
