@@ -1,5 +1,5 @@
 <template>
-    <World :game-config="configuration" :is-active="true" />
+    <World :game-config="configuration" :is-active="true" :fullscreen="fullscreen" />
 </template>
 
 <script>
@@ -12,6 +12,9 @@ export default {
     modes: ['sim', 'kiosk'],
     components: {
         World: World,
+    },
+    props: {
+        fullscreen: {type: Boolean, default: true},
     },
     setup() {
         const wizard = useWizardStore()
