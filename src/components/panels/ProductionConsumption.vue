@@ -9,7 +9,9 @@
             <option :selected="currency === 'kwh'" value="kwh">Energy</option>
         </select>
         <div>
-            <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency" :unit="units[currency]" />
+            <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency"
+                         :unit="units[currency]" :fullscreen="fullscreen"
+                         :nsteps="fullscreen?getTotalMissionHours:24" />
         </div>
     </div>
 </template>
@@ -17,6 +19,7 @@
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {VersusGraph} from '../graphs'
 
 export default {
@@ -31,12 +34,15 @@ export default {
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
+        fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {activePanels} = storeToRefs(dashboard)
-        return {activePanels}
+        const {getTotalMissionHours} = storeToRefs(wizard)
+        return {activePanels, getTotalMissionHours}
     },
     data() {
         return {

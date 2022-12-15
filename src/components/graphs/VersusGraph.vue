@@ -21,12 +21,12 @@ export default {
         id: {type: String, required: true},
         plottedValue: {type: String, required: true},
         unit: {type: String, required: true},
+        fullscreen: {type: Boolean, default: false},
+        nsteps: {type: Number, required: true},
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {
-            isTimerRunning, currentStepBuffer, maxStepBuffer,
-        } = storeToRefs(dashboard)
+        const {isTimerRunning, currentStepBuffer, maxStepBuffer} = storeToRefs(dashboard)
         const {getData} = dashboard
         return {isTimerRunning, currentStepBuffer, maxStepBuffer, getData}
     },
@@ -40,10 +40,17 @@ export default {
         // update the chart datasets and labels
         // when the current step buffer changes
         currentStepBuffer() {
-            this.updateChart()
+            // fullscreen charts show all the values and need no updates
+            if (!this.fullscreen) {
+                this.updateChart()
+            }
         },
         // re-init the chart when we plot something else
         plottedValue() {
+            this.initChart()
+        },
+        // re-init the chart when we change the number of steps displayed
+        nsteps() {
             this.initChart()
         },
     },
@@ -55,7 +62,6 @@ export default {
     methods: {
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
-            console.log(`Initializing ${this.plottedValue}`)
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
@@ -66,11 +72,11 @@ export default {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
-                    labels: Array(24).fill(''),
+                    labels: Array(this.nsteps).fill(''),
                     datasets: [
                         {
                             lineTension: 0,
-                            data: Array(24),
+                            data: Array(this.nsteps),
                             label: 'Produced',
                             borderColor: 'rgba(0,0,255,1)',
                             fill: false,
@@ -78,7 +84,7 @@ export default {
                         },
                         {
                             lineTension: 0,
-                            data: Array(24),
+                            data: Array(this.nsteps),
                             label: 'Consumed',
                             borderColor: '#cd0000',
                             fill: false,
@@ -133,15 +139,24 @@ export default {
             const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
-            // we need to redraw the previous 24 steps, otherwise we just add one step
+            // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
-            if (currentStep !== this.prevStep+1) {
-                startingStep = currentStep - 23  // replace all 24 values
+            let endingStep
+            if (this.fullscreen) {
+                // show the full graph
+                startingStep = 0
+                endingStep = this.nsteps
+            } else if (currentStep !== this.prevStep+1) {
+                // replace the last nsteps values
+                startingStep = currentStep - (this.nsteps-1)
+                endingStep = currentStep
             } else {
-                startingStep = currentStep  // add the latest value
+                // add the latest value
+                startingStep = currentStep
+                endingStep = currentStep
             }
-            // this will do 1 or 24 iterations (maybe refactor it to something better)
-            for (let step = startingStep; step <= currentStep; step++) {
+            // this will do 1 iteration when startingStep == endingStep
+            for (let step = startingStep; step <= endingStep; step++) {
                 // remove the oldest values
                 data.datasets[0].data.shift()
                 data.datasets[1].data.shift()
@@ -157,7 +172,7 @@ export default {
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has 24 total items and is not stretched
+                    // so that the plot still has nsteps total items and is not stretched
                     data.datasets[0].data.push(undefined)
                     data.datasets[1].data.push(undefined)
                     data.labels.push('')

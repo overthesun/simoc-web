@@ -44,8 +44,8 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
                 </div>
             </template>
             <template #panel-content>
-                <component :is="panelName" :canvas-number="index"
-                           :panel-index="index" :panel-section="panelSection"
+                <component :is="panelName" :canvas-number="index" :panel-index="index"
+                           :panel-section="panelSection" :fullscreen="isFullscreen"
                            @panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
