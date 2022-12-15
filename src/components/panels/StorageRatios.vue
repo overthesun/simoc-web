@@ -8,7 +8,8 @@
         </select>
         <div>
             <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage"
-                         :storages-mapping="storagesMapping" />
+                         :storages-mapping="storagesMapping" :fullscreen="fullscreen"
+                         :nsteps="fullscreen?getTotalMissionHours:24" />
         </div>
     </div>
 </template>
@@ -16,6 +17,7 @@
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
 import {LevelsGraph} from '../graphs'
 
@@ -31,12 +33,15 @@ export default {
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
+        fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
     setup() {
         const dashboard = useDashboardStore()
+        const wizard = useWizardStore()
         const {gameConfig, currencyDict} = storeToRefs(dashboard)
-        return {gameConfig, currencyDict}
+        const {getTotalMissionHours} = storeToRefs(wizard)
+        return {gameConfig, currencyDict, getTotalMissionHours}
     },
     data() {
         return {
