@@ -20,6 +20,8 @@ export default {
         id: {type: String, required: true},
         plottedStorage: {type: String, required: true},
         storagesMapping: {type: Object, required: true},  // TODO: Revert ABM Workaround
+        fullscreen: {type: Boolean, default: false},
+        nsteps: {type: Number, required: true},
     },
     setup() {
         const dashboard = useDashboardStore()
@@ -60,10 +62,17 @@ export default {
         // update the chart datasets and labels
         // when the current step buffer changes
         currentStepBuffer() {
-            this.updateChart()
+            // fullscreen charts show all the values and need no updates
+            if (!this.fullscreen) {
+                this.updateChart()
+            }
         },
         // re-init the chart when we plot something else
         plottedStorage() {
+            this.initChart()
+        },
+        // re-init the chart when we change the number of steps displayed
+        nsteps() {
             this.initChart()
         },
     },
@@ -88,12 +97,12 @@ export default {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
-                    labels: Array(24).fill(''),
+                    labels: Array(this.nsteps).fill(''),
                     // create N datasets with different labels/colors
                     datasets: this.setsinfo[this.storage_type].labels_colors.map(
                         ([label, color]) => ({
                             lineTension: 0,
-                            data: Array(24),
+                            data: Array(this.nsteps),
                             label: label,
                             backgroundColor: color,
                             fill: true,
@@ -146,15 +155,24 @@ export default {
             const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep+1 (e.g. when the user moved the scrubber)
-            // we need to redraw the previous 24 steps, otherwise we just add one step
+            // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
-            if (currentStep !== this.prevStep+1) {
-                startingStep = currentStep - 23  // replace all 24 values
+            let endingStep
+            if (this.fullscreen) {
+                // show the full graph
+                startingStep = 0
+                endingStep = this.nsteps
+            } else if (currentStep !== this.prevStep+1) {
+                // replace the last nsteps values
+                startingStep = currentStep - (this.nsteps-1)
+                endingStep = currentStep
             } else {
-                startingStep = currentStep  // add the latest value
+                // add the latest value
+                startingStep = currentStep
+                endingStep = currentStep
             }
-            // this will do 1 or 24 iterations (maybe refactor it to something better)
-            for (let step = startingStep; step <= currentStep; step++) {
+            // this will do 1 iteration when startingStep == endingStep
+            for (let step = startingStep; step <= endingStep; step++) {
                 // remove the oldest values and labels
                 Object.values(data.datasets).forEach(dataset => dataset.data.shift())
                 data.labels.shift()
@@ -174,7 +192,7 @@ export default {
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has 24 total items and is not stretched
+                    // so that the plot still has nsteps total items and is not stretched
                     Object.values(data.datasets).forEach(dataset => dataset.data.push(undefined))
                     data.labels.push('')
                 }
