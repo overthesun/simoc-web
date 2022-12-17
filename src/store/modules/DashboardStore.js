@@ -58,6 +58,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
         // Game Management
         currentMode: '',
+        simLocation: 'mars',
         activePanels: [],
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         terminated: false,       // true if we stopped or retrieved all steps from the server
