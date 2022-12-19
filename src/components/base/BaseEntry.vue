@@ -228,7 +228,6 @@ export default {
         width: 122px;
         height: 122px;
         min-height: 122px;
-        margin-right: 12px;
         font-size: 14px;
         color: transparent;
         background: transparent;
@@ -246,6 +245,7 @@ export default {
 
     .btn-mars {
         background-image: url(../../assets/Mars-Ft-Calgary-small.jpg);
+        margin-right: 12px;
 
         &:hover{
             background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary-small.jpg);
