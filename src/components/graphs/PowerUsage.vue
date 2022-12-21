@@ -162,7 +162,7 @@ export default {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 indexAxis: 'y',
                 scales: {
                     x: {
