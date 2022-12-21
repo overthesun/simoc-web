@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage': 'url(../src/assets/' + simLocation + '-bg.jpg)', 'backgroundSize':'cover' }">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -52,7 +52,6 @@
                         <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                     </nav>
                 </template>
-
                 <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
                     <keep-alive>
@@ -99,6 +98,7 @@ export default {
         const wizard = useWizardStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
+            simLocation,
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
         const {
@@ -109,7 +109,7 @@ export default {
         const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            setGameParams, setSimulationData, configuration, getFormattedConfiguration,
+            simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
             activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
             activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
             setConfiguration,

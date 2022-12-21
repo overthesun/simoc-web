@@ -8,7 +8,10 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template #entry-main>
-                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <b-button-group>
+                    <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
+                    <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
+                </b-button-group>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
@@ -44,13 +47,13 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
+            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
         const {activeConfigType} = storeToRefs(wizard)
         const {setConfiguration, setLiveConfig} = wizard
         return {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
+            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive, simLocation,
             setSimulationData, activeConfigType, setConfiguration,
             setLiveConfig,
         }
@@ -71,9 +74,10 @@ export default {
         ...mapMutations('modal', ['SETSURVEYWASPROMPTED']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
-        toConfiguration() {
+        toConfiguration(location) {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
+            this.simLocation = location
             this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
