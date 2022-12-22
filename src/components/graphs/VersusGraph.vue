@@ -11,10 +11,12 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import Chart from 'chart.js'
+import {Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend)
 
 export default {
     props: {
@@ -78,7 +80,7 @@ export default {
                             lineTension: 0,
                             data: Array(this.nsteps),
                             label: 'Produced',
-                            borderColor: 'rgba(0,0,255,1)',
+                            borderColor: '#0000ff',
                             fill: false,
                             pointStyle: 'line',
                         },
@@ -93,44 +95,44 @@ export default {
                     ],
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    color: '#eeeeee',
                     scales: {
-                        yAxes: [{
+                        y: {
+                            beginAtZero: true,
                             ticks: {
-                                beginAtZero: true,
                                 callback: (value, index, values) => {
                                     const val = value > 0 ? value : value.toPrecision(2)
                                     return `${val} ${this.unit}`
                                 },
                             },
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                            },
-                        }],
-                    },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        // https://stackoverflow.com/a/50450646
-                        labels: {usePointStyle: true},
+                        },
+                        x: {
+                            beginAtZero: true,
+                        },
                     },
                     animation: {
-                        animateScale: false,
-                        animateRotate: false,
+                        /* this prevents the new points to rise from
+                         * the bottom and just slide in from the right */
+                        y: {duration: 0},
                     },
-                    title: {
-                        display: false,
-                        text: '(Energy) Consumption Vs Production',
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            // https://stackoverflow.com/a/50450646
+                            labels: {usePointStyle: true},
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            usePointStyle: true,
+                            callbacks: {
+                                title: (context) => `Step: ${context[0].label}`,
+                            }
+                        },
                     },
-
-                    defaultFontColor: '#1e1e1e',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    drawborder: false,
-                    cutoutPercentage: 70,
-                    rotation: Math.PI,
-                    circumference: 1 * Math.PI,
                 },
             })
             this.updateChart()
