@@ -11,9 +11,11 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import Chart from 'chart.js'
+import {Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler)
 
 export default {
     props: {
@@ -106,47 +108,48 @@ export default {
                             label: label,
                             backgroundColor: color,
                             fill: true,
+                            pointStyle: 'line',
                         })
                     ),
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    defaultFontColor: '#1e1e1e',
+                    color: '#eeeeee',
                     scales: {
-                        yAxes: [{
+                        y: {
                             stacked: true,
+                            beginAtZero: true,
                             ticks: {
-                                beginAtZero: true,
                                 // by default the values go up to 120% instead
                                 // of stopping at 100%, but with max: 100 it's
                                 // always stuck at 100% and it doesn't scale
                                 // when only small values are displayed
-                                callback(value, index, values) {
-                                    return `${value}%`
-                                },
+                                callback: (value, index, values) => `${value}%`,
                             },
-                        }],
-                    },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 20,
                         },
                     },
-                    elements: {
-                        point: {
-                            // make the dots small, but with a big
-                            // hit ratio so it's easy to hover them
-                            radius: 1,
-                            hitRadius: 5,
-                            hoverRadius: 2,
+                    animation: {
+                        /* this prevents the new points to rise from
+                         * the bottom and just slide in from the right */
+                        y: {duration: 0},
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 20,
+                            },
                         },
-                    },
-                    title: {
-                        display: false,
-                    },
+                        tooltip: {
+                            mode: 'index', // show both values
+                            intersect: false,
+                            callbacks: {
+                                title: (context) => `Step: ${context[0].label}`,
+                            },
+                        },
+                    }
                 },
             })
             this.updateChart()
