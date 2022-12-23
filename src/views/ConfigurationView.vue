@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage': 'url(../src/assets/' + simLocation + '-bg.jpg)', 'backgroundSize':'cover' }">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage': 'url(../src/assets/' + simLocation + '-bg.jpg)', 'background-repeat': 'no-repeat', 'background-attachment': 'fixed', 'background-size':'cover', 'background-position': '50% 10%', 'background-color': '#1e1e1e'}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />

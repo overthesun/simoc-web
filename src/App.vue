@@ -29,6 +29,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     padding: 0px;
     margin: 0px;
     background-image:url('./assets/mars-bg.jpg');
+    background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: 50% 10%;
