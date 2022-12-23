@@ -196,7 +196,7 @@ export default {
                     legend: {
                         display: false,
                     },
-                    tooltips: {
+                    tooltip: {
                         mode: 'point',  // show single value
                     },
                 },
