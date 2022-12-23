@@ -45,6 +45,11 @@ export default {
                 this.updateChart()
             }
         },
+        maxStepBuffer() {
+            if (this.fullscreen) {
+                this.updateChart()
+            }
+        },
         // re-init the chart when we plot something else
         plottedValue() {
             this.initChart()
