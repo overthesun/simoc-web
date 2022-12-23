@@ -13,7 +13,8 @@ The visual difference between minor and major lines are in there opacity with mi
 
 
 <script>
-import {Chart, LineController, LineElement, LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
+import {Chart, LineController, LineElement,
+        LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useLiveStore} from '../../store/modules/LiveStore'
@@ -153,8 +154,8 @@ export default {
                             intersect: false,
                             usePointStyle: true,
                             callbacks: {
-                                title: (context) => `Step: ${context[0].label}`,
-                            }
+                                title: context => `Step: ${context[0].label}`,
+                            },
                         },
                     },
                 },

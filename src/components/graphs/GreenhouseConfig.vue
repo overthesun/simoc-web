@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import {Chart, BarController, BarElement, LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
+import {Chart, BarController, BarElement,
+        LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'

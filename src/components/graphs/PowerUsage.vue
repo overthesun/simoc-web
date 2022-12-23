@@ -6,13 +6,15 @@
 
 <script>
 import axios from 'axios'
-import {Chart, BarController, BarElement, LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
+import {Chart, BarController, BarElement,
+        LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
-Chart.register(BarController, BarElement, LinearScale, CategoryScale, Title, Tooltip)
+Chart.register(BarController, BarElement,
+               LinearScale, CategoryScale, Title, Tooltip)
 
 export default {
     props: {

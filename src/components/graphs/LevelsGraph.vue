@@ -11,11 +11,13 @@ See chart.js documentation for further details on the related mounted functions.
 </template>
 
 <script>
-import {Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler} from 'chart.js'
+import {Chart, LineController, LineElement, PointElement,
+        LinearScale, CategoryScale, Tooltip, Legend, Filler} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler)
+Chart.register(LineController, LineElement, PointElement,
+               LinearScale, CategoryScale, Tooltip, Legend, Filler)
 
 export default {
     props: {
@@ -146,10 +148,10 @@ export default {
                             mode: 'index', // show both values
                             intersect: false,
                             callbacks: {
-                                title: (context) => `Step: ${context[0].label}`,
+                                title: context => `Step: ${context[0].label}`,
                             },
                         },
-                    }
+                    },
                 },
             })
             this.updateChart()

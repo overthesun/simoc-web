@@ -144,7 +144,7 @@ export default {
 
                     const {text} = chart.options.elements.centerText
                     const textX = Math.round((width - ctx.measureText(text).width) / 2)
-                    const textY = Math.round(height / 2 - fontSize)
+                    const textY = Math.round((height / 2) - fontSize)
 
                     ctx.fillStyle = '#eeeeee'
                     ctx.fillText(text, textX, textY)
