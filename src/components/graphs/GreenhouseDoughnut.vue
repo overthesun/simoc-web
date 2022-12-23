@@ -13,13 +13,15 @@ See chart.js documentation for more details.
 </template>
 
 <script>
-import Chart from 'chart.js'
+import {Chart, DoughnutController, ArcElement, Legend, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter} from '../../javascript/utils'
+
+Chart.register(DoughnutController, ArcElement, Legend, Tooltip)
 
 export default {
     props: {
@@ -34,7 +36,7 @@ export default {
     },
     data() {
         return {
-            // Greenhouse volumes. These should be retrieved from the database in the future.
+            // Greenhouse volumes. These should be retrieved from the backend in the future.
             greenhouseSize: {
                 none: 0,
                 greenhouse_small: 490,
@@ -111,7 +113,8 @@ export default {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutoutPercentage: 70,
+                cutout: '70%',
+                color: '#eeeeee',
                 elements: {
                     arc: {
                         borderWidth: 0,
@@ -120,39 +123,30 @@ export default {
                         text: '',
                     },
                 },
-                legend: {
-                    onClick: null,
-                    display: true,
-                    fontColor: '#eeeeee',
-                    position: 'bottom',
-                    labels: {
-                        fontColor: '#eeeeee',
-                        fontFamily: 'open sans',
-                        fontSize: 14,
-                        boxWidth: 4,
-                        usePointStyle: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 20,
+                        },
                     },
                 },
-                animation: {
-                    animateScale: false,
-                    animateRotate: false,
-                },
-                drawborder: false,
             },
             plugins: [{
                 beforeDraw(chart) {
-                    const {width, height, ctx} = chart.chart
-
+                    const {width, height, ctx} = chart
                     ctx.restore()
-                    const fontSize = (height/300).toFixed(2)
-                    ctx.font = `${fontSize}em sans-serif`
-                    ctx.textBaseline = 'bottom'
 
-                    const {text} = chart.chart.options.elements.centerText
+                    const fontSize = Math.min((width/8), 16).toFixed(2)
+                    ctx.font = `${fontSize}px sans-serif`
+                    ctx.textBaseline = 'alphabetic'
+
+                    const {text} = chart.options.elements.centerText
                     const textX = Math.round((width - ctx.measureText(text).width) / 2)
-                    const textY = height / 2
+                    const textY = Math.round(height / 2 - fontSize)
 
-                    ctx.fillStyle = 'white'
+                    ctx.fillStyle = '#eeeeee'
                     ctx.fillText(text, textX, textY)
                     ctx.save()
                 },
