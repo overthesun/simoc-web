@@ -6,11 +6,15 @@
 
 <script>
 import axios from 'axios'
-import Chart from 'chart.js'
+import {Chart, BarController, BarElement,
+        LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
+
+Chart.register(BarController, BarElement,
+               LinearScale, CategoryScale, Title, Tooltip)
 
 export default {
     props: {
@@ -153,48 +157,50 @@ export default {
         // TODO this is mostly duplicated with GreenhouseConfiguration.vue: remove duplication
         const canvas = document.getElementById(this.id)
         this.chart = new Chart(canvas, {
-            type: 'horizontalBar',
+            type: 'bar',
             data: {
                 labels: ['Prod.', 'Cons.'],
                 datasets: [],  // see updateChart for info
             },
             options: {
-                responsive: false,
-                maintainAspectRatio: true,
-                title: {
-                    display: true,
-                    text: 'Total Energy Production vs Consumption',
-                    fontColor: '#eeeeee',
-                },
-                tooltips: {
-                    mode: 'point',  // show single value
-                },
-                legend: {
-                    display: false,
-                },
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
                 scales: {
-                    xAxes: [{
+                    x: {
                         stacked: true,
                         ticks: {
-                            beginAtZero: true,
-                            fontColor: '#eeeeee',
+                            color: '#eeeeee',
                             callback(value, index, values) {
                                 return `${value} kWh`
                             },
                         },
-                        gridLines: {
+                        grid: {
                             color: '#666666',
                         },
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         stacked: true,
                         ticks: {
-                            fontColor: '#eeeeee',
+                            color: '#eeeeee',
                         },
-                        gridLines: {
+                        grid: {
                             color: '#666666',
                         },
-                    }],
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Energy Production vs Consumption',
+                        color: '#eeeeee',
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'point',  // show single value
+                    },
                 },
             },
         })

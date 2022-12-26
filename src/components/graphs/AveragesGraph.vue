@@ -13,10 +13,13 @@ The visual difference between minor and major lines are in there opacity with mi
 
 
 <script>
-import Chart from 'chart.js'
+import {Chart, LineController, LineElement,
+        LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useLiveStore} from '../../store/modules/LiveStore'
+
+Chart.register(LineController, LineElement, LinearScale, CategoryScale, Tooltip, Legend)
 
 const getColorRange = (baseColor, n=1) => {
     // Given a hex color, return a list of shades lighter/darker
@@ -74,7 +77,6 @@ export default {
         currencySensorInfo() {
             this.updateActiveSensors()
             this.initChart()
-            console.log('Updating sensor info')
         },
     },
     mounted() {
@@ -121,40 +123,41 @@ export default {
                     datasets: datasets,
                 },
                 options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                callback: (value, index, values) => `${value}${this.unit}`,
-                            },
-                        }],
-                        xAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                            },
-                        }],
-                    },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        // https://stackoverflow.com/a/50450646
-                        labels: {usePointStyle: true},
-                    },
-                    animation: {
-                        animateScale: false,
-                        animateRotate: false,
-                    },
-                    title: {
-                        display: false,
-                        text: '(Average) Atmospheric CO2',
-                    },
-                    defaultFontColor: '#1e1e1e',
                     responsive: true,
                     maintainAspectRatio: false,
-                    drawborder: false,
-                    cutoutPercentage: 70,
-                    rotation: Math.PI,
-                    circumference: Math.PI,
+                    color: '#eeeeee',
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (value, index, values) => `${value}${this.unit}`,
+                            },
+                        },
+                        x: {
+                            beginAtZero: true,
+                        },
+                    },
+                    animation: {
+                        /* this prevents the new points to rise from
+                         * the bottom and just slide in from the right */
+                        y: {duration: 0},
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            // https://stackoverflow.com/a/50450646
+                            labels: {usePointStyle: true},
+                        },
+                        tooltip: {
+                            mode: 'index', // show both values
+                            intersect: false,
+                            usePointStyle: true,
+                            callbacks: {
+                                title: context => `Step: ${context[0].label}`,
+                            },
+                        },
+                    },
                 },
             })
             this.updateChart()

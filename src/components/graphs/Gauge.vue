@@ -14,10 +14,13 @@ See chart.js documentation for further explantion of below fucntionality.
 </template>
 
 <script>
-import Chart from 'chart.js'
+import {Chart, DoughnutController, ArcElement, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+
+Chart.register(DoughnutController, ArcElement, Title, Tooltip)
+
 
 export default {
     props: {
@@ -46,7 +49,7 @@ export default {
                 this.chart.data.datasets[0].data = [gauge_value, gauge_remainder]
                 this.chart.data.datasets[0].backgroundColor = [this.color, '#eeeeee']
                 this.chart.options.elements.centerText.text = `${value.toFixed(4)}%`
-                this.chart.update()
+                this.chart.update('active')
             },
             deep: true,
         },
@@ -63,8 +66,12 @@ export default {
                     data: [10],
                 }],
             },
-            rotation: Math.PI * -0.5,
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                rotation: -90,
+                circumference: 180,
+                cutout: '70%',
                 elements: {
                     arc: {
                         borderWidth: 0,
@@ -73,33 +80,23 @@ export default {
                         text: 'Loading...',
                     },
                 },
-                tooltips: {
-                    callbacks: {
-                        label(tooltipItems, data) {
-                            // show "label: N%" in the tooltip
-                            const label = data.labels[tooltipItems.index]
-                            const value = data.datasets[0].data[tooltipItems.index]
-                            return `${label}: ${value*100}%`
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label(context) {
+                                // show "label: N%" in the tooltip
+                                return `${context.label}: ${context.formattedValue}%`
+                            },
                         },
                     },
                 },
-                legend: {
-                    display: false,
-                },
-                animation: {
-                    animateScale: false,
-                    animateRotate: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                drawborder: false,
-                cutoutPercentage: 70,
-                rotation: Math.PI,
-                circumference: 1 * Math.PI,
             },
             plugins: [{
-                beforeDraw(chart) {
-                    const {width, height, ctx} = chart.chart
+                beforeDraw(chart, args, options) {
+                    const {width, height, ctx} = chart
                     ctx.restore()
 
                     // scale the font size based on the width, so that
@@ -108,7 +105,7 @@ export default {
                     ctx.font = `${fontSize}px sans-serif`
                     ctx.textBaseline = 'alphabetic'
 
-                    const {text} = chart.chart.options.elements.centerText
+                    const {text} = chart.options.elements.centerText
                     const textX = Math.round((width - ctx.measureText(text).width) / 2)
                     const arcH = width / 2  // height of the arc
                     const textY = Math.min(((height-arcH)/2) + arcH, height)
