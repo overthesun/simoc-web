@@ -24,7 +24,7 @@
     "json-loader": "^0.5.7",
     "postcss-nesting": "^10.1.10",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.26",
+    "pinia": "^2.0.28",
     "socket.io-client": "^4.5.4",
     "three": "^0.147.0",
     "vite-plugin-eslint": "^1.8.0",
@@ -36,9 +36,9 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "eslint": "^8.28.0",
+    "eslint": "^8.30.0",
     "eslint-plugin-vue": "^9.8.0",
-    "sass": "^1.56.2",
+    "sass": "^1.57.1",
     "vite": "^3.2.4"
   },
   "postcss": {
