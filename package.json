@@ -18,7 +18,7 @@
     "0g": "^0.0.9",
     "axios": "^1.2.1",
     "chart.js": "^4.1.1",
-    "chartjs-plugin-annotation": "^0.5.7",
+    "chartjs-plugin-annotation": "^2.1.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
