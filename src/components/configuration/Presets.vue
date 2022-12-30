@@ -20,7 +20,8 @@ Future version should also automatically switch the selected preset to 'custom' 
                     <select ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, name) in getPresets" :key="name" :value="name">{{preset.name}}</option>
+                        <option v-if="simLocation === 'mars'" v-for="(preset, name) in mars_presets" :key="name" :value="name">{{preset.name}}</option>
+                        <option v-else v-for="(preset, b2_name) in b2_presets" :key="b2_name" :value="b2_name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
@@ -36,6 +37,7 @@ Future version should also automatically switch the selected preset to 'custom' 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 // global constants used to mark the empty and custom presets
@@ -43,14 +45,16 @@ const EMPTY = 'empty'
 const CUSTOM = 'custom'
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {configuration, resetConfig, getPresets} = storeToRefs(wizard)
+        const {simLocation} = storeToRefs(dashboard)
+        const {configuration, resetConfig, b2_presets, mars_presets} = storeToRefs(wizard)
         const {
             setActiveRefEntry, resetConfigDefault,
             setConfiguration, setPreset,
         } = wizard
         return {
-            configuration, resetConfig, getPresets, setActiveRefEntry,
+            simLocation, configuration, resetConfig, b2_presets, mars_presets, setActiveRefEntry,
             resetConfigDefault, setConfiguration, setPreset,
         }
     },
@@ -104,7 +108,7 @@ export default {
             if (name === CUSTOM) {
                 this.loadFromLocalStorage()
             } else {
-                this.setPreset(name)
+                this.setPreset(name, this.simLocation)
             }
         },
         saveToLocalStorage() {

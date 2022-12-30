@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper">
+        <label class="input-wrapper" v-if="simLocation === 'mars'">
             <div class="input-title" @click="setActiveRefEntry('CrewQuarters')">
                 Crew Quarters <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
@@ -23,6 +23,24 @@
                    class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                    required @input="setInhabitantsHandler">
         </label>
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('Weeding')">
+                Weeding <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class="input-description">Select how many hours per day your inhabitants should spend weeding.</div>
+            <label><input ref="humans" v-model="humans.weeding" :min="ranges.weeding.min" :max="ranges.weeding.max"
+                   class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
+                   required @input="setInhabitantsHandler"> hours/day</label>
+        </label>
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('PestPicking')">
+                Pest Picking <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
+            <div class="input-description">Select how many hours per day your inhabitants should spend pest picking.</div>
+            <label><input ref="humans" v-model="humans.pestPicking" :min="ranges.pestPicking.min" :max="ranges.pestPicking.max"
+                   class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
+                   required @input="setInhabitantsHandler"> hours/day</label>
+        </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Food')">
                 Food Supply <fa-icon :icon="['fa-solid','circle-info']" />
@@ -41,20 +59,38 @@
                           :max="ranges.eclss.max" class="input-field-number"
                           type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> ECLSS modules</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.o2Reserves" class="input-field-number"
+                          type="number" pattern="^\d+$" placeholder = "kg" required
+                          @input="setInhabitantsHandler"> O2 reserves (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.o2LowerLimit" class="input-field-number"
+                          type="number" pattern="^\d+$" placeholder = "kg" required
+                          @input="setInhabitantsHandler"> lower limit of O2 (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2Reserves" class="input-field-number"
+                          type="number" pattern="^\d+$" placeholder = "kg" required
+                          @input="setInhabitantsHandler"> CO2 reserves (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2LowerLimit" class="input-field-number"
+                          type="number" pattern="^\d+$" placeholder = "kg" required
+                          @input="setInhabitantsHandler"> lower limit of CO2 (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2UpperLimit" class="input-field-number"
+                          type="number" pattern="^\d+$" placeholder = "kg" required
+                          @input="setInhabitantsHandler"> upper limit of CO2 (kg)</label>
         </label>
     </div>
 </template>
 
 <script>
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {configuration, validValues} = storeToRefs(wizard)
         const {setInhabitants, setActiveRefEntry} = wizard
-        return {configuration, validValues, setInhabitants, setActiveRefEntry}
+        return {simLocation, configuration, validValues, setInhabitants, setActiveRefEntry}
     },
     data() {
         return {
@@ -75,31 +111,55 @@ export default {
         // when a config file is uploaded
         'configuration.crewQuarters': {
             handler() {
-                const {crewQuarters} = this.configuration
-                // TODO: maybe the amount should be a hidden field
-                if (crewQuarters.type === 'none') {
-                    this.humans.amount = 0  // can't have humans without crew quarters
-                    crewQuarters.amount = 0
-                } else {
-                    crewQuarters.amount = 1
-                    this.$refs.humans.setCustomValidity('')  // remove custom error
-                }
-                this.validateRef('humans')  // wait until the min/max are updated to validate
+                if(this.simLocation === 'mars') {
+                    const {crewQuarters} = this.configuration
+                    // TODO: maybe the amount should be a hidden field
+                    if (crewQuarters.type === 'none') {
+                        this.humans.amount = 0  // can't have humans without crew quarters
+                        crewQuarters.amount = 0
+                    } else {
+                        crewQuarters.amount = 1
+                        this.$refs.humans.setCustomValidity('')  // remove custom error
+                    }
+                    this.validateRef('humans')  // wait until the min/max are updated to validate
 
-                this.crewQuarters = crewQuarters
-                this.$refs.crew_quarters_type.reportValidity()
+                    this.crewQuarters = crewQuarters
+                    this.$refs.crew_quarters_type.reportValidity()
+                }
             },
             deep: true, // Must be used if the watched value is an object.
         },
         'configuration.humans.amount': function() {
             const {humans} = this.configuration
             this.humans = humans
-            // if we have humans, check that the crew quarter is selected before checking the ranges
-            const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||
-                                               !this.$refs.crew_quarters_type.checkValidity())
-            const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
+            if(this.simLocation === 'mars') {
+                // if we have humans, check that the crew quarter is selected before checking the ranges
+                const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||
+                                                   !this.$refs.crew_quarters_type.checkValidity())
+                const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
+                this.$refs.humans.setCustomValidity(
+                    humans_are_invalid ? 'Please select a crew quarters type.' : ''
+                )
+            }
+            this.validateRef('humans')
+        },
+        'configuration.humans.weeding': function() {
+            const {humans} = this.configuration
+            this.humans = humans
+            const working_hours_invalid = (humans.weeding > 16 || humans.weeding +
+                                          humans.pestPicking > 16)
             this.$refs.humans.setCustomValidity(
-                humans_are_invalid ? 'Please select a crew quarters type.' : ''
+                working_hours_invalid ? 'Hours spent working must total 16 hours/day or less.' : ''
+            )
+            this.validateRef('humans')
+        },
+        'configuration.humans.pestPicking' : function() {
+            const {humans} = this.configuration
+            this.humans = humans
+            const working_hours_invalid = (humans.weeding > 16 || humans.weeding +
+                                          humans.pestPicking > 16)
+            this.$refs.humans.setCustomValidity(
+                working_hours_invalid ? 'Hours spent working must total 16 hours/day or less.' : ''
             )
             this.validateRef('humans')
         },
@@ -107,7 +167,7 @@ export default {
             this.food = this.configuration.food
             this.validateRef('food')
         },
-        'configuration.eclss.amount': function() {
+        'configuration.eclss': function() {
             this.eclss = this.configuration.eclss
             this.validateRef('eclss')
         },
@@ -123,8 +183,8 @@ export default {
     methods: {
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
-            const value = {humans: this.humans, food: this.food,
-                           crewQuarters: this.crewQuarters, eclss: this.eclss}
+            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters,
+            eclss: this.eclss}
             this.setInhabitants(value)
         },
         validateRef(ref) {
@@ -137,4 +197,8 @@ export default {
 
 <style lang="scss" scoped>
     @import '../../sass/components/configuration-input';
+
+    .list-input {
+        margin-top: 8px;
+    }
 </style>

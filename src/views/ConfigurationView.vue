@@ -32,7 +32,7 @@
                             <Initial ref="initial" />
                             <Inhabitants ref="inhabitants" />
                             <Greenhouse ref="greenhouse" />
-                            <Energy ref="energy" />
+                            <Energy v-if="simLocation === 'mars'" ref="energy" />
                             <!--
                             This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
                             <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
@@ -106,7 +106,7 @@ export default {
         const {
             configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
-            getPresets, simdataLocation,
+            simdataLocation, getPresets,
         } = storeToRefs(wizard)
         const {resetConfigDefault, setConfiguration} = wizard
         return {

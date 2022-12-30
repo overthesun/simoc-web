@@ -1,21 +1,23 @@
 <template>
     <div>
-        <label class="input-wrapper">
-            <div class="input-title" @click="setActiveRefEntry('Location')">
-                Location <fa-icon :icon="['fa-solid','circle-info']" />
-            </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">Your habitat is located on the equatorial region of Mars.</div>
-            <select ref="location" v-model="location" class="input-field-select" required @change="setInitialHandler">
-                <option value="none" disabled hidden>Location</option>
-                <option value="mars" selected>Mars</option>
-            </select>
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('StartDate')">
+                Mission Start Date <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>
+            <div class="input-description">Select the start date of your stay at B2.</div>
+            <div class="input-initial-wrapper">
+                <input ref="startDate" v-model="startDate"
+                       class="input-date-select" type="date" required @input="setInitialHandler"
+                          @change="setInitialHandler">
+            </div>
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Duration')">
                 Mission Duration <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Select the duration of your stay on Mars.</div>
-            <div class="input-duration-wrapper">
+            <div v-if="simLocation === 'mars'" class="input-description">Select the duration of your stay on Mars.</div>
+            <div v-else class="input-description">Select the duration of your stay at B2.</div>
+            <div class="input-initial-wrapper">
                 <input ref="duration" v-model="duration.amount" :min="duration_min" :max="duration_max"
                        class="input-field-number" type="number" pattern="^\d+$"
                        placeholder="Length" required @input="setInitialHandler">
@@ -34,29 +36,32 @@
 
 <script>
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {configuration, validValues} = storeToRefs(wizard)
         const {setInitial, setActiveRefEntry} = wizard
-        return {configuration, validValues, setInitial, setActiveRefEntry}
+        return {simLocation, configuration, validValues, setInitial, setActiveRefEntry}
     },
     data() {
         return {
-            location: undefined,
+            startDate: undefined,
             duration: undefined,
             duration_min: undefined,
             duration_max: undefined,
         }
     },
     watch: {
-        'configuration.location': function() {
-            // update location and report validity
-            const {location} = this.configuration
-            this.location = location
-            this.$nextTick(() => this.$refs.location.reportValidity())
+        'configuration.startDate': function() {
+            // update start date
+            const {startDate} = this.configuration
+            this.startDate = startDate
+            this.$nextTick(() => this.$refs.startDate.reportValidity())
         },
         'configuration.duration': {
             handler() {
@@ -82,15 +87,15 @@ export default {
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {duration, location} = this.configuration
-        this.location = location
+        const {startDate, duration} = this.configuration
+        this.startDate = startDate
         this.duration = duration
     },
     methods: {
         setInitialHandler() {
             // Called when any of the form values are changed, or input happens.
             // Updates the wizard store values with the form values.
-            const value = {location: this.location, duration: this.duration}
+            const value = {startDate: this.startDate, duration: this.duration}
             this.setInitial(value)  // this will change the configuration and trigger the configuration watcher
         },
     },
@@ -100,7 +105,7 @@ export default {
 <style lang="scss" scoped>
     @import '../../sass/components/configuration-input';
 
-    .input-duration-wrapper{
+    .input-initial-wrapper{
         display:flex;
         justify-content: flex-start;
         align-items:center;

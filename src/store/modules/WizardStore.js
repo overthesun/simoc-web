@@ -21,7 +21,7 @@ export const useWizardStore = defineStore('WizardStore', {
         // valid values and ranges for the form inputs
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
-            locations: ['mars'],
+            locations: ['mars', 'b2'],
             duration_ranges: {
                 // limited to 1 earth year
                 hour: {min: 24, max: 8760},
@@ -30,14 +30,16 @@ export const useWizardStore = defineStore('WizardStore', {
             },
             duration_units: ['hour', 'day'],
             humans: {min: 0, max: 10},
+            weeding: {min: 0, max: 16},
+            pestPicking: {min: 0, max: 16},
             food: {min: 0, max: 8760},
             eclss: {min: 0, max: 10},
             crew_quarters_types: ['none', 'crew_habitat_small',
                                   'crew_habitat_medium', 'crew_habitat_large',
-                                  'crew_habitat_sam'],
+                                  'crew_habitat_sam', 'crew_habitat_b2'],
             greenhouse_types: ['none', 'greenhouse_small',
                                'greenhouse_medium', 'greenhouse_large',
-                               'greenhouse_sam'],
+                               'greenhouse_sam', 'b2_intensive_agricultural_biome'],
             // TODO: the list of plants is downloaded and should be cached
             // the valid range for plants is calculated dinamically
             generator_types: ['none', 'solar_pv_array_mars'],
@@ -58,7 +60,37 @@ export const useWizardStore = defineStore('WizardStore', {
             greenhouse: {type: 'none', amount: 0, units: ''},
             plantSpecies: [{type: '', amount: ''}],
         },
-        getPresets: {
+        defaultB2Config: {
+            name: 'Default config',
+            simdata_file: '',
+            location: 'b2',
+            startDate: null,
+            duration: {type: 'none', amount: 30, units: 'day'},
+            humans: {
+                type: 'human_agent',
+                amount: 1,
+                units: '',
+                weeding: null,
+                pestPicking: null,
+            },
+            food: {type: 'food_storage', amount: 100, units: 'kg'},
+            crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+            eclss: {
+                type: 'eclss',
+                amount: 1,
+                units: '',
+                o2Reserves: null,
+                o2LowerLimit: null,
+                co2Reserves: null,
+                co2LowerLimit: null,
+                co2UpperLimit: null,
+            },
+            powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+            powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+            greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+            plantSpecies: [{type: 'radish', amount: 40}],
+        },
+        mars_presets: {
             one_human: {
                 name: '1 Human',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
@@ -186,6 +218,110 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type:'wheat', amount:100}],
             },*/
         },
+        b2_presets: {
+            b2_mission_1a: {
+                name: 'Mission 1a',
+                simdata_file: 'simoc-simdata-4-human-preset.json',
+                location: 'b2',
+                startDate: '2022-12-01',
+                duration: {type: 'none', amount: 30, units: 'day'},
+                humans: {
+                    type: 'human_agent',
+                    amount: 1,
+                    units: '',
+                    weeding: 3,
+                    pestPicking: 3,
+                },
+                food: {type: 'food_storage', amount: 100, units: 'kg'},
+                crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+                eclss: {
+                    type: 'eclss',
+                    amount: 1,
+                    units: '',
+                    o2Reserves: 10,
+                    o2LowerLimit: 10,
+                    co2Reserves: 10,
+                    co2LowerLimit: 10,
+                    co2UpperLimit: 10,
+                },
+                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                plantSpecies: [{type: 'radish', amount: 40}],
+            },
+            b2_mission_1b: {
+                name: 'Mission 1b',
+                simdata_file: 'simoc-simdata-4-human-garden-preset.json',
+                location: 'b2',
+                startDate: '2022-12-01',
+                duration: {type: 'none', amount: 30, units: 'day'},
+                humans: {
+                    type: 'human_agent',
+                    amount: 1,
+                    units: '',
+                    weeding: 6,
+                    pestPicking: 6,
+                },
+                food: {type: 'food_storage', amount: 100, units: 'kg'},
+                crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+                eclss: {
+                    type: 'eclss',
+                    amount: 2,
+                    units: '',
+                    o2Reserves: 20,
+                    o2LowerLimit: 20,
+                    co2Reserves: 20,
+                    co2LowerLimit: 20,
+                    co2UpperLimit: 20,
+                },
+                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                plantSpecies: [
+                    {type: 'wheat', amount: 20},
+                    {type: 'cabbage', amount: 30},
+                    {type: 'strawberry', amount: 10},
+                    {type: 'radish', amount: 50},
+                    {type: 'red_beet', amount: 50},
+                    {type: 'onion', amount: 50},
+                ],
+            },
+            b2_mission_2: {
+                name: 'Mission 2',
+                simdata_file: 'simoc-simdata-sam-1-human-garden-preset.json',
+                location: 'b2',
+                startDate: '2022-12-01',
+                duration: {type: 'none', amount: 30, units: 'day'},
+                humans: {
+                    type: 'human_agent',
+                    amount: 1,
+                    units: '',
+                    weeding: 8,
+                    pestPicking: 8,
+                },
+                food: {type: 'food_storage', amount: 100, units: 'kg'},
+                crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+                eclss: {
+                    type: 'eclss',
+                    amount: 1,
+                    units: '',
+                    o2Reserves: 30,
+                    o2LowerLimit: 30,
+                    co2Reserves: 30,
+                    co2LowerLimit: 30,
+                    co2UpperLimit: 30,
+                },
+                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                plantSpecies: [
+                    {type: 'rice', amount: 2},
+                    {type: 'cabbage', amount: 8},
+                    {type: 'tomato', amount: 8},
+                    {type: 'sweet_potato', amount: 5},
+                ],
+            },
+        },
     }),
     getters: {
         // This method converts the total mission time to hours regardless of the units selected.
@@ -206,6 +342,14 @@ export const useWizardStore = defineStore('WizardStore', {
             }
 
             return totalHours
+        },
+
+        getPresets(state, location = 'mars'){
+            if(location === 'b2') {
+                return state.b2_presets
+            } else {
+                return state.mars_presets
+            }
         },
 
         // Returns a formatted configuration object in the format required by the backend.
@@ -246,12 +390,15 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
-        setConfiguration(value) {
+        setConfiguration(value, location = 'mars') {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            const newconfig = this.defaultConfig
+            let newconfig = this.defaultConfig
+            if (location == 'b2') {
+                newconfig = this.defaultB2Config
+            }
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
@@ -271,16 +418,20 @@ export const useWizardStore = defineStore('WizardStore', {
             }
             this.configuration = newconfig
         },
-        setPreset(name) {
-            this.setConfiguration(this.getPresets[name])
+        setPreset(name, location = 'mars') {
+            let locationPreset = this.mars_presets
+            if (location === 'b2') {
+                locationPreset = this.b2_presets
+            }
+            this.setConfiguration(locationPreset[name], location)
         },
         setLiveConfig(duration) {
             console.log('Updating mission time...')
             this.setConfiguration(duration)
         },
         setInitial(value) {
-            const {location, duration} = value
-            this.configuration.location = location
+            const {startDate, duration} = value
+            this.configuration.startDate = startDate
             this.configuration.duration = duration
         },
         setInhabitants(value) {
