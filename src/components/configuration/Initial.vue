@@ -8,7 +8,7 @@
             <div class="input-initial-wrapper">
                 <input ref="startDate" v-model="startDate"
                        class="input-date-select" type="date" required @input="setInitialHandler"
-                          @change="setInitialHandler">
+                       @change="setInitialHandler">
             </div>
         </label>
         <label class="input-wrapper">

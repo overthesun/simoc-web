@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper" v-if="simLocation === 'mars'">
+        <label v-if="simLocation === 'mars'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('CrewQuarters')">
                 Crew Quarters <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
@@ -29,17 +29,18 @@
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Select how many hours per day your inhabitants should spend weeding.</div>
             <label><input ref="humans" v-model="humans.weeding" :min="ranges.weeding.min" :max="ranges.weeding.max"
-                   class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
-                   required @input="setInhabitantsHandler"> hours/day</label>
+                          class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
+                          required @input="setInhabitantsHandler"> hours/day</label>
         </label>
         <label v-if="simLocation === 'b2'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('PestPicking')">
                 Pest Picking <fa-icon :icon="['fa-solid','circle-info']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
             <div class="input-description">Select how many hours per day your inhabitants should spend pest picking.</div>
-            <label><input ref="humans" v-model="humans.pestPicking" :min="ranges.pestPicking.min" :max="ranges.pestPicking.max"
-                   class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
-                   required @input="setInhabitantsHandler"> hours/day</label>
+            <label><input ref="humans" v-model="humans.pestPicking" :min="ranges.pestPicking.min"
+                          :max="ranges.pestPicking.max" class="input-field-number" type="number"
+                          pattern="^\d+$" placeholder="Hours" required
+                          @input="setInhabitantsHandler"> hours/day</label>
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Food')">
@@ -59,21 +60,41 @@
                           :max="ranges.eclss.max" class="input-field-number"
                           type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> ECLSS modules</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.o2Reserves" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder = "kg" required
-                          @input="setInhabitantsHandler"> O2 reserves (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.o2LowerLimit" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder = "kg" required
-                          @input="setInhabitantsHandler"> lower limit of O2 (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2Reserves" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder = "kg" required
-                          @input="setInhabitantsHandler"> CO2 reserves (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2LowerLimit" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder = "kg" required
-                          @input="setInhabitantsHandler"> lower limit of CO2 (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss" v-model="eclss.co2UpperLimit" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder = "kg" required
-                          @input="setInhabitantsHandler"> upper limit of CO2 (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
+                                                                         v-model="eclss.o2Reserves"
+                                                                         class="input-field-number"
+                                                                         type="number" pattern="^\d+$"
+                                                                         placeholder="kg" required
+                                                                         @input="setInhabitantsHandler">
+                O2 reserves (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
+                                                                         v-model="eclss.o2LowerLimit"
+                                                                         class="input-field-number"
+                                                                         type="number" pattern="^\d+$"
+                                                                         placeholder="kg" required
+                                                                         @input="setInhabitantsHandler">
+                lower limit of O2 (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
+                                                                         v-model="eclss.co2Reserves"
+                                                                         class="input-field-number"
+                                                                         type="number" pattern="^\d+$"
+                                                                         placeholder="kg" required
+                                                                         @input="setInhabitantsHandler">
+                CO2 reserves (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
+                                                                         v-model="eclss.co2LowerLimit"
+                                                                         class="input-field-number"
+                                                                         type="number" pattern="^\d+$"
+                                                                         placeholder="kg" required
+                                                                         @input="setInhabitantsHandler">
+                lower limit of CO2 (kg)</label>
+            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
+                                                                         v-model="eclss.co2UpperLimit"
+                                                                         class="input-field-number"
+                                                                         type="number" pattern="^\d+$"
+                                                                         placeholder="kg" required
+                                                                         @input="setInhabitantsHandler">
+                upper limit of CO2 (kg)</label>
         </label>
     </div>
 </template>
@@ -111,7 +132,7 @@ export default {
         // when a config file is uploaded
         'configuration.crewQuarters': {
             handler() {
-                if(this.simLocation === 'mars') {
+                if (this.simLocation === 'mars') {
                     const {crewQuarters} = this.configuration
                     // TODO: maybe the amount should be a hidden field
                     if (crewQuarters.type === 'none') {
@@ -132,7 +153,7 @@ export default {
         'configuration.humans.amount': function() {
             const {humans} = this.configuration
             this.humans = humans
-            if(this.simLocation === 'mars') {
+            if (this.simLocation === 'mars') {
                 // if we have humans, check that the crew quarter is selected before checking the ranges
                 const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||
                                                    !this.$refs.crew_quarters_type.checkValidity())
@@ -153,7 +174,7 @@ export default {
             )
             this.validateRef('humans')
         },
-        'configuration.humans.pestPicking' : function() {
+        'configuration.humans.pestPicking': function() {
             const {humans} = this.configuration
             this.humans = humans
             const working_hours_invalid = (humans.weeding > 16 || humans.weeding +
@@ -184,7 +205,7 @@ export default {
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
             const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters,
-            eclss: this.eclss}
+                           eclss: this.eclss}
             this.setInhabitants(value)
         },
         validateRef(ref) {

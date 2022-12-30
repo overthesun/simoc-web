@@ -63,7 +63,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation, simLocation
+            menuActive, currentMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,

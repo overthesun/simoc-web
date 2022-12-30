@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper" v-if="simLocation === 'mars'">
+        <label v-if="simLocation === 'mars'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Greenhouse')">
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
@@ -238,7 +238,7 @@ export default {
             // validate and update greenhouse type
             const {greenhouse} = this.configuration
             const gh_is_valid = this.validValues.greenhouse_types.includes(greenhouse.type)
-            if(this.simLocation === 'mars') {
+            if (this.simLocation === 'mars') {
                 this.$refs.greenhouse_type.setCustomValidity(
                     gh_is_valid ? '' : 'Please select a valid greenhouse type.'
                 )

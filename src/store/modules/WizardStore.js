@@ -344,8 +344,8 @@ export const useWizardStore = defineStore('WizardStore', {
             return totalHours
         },
 
-        getPresets(state, location = 'mars'){
-            if(location === 'b2') {
+        getPresets(state, location = 'mars') {
+            if (location === 'b2') {
                 return state.b2_presets
             } else {
                 return state.mars_presets
@@ -396,7 +396,7 @@ export const useWizardStore = defineStore('WizardStore', {
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
             let newconfig = this.defaultConfig
-            if (location == 'b2') {
+            if (location === 'b2') {
                 newconfig = this.defaultB2Config
             }
             const valid_keys = []

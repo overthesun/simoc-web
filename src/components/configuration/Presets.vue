@@ -17,11 +17,18 @@ Future version should also automatically switch the selected preset to 'custom' 
             <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
             <div>
                 <div class="presets-dropdown">
-                    <select ref="preset_dropdown" v-model="selected"
+                    <select v-if="simLocation === 'mars'" ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-if="simLocation === 'mars'" v-for="(preset, name) in mars_presets" :key="name" :value="name">{{preset.name}}</option>
-                        <option v-else v-for="(preset, b2_name) in b2_presets" :key="b2_name" :value="b2_name">{{preset.name}}</option>
+                        <option v-for="(preset, name) in mars_presets" :key="name"
+                                :value="name">{{preset.name}}</option>
+                        <option :value="CUSTOM">[Custom]</option>
+                    </select>
+                    <select v-else ref="preset_dropdown" v-model="selected"
+                            class="input-field-select" @change="updateConfig(selected)">
+                        <option :value="EMPTY" hidden disabled selected>Preset</option>
+                        <option v-for="(preset, b2_name) in b2_presets" :key="b2_name"
+                                :value="b2_name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
