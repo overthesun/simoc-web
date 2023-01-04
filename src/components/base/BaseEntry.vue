@@ -229,6 +229,7 @@ export default {
         height: 122px;
         min-height: 122px;
         font-size: 14px;
+        vertical-align: top;
         color: transparent;
         background: transparent;
 
