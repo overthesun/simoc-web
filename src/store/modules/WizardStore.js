@@ -501,6 +501,9 @@ export const useWizardStore = defineStore('WizardStore', {
                 this.configuration.plantSpecies[0].amount = ''
             }
         },
+        setCropManagement(value) {
+            this.configuration.improvedCropManagement = value
+        },
         setActiveRefEntry(value) {
             // This is set here so I don't have to call it on every link.
             // It is redundant for the table of contents navigation.

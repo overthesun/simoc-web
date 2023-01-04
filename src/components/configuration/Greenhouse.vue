@@ -48,6 +48,9 @@
                 Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</div>
+            <label><input v-model="configuration.improvedCropManagement" type="checkbox" @change="updateCropManagementHandler" />
+                Yes / No
+            </label>
         </label>
     </div>
 </template>
@@ -66,11 +69,12 @@ export default {
         const {configuration, validValues, activeReference} = storeToRefs(wizard)
         const {
             setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,
-            setActiveRefEntry,
+            setCropManagement, setActiveRefEntry,
         } = wizard
         return {
             simLocation, configuration, validValues, setGreenhouse, addPlantSpecies,
-            updatePlantSpecies, removePlantSpecies, setActiveRefEntry, activeReference,
+            updatePlantSpecies, removePlantSpecies, setCropManagement,
+            setActiveRefEntry, activeReference,
         }
     },
     data() {
@@ -83,6 +87,7 @@ export default {
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
             plant_selects: {},  // map index -> <select> for the plant type dropdown
             plant_inputs: {},  // map index -> <input> for the plant amount
+            improvedCropManagement: false,
         }
     },
 
@@ -96,6 +101,12 @@ export default {
             },
             deep: true,
         },
+        'configuration.improvedCropManagement': {
+            handler() {
+                this.improvedCropManagement = this.configuration.improvedCropManagement
+            },
+            deep: true,
+        }
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
@@ -156,6 +167,10 @@ export default {
             this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
             this.setGreenhouse(value)
+        },
+
+        updateCropManagementHandler(e) {
+            this.setCropManagement(e.target.checked)
         },
 
         /*
