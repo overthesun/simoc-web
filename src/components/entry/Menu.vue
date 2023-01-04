@@ -98,7 +98,7 @@ export default {
             // duplicated in Login.vue
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
-            this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
@@ -117,7 +117,7 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 const {configuration, currency_desc, ...simdata} = json_data
-                this.setConfiguration(configuration)
+                this.setConfiguration(configuration, this.simLocation)
                 this.setSimulationData({simdata, currency_desc})
             } catch (error) {
                 console.error(error)  // report full error in the console

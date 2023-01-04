@@ -45,7 +45,7 @@
         </label>
         <label v-if="simLocation === 'b2'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
-                Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
+                <input ref="improved_checkbox" v-model="greenhouse.improved_crop_management" type="checkbox" @change="setCropManagementHandler">Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</div>
         </label>
@@ -154,6 +154,12 @@ export default {
         // as they do their own thing differently than other form elements.
         setGreenhouseHandler() {
             this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
+            const value = {greenhouse: this.greenhouse}
+            this.setGreenhouse(value)
+        },
+
+        setCropManagementHandler() {
+            this.greenhouse.improved_crop_management = this.$refs.improved_checkbox.checked
             const value = {greenhouse: this.greenhouse}
             this.setGreenhouse(value)
         },

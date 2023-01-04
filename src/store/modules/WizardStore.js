@@ -25,7 +25,7 @@ export const useWizardStore = defineStore('WizardStore', {
             duration_ranges: {
                 // limited to 1 earth year
                 hour: {min: 24, max: 8760},
-                day: {min: 1, max: 365},
+                day: {min: 1, max: 730},
                 year: {min: 1, max: 1},
             },
             duration_units: ['hour', 'day'],
@@ -87,7 +87,8 @@ export const useWizardStore = defineStore('WizardStore', {
             },
             powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
             powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-            greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+            greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
+                         improved_crop_management: false},
             plantSpecies: [{type: 'radish', amount: 40}],
         },
         mars_presets: {
@@ -223,11 +224,11 @@ export const useWizardStore = defineStore('WizardStore', {
                 name: 'Mission 1a',
                 simdata_file: 'simoc-simdata-4-human-preset.json',
                 location: 'b2',
-                startDate: '2022-12-01',
-                duration: {type: 'none', amount: 30, units: 'day'},
+                startDate: '1991-09-26',
+                duration: {type: 'none', amount: 475, units: 'day'},
                 humans: {
                     type: 'human_agent',
-                    amount: 1,
+                    amount: 8,
                     units: '',
                     weeding: 3,
                     pestPicking: 3,
@@ -246,18 +247,19 @@ export const useWizardStore = defineStore('WizardStore', {
                 },
                 powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
+                             improved_crop_management: false},
                 plantSpecies: [{type: 'radish', amount: 40}],
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
                 simdata_file: 'simoc-simdata-4-human-garden-preset.json',
                 location: 'b2',
-                startDate: '2022-12-01',
-                duration: {type: 'none', amount: 30, units: 'day'},
+                startDate: '1993-01-12',
+                duration: {type: 'none', amount: 257, units: 'day'},
                 humans: {
                     type: 'human_agent',
-                    amount: 1,
+                    amount: 8,
                     units: '',
                     weeding: 6,
                     pestPicking: 6,
@@ -276,7 +278,8 @@ export const useWizardStore = defineStore('WizardStore', {
                 },
                 powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
+                             improved_crop_management: false},
                 plantSpecies: [
                     {type: 'wheat', amount: 20},
                     {type: 'cabbage', amount: 30},
@@ -290,11 +293,11 @@ export const useWizardStore = defineStore('WizardStore', {
                 name: 'Mission 2',
                 simdata_file: 'simoc-simdata-sam-1-human-garden-preset.json',
                 location: 'b2',
-                startDate: '2022-12-01',
-                duration: {type: 'none', amount: 30, units: 'day'},
+                startDate: '1994-03-06',
+                duration: {type: 'none', amount: 185, units: 'day'},
                 humans: {
                     type: 'human_agent',
-                    amount: 1,
+                    amount: 7,
                     units: '',
                     weeding: 8,
                     pestPicking: 8,
@@ -313,7 +316,8 @@ export const useWizardStore = defineStore('WizardStore', {
                 },
                 powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: ''},
+                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
+                             improved_crop_management: false},
                 plantSpecies: [
                     {type: 'rice', amount: 2},
                     {type: 'cabbage', amount: 8},
@@ -390,14 +394,16 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
-        setConfiguration(value, location = 'mars') {
+        setConfiguration(value, location) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            let newconfig = this.defaultConfig
+            let newconfig
             if (location === 'b2') {
                 newconfig = this.defaultB2Config
+            } else if (location === 'mars') {
+                newconfig = this.defaultConfig
             }
             const valid_keys = []
             const invalid_keys = []
@@ -418,16 +424,16 @@ export const useWizardStore = defineStore('WizardStore', {
             }
             this.configuration = newconfig
         },
-        setPreset(name, location = 'mars') {
-            let locationPreset = this.mars_presets
+        setPreset(name, location) {
             if (location === 'b2') {
-                locationPreset = this.b2_presets
+                this.setConfiguration(this.b2_presets[name], location)
+            } else if (location === 'mars') {
+                this.setConfiguration(this.mars_presets[name], location)
             }
-            this.setConfiguration(locationPreset[name], location)
         },
-        setLiveConfig(duration) {
+        setLiveConfig(duration, location) {
             console.log('Updating mission time...')
-            this.setConfiguration(duration)
+            this.setConfiguration(duration, location)
         },
         setInitial(value) {
             const {startDate, duration} = value

@@ -60,41 +60,28 @@
                           :max="ranges.eclss.max" class="input-field-number"
                           type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> ECLSS modules</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
-                                                                         v-model="eclss.o2Reserves"
-                                                                         class="input-field-number"
-                                                                         type="number" pattern="^\d+$"
-                                                                         placeholder="kg" required
-                                                                         @input="setInhabitantsHandler">
-                O2 reserves (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
-                                                                         v-model="eclss.o2LowerLimit"
-                                                                         class="input-field-number"
-                                                                         type="number" pattern="^\d+$"
-                                                                         placeholder="kg" required
-                                                                         @input="setInhabitantsHandler">
-                lower limit of O2 (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
-                                                                         v-model="eclss.co2Reserves"
-                                                                         class="input-field-number"
-                                                                         type="number" pattern="^\d+$"
-                                                                         placeholder="kg" required
-                                                                         @input="setInhabitantsHandler">
-                CO2 reserves (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
-                                                                         v-model="eclss.co2LowerLimit"
-                                                                         class="input-field-number"
-                                                                         type="number" pattern="^\d+$"
-                                                                         placeholder="kg" required
-                                                                         @input="setInhabitantsHandler">
-                lower limit of CO2 (kg)</label>
-            <label v-if="simLocation === 'b2'" class="list-input"><input ref="eclss"
-                                                                         v-model="eclss.co2UpperLimit"
-                                                                         class="input-field-number"
-                                                                         type="number" pattern="^\d+$"
-                                                                         placeholder="kg" required
-                                                                         @input="setInhabitantsHandler">
-                upper limit of CO2 (kg)</label>
+            <template v-if="simLocation === 'b2'">
+                <label class="list-input">
+                    <input ref="eclss" v-model="eclss.o2Reserves" class="input-field-number"
+                           type="number" pattern="^\d+$" placeholder="kg" required
+                           @input="setInhabitantsHandler">O2 reserves (kg)</label>
+                <label class="list-input">
+                    <input ref="eclss" v-model="eclss.o2LowerLimit" class="input-field-number"
+                           type="number" pattern="^\d+$" placeholder="kg" required
+                           @input="setInhabitantsHandler">lower limit of O2 (kg)</label>
+                <label class="list-input">
+                    <input ref="eclss" v-model="eclss.co2Reserves" class="input-field-number"
+                           type="number" pattern="^\d+$" placeholder="kg" required
+                           @input="setInhabitantsHandler">CO2 reserves (kg)</label>
+                <label class="list-input">
+                    <input ref="eclss" v-model="eclss.co2LowerLimit" class="input-field-number"
+                           type="number" pattern="^\d+$" placeholder="kg" required
+                           @input="setInhabitantsHandler">lower limit of CO2 (kg)</label>
+                <label class="list-input">
+                    <input ref="eclss" v-model="eclss.co2UpperLimit" class="input-field-number"
+                           type="number" pattern="^\d+$" placeholder="kg" required
+                           @input="setInhabitantsHandler">upper limit of CO2 (kg)</label>
+            </template>
         </label>
     </div>
 </template>

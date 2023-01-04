@@ -7,6 +7,7 @@ const placeIndex = {
     solar_panel_triple: {assetName: 'solar_panel'},
     steps: {assetName: 'steps'},
     airlock: {assetName: 'airlock'},
+    // TODO update to correct b2 asset
     crew_habitat_b2: {assetName: 'hub_small'},
     crew_habitat_sam: {assetName: 'hub_small'},
     crew_habitat_small: {assetName: 'hub_small'},
@@ -16,6 +17,7 @@ const placeIndex = {
     greenhouse_small: {assetName: 'greenhouse_small'},
     greenhouse_medium: {assetName: 'greenhouse_medium'},
     greenhouse_large: {assetName: 'greenhouse_large'},
+    // TODO update to correct B2 asset
     b2_intensive_agricultural_biome: {assetName: 'greenhouse_small'},
     lander: {assetName: 'lander'},
     rover: {assetName: 'rover'},
