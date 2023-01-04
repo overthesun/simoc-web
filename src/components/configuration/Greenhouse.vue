@@ -255,6 +255,7 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 494,
+                greenhouse_b2: 4000,
             }[this.greenhouse.type]
             // calculate the used and free space, then set the max space that can
             // be used by each plant in order not to overflow the greenhouse size

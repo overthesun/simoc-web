@@ -18,7 +18,9 @@
             <div class="input-title" @click="setActiveRefEntry('Inhabitants')">
                 Inhabitants <fa-icon :icon="['fa-solid','circle-info']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">The number of astronaut explorers to live in your habitat.</div>
+            <div class="input-description">The number of
+                {{{'mars': 'astronaut explorers', 'b2': 'biospherians'}[this.simLocation]}}
+            to live in your habitat.</div>
             <input ref="humans" v-model="humans.amount" :min="ranges.humans.min" :max="ranges.humans.max"
                    class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                    required @input="setInhabitantsHandler">

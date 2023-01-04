@@ -6,7 +6,7 @@
             </div>
             <div class="input-description">Select the start date of your stay at B2.</div>
             <div class="input-initial-wrapper">
-                <input ref="startDate" v-model="startDate"
+                <input ref="startDate" v-model="startDate" :min="ranges.startDate.min" :max="ranges.startDate.max"
                        class="input-date-select" type="date" required @input="setInitialHandler"
                        @change="setInitialHandler">
             </div>
@@ -54,6 +54,11 @@ export default {
             duration: undefined,
             duration_min: undefined,
             duration_max: undefined,
+        }
+    },
+    computed: {
+        ranges() {
+            return this.validValues
         }
     },
     watch: {
