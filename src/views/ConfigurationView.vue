@@ -31,6 +31,7 @@
                             <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
                             <Initial ref="initial" />
                             <Inhabitants ref="inhabitants" />
+                            <ECLSS ref="eclss" />
                             <Greenhouse ref="greenhouse" />
                             <Energy v-if="simLocation === 'mars'" ref="energy" />
                             <!--
@@ -77,7 +78,7 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
-import {ConfigurationMenu, Presets, Initial, Inhabitants,
+import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS, 
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
 
@@ -88,6 +89,7 @@ export default {
         Presets,
         Initial,
         Inhabitants,
+        ECLSS,
         Greenhouse,
         Energy,
         Reference,

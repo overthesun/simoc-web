@@ -1,5 +1,6 @@
 export {default as ConfigurationMenu} from './ConfigurationMenu.vue'
 export {default as Inhabitants} from './Inhabitants.vue'
+export {default as ECLSS} from './ECLSS.vue'
 export {default as Greenhouse} from './Greenhouse.vue'
 export {default as Initial} from './Initial.vue'
 export {default as Energy} from './Energy.vue'
