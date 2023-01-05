@@ -98,7 +98,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 co2UpperLimit: 2.5, // %
             },
             powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-            powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+            powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
             greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
             plantSpecies: [
                 {type: 'rice', amount: 530},
@@ -112,7 +112,9 @@ export const useWizardStore = defineStore('WizardStore', {
                 {type: 'soybean', amount: 326},
                 {type: 'orchard', amount: 646},
             ],
-            improvedCropManagement: false
+            improvedCropManagement: false,
+            concrete: {amount: 15800},
+            soil: {amount: 16720},
         },
         mars_presets: {
             one_human: {
@@ -260,7 +262,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     co2UpperLimit: 2.5, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
                 plantSpecies: [
                     {type: 'rice', amount: 530},
@@ -274,7 +276,9 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'soybean', amount: 326},
                     {type: 'orchard', amount: 646},
                 ],
-                improvedCropManagement: false
+                improvedCropManagement: false,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
@@ -294,7 +298,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     co2UpperLimit: 2.5, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: '',
                              o2: 6302, co2: 136, h2o: 381, n2: 35312},
                 plantSpecies: [
@@ -310,7 +314,9 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'orchard', amount: 261},
                     {type: 'red_beet', amount: 784},
                 ],
-                improvedCropManagement: false
+                improvedCropManagement: false,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
             b2_mission_2: {
                 name: 'Mission 2',
@@ -329,7 +335,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     co2UpperLimit: 2.5, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
+                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
                 plantSpecies: [
                     {type: 'rice', amount: 530},
@@ -343,7 +349,9 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'soybean', amount: 326},
                     {type: 'orchard', amount: 646},
                 ],
-                improvedCropManagement: true
+                improvedCropManagement: true,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
         },
     }),
@@ -382,14 +390,19 @@ export const useWizardStore = defineStore('WizardStore', {
             // create formatted configuration
             const fconfig = {
                 location: config.location,
-                startTime: config.startTime,
+                start_time: config.startDate,
                 duration: {type: config.duration.units,
                            value: parseInt(config.duration.amount, 10)},
                 human_agent: {amount: parseInt(config.humans.amount, 10)},
                 food_storage: {ration: parseInt(config.food.amount, 10)},
                 eclss: config.eclss,
-                power_storage: {kwh: parseInt(config.powerStorage.amount, 10)},
-                nutrient_storage: {fertilizer: 300},
+                power_storage: {
+                    amount: parseInt(config.powerStorage.amount, 10),
+                    kwh: parseInt(config.powerStorage.kwh, 10),
+                },
+                nutrient_storage: {fertilizer: config.location === 'b2' ? 10000 : 300},
+                concrete: config.concrete,
+                soil: config.soil,
                 single_agent: 1,
                 plants: [],
             }
