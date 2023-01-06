@@ -47,9 +47,9 @@
             <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
                 Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</div>
-            <label><input v-model="configuration.improvedCropManagement" type="checkbox" @change="updateCropManagementHandler" />
-                Yes / No
+            <label class="input-description" style="display: flex; flex-direction: row; align-items: center; height: 2em">
+                <input v-model="configuration.improvedCropManagement" type="checkbox" @change="updateCropManagementHandler" style="margin-right: 10px"/>
+                <span>Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</span>
             </label>
         </label>
     </div>

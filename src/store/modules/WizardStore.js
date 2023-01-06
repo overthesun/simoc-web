@@ -39,9 +39,9 @@ export const useWizardStore = defineStore('WizardStore', {
             food: {min: 0, max: 8760},
             eclss: {
                 amount: {min: 0, max: 10},
-                co2UpperLimit: {min: 0, max: 3},
+                co2UpperLimit: {min: 0, max: 1},
                 co2Reserves: {min: 0, max: 1e6},
-                co2LowerLimit: {min: 0, max: 3},
+                co2LowerLimit: {min: 0, max: 1},
                 o2Reserves: {min: 0, max: 1e6},
                 o2LowerLimit: {min: 0, max: 30},
             },
@@ -95,10 +95,10 @@ export const useWizardStore = defineStore('WizardStore', {
                 o2LowerLimit: 20,   // %
                 co2Reserves: 0,     // kg
                 co2LowerLimit: 0,   // %
-                co2UpperLimit: 2.5, // %
+                co2UpperLimit: 0.25, // %
             },
             powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-            powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
+            powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
             greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
             plantSpecies: [
                 {type: 'rice', amount: 530},
@@ -259,10 +259,10 @@ export const useWizardStore = defineStore('WizardStore', {
                     o2LowerLimit: 20,   // %
                     co2Reserves: 0,     // kg
                     co2LowerLimit: 0,   // %
-                    co2UpperLimit: 2.5, // %
+                    co2UpperLimit: 0.25, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
                 plantSpecies: [
                     {type: 'rice', amount: 530},
@@ -295,10 +295,10 @@ export const useWizardStore = defineStore('WizardStore', {
                     o2LowerLimit: 20,   // %
                     co2Reserves: 0,     // kg
                     co2LowerLimit: 0,   // %
-                    co2UpperLimit: 2.5, // %
+                    co2UpperLimit: 0.25, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: '',
                              o2: 6302, co2: 136, h2o: 381, n2: 35312},
                 plantSpecies: [
@@ -332,10 +332,10 @@ export const useWizardStore = defineStore('WizardStore', {
                     o2LowerLimit: 20,   // %
                     co2Reserves: 0,     // kg
                     co2LowerLimit: 0,   // %
-                    co2UpperLimit: 2.5, // %
+                    co2UpperLimit: 0.25, // %
                 },
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-                powerStorage: {type: 'power_storage', amount: 10, units: 'kWh', kwh: 1000},
+                powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
                 plantSpecies: [
                     {type: 'rice', amount: 530},
@@ -396,10 +396,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 human_agent: {amount: parseInt(config.humans.amount, 10)},
                 food_storage: {ration: parseInt(config.food.amount, 10)},
                 eclss: config.eclss,
-                power_storage: {
-                    amount: parseInt(config.powerStorage.amount, 10),
-                    kwh: parseInt(config.powerStorage.kwh, 10),
-                },
+                power_storage: {kwh: parseInt(config.powerStorage.amount, 10)},
                 nutrient_storage: {fertilizer: config.location === 'b2' ? 10000 : 300},
                 concrete: config.concrete,
                 soil: config.soil,
