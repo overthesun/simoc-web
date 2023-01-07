@@ -1,5 +1,7 @@
 export {default as GreenhouseConfig} from './GreenhouseConfig.vue'
 export {default as PowerUsage} from './PowerUsage.vue'
+export {default as O2Usage} from './O2Usage.vue'
+export {default as CO2Usage} from './CO2Usage.vue'
 export {default as Gauge} from './Gauge.vue'
 export {default as VersusGraph} from './VersusGraph.vue'
 export {default as AveragesGraph} from './AveragesGraph.vue'

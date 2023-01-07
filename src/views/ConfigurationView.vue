@@ -165,7 +165,7 @@ export default {
         },
     },
     beforeMount() {
-        this.resetConfigDefault()
+        this.resetConfigDefault(this.simLocation)
         this.menuActive = false
         this.activeForm = this.getActiveForm
     },

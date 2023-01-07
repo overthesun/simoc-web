@@ -1,5 +1,7 @@
-<!-- This chart compares the total production and consumption of energy in the config wizard. -->
-
+<!--
+This chart compares the total production and consumption of O2 in the config wizard.
+It was adapted from PowerUsage.vue and mirrors CO2Usage.vue
+-->
 <template>
     <canvas :id="id" style="height: 100%" />
 </template>
@@ -23,57 +25,41 @@ export default {
     },
     data() {
         return {
-            energy: {
+            o2: {
                 // agent: [production, consumption],
                 // these only produce
-                powerGenerator: [0, null],
-                // powerStorage: [0, null], TODO: handle batteries
+                plantSpecies: [0, null],
                 // these only consume
-                plantSpecies: [null, 0],
-                eclss: [null, 0],
-                crewQuarters: [null, 0],
-                greenhouse: [null, 0],
+                humans: [null, 0],
+                soil: [null, 0],
             },
-            // these two arrays should match the items in this.energy
-            labels: ['Solar array', /* 'Batteries', */ 'Plants',
-                     'ECLSS', 'Crew quarters', 'Greenhouse'],
-            colors: ['#0000ff', /* '#0000ee', */ '#ff0000',
-                     '#ee0000', '#dd0000', '#cc0000'],
+            // these two arrays should match the items in this.o2
+            labels: ['Plants', 'Humans', 'Soil'],
+            colors: ['#0000ff', '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
         }
     },
-
     computed: {
-
-        crewQuarters() {
-            return this.configuration.crewQuarters
-        },
-        eclss() {
-            return this.configuration.eclss
-        },
-        powerGenerator() {
-            return this.configuration.powerGeneration
-        },
-        powerStorage() {
-            return this.configuration.powerStorage
-        },
-        greenhouse() {
-            return this.configuration.greenhouse
-        },
         plantSpecies() {
             return this.configuration.plantSpecies
         },
+        humans() {
+            return this.configuration.humans
+        },
+        soil() {
+            return this.configuration.soil
+        }
     },
-
     watch: {
         plantSpecies: {
             handler() {
-                this.energy.plantSpecies[1] = 0
+                this.o2.plantSpecies = [0, 0]
                 this.plantSpecies.forEach(element => {
                     // TODO: double check the plantSpecies values in the presets
                     if (element.type !== null && element.amount > 0) {
-                        this.retrievePower(element.type, element.amount, response => {
-                            const {energy_input} = response
-                            this.energy.plantSpecies[1] += energy_input
+                        this.retrieveO2(element.type, element.amount, response => {
+                            const {o2} = response
+                            this.o2.plantSpecies[0] += o2.output
+                            this.o2.plantSpecies[1] += o2.input
                             this.updateChart()
                         })
                     }
@@ -82,70 +68,31 @@ export default {
             immediate: true,
             deep: true,
         },
-
-        eclss: {
+        humans: {
             handler() {
-                this.retrievePower(this.eclss.type, this.eclss.amount, response => {
-                    const {energy_input} = response
-                    this.energy.eclss[1] = energy_input
+                this.o2.humans = [0, 0]
+                this.retrieveO2('human_agent', this.configuration.humans.amount, response => {
+                    const {o2} = response
+                    this.o2.humans[0] += o2.output
+                    this.o2.humans[1] += o2.input
                     this.updateChart()
                 })
             },
             immediate: true,
-            deep: true,
+            deep: true
         },
-        crewQuarters: {
+        soil: {
             handler() {
-                this.retrievePower(this.crewQuarters.type, 1, response => {
-                    const {energy_input} = response
-                    this.energy.crewQuarters[1] = energy_input
+                this.o2.soil = [0, 0]
+                this.retrieveO2('soil', this.configuration.soil.amount, response => {
+                    const {o2} = response
+                    this.o2.soil[0] += o2.output
+                    this.o2.soil[1] += o2.input
                     this.updateChart()
                 })
             },
             immediate: true,
-            deep: true,
-        },
-        greenhouse: {
-            handler() {
-                this.retrievePower(this.greenhouse.type, 1, response => {
-                    const {energy_input} = response
-                    this.energy.greenhouse[1] = energy_input
-                    this.updateChart()
-                })
-            },
-            immediate: true,
-            deep: true,
-        },
-        powerGenerator: {
-            handler() {
-                this.retrievePower(
-                    this.powerGenerator.type,
-                    this.powerGenerator.amount,
-                    response => {
-                        const {energy_output} = response
-                        this.energy.powerGenerator[0] = energy_output
-                        this.updateChart()
-                    }
-                )
-            },
-            immediate: true,
-            deep: true,
-        },
-        powerStorage: {
-            handler() {
-                this.retrievePower(
-                    this.powerStorage.type,
-                    this.powerStorage.amount,
-                    response => {
-                        // const {energy_capacity} = response
-                        // TODO: handle batteries
-                        // this.energy.powerStorage = energy_capacity
-                        // this.updateChart()
-                    }
-                )
-            },
-            immediate: true,
-            deep: true,
+            deep: true
         },
     },
 
@@ -163,7 +110,7 @@ export default {
                 maintainAspectRatio: false,
                 title: {
                     display: true,
-                    text: 'Total Energy Production vs Consumption',
+                    text: 'O2 Production vs Consumption (ideal conditions)',
                     fontColor: '#eeeeee',
                 },
                 tooltips: {
@@ -179,7 +126,7 @@ export default {
                             beginAtZero: true,
                             fontColor: '#eeeeee',
                             callback(value, index, values) {
-                                return `${value} kWh`
+                                return `${value} kg`
                             },
                         },
                         gridLines: {
@@ -203,17 +150,17 @@ export default {
 
     methods: {
         // TODO request all data as a single json, do math client-side
-        retrievePower(agent, amount, callback) {
+        retrieveO2(agent, amount, callback) {
             axios.defaults.withCredentials = true
             const params = {agent_name: agent, quantity: amount ?? 1}
-            return axios.get('/get_energy', {params})
-                    .then(response => {
-                        if (response.status === 200) {
-                            callback(response.data)
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
+            return axios.get('/get_o2_co2', {params})
+                .then(response => {
+                    if (response.status === 200) {
+                        callback(response.data)
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
         },
         updateChart() {
             // Instead of accepting a dataset for each row (i.e. one for
@@ -225,11 +172,11 @@ export default {
             // 10 in the production row and nothing in the consumption row
             // and vice versa.
             this.chart.data.datasets = []
-            Object.keys(this.energy).forEach((key, i) => {
+            Object.keys(this.o2).forEach((key, i) => {
                 const dataset = {
                     label: this.labels[i],
                     backgroundColor: this.colors[i],
-                    data: this.energy[key],
+                    data: this.o2[key],
                 }
                 this.chart.data.datasets.push(dataset)
             })
