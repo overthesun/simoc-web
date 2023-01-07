@@ -1,5 +1,6 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage':
+        'url(../src/assets/' + simLocation + '-bg.jpg)'}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -30,7 +31,7 @@
                             <Initial ref="initial" />
                             <Inhabitants ref="inhabitants" />
                             <Greenhouse ref="greenhouse" />
-                            <Energy ref="energy" />
+                            <Energy v-if="simLocation === 'mars'" ref="energy" />
                             <!--
                             This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
                             <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
@@ -52,7 +53,6 @@
                         <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                     </nav>
                 </template>
-
                 <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
                     <keep-alive>
@@ -99,17 +99,18 @@ export default {
         const wizard = useWizardStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
+            simLocation,
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
         const {
             configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
-            getPresets, simdataLocation,
+            simdataLocation, getPresets,
         } = storeToRefs(wizard)
         const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            setGameParams, setSimulationData, configuration, getFormattedConfiguration,
+            simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
             activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
             activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
             setConfiguration,
@@ -258,7 +259,7 @@ export default {
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
-                        this.setConfiguration(configuration)
+                        this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData({simdata, currency_desc})
                         this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
                         this.isLive = false
@@ -318,6 +319,9 @@ export default {
     min-height: 100vh;
     display: grid;
     grid-template-rows: 50px minmax(0px,1fr);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 50% 10%;
 }
 
     .form-wrapper{

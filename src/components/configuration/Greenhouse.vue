@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper">
+        <label v-if="simLocation === 'mars'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Greenhouse')">
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
@@ -19,7 +19,6 @@
             <div class="input-title" @click="setActiveRefEntry('PlantSpecies')">
                 Plant Species <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-
             <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
@@ -44,25 +43,34 @@
                 </fa-layers>
             </div>
         </label>
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
+                <input ref="improved_checkbox" v-model="greenhouse.improved_crop_management" type="checkbox" @change="setCropManagementHandler">Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>
+            <div class="input-description">Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</div>
+        </label>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {configuration, validValues, activeReference} = storeToRefs(wizard)
         const {
             setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,
             setActiveRefEntry,
         } = wizard
         return {
-            configuration, validValues, setGreenhouse, addPlantSpecies, updatePlantSpecies,
-            removePlantSpecies, setActiveRefEntry, activeReference,
+            simLocation, configuration, validValues, setGreenhouse, addPlantSpecies,
+            updatePlantSpecies, removePlantSpecies, setActiveRefEntry, activeReference,
         }
     },
     data() {
@@ -150,6 +158,12 @@ export default {
             this.setGreenhouse(value)
         },
 
+        setCropManagementHandler() {
+            this.greenhouse.improved_crop_management = this.$refs.improved_checkbox.checked
+            const value = {greenhouse: this.greenhouse}
+            this.setGreenhouse(value)
+        },
+
         /*
         //Unused method for gathering unique plant names for a particular field.
         uniquePlantNames:function(index){
@@ -230,10 +244,12 @@ export default {
             // validate and update greenhouse type
             const {greenhouse} = this.configuration
             const gh_is_valid = this.validValues.greenhouse_types.includes(greenhouse.type)
-            this.$refs.greenhouse_type.setCustomValidity(
-                gh_is_valid ? '' : 'Please select a valid greenhouse type.'
-            )
-            this.$refs.greenhouse_type.reportValidity()
+            if (this.simLocation === 'mars') {
+                this.$refs.greenhouse_type.setCustomValidity(
+                    gh_is_valid ? '' : 'Please select a valid greenhouse type.'
+                )
+                this.$refs.greenhouse_type.reportValidity()
+            }
             this.greenhouse = greenhouse
 
             // validate and update plants

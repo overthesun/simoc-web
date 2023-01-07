@@ -10,7 +10,7 @@
             <dt v-if="getGameID">Mission ID:</dt>
             <dd v-if="getGameID">{{getGameID}}</dd>
             <dt>Location:</dt>
-            <dd>{{stringFormatter(configuration.location)}}</dd>
+            <dd>{{stringFormatter(simLocation)}}</dd>
             <dt>Duration:</dt>
             <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
             <dt>Mars days:</dt>
@@ -47,7 +47,7 @@
 
         <dl v-if="info_section == 'location-info'">
             <dt>Location:</dt>
-            <dd>{{stringFormatter(configuration.location)}}</dd>
+            <dd>{{stringFormatter(simLocation)}}</dd>
             <dt>Day length:</dt>
             <dd>24h 37m 23s</dd>
             <dt>Surface Temperature:</dt>
@@ -76,10 +76,10 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {currentStepBuffer, simLocation} = storeToRefs(dashboard)
         const {getData} = dashboard
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
-        return {currentStepBuffer, getData, configuration, getTotalMissionHours}
+        return {currentStepBuffer, simLocation, getData, configuration, getTotalMissionHours}
     },
     modes: ['sim', 'kiosk'],
     data() {

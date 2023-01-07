@@ -1,5 +1,6 @@
 <template>
-    <div class="base-dashboard-wrapper">
+    <div class="base-dashboard-wrapper" :style="{'backgroundImage':
+        'url(../src/assets/' + simLocation + '-bg.jpg)'}">
         <router-view />
     </div>
 </template>
@@ -61,7 +62,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation,
+            menuActive, currentMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -74,7 +75,7 @@ export default {
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation,
+            menuActive, currentMode, leaveWithoutConfirmation, simLocation,
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
             configuration, getTotalMissionHours,
@@ -264,7 +265,7 @@ export default {
                 }
                 // Send bundle to parseData in the livedata store for parsing
                 this.parseData(data)
-                this.setLiveConfig({duration: {amount: this.bundleNum}})  // Sets the totalMissionHours
+                this.setLiveConfig({duration: {amount: this.bundleNum}}, this.simLocation)  // Sets the totalMissionHours
                 this.maxStepBuffer = this.bundleNum
             })
             socket.on('disconnect', msg => {
@@ -450,5 +451,8 @@ export default {
         min-height: 100vh;
         overflow:hidden;
         position:relative;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: 50% 10%;
     }
 </style>

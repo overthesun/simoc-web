@@ -37,15 +37,14 @@ using v-for to populate all links with the title and the approriate value for th
             </div>
         </div>
 
-        <div v-if="activeRefEntry === 'Location'" class="reference-item">
+        <div v-if="activeRefEntry === 'StartDate'" class="reference-item">
             <div class="reference-item-title">
                 <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
-                         @click="setActiveRefEntry('Table')" /> Location
+                         @click="setActiveRefEntry('Table')" /> Start Date
             </div>
             <div class="reference-item-entry">
-                <p>This version of SIMOC offers one location: Mars.  It is assumed the <a class="reference-link" href="#" @click="setActiveRefEntry('CrewQuarters')">habitat</a> has been built to your specifications and deployed in advance of your arrival.  The habitat is located close to the equator for relatively equal periods of day and night through the Martian year.</p>
-                <p>Future versions will enable you to select specific locations on Mars, and Earth’s Moon, asteroids, and the moons of Jupiter and Saturn. Each of these locations will present unique challenges for your crew’s survival.</p>
-                <p>For now, Mars presents its own challenges. Good luck!</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lorem tortor, sollicitudin ac sem a, egestas ultrices mauris. Vivamus sit amet eros scelerisque, suscipit metus vel, ullamcorper leo. Suspendisse tincidunt neque vitae est bibendum, et gravida lacus scelerisque. Nullam elementum volutpat dictum. Quisque eros nibh, tempus at mollis sed, vulputate ut lacus. Cras nec bibendum est, in congue nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae</p>
+                <p> Aenean nec metus efficitur tortor ullamcorper ullamcorper. Vestibulum euismod ligula a suscipit dignissim. Quisque vel eros aliquam nulla fermentum maximus ut et sem. Curabitur elit magna, aliquam sagittis odio viverra, ullamcorper euismod velit. In mi arcu, tempor vitae interdum eget, commodo a nulla. Maecenas et sodales ante, vitae eleifend magna. Integer accumsan egestas eros id viverra. Nulla eget rutrum arcu, nec aliquam sem</p>
             </div>
         </div>
 
@@ -70,6 +69,28 @@ using v-for to populate all links with the title and the approriate value for th
             <div class="reference-item-entry">
                 <p>While you can use SIMOC to simulate a plant-only configuration, if you design a mission that includes humans, then Environmental Control and Life Support System (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>), <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food</a>, and a <a class="reference-link" href="#" @click="setActiveRefEntry('CrewQuarters')">crew quarters</a> are required. It is assumed the food and life support required to bring the humans from Earth to Mars are already accounted for, your SIMOC mission starting the day you land and occupy the habitat. Be certain to provide ample food for the astronauts to consume until the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> produces the first edible <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a>. You must include at least one ECLSS to maintain breathable air and potable water, as well as manage human waste products. The ELCSS will likely continue to be used when the plants are harvested or plant growth is not maintained due to environmental constraints.</p>
                 <p><i>ASTRONAUTS are not required for a plant-only simulation.</i></p>
+            </div>
+        </div>
+
+        <div v-if="activeRefEntry === 'Weeding'" class="reference-item">
+            <div class="reference-item-title">
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
+                         @click="setActiveRefEntry('Table')" /> Weeding
+            </div>
+            <div class="reference-item-entry">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lorem tortor, sollicitudin ac sem a, egestas ultrices mauris. Vivamus sit amet eros scelerisque, suscipit metus vel, ullamcorper leo. Suspendisse tincidunt neque vitae est bibendum, et gravida lacus scelerisque. Nullam elementum volutpat dictum. Quisque eros nibh, tempus at mollis sed, vulputate ut lacus. Cras nec bibendum est, in congue nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae</p>
+                <p> Aenean nec metus efficitur tortor ullamcorper ullamcorper. Vestibulum euismod ligula a suscipit dignissim. Quisque vel eros aliquam nulla fermentum maximus ut et sem. Curabitur elit magna, aliquam sagittis odio viverra, ullamcorper euismod velit. In mi arcu, tempor vitae interdum eget, commodo a nulla. Maecenas et sodales ante, vitae eleifend magna. Integer accumsan egestas eros id viverra. Nulla eget rutrum arcu, nec aliquam sem</p>
+            </div>
+        </div>
+
+        <div v-if="activeRefEntry === 'PestPicking'" class="reference-item">
+            <div class="reference-item-title">
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
+                         @click="setActiveRefEntry('Table')" /> Pest Picking
+            </div>
+            <div class="reference-item-entry">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lorem tortor, sollicitudin ac sem a, egestas ultrices mauris. Vivamus sit amet eros scelerisque, suscipit metus vel, ullamcorper leo. Suspendisse tincidunt neque vitae est bibendum, et gravida lacus scelerisque. Nullam elementum volutpat dictum. Quisque eros nibh, tempus at mollis sed, vulputate ut lacus. Cras nec bibendum est, in congue nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae</p>
+                <p> Aenean nec metus efficitur tortor ullamcorper ullamcorper. Vestibulum euismod ligula a suscipit dignissim. Quisque vel eros aliquam nulla fermentum maximus ut et sem. Curabitur elit magna, aliquam sagittis odio viverra, ullamcorper euismod velit. In mi arcu, tempor vitae interdum eget, commodo a nulla. Maecenas et sodales ante, vitae eleifend magna. Integer accumsan egestas eros id viverra. Nulla eget rutrum arcu, nec aliquam sem</p>
             </div>
         </div>
 
@@ -146,6 +167,25 @@ using v-for to populate all links with the title and the approriate value for th
             </div>
         </div>
 
+        <div v-if="activeRefEntry === 'ImprovedCropManagement'" class="reference-item">
+            <div class="reference-item-title">
+                <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
+                         @click="setActiveRefEntry('Table')" /> Improved Crop Management
+            </div>
+            <div class="reference-item-entry">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lorem tortor, sollicitudin ac sem a, egestas ultrices mauris. Vivamus sit amet eros scelerisque, suscipit metus vel, ullamcorper leo. Suspendisse tincidunt neque vitae est bibendum, et gravida lacus scelerisque. Nullam elementum volutpat dictum. Quisque eros nibh, tempus at mollis sed, vulputate ut lacus. Cras nec bibendum est, in congue nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae</p>
+                <p> Aenean nec metus efficitur tortor ullamcorper ullamcorper. Vestibulum euismod ligula a suscipit dignissim. Quisque vel eros aliquam nulla fermentum maximus ut et sem. Curabitur elit magna, aliquam sagittis odio viverra, ullamcorper euismod velit. In mi arcu, tempor vitae interdum eget, commodo a nulla. Maecenas et sodales ante, vitae eleifend magna. Integer accumsan egestas eros id viverra. Nulla eget rutrum arcu, nec aliquam sem</p>
+                <ul>
+                    <li>Don’t cross-contaminate with hand tools</li>
+                    <li>Remove pests immediately</li>
+                    <li>Pollinate plants by hand</li>
+                    <li>Wash diseased leaves with soap & water</li>
+                    <li>Protect seedlings from roaches</li>
+                </ul>
+
+            </div>
+        </div>
+
         <div v-if="activeRefEntry === 'PowerGeneration'" class="reference-item">
             <div class="reference-item-title">
                 <fa-icon :icon="['fa-solid','list-ul']" title="Go to Table of Contents"
@@ -177,7 +217,6 @@ using v-for to populate all links with the title and the approriate value for th
             <ul>
                 <li><a class="reference-link" href="#" @click="setActiveRefEntry('Welcome')">Welcome to SIMOC</a></li>
                 <li><a class="reference-link" href="#" @click="setActiveRefEntry('Presets')">Presets</a></li>
-                <li><a class="reference-link" href="#" @click="setActiveRefEntry('Location')">Location</a></li>
                 <li><a class="reference-link" href="#" @click="setActiveRefEntry('Duration')">Mission Duration</a></li>
                 <li><a class="reference-link" href="#" @click="setActiveRefEntry('Inhabitants')">Inhabitants</a></li>
                 <li><a class="reference-link" href="#" @click="setActiveRefEntry('Food')">Food Supply</a></li>
