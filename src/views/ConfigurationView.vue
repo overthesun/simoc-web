@@ -1,7 +1,6 @@
 <template>
     <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage':
-        'url(../src/assets/' + simLocation + '-bg.jpg)', 'background-repeat': 'no-repeat', 'background-attachment':
-        'fixed', 'background-size':'cover', 'background-position': '50% 10%', 'background-color': '#1e1e1e'}">
+        'url(../src/assets/' + simLocation + '-bg.jpg)'}">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -262,7 +261,7 @@ export default {
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
-                        this.setConfiguration(configuration)
+                        this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData({simdata, currency_desc})
                         this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
                         this.isLive = false
@@ -322,6 +321,9 @@ export default {
     min-height: 100vh;
     display: grid;
     grid-template-rows: 50px minmax(0px,1fr);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 50% 10%;
 }
 
     .form-wrapper{

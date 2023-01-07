@@ -78,13 +78,7 @@ export const useWizardStore = defineStore('WizardStore', {
             startDate: '1991-01-01',
             duration: {type: 'none', amount: 30, units: 'day'},
             // TODO: Implement weeding and pestPicking on backend, connect
-            humans: {
-                type: 'human_agent',
-                amount: 8,
-                units: '',
-                weeding: null,
-                pestPicking: null,
-            },
+            humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
             food: {type: 'food_storage', amount: 500, units: 'kg'},
             crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
             eclss: {
@@ -251,7 +245,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 location: 'b2',
                 startDate: '1991-09-26',
                 duration: {type: 'none', amount: 475, units: 'day'},
-                humans: {type: 'human_agent', amount: 8, units: ''},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: '',
@@ -324,7 +318,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 location: 'b2',
                 startDate: '1994-03-06',
                 duration: {type: 'none', amount: 185, units: 'day'},
-                humans: {type: 'human_agent', amount: 7, units: ''},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: '',
@@ -426,7 +420,7 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
-        setConfiguration(value, location = 'mars') {
+        setConfiguration(value, location) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
@@ -451,16 +445,16 @@ export const useWizardStore = defineStore('WizardStore', {
             }
             this.configuration = newconfig
         },
-        setPreset(name, location = 'mars') {
-            let locationPreset = this.mars_presets
+        setPreset(name, location) {
             if (location === 'b2') {
-                locationPreset = this.b2_presets
+                this.setConfiguration(this.b2_presets[name], location)
+            } else if (location === 'mars') {
+                this.setConfiguration(this.mars_presets[name], location)
             }
-            this.setConfiguration(locationPreset[name], location)
         },
-        setLiveConfig(duration) {
+        setLiveConfig(duration, location) {
             console.log('Updating mission time...')
-            this.setConfiguration(duration)
+            this.setConfiguration(duration, location)
         },
         setInitial(value) {
             const {startDate, duration} = value

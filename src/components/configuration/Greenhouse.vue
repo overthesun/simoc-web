@@ -45,7 +45,7 @@
         </label>
         <label v-if="simLocation === 'b2'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
-                Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
+                <input ref="improved_checkbox" v-model="greenhouse.improved_crop_management" type="checkbox" @change="setCropManagementHandler">Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <label class="input-description" style="display: flex; flex-direction: row; align-items: center; height: 2em">
                 <input v-model="configuration.improvedCropManagement" type="checkbox" @change="updateCropManagementHandler" style="margin-right: 10px"/>

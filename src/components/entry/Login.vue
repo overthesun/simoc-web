@@ -80,9 +80,9 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, parameters} = storeToRefs(dashboard)
+        const {currentMode, parameters, simLocation} = storeToRefs(dashboard)
         const {setLiveConfig} = wizard
-        return {currentMode, parameters, setLiveConfig}
+        return {currentMode, parameters, simLocation, setLiveConfig}
     },
     data() {
         // Initialize all the values that will be used for v-model
@@ -167,7 +167,7 @@ export default {
             // duplicated in Menu.vue
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
-            this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
             this.$router.push('dashboard')
         },
         keyListener(e) {

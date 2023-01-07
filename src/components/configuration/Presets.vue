@@ -140,7 +140,7 @@ export default {
             const loadPreset = () => {
                 const config = localStorage.getItem('custom-config')
                 if (config) {
-                    this.setConfiguration(JSON.parse(config))
+                    this.setConfiguration(JSON.parse(config), this.simLocation)
                 } else {
                     this.alert('No Custom preset found. Use the Save button to save one.')
                 }

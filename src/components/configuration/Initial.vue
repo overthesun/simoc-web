@@ -16,7 +16,7 @@
                 Mission Duration <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div v-if="simLocation === 'mars'" class="input-description">Select the duration of your stay on Mars.</div>
-            <div v-else class="input-description">Select the duration of your stay at B2.</div>
+            <div v-else class="input-description">Select the duration of your stay at Biosphere 2.</div>
             <div class="input-initial-wrapper">
                 <input ref="duration" v-model="duration.amount" :min="duration_min" :max="duration_max"
                        class="input-field-number" type="number" pattern="^\d+$"
