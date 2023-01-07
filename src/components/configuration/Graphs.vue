@@ -18,10 +18,10 @@ This component would have a similar functionality to that of the reference wiki.
             <PowerUsage id="pu-config-canvas" />
         </div>
         <div v-if="simLocation === 'b2'">
-            <O2Usage id="ou-config-canvas"  />
+            <O2Usage id="ou-config-canvas" />
         </div>
         <div v-if="simLocation === 'b2'">
-            <CO2Usage id="cu-config-canvas"  />
+            <CO2Usage id="cu-config-canvas" />
         </div>
         <div><GreenhouseConfig id="gh-config-canvas" /></div>
     </section>

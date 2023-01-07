@@ -77,7 +77,7 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
-import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS, 
+import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
 

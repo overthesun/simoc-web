@@ -59,7 +59,7 @@ export default {
     computed: {
         ranges() {
             return this.validValues
-        }
+        },
     },
     watch: {
         'configuration.startDate': function() {

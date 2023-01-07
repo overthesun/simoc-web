@@ -4,7 +4,7 @@ It was adapted from PowerUsage.vue and mirrors O2Usage.vue
 -->
 
 <template>
-    <canvas :id="id"  style="height: 100%"/>
+    <canvas :id="id" style="height: 100%" />
 </template>
 
 <script>
@@ -84,7 +84,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         soil: {
             handler() {
@@ -97,7 +97,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
         concrete: {
             handler() {
@@ -110,7 +110,7 @@ export default {
                 })
             },
             immediate: true,
-            deep: true
+            deep: true,
         },
     },
 
@@ -172,13 +172,13 @@ export default {
             axios.defaults.withCredentials = true
             const params = {agent_name: agent, quantity: amount ?? 1}
             return axios.get('/get_o2_co2', {params})
-                .then(response => {
-                    if (response.status === 200) {
-                        callback(response.data)
-                    }
-                }).catch(error => {
-                    console.log(error)
-                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            callback(response.data)
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
         },
         updateChart() {
             // Instead of accepting a dataset for each row (i.e. one for

@@ -245,16 +245,16 @@ export const useWizardStore = defineStore('WizardStore', {
                 location: 'b2',
                 startDate: '1991-09-26',
                 duration: {type: 'none', amount: 475, units: 'day'},
-                humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null,
+                         pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: '',
-                    o2Reserves: 0,      // kg
-                    o2LowerLimit: 20,   // %
-                    co2Reserves: 0,     // kg
-                    co2LowerLimit: 0,   // %
-                    co2UpperLimit: 0.25, // %
-                },
+                        o2Reserves: 0,          // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
@@ -285,12 +285,11 @@ export const useWizardStore = defineStore('WizardStore', {
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: '',
                                o2: 1967, co2: 42, h2o: 120, n2: 11025},
                 eclss: {type: 'eclss', amount: 1, units: '',
-                    o2Reserves: 11289,  // kg
-                    o2LowerLimit: 20,   // %
-                    co2Reserves: 0,     // kg
-                    co2LowerLimit: 0,   // %
-                    co2UpperLimit: 0.25, // %
-                },
+                        o2Reserves: 0,          // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: '',
@@ -318,16 +317,16 @@ export const useWizardStore = defineStore('WizardStore', {
                 location: 'b2',
                 startDate: '1994-03-06',
                 duration: {type: 'none', amount: 185, units: 'day'},
-                humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null,
+                         pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: '',
-                    o2Reserves: 0,      // kg
-                    o2LowerLimit: 20,   // %
-                    co2Reserves: 0,     // kg
-                    co2LowerLimit: 0,   // %
-                    co2UpperLimit: 0.25, // %
-                },
+                        o2Reserves: 0,          // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
                 powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
@@ -397,7 +396,8 @@ export const useWizardStore = defineStore('WizardStore', {
                 single_agent: 1,
                 plants: [],
             }
-            fconfig[config.powerGeneration.type] = {amount: parseInt(config.powerGeneration.amount, 10)}
+            const pg = config.powerGeneration
+            fconfig[pg.type] = {amount: parseInt(pg.amount, 10)}
             if ((state.configuration.greenhouse.type === 'none') &&
                 (state.configuration.crewQuarters.type === 'none')) {
                 throw new Error('Please select a value for the ' +
@@ -425,7 +425,7 @@ export const useWizardStore = defineStore('WizardStore', {
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            let newconfig = location === 'b2' ? this.defaultB2Config : this.defaultConfig
+            const newconfig = location === 'b2' ? this.defaultB2Config : this.defaultConfig
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
@@ -462,7 +462,7 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration.duration = duration
         },
         setInhabitants(value) {
-            const {humans, food, crewQuarters, eclss} = value
+            const {humans, food, crewQuarters} = value
             this.configuration.humans = humans
             this.configuration.food = food
             this.configuration.crewQuarters = crewQuarters
