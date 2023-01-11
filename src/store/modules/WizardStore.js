@@ -107,6 +107,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 {type: 'orchard', amount: 646},
             ],
             improvedCropManagement: false,
+            startWithM1EndingAtmosphere: false,
             concrete: {amount: 15800},
             soil: {amount: 16720},
         },
@@ -271,6 +272,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'orchard', amount: 646},
                 ],
                 improvedCropManagement: false,
+                startWithM1EndingAtmosphere: false,
                 concrete: {amount: 15800},
                 soil: {amount: 16720},
             },
@@ -285,7 +287,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: '',
                                o2: 1967, co2: 42, h2o: 120, n2: 11025},
                 eclss: {type: 'eclss', amount: 1, units: '',
-                        o2Reserves: 0,          // kg
+                        o2Reserves: 11288,      // kg
                         o2LowerLimit: 20,       // %
                         co2Reserves: 0,         // kg
                         co2LowerLimit: 0,       // %
@@ -307,6 +309,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'orchard', amount: 261},
                     {type: 'red_beet', amount: 784},
                 ],
+                startWithM1EndingAtmosphere: true,
                 improvedCropManagement: false,
                 concrete: {amount: 15800},
                 soil: {amount: 16720},
@@ -342,6 +345,7 @@ export const useWizardStore = defineStore('WizardStore', {
                     {type: 'soybean', amount: 326},
                     {type: 'orchard', amount: 646},
                 ],
+                startWithM1EndingAtmosphere: false,
                 improvedCropManagement: true,
                 concrete: {amount: 15800},
                 soil: {amount: 16720},
@@ -414,6 +418,13 @@ export const useWizardStore = defineStore('WizardStore', {
                 if (element.type !== '') {
                     fconfig.plants.push({species: element.type,
                                          amount: parseInt(element.amount, 10)})
+                }
+            })
+            // Flags, used to customize starting parameters in b2 sim
+            const flags = ['improvedCropManagement', 'startWithM1EndingAtmosphere']
+            flags.forEach(f => {
+                if (f in state.configuration) {
+                    fconfig[f] = state.configuration[f]
                 }
             })
             return fconfig
