@@ -11,12 +11,20 @@
             <dd v-if="getGameID">{{getGameID}}</dd>
             <dt>Location:</dt>
             <dd>{{stringFormatter(simLocation)}}</dd>
-            <dt>Duration:</dt>
-            <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
-            <dt>Mars days:</dt>
-            <dd>{{calcSols(currentStepBuffer-1)}}</dd>
-            <dt>Earth days:</dt>
-            <dd>{{calcDays(currentStepBuffer-1)}}</dd>
+            <template v-if="simLocation === 'mars'">
+                <dt>Duration:</dt>
+                <dd>{{currentStepBuffer}}/{{getTotalMissionHours}} h</dd>
+                <dt>Mars days:</dt>
+                <dd>{{calcSols(currentStepBuffer-1)}}</dd>
+                <dt>Earth days:</dt>
+                <dd>{{calcDays(currentStepBuffer-1)}}</dd>
+            </template>
+            <template v-else-if="simLocation === 'b2'">
+                <dt>Start Date:</dt>
+                <dd>{{startDate.toLocaleString()}}</dd>
+                <dt>Current Date:</dt>
+                <dd>{{calcDate(currentStepBuffer).toLocaleString()}}</dd>
+            </template>
             <dt>Inhabitants:</dt>
             <dd>{{humanCount()}}/{{configuration.humans.amount}}</dd>
             <!-- TODO: restore this when we get the value from the backend
@@ -26,21 +34,41 @@
 
         <dl v-if="info_section == 'mission-config'">
             <dt>Location:</dt>
-            <dd>Mars</dd>
+            <dd>{{stringFormatter(simLocation)}}</dd>
+            <template v-if="simLocation === 'b2'">
+                <dt>Start Date:</dt>
+                <dd>{{startDate.toLocaleDateString()}}</dd>
+            </template>
             <dt>Duration:</dt>
             <dd>{{configuration.duration.amount}} {{stringFormatter(configuration.duration.units)}}</dd>
             <dt>Food:</dt>
             <dd>{{configuration.food.amount}} {{configuration.food.units}}</dd>
-            <dt>Crew Quarters:</dt>
-            <dd>{{stringFormatter(configuration.crewQuarters.type).split(' ').pop()}}</dd>
-            <dt>Greenhouse:</dt>
-            <dd>{{stringFormatter(configuration.greenhouse.type).split(' ').pop()}}</dd>
-            <dt>Solar PV Array:</dt>
-            <dd>{{configuration.powerGeneration.amount}} panels</dd>
-            <dt>Batteries:</dt>
-            <dd>{{configuration.powerStorage.amount}} {{configuration.powerStorage.units}}</dd>
-            <dt>ECLSS:</dt>
-            <dd>{{configuration.eclss.amount}}</dd>
+            <template v-if="simLocation === 'mars'">
+                <dt>Crew Quarters:</dt>
+                <dd>{{stringFormatter(configuration.crewQuarters.type).split(' ').pop()}}</dd>
+                <dt>Greenhouse:</dt>
+                <dd>{{stringFormatter(configuration.greenhouse.type).split(' ').pop()}}</dd>
+                <dt>Solar PV Array:</dt>
+                <dd>{{configuration.powerGeneration.amount}} panels</dd>
+                <dt>Batteries:</dt>
+                <dd>{{configuration.powerStorage.amount}} {{configuration.powerStorage.units}}</dd>
+                <dt>ECLSS:</dt>
+                <dd>{{configuration.eclss.amount}}</dd>
+            </template>
+            <template v-else-if="simLocation === 'b2'">
+                <dt>CO2 Upper Limit:</dt>
+                <dd>{{configuration.eclss.co2UpperLimit * 1e4}} ppm</dd>
+                <dt>CO2 Reserves:</dt>
+                <dd>{{configuration.eclss.co2Reserves}} kg</dd>
+                <dt>CO2 Lower Limit:</dt>
+                <dd>{{configuration.eclss.co2LowerLimit * 1e4}} ppm</dd>
+                <dt>O2 Reserves:</dt>
+                <dd>{{configuration.eclss.o2Reserves}} kg</dd>
+                <dt>O2 Lower Limit:</dt>
+                <dd>{{configuration.eclss.o2LowerLimit}} %</dd>
+                <dt>Improved Crop Management:</dt>
+                <dd>{{configuration.improvedCropManagement ? 'True' : 'False'}}</dd>
+            </template>
             <dt>Inhabitants:</dt>
             <dd>{{configuration.humans.amount}}</dd>
         </dl>
@@ -49,15 +77,15 @@
             <dt>Location:</dt>
             <dd>{{stringFormatter(simLocation)}}</dd>
             <dt>Day length:</dt>
-            <dd>24h 37m 23s</dd>
+            <dd>{{locationInfo.dayLength[simLocation]}}</dd>
             <dt>Surface Temperature:</dt>
-            <dd>210 K | -63 °C | -81 °F</dd>
+            <dd>{{locationInfo.surfaceTemperature[simLocation]}}</dd>
             <dt>Solar Gain:</dt>
-            <dd>500 W/m²</dd>
+            <dd>{{locationInfo.solarGain[simLocation]}}</dd>
             <dt>Atmospheric Pressure:</dt>
-            <dd>0.636 kPa</dd>
+            <dd>{{locationInfo.atmosphericPressure[simLocation]}}</dd>
             <dt>Gravity:</dt>
-            <dd>3.71 m/s²</dd>
+            <dd>{{locationInfo.gravity[simLocation]}}</dd>
         </dl>
 
     </section>
@@ -85,10 +113,23 @@ export default {
     data() {
         return {
             info_section: 'mission-status',
+            locationInfo: {
+                dayLength: {mars: '24h 37m 23s', b2: '24h'},
+                surfaceTemperature: {mars: '210 K | -63 °C | -81 °F', b2: '288 K | 15 °C | -60 °F'},
+                solarGain: {mars: '500 W/m²', b2: '2000 W/m²'},
+                atmosphericPressure: {mars: '0.636 kPa', b2: '101 kPa'},
+                gravity: {mars: '3.71 m/s²', b2: '9.81 m/s²'},
+            }
         }
     },
     computed: {
         ...mapGetters(['getGameID']),
+
+        startDate() {
+            if (this.simLocation === 'b2') {
+                return new Date(Date.parse(this.configuration.startDate + ' 00:00:00'))
+            }
+        }
     },
     methods: {
         stringFormatter: StringFormatter,
@@ -116,6 +157,11 @@ export default {
             const minutes = Math.floor((hours % 1) * 60)
             return `${days}d ${Math.floor(hours)}h ${minutes}m`
         },
+        calcDate(stepBuffer) {
+            const startDate = new Date(this.startDate)
+            const currentMS = startDate.setHours(this.startDate.getHours() + stepBuffer)
+            return new Date(currentMS)
+        }
     },
 }
 </script>
