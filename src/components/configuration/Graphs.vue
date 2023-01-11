@@ -54,16 +54,23 @@ export default {
 .graphs-wrapper {
     display: grid;
     justify-items: center;
-    height: 100%;
     position: relative;
     &.mars {
-        grid-template-rows: 50% 50%;
+        grid-template-rows: 1fr 1fr;
     }
     &.b2 {
-        grid-template-rows: 33% 33% 33%;
+        grid-template-rows: 1fr 1fr 1fr;
     }
+    grid-template-columns: 1fr;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
 }
 .graphs-wrapper div {
+    /* these are required by ChartJS
+     * to properly resize the graph */
+    position: relative;
+    overflow-x: auto;
     width: 100%;
 }
 .graphs-wrapper canvas {

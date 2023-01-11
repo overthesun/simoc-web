@@ -36,14 +36,9 @@ export default {
         Tooltip,
     },
     props: {
-        gameConfig: {
-            type: Object,
-            default: null,
-        },
-        isActive: {
-            type: Boolean,
-            default: true,
-        },
+        gameConfig: {type: Object, default: null},
+        isActive: {type: Boolean, default: true},
+        fullscreen: {type: Boolean, default: true},
     },
     data() {
         return {
@@ -79,6 +74,10 @@ export default {
                 this.stop()
             }
         },
+        fullscreen() {
+            // resize the canvas when we switch to fullscreen
+            this.$nextTick(() => this.resizer.setSize())
+        },
     },
     mounted() {
         this.init()
@@ -99,7 +98,7 @@ export default {
             loader = new Loader(this.settings, this.showLoadingScreen)
 
             // eslint-disable-next-line no-new
-            new Resizer(camera, renderer, this.addHookup, this.$refs.sceneContainer)
+            this.resizer = new Resizer(camera, renderer, this.addHookup, this.$refs.sceneContainer)
             buildControls(camera, renderer.domElement, this.settings, this.addTick)
             buildLights(this.settings, scene)
             buildSkybox(scene, this.settings)
