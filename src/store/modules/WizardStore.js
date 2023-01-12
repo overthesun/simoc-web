@@ -9,7 +9,7 @@ export const useWizardStore = defineStore('WizardStore', {
         // the index of the currently-selected form
         activeFormIndex: 0,
         // array of component names used within the ConfigurationView. Used to display by index
-        formOrder: ['Initial', 'Inhabitants', 'Greenhouse', 'Energy', 'Finalize'],
+        formOrder: ['Initial', 'Inhabitants', 'ECLSS', 'Greenhouse', 'Energy', 'Finalize'],
         // which window on the reference side is active
         activeReference: 'Layout',  // see also resetConfigDefault below
         // which entry is currently active within the reference
@@ -22,27 +22,38 @@ export const useWizardStore = defineStore('WizardStore', {
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
             locations: ['mars', 'b2'],
+            startDate: {
+                min: '1991-01-01',
+                max: '1995-12-31',
+            },
             duration_ranges: {
-                // limited to 1 earth year
-                hour: {min: 24, max: 8760},
-                day: {min: 1, max: 730},
-                year: {min: 1, max: 1},
+                // limited to 2 earth years
+                hour: {min: 24, max: 8760*2},
+                day: {min: 1, max: 365*2},
+                year: {min: 1, max: 1*2},
             },
             duration_units: ['hour', 'day'],
             humans: {min: 0, max: 10},
             weeding: {min: 0, max: 16},
             pestPicking: {min: 0, max: 16},
             food: {min: 0, max: 8760},
-            eclss: {min: 0, max: 10},
+            eclss: {
+                amount: {min: 0, max: 10},
+                co2UpperLimit: {min: 0, max: 1},
+                co2Reserves: {min: 0, max: 1e6},
+                co2LowerLimit: {min: 0, max: 1},
+                o2Reserves: {min: 0, max: 1e6},
+                o2LowerLimit: {min: 0, max: 30},
+            },
             crew_quarters_types: ['none', 'crew_habitat_small',
                                   'crew_habitat_medium', 'crew_habitat_large',
                                   'crew_habitat_sam', 'crew_habitat_b2'],
             greenhouse_types: ['none', 'greenhouse_small',
                                'greenhouse_medium', 'greenhouse_large',
-                               'greenhouse_sam', 'b2_intensive_agricultural_biome'],
+                               'greenhouse_sam', 'greenhouse_b2'],
             // TODO: the list of plants is downloaded and should be cached
             // the valid range for plants is calculated dinamically
-            generator_types: ['none', 'solar_pv_array_mars'],
+            generator_types: ['none', 'solar_pv_array_mars', 'b2_power_gen'],
             generator: {min: 0, max: 5000},
             storage: {min: 0, max: 10000},
         },
@@ -61,35 +72,44 @@ export const useWizardStore = defineStore('WizardStore', {
             plantSpecies: [{type: '', amount: ''}],
         },
         defaultB2Config: {
-            name: 'Default config',
+            name: 'Default config Biosphere 2',
             simdata_file: '',
             location: 'b2',
-            startDate: null,
+            startDate: '1991-01-01',
             duration: {type: 'none', amount: 30, units: 'day'},
-            humans: {
-                type: 'human_agent',
-                amount: 1,
-                units: '',
-                weeding: null,
-                pestPicking: null,
-            },
-            food: {type: 'food_storage', amount: 100, units: 'kg'},
+            // TODO: Implement weeding and pestPicking on backend, connect
+            humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
+            food: {type: 'food_storage', amount: 500, units: 'kg'},
             crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
             eclss: {
                 type: 'eclss',
                 amount: 1,
                 units: '',
-                o2Reserves: null,
-                o2LowerLimit: null,
-                co2Reserves: null,
-                co2LowerLimit: null,
-                co2UpperLimit: null,
+                o2Reserves: 0,      // kg
+                o2LowerLimit: 20,   // %
+                co2Reserves: 0,     // kg
+                co2LowerLimit: 0,   // %
+                co2UpperLimit: 0.25, // %
             },
-            powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+            powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
             powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-            greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
-                         improved_crop_management: false},
-            plantSpecies: [{type: 'radish', amount: 40}],
+            greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
+            plantSpecies: [
+                {type: 'rice', amount: 530},
+                {type: 'wheat', amount: 370},
+                {type: 'sorghum', amount: 261},
+                {type: 'peanut', amount: 168},
+                {type: 'corn', amount: 488},
+                {type: 'dry_bean', amount: 222},
+                {type: 'sweet_potato', amount: 261},
+                {type: 'vegetables', amount: 348},
+                {type: 'soybean', amount: 326},
+                {type: 'orchard', amount: 646},
+            ],
+            improvedCropManagement: false,
+            startWithM1EndingAtmosphere: false,
+            concrete: {amount: 15800},
+            soil: {amount: 16720},
         },
         mars_presets: {
             one_human: {
@@ -143,7 +163,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 food: {type: 'food_storage', amount: 1200, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_medium', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: ''},
-                powerGeneration: {type: 'solar_pv_array_mars', amount: 300, units: ''},
+                powerGeneration: {type: 'solar_pv_array_mars', amount: 500, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
                 greenhouse: {type: 'greenhouse_small', amount: 1, units: ''},
                 plantSpecies: [
@@ -222,108 +242,113 @@ export const useWizardStore = defineStore('WizardStore', {
         b2_presets: {
             b2_mission_1a: {
                 name: 'Mission 1a',
-                simdata_file: 'simoc-simdata-4-human-preset.json',
+                simdata_file: 'simoc-simdata-b2-mission-1a.json',
                 location: 'b2',
                 startDate: '1991-09-26',
                 duration: {type: 'none', amount: 475, units: 'day'},
-                humans: {
-                    type: 'human_agent',
-                    amount: 8,
-                    units: '',
-                    weeding: 3,
-                    pestPicking: 3,
-                },
-                food: {type: 'food_storage', amount: 100, units: 'kg'},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null,
+                         pestPicking: null},
+                food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
-                eclss: {
-                    type: 'eclss',
-                    amount: 1,
-                    units: '',
-                    o2Reserves: 10,
-                    o2LowerLimit: 10,
-                    co2Reserves: 10,
-                    co2LowerLimit: 10,
-                    co2UpperLimit: 10,
-                },
-                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                eclss: {type: 'eclss', amount: 1, units: '',
+                        o2Reserves: 0,          // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
+                powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
-                             improved_crop_management: false},
-                plantSpecies: [{type: 'radish', amount: 40}],
+                greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
+                plantSpecies: [
+                    {type: 'rice', amount: 530},
+                    {type: 'wheat', amount: 370},
+                    {type: 'sorghum', amount: 261},
+                    {type: 'peanut', amount: 168},
+                    {type: 'corn', amount: 488},
+                    {type: 'dry_bean', amount: 222},
+                    {type: 'sweet_potato', amount: 261},
+                    {type: 'vegetables', amount: 348},
+                    {type: 'soybean', amount: 326},
+                    {type: 'orchard', amount: 646},
+                ],
+                improvedCropManagement: false,
+                startWithM1EndingAtmosphere: false,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
-                simdata_file: 'simoc-simdata-4-human-garden-preset.json',
+                simdata_file: 'simoc-simdata-b2-mission-1b.json',
                 location: 'b2',
                 startDate: '1993-01-12',
                 duration: {type: 'none', amount: 257, units: 'day'},
-                humans: {
-                    type: 'human_agent',
-                    amount: 8,
-                    units: '',
-                    weeding: 6,
-                    pestPicking: 6,
-                },
-                food: {type: 'food_storage', amount: 100, units: 'kg'},
-                crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
-                eclss: {
-                    type: 'eclss',
-                    amount: 2,
-                    units: '',
-                    o2Reserves: 20,
-                    o2LowerLimit: 20,
-                    co2Reserves: 20,
-                    co2LowerLimit: 20,
-                    co2UpperLimit: 20,
-                },
-                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                humans: {type: 'human_agent', amount: 8, units: ''},
+                food: {type: 'food_storage', amount: 500, units: 'kg'},
+                crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: '',
+                               o2: 1967, co2: 42, h2o: 120, n2: 11025},
+                eclss: {type: 'eclss', amount: 1, units: '',
+                        o2Reserves: 11288,      // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
+                powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
-                             improved_crop_management: false},
+                greenhouse: {type: 'greenhouse_b2', amount: 1, units: '',
+                             o2: 6302, co2: 136, h2o: 381, n2: 35312},
                 plantSpecies: [
-                    {type: 'wheat', amount: 20},
-                    {type: 'cabbage', amount: 30},
-                    {type: 'strawberry', amount: 10},
-                    {type: 'radish', amount: 50},
-                    {type: 'red_beet', amount: 50},
-                    {type: 'onion', amount: 50},
+                    {type: 'rice', amount: 214},
+                    {type: 'wheat', amount: 149},
+                    {type: 'sorghum', amount: 105},
+                    {type: 'peanut', amount: 68},
+                    {type: 'corn', amount: 197},
+                    {type: 'dry_bean', amount: 784},
+                    {type: 'sweet_potato', amount: 784},
+                    {type: 'vegetables', amount: 141},
+                    {type: 'soybean', amount: 132},
+                    {type: 'orchard', amount: 261},
+                    {type: 'red_beet', amount: 784},
                 ],
+                startWithM1EndingAtmosphere: true,
+                improvedCropManagement: false,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
             b2_mission_2: {
                 name: 'Mission 2',
-                simdata_file: 'simoc-simdata-sam-1-human-garden-preset.json',
+                simdata_file: 'simoc-simdata-b2-mission-2.json',
                 location: 'b2',
                 startDate: '1994-03-06',
                 duration: {type: 'none', amount: 185, units: 'day'},
-                humans: {
-                    type: 'human_agent',
-                    amount: 7,
-                    units: '',
-                    weeding: 8,
-                    pestPicking: 8,
-                },
-                food: {type: 'food_storage', amount: 100, units: 'kg'},
+                humans: {type: 'human_agent', amount: 8, units: '', weeding: null,
+                         pestPicking: null},
+                food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
-                eclss: {
-                    type: 'eclss',
-                    amount: 1,
-                    units: '',
-                    o2Reserves: 30,
-                    o2LowerLimit: 30,
-                    co2Reserves: 30,
-                    co2LowerLimit: 30,
-                    co2UpperLimit: 30,
-                },
-                powerGeneration: {type: 'solar_pv_array_mars', amount: 70, units: ''},
+                eclss: {type: 'eclss', amount: 1, units: '',
+                        o2Reserves: 0,          // kg
+                        o2LowerLimit: 20,       // %
+                        co2Reserves: 0,         // kg
+                        co2LowerLimit: 0,       // %
+                        co2UpperLimit: 0.25},   // %
+                powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
                 powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-                greenhouse: {type: 'b2_intensive_agricultural_biome', amount: 1, units: '',
-                             improved_crop_management: false},
+                greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
                 plantSpecies: [
-                    {type: 'rice', amount: 2},
-                    {type: 'cabbage', amount: 8},
-                    {type: 'tomato', amount: 8},
-                    {type: 'sweet_potato', amount: 5},
+                    {type: 'rice', amount: 530},
+                    {type: 'wheat', amount: 370},
+                    {type: 'sorghum', amount: 261},
+                    {type: 'peanut', amount: 168},
+                    {type: 'corn', amount: 488},
+                    {type: 'dry_bean', amount: 222},
+                    {type: 'sweet_potato', amount: 261},
+                    {type: 'vegetables', amount: 348},
+                    {type: 'soybean', amount: 326},
+                    {type: 'orchard', amount: 646},
                 ],
+                startWithM1EndingAtmosphere: false,
+                improvedCropManagement: true,
+                concrete: {amount: 15800},
+                soil: {amount: 16720},
             },
         },
     }),
@@ -361,17 +386,22 @@ export const useWizardStore = defineStore('WizardStore', {
             const config = state.configuration
             // create formatted configuration
             const fconfig = {
+                location: config.location,
+                start_time: config.startDate,
                 duration: {type: config.duration.units,
                            value: parseInt(config.duration.amount, 10)},
                 human_agent: {amount: parseInt(config.humans.amount, 10)},
                 food_storage: {ration: parseInt(config.food.amount, 10)},
-                eclss: {amount: parseInt(config.eclss.amount, 10)},
-                solar_pv_array_mars: {amount: parseInt(config.powerGeneration.amount, 10)},
+                eclss: config.eclss,
                 power_storage: {kwh: parseInt(config.powerStorage.amount, 10)},
-                nutrient_storage: {fertilizer: 300},
+                nutrient_storage: {fertilizer: config.location === 'b2' ? 10000 : 300},
+                concrete: config.concrete,
+                soil: config.soil,
                 single_agent: 1,
                 plants: [],
             }
+            const pg = config.powerGeneration
+            fconfig[pg.type] = {amount: parseInt(pg.amount, 10)}
             if ((state.configuration.greenhouse.type === 'none') &&
                 (state.configuration.crewQuarters.type === 'none')) {
                 throw new Error('Please select a value for the ' +
@@ -390,6 +420,13 @@ export const useWizardStore = defineStore('WizardStore', {
                                          amount: parseInt(element.amount, 10)})
                 }
             })
+            // Flags, used to customize starting parameters in b2 sim
+            const flags = ['improvedCropManagement', 'startWithM1EndingAtmosphere']
+            flags.forEach(f => {
+                if (f in state.configuration) {
+                    fconfig[f] = state.configuration[f]
+                }
+            })
             return fconfig
         },
     },
@@ -399,12 +436,7 @@ export const useWizardStore = defineStore('WizardStore', {
             // initialize the config with the default, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            let newconfig
-            if (location === 'b2') {
-                newconfig = this.defaultB2Config
-            } else if (location === 'mars') {
-                newconfig = this.defaultConfig
-            }
+            const newconfig = location === 'b2' ? this.defaultB2Config : this.defaultConfig
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
@@ -441,11 +473,13 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration.duration = duration
         },
         setInhabitants(value) {
-            const {humans, food, crewQuarters, eclss} = value
+            const {humans, food, crewQuarters} = value
             this.configuration.humans = humans
             this.configuration.food = food
             this.configuration.crewQuarters = crewQuarters
-            this.configuration.eclss = eclss
+        },
+        setECLSS(value) {
+            this.configuration.eclss = value
         },
         setGreenhouse(value) {
             const {greenhouse} = value
@@ -479,14 +513,17 @@ export const useWizardStore = defineStore('WizardStore', {
                 this.configuration.plantSpecies[0].amount = ''
             }
         },
+        setCropManagement(value) {
+            this.configuration.improvedCropManagement = value
+        },
         setActiveRefEntry(value) {
             // This is set here so I don't have to call it on every link.
             // It is redundant for the table of contents navigation.
             this.activeReference = 'Reference'
             this.activeRefEntry = value
         },
-        resetConfigDefault(state) {
-            this.configuration = this.defaultConfig
+        resetConfigDefault(value) {
+            this.configuration = value === 'b2' ? this.defaultB2Config : this.defaultConfig
             this.activeFormIndex = 0
             this.activeReference = 'Layout'
             this.activeRefEntry = 'Welcome'

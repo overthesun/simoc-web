@@ -18,29 +18,12 @@
             <div class="input-title" @click="setActiveRefEntry('Inhabitants')">
                 Inhabitants <fa-icon :icon="['fa-solid','circle-info']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">The number of astronaut explorers to live in your habitat.</div>
+            <div class="input-description">The number of
+                {{{'mars': 'astronaut explorers', 'b2': 'biospherians'}[simLocation]}}
+                to live in your habitat.</div>
             <input ref="humans" v-model="humans.amount" :min="ranges.humans.min" :max="ranges.humans.max"
                    class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                    required @input="setInhabitantsHandler">
-        </label>
-        <label v-if="simLocation === 'b2'" class="input-wrapper">
-            <div class="input-title" @click="setActiveRefEntry('Weeding')">
-                Weeding <fa-icon :icon="['fa-solid','circle-info']" />
-            </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">Select how many hours per day your inhabitants should spend weeding.</div>
-            <label><input ref="humans" v-model="humans.weeding" :min="ranges.weeding.min" :max="ranges.weeding.max"
-                          class="input-field-number" type="number" pattern="^\d+$" placeholder="Hours"
-                          required @input="setInhabitantsHandler"> hours/day</label>
-        </label>
-        <label v-if="simLocation === 'b2'" class="input-wrapper">
-            <div class="input-title" @click="setActiveRefEntry('PestPicking')">
-                Pest Picking <fa-icon :icon="['fa-solid','circle-info']" />
-            </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">Select how many hours per day your inhabitants should spend pest picking.</div>
-            <label><input ref="humans" v-model="humans.pestPicking" :min="ranges.pestPicking.min"
-                          :max="ranges.pestPicking.max" class="input-field-number" type="number"
-                          pattern="^\d+$" placeholder="Hours" required
-                          @input="setInhabitantsHandler"> hours/day</label>
         </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Food')">
@@ -50,38 +33,6 @@
             <label><input ref="food" v-model="food.amount" :min="ranges.food.min" :max="ranges.food.max"
                           class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> kg</label>
-        </label>
-        <label class="input-wrapper">
-            <div class="input-title" @click="setActiveRefEntry('ECLSS')">
-                Life Support <fa-icon :icon="['fa-solid','circle-info']" />
-            </div>
-            <div class="input-description">As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <label><input ref="eclss" v-model="eclss.amount" :min="ranges.eclss.min"
-                          :max="ranges.eclss.max" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder="Quantity"
-                          required @input="setInhabitantsHandler"> ECLSS modules</label>
-            <template v-if="simLocation === 'b2'">
-                <label class="list-input">
-                    <input ref="eclss" v-model="eclss.o2Reserves" class="input-field-number"
-                           type="number" pattern="^\d+$" placeholder="kg" required
-                           @input="setInhabitantsHandler">O2 reserves (kg)</label>
-                <label class="list-input">
-                    <input ref="eclss" v-model="eclss.o2LowerLimit" class="input-field-number"
-                           type="number" pattern="^\d+$" placeholder="kg" required
-                           @input="setInhabitantsHandler">lower limit of O2 (kg)</label>
-                <label class="list-input">
-                    <input ref="eclss" v-model="eclss.co2Reserves" class="input-field-number"
-                           type="number" pattern="^\d+$" placeholder="kg" required
-                           @input="setInhabitantsHandler">CO2 reserves (kg)</label>
-                <label class="list-input">
-                    <input ref="eclss" v-model="eclss.co2LowerLimit" class="input-field-number"
-                           type="number" pattern="^\d+$" placeholder="kg" required
-                           @input="setInhabitantsHandler">lower limit of CO2 (kg)</label>
-                <label class="list-input">
-                    <input ref="eclss" v-model="eclss.co2UpperLimit" class="input-field-number"
-                           type="number" pattern="^\d+$" placeholder="kg" required
-                           @input="setInhabitantsHandler">upper limit of CO2 (kg)</label>
-            </template>
         </label>
     </div>
 </template>
@@ -105,12 +56,11 @@ export default {
             humans: undefined,
             food: undefined,
             crewQuarters: undefined,
-            eclss: undefined,
         }
     },
     computed: {
         ranges() {
-            return this.validValues  // return the valid ranges for humans/food/eclss
+            return this.validValues  // return the valid ranges for humans/food
         },
     },
     watch: {
@@ -175,24 +125,18 @@ export default {
             this.food = this.configuration.food
             this.validateRef('food')
         },
-        'configuration.eclss': function() {
-            this.eclss = this.configuration.eclss
-            this.validateRef('eclss')
-        },
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {humans, food, crewQuarters, eclss} = this.configuration
+        const {humans, food, crewQuarters} = this.configuration
         this.humans = humans
         this.food = food
         this.crewQuarters = crewQuarters
-        this.eclss = eclss
     },
     methods: {
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
-            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters,
-                           eclss: this.eclss}
+            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters}
             this.setInhabitants(value)
         },
         validateRef(ref) {

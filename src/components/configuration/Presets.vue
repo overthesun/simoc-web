@@ -86,7 +86,7 @@ export default {
             this.dont_set_custom = true
             // reset the config to the empty preset
             this.selected = EMPTY
-            this.resetConfigDefault()
+            this.resetConfigDefault(this.simLocation)
             // restore the var to false
             this.resetConfig = false
         },

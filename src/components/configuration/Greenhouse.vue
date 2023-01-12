@@ -45,9 +45,13 @@
         </label>
         <label v-if="simLocation === 'b2'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
-                <input ref="improved_checkbox" v-model="greenhouse.improved_crop_management" type="checkbox" @change="setCropManagementHandler">Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
+                Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</div>
+            <label class="input-description crop-mgmt-description">
+                <input v-model="configuration.improvedCropManagement" type="checkbox"
+                       style="margin-right: 10px" @change="updateCropManagementHandler">
+                <span>Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</span>
+            </label>
         </label>
     </div>
 </template>
@@ -66,11 +70,12 @@ export default {
         const {configuration, validValues, activeReference} = storeToRefs(wizard)
         const {
             setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,
-            setActiveRefEntry,
+            setCropManagement, setActiveRefEntry,
         } = wizard
         return {
             simLocation, configuration, validValues, setGreenhouse, addPlantSpecies,
-            updatePlantSpecies, removePlantSpecies, setActiveRefEntry, activeReference,
+            updatePlantSpecies, removePlantSpecies, setCropManagement,
+            setActiveRefEntry, activeReference,
         }
     },
     data() {
@@ -83,6 +88,7 @@ export default {
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
             plant_selects: {},  // map index -> <select> for the plant type dropdown
             plant_inputs: {},  // map index -> <input> for the plant amount
+            improvedCropManagement: false,
         }
     },
 
@@ -93,6 +99,12 @@ export default {
         'configuration.plantSpecies': {
             handler() {
                 this.updateAndValidate()
+            },
+            deep: true,
+        },
+        'configuration.improvedCropManagement': {
+            handler() {
+                this.improvedCropManagement = this.configuration.improvedCropManagement
             },
             deep: true,
         },
@@ -158,10 +170,8 @@ export default {
             this.setGreenhouse(value)
         },
 
-        setCropManagementHandler() {
-            this.greenhouse.improved_crop_management = this.$refs.improved_checkbox.checked
-            const value = {greenhouse: this.greenhouse}
-            this.setGreenhouse(value)
+        updateCropManagementHandler(e) {
+            this.setCropManagement(e.target.checked)
         },
 
         /*
@@ -261,6 +271,7 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 494,
+                greenhouse_b2: 4000,
             }[this.greenhouse.type]
             // calculate the used and free space, then set the max space that can
             // be used by each plant in order not to overflow the greenhouse size
@@ -355,4 +366,11 @@ export default {
 
         margin-right:24px;
     }
+
+.crop-mgmt-description{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 2em;
+}
 </style>

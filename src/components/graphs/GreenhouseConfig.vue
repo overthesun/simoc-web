@@ -1,15 +1,18 @@
 <!-- This chart compares the total and the used space of the greenhouse in the config wizard. -->
 
 <template>
-    <canvas :id="id" />
+    <canvas :id="id" style="height: 100%" />
 </template>
 
 <script>
-import Chart from 'chart.js'
+import {Chart, BarController, BarElement,
+        LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
 import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
+
+Chart.register(BarController, BarElement, LinearScale, CategoryScale, Title, Tooltip)
 
 export default {
     props: {
@@ -27,6 +30,7 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 272,
+                greenhouse_b2: 4000,
             },
             // colors used for the plants in the graphs
             colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',
@@ -62,48 +66,50 @@ export default {
         // TODO this is mostly duplicated with PowerUsage.vue: remove duplication
         const canvas = document.getElementById(this.id)
         this.chart = new Chart(canvas, {
-            type: 'horizontalBar',
+            type: 'bar',
             data: {
                 labels: ['Total', 'Used'],
                 datasets: [],  // see updateChart for info
             },
             options: {
                 responsive: false,
-                maintainAspectRatio: true,
-                title: {
-                    display: true,
-                    text: 'Total Greenhouse Space vs Used Space',
-                    fontColor: '#eeeeee',
-                },
-                tooltips: {
-                    mode: 'point',  // show single value
-                },
-                legend: {
-                    display: false,
-                },
+                maintainAspectRatio: false,
+                indexAxis: 'y',
                 scales: {
-                    xAxes: [{
+                    x: {
                         stacked: true,
                         ticks: {
-                            beginAtZero: true,
-                            fontColor: '#eeeeee',
+                            color: '#eeeeee',
                             callback(value, index, values) {
                                 return `${value} m³`
                             },
                         },
-                        gridLines: {
+                        grid: {
                             color: '#666666',
                         },
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         stacked: true,
                         ticks: {
-                            fontColor: '#eeeeee',
+                            color: '#eeeeee',
                         },
-                        gridLines: {
+                        grid: {
                             color: '#666666',
                         },
-                    }],
+                    },
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Total Greenhouse Space vs Used Space',
+                        color: '#eeeeee',
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        mode: 'point',  // show single value
+                    },
                 },
             },
         })
