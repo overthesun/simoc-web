@@ -68,10 +68,11 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, activePanels} = storeToRefs(dashboard)
+        const {currentMode, kioskMode, activePanels} = storeToRefs(dashboard)
         const {setDefaultPanels} = dashboard
         const {configuration} = storeToRefs(wizard)
-        return {currentMode, setDefaultPanels, getActivePanels: activePanels, configuration}
+        return {currentMode, kioskMode, setDefaultPanels,
+                getActivePanels: activePanels, configuration}
     },
     data() {
         return {

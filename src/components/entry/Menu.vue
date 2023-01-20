@@ -47,13 +47,13 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive, simLocation,
+            maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
         const {activeConfigType} = storeToRefs(wizard)
         const {setConfiguration, setLiveConfig} = wizard
         return {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive, simLocation,
+            maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
             setSimulationData, activeConfigType, setConfiguration,
             setLiveConfig,
         }
@@ -149,7 +149,7 @@ export default {
             if (e.ctrlKey && e.key === 'k') {
                 e.preventDefault()  // prevent event from propagating to browser
                 this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
-                this.currentMode = 'kiosk'
+                this.kioskMode = true
                 this.$router.push('/')
             }
 

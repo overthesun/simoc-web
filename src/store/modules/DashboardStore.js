@@ -57,7 +57,8 @@ import {parseData} from '../../javascript/parseData'
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
         // Game Management
-        currentMode: '',
+        currentMode: '',  // either 'sim' or 'live'
+        kioskMode: false,  // if true, enable kiosk mode
         simLocation: 'mars',
         activePanels: [],
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
