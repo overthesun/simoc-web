@@ -34,7 +34,7 @@ export default {
         const {getData} = dashboard
         return {currentStepBuffer, currencyDict, getData}
     },
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     methods: {
         stringFormatter: StringFormatter,
         storage(step) {
