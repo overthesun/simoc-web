@@ -256,15 +256,15 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
                 'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
             ]
-            // sim layout for kiosk mode
+
             if (currentMode === 'sim' && kioskMode) {
+                // sim layout for kiosk mode
                 layout = [
                     'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
                     'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
                 ]
-            }
-            // live layout
-            else if (currentMode === 'live') {
+            } else if (currentMode === 'live') {
+                // live layout
                 layout = [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
