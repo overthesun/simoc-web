@@ -250,21 +250,27 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param mode
          */
-        setDefaultPanels(mode) {
-            this.activePanels = {
-                sim: [
-                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
-                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
-                ],
-                kiosk: [
+        setDefaultPanels(currentMode, kioskMode) {
+            // default panel layout used for sim mode
+            let layout = [
+                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+            ]
+            // sim layout for kiosk mode
+            if (currentMode === 'sim' && kioskMode) {
+                layout = [
                     'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
                     'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
-                ],
-                live: [
+                ]
+            }
+            // live layout
+            else if (currentMode === 'live') {
+                layout = [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
-                ],
-            }[mode]
+                ]
+            }
+            this.activePanels = layout
         },
         /**
          * Initializes a new game. Constructs the parameters state variable and initializes
