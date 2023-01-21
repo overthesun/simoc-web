@@ -68,10 +68,10 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, kioskMode, activePanels} = storeToRefs(dashboard)
+        const {currentMode, kioskMode, simLocation, activePanels} = storeToRefs(dashboard)
         const {setDefaultPanels} = dashboard
         const {configuration} = storeToRefs(wizard)
-        return {currentMode, kioskMode, setDefaultPanels,
+        return {currentMode, kioskMode, simLocation, setDefaultPanels,
                 getActivePanels: activePanels, configuration}
     },
     data() {
@@ -91,7 +91,8 @@ export default {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                if (panel.modes.includes(this.currentMode)) {
+                if (panel.modes.includes(this.currentMode) ||
+                    panel.modes.includes(`${this.currentMode}:${this.simLocation}`)) {
                     sorted.push([panel.panelTitle, panelName])
                 }
             })
