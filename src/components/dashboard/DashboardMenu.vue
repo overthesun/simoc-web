@@ -7,7 +7,7 @@ use some of these features.
         <template #menu-title>
             Dashboard Menu
         </template>
-        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
+        <template v-if="!kioskMode" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button @click="downloadSimData">Download Simulation Data</button>
@@ -40,7 +40,7 @@ export default {
         const wizard = useWizardStore()
         const {
             isTimerRunning, activePanels, gameCurrencies, currentMode,
-            menuActive, leaveWithoutConfirmation,
+            kioskMode, menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
@@ -48,7 +48,7 @@ export default {
         } = dashboard
         const {configuration, activeConfigType} = storeToRefs(wizard)
         return {
-            isTimerRunning, activePanels, gameCurrencies, currentMode,
+            isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
             menuActive, leaveWithoutConfirmation, getSimulationData, setStopped,
             startTimer, pauseTimer, setDefaultPanels, configuration, activeConfigType,
         }
@@ -100,14 +100,12 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.activePanels)
-            const layout = this.currentMode === 'live' ? 'live' : 'sim'
-            localStorage.setItem(`panels-layout-${layout}`, panelsLayout)
+            localStorage.setItem(`panels-layout-${this.currentMode}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            const layout = this.currentMode === 'live' ? 'live' : 'sim'
-            localStorage.removeItem(`panels-layout-${layout}`)
-            this.setDefaultPanels(this.currentMode)
+            localStorage.removeItem(`panels-layout-${this.currentMode}`)
+            this.setDefaultPanels(this.currentMode, this.kioskMode)
         },
         // Logout button route
         async logout() {
@@ -141,7 +139,7 @@ export default {
                     // the user already confirmed, don't ask twice
                     this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
-                    if (this.currentMode !== 'kiosk') {
+                    if (!this.kioskMode) {
                         this.$router.push('menu')
                     } else {
                         this.$router.push('configuration')

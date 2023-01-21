@@ -263,7 +263,7 @@ export default {
                         const {configuration, ...simdata} = data
                         this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData({simdata, currency_desc})
-                        this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                        this.currentMode = 'sim'
                         this.isLive = false
                         this.loadFromSimData = true
                         this.$router.push('dashboard')
@@ -297,7 +297,7 @@ export default {
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                this.currentMode = 'sim'
                 this.isLive = false
                 this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen

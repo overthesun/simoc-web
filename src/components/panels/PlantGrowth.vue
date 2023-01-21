@@ -33,7 +33,7 @@ export default {
         const {configuration} = storeToRefs(wizard)
         return {currentStepBuffer, getData, configuration}
     },
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     computed: {
         getPlants() {
             // filter out plants that don't have a type set

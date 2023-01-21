@@ -10,7 +10,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 <template>
     <div class="entry-wrapper">
         <!-- Normal Mode -->
-        <BaseEntry v-if="currentMode !== 'kiosk'">
+        <BaseEntry v-if="!kioskMode">
             <template #entry-main>
                 <div class="welcome-wrapper">
                     <p class="welcome-title">WELCOME TO SIMOC</p>
@@ -87,9 +87,9 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode} = storeToRefs(dashboard)
+        const {kioskMode} = storeToRefs(dashboard)
         const {activeConfigType} = storeToRefs(wizard)
-        return {currentMode, activeConfigType}
+        return {kioskMode, activeConfigType}
     },
     methods: {
         toLogin() {

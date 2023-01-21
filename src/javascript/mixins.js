@@ -8,8 +8,8 @@ import {useDashboardStore} from '../store/modules/DashboardStore'
 export const idleMixin = {
     setup() {
         const dashboard = useDashboardStore()
-        const {currentMode} = storeToRefs(dashboard)
-        return {currentMode}
+        const {kioskMode} = storeToRefs(dashboard)
+        return {kioskMode}
     },
     data() {
         return {
@@ -39,12 +39,12 @@ export const idleMixin = {
         ...mapGetters('modal', ['getCountdownIsRunning']),
     },
     beforeMount() {
-        if (this.currentMode === 'kiosk') {
+        if (this.kioskMode) {
             this.idle.start()
         }
     },
     beforeUnmount() {
-        if (this.currentMode === 'kiosk') {
+        if (this.kioskMode) {
             this.STOPCOUNTDOWNTIMER()
             this.idle.stop()
         }

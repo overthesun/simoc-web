@@ -57,7 +57,8 @@ import {parseData} from '../../javascript/parseData'
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
         // Game Management
-        currentMode: '',
+        currentMode: '',  // either 'sim' or 'live'
+        kioskMode: false,  // if true, enable kiosk mode
         simLocation: 'mars',
         activePanels: [],
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
@@ -249,21 +250,27 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param mode
          */
-        setDefaultPanels(mode) {
-            this.activePanels = {
-                sim: [
-                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
-                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
-                ],
-                kiosk: [
+        setDefaultPanels(currentMode, kioskMode) {
+            // default panel layout used for sim mode
+            let layout = [
+                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+            ]
+
+            if (currentMode === 'sim' && kioskMode) {
+                // sim layout for kiosk mode
+                layout = [
                     'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
                     'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
-                ],
-                live: [
+                ]
+            } else if (currentMode === 'live') {
+                // live layout
+                layout = [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
-                ],
-            }[mode]
+                ]
+            }
+            this.activePanels = layout
         },
         /**
          * Initializes a new game. Constructs the parameters state variable and initializes

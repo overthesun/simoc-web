@@ -30,13 +30,13 @@ export default {
         // Ensure the menu on the Dashboard is closed before showing any modal.
         this.menuActive = false
         if (this.leaveWithoutConfirmation ||
-            (this.currentMode === 'kiosk' && this.getCountdownEnded)) {
+            (this.kioskMode && this.getCountdownEnded)) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Stop/close the countdown modal if it's still open
             // (e.g. when the user press the back button during the countdown)
-            if (this.currentMode === 'kiosk') {
+            if (this.kioskMode) {
                 this.STOPCOUNTDOWNTIMER()
             }
             // Make user to confirm before exiting.
@@ -47,7 +47,7 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted && this.currentMode !== 'kiosk') {
+            if (!this.getSurveyWasPrompted && !this.kioskMode) {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
                 confirmExit()
@@ -62,7 +62,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation, simLocation,
+            menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -75,7 +75,7 @@ export default {
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation, simLocation,
+            menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
             configuration, getTotalMissionHours,
