@@ -9,7 +9,7 @@ import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     panelTitle: 'Habitat View',
-    modes: ['sim'],
+    modes: ['sim:mars'],
     components: {
         World: World,
     },

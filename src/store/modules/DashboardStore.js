@@ -259,6 +259,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
 
             if (currentMode === 'sim' && kioskMode) {
                 // sim layout for kiosk mode
+                // TODO: the ThreeDPanel is not available for B2
                 layout = [
                     'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
                     'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
