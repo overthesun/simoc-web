@@ -14,6 +14,20 @@
                 <option value="crew_habitat_sam">SAM (272 m³)</option>
             </select>
         </label>
+        <label v-else class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('Biomes')">
+                Biomes <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>
+            <div class="input-description">Select the size of each Biosphere 2 biome.</div>
+            <template v-for="(val, key) in biomes" :key="key + '-input'">
+                <label class="list-input">
+                    <input :ref="key" v-model="biomes[key]" min="0" max="10000"
+                           class="input-field-number" type="number" step="1" pattern="^\d+$"
+                           placeholder="Square Meters" required @input="setInhabitantsHandler">
+                    m<sup>2</sup> {{stringFormatter(key)}}
+                </label>
+            </template>
+        </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Inhabitants')">
                 Inhabitants <fa-icon :icon="['fa-solid','circle-info']" />
@@ -41,6 +55,7 @@
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {StringFormatter} from '../../javascript/utils'
 
 export default {
     setup() {
@@ -56,6 +71,7 @@ export default {
             humans: undefined,
             food: undefined,
             crewQuarters: undefined,
+            biomes: undefined,
         }
     },
     computed: {
@@ -125,6 +141,15 @@ export default {
             this.food = this.configuration.food
             this.validateRef('food')
         },
+        'configuration.biomes': {
+            handler() {
+                this.biomes = this.configuration.biomes
+                Object.keys(this.biomes).forEach(biome => {
+                    this.validateRef(biome)
+                })
+            },
+            deep: true,
+        },
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
@@ -132,16 +157,30 @@ export default {
         this.humans = humans
         this.food = food
         this.crewQuarters = crewQuarters
+        if (this.simLocation === 'b2') {
+            const {biomes} = this.configuration
+            this.biomes = biomes
+        }
     },
     methods: {
+        stringFormatter: StringFormatter,
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
             const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters}
+            if (this.simLocation === 'b2') {
+                value.biomes = this.biomes
+            }
             this.setInhabitants(value)
         },
         validateRef(ref) {
             // wait for the fields to be updated before attempting validation
-            this.$nextTick(() => this.$refs[ref].reportValidity())
+            this.$nextTick(() => {
+                let r = this.$refs[ref]
+                if (Array.isArray(r)) {
+                    r = r[0]
+                }
+                r.reportValidity()
+            })
         },
     },
 }
