@@ -58,7 +58,14 @@ using v-for to populate all links with the title and the approriate value for th
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Biomes'" :setActiveRefEntry="setActiveRefEntry" heading="Biomes">
-            <p>Information on the 4 Biosphere 2 Biomes.</p>
+            <p>Biosphere 2 includes 5 unique biomes: Rainforest, Desert, Savannah, Ocean and the Intensive Agriculture Biome (IAB), or greenhouse.</p>
+            <p>All biomes include some combination of air, soil and vegetation, and each of these performs a different function:</p>
+            <ul>
+                <li><b>Air</b> circulates between all the biomes, as well as the lungs and crew habitat. A larger air 'sink' means the daily and seasonal fluctuations of O<sub>2</sub> and CO<sub>2</sub> are less in terms of %, which makes it easier to maintain the right composition for humans and plants</li>
+                <li><b>Soil</b> is included in all biomes except the ocean. Soil microorganisms respiration, or consume O<sub>2</sub> and produce CO<sub>2</sub>, just like humans.</li>
+                <li><b>Vegetation</b> varies between biomes, but it always performs photosynthesis, which consumes CO<sub>2</sub> and produces O<sub>2</sub>. All biomes include vegetation except for the ocean, which is offset by coral activity, and the IAB, for which the vegetation is the plants, defined below.</li>
+            </ul>
+            <p>Each biome has different amounts of the above, giving it different exchanges.</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Food'" :setActiveRefEntry="setActiveRefEntry" heading="Food Supply">
