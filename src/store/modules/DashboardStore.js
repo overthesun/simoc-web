@@ -101,6 +101,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 data: state.data,
             }
         },
+        getLayoutName(state) {
+            // return the panel layout name, either `sim:mars`, `sim:b2`, or `live`
+            if (state.currentMode === 'sim') {
+                return `${state.currentMode}:${state.simLocation}`
+            } else {
+                return state.currentMode
+            }
+        },
     },
 
     actions: {
@@ -245,33 +253,23 @@ export const useDashboardStore = defineStore('DashboardStore', {
             const {step_num: step} = min
             this.parameters.min_step_num = Math.max(step+1, this.parameters.min_step_num)
         },
-        /**
-         * Sets the default panels.
-         *
-         * @param mode
-         */
-        setDefaultPanels(currentMode, kioskMode) {
-            // default panel layout used for sim mode
-            let layout = [
-                'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
-                'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
-            ]
 
-            if (currentMode === 'sim' && kioskMode) {
-                // sim layout for kiosk mode
-                // TODO: the ThreeDPanel is not available for B2
-                layout = [
-                    'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
-                    'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
-                ]
-            } else if (currentMode === 'live') {
-                // live layout
-                layout = [
+        setDefaultPanels(layout) {
+            this.activePanels = {
+                'sim:mars': [
+                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+                ],
+                // TODO: replace with B2-related panels
+                'sim:b2': [
+                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
+                ],
+                'live': [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
-                ]
-            }
-            this.activePanels = layout
+                ],
+            }[layout]
         },
         /**
          * Initializes a new game. Constructs the parameters state variable and initializes

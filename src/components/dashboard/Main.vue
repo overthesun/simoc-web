@@ -68,10 +68,10 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, kioskMode, simLocation, activePanels} = storeToRefs(dashboard)
-        const {setDefaultPanels} = dashboard
+        const {currentMode, simLocation, activePanels} = storeToRefs(dashboard)
+        const {setDefaultPanels, getLayoutName} = dashboard
         const {configuration} = storeToRefs(wizard)
-        return {currentMode, kioskMode, simLocation, setDefaultPanels,
+        return {currentMode, simLocation, setDefaultPanels, getLayoutName,
                 getActivePanels: activePanels, configuration}
     },
     data() {
@@ -111,11 +111,12 @@ export default {
     },
     beforeMount() {
         // load saved panels from local storage or use default layout
-        const savedPanels = localStorage.getItem(`panels-layout-${this.currentMode}`)
+        const layout = this.getLayoutName
+        const savedPanels = localStorage.getItem(`panels-layout-${layout}`)
         if (savedPanels) {
             this.activePanels = JSON.parse(savedPanels)
         } else {
-            this.setDefaultPanels(this.currentMode, this.kioskMode)
+            this.setDefaultPanels(layout)
         }
     },
     methods: {
