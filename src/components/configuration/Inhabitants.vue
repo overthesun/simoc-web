@@ -153,18 +153,23 @@ export default {
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {humans, food, crewQuarters, biomes} = this.configuration
+        const {humans, food, crewQuarters} = this.configuration
         this.humans = humans
         this.food = food
         this.crewQuarters = crewQuarters
-        this.biomes = biomes
+        if (this.simLocation === 'b2') {
+            const {biomes} = this.configuration
+            this.biomes = biomes
+        }
     },
     methods: {
         stringFormatter: StringFormatter,
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
-            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters,
-                           biomes: this.biomes}
+            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters}
+            if (this.simLocation === 'b2') {
+                value.biomes = this.biomes
+            }
             this.setInhabitants(value)
         },
         validateRef(ref) {

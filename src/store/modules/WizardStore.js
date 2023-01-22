@@ -480,11 +480,14 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration.duration = duration
         },
         setInhabitants(value) {
-            const {humans, food, crewQuarters, biomes} = value
+            const {humans, food, crewQuarters} = value
             this.configuration.humans = humans
             this.configuration.food = food
             this.configuration.crewQuarters = crewQuarters
-            this.configuration.biomes = biomes
+            if ('biomes' in value) {
+                const {biomes} = value
+                this.configuration.biomes = biomes
+            }
         },
         setECLSS(value) {
             this.configuration.eclss = value
