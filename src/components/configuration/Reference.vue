@@ -57,6 +57,10 @@ using v-for to populate all links with the title and the approriate value for th
             <p><i>ASTRONAUTS are not required for a plant-only simulation.</i></p>
         </ReferenceItem>
 
+        <ReferenceItem v-if="activeRefEntry === 'Biomes'" :setActiveRefEntry="setActiveRefEntry" heading="Biomes">
+            <p>Information on the 4 Biosphere 2 Biomes.</p>
+        </ReferenceItem>
+
         <ReferenceItem v-if="activeRefEntry === 'Food'" :setActiveRefEntry="setActiveRefEntry" heading="Food Supply">
             <p>It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
             <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (cabbage) while others offer very little for the human to digest (wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO2 reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
@@ -183,6 +187,7 @@ export default {
                 {ref: 'StartDate', label: 'Start Date'},
                 {ref: 'Duration', label: 'Mission Duration'},
                 {ref: 'Inhabitants', label: 'Inhabitants'},
+                {ref: 'Biomes', label: 'Biomes'},
                 {ref: 'Food', label: 'Food Supply'},
                 {ref: 'CO2Management', label: 'CO₂ Management'},
                 {ref: 'O2Management', label: 'O₂ Management'},
