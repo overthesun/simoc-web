@@ -205,6 +205,7 @@ export default {
     .btn-normal {
         width: 256px;
         height: 48px;
+        vertical-align: top;
         min-height: 48px;
         margin-bottom: 12px;
         border-radius: 5px;
