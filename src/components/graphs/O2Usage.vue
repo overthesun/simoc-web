@@ -36,7 +36,7 @@ export default {
                 biomes_produce: [0, null],
                 // these only consume
                 humans: [null, 0],
-                biomes_consume: [null, 0]
+                biomes_consume: [null, 0],
             },
             // these two arrays should match the items in this.o2
             labels: ['Plants', 'Biomes', 'Humans', 'Biomes'],
