@@ -24,7 +24,7 @@
                     <input :ref="key" v-model="biomes[key]" :min="0" :max="1e4"
                            class="input-field-number" type="number" step="1" pattern="^\d+$"
                            placeholder="Square Meters" required @input="setInhabitantsHandler">
-                    m<sup>2</sup> {{ stringFormatter(key) }}
+                    m<sup>2</sup> {{stringFormatter(key)}}
                 </label>
             </template>
         </label>
@@ -55,7 +55,7 @@
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
-import { StringFormatter } from '../../javascript/utils'
+import {StringFormatter} from '../../javascript/utils'
 
 export default {
     setup() {
@@ -144,13 +144,12 @@ export default {
         'configuration.biomes': {
             handler() {
                 this.biomes = this.configuration.biomes
-                for (let biome in this.biomes) {
+                Object.keys(this.biomes).forEach(biome => {
                     this.validateRef(biome)
-
-                }
+                })
             },
             deep: true,
-        }
+        },
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
@@ -159,7 +158,6 @@ export default {
         this.food = food
         this.crewQuarters = crewQuarters
         this.biomes = biomes
-        console.log(biomes)
     },
     methods: {
         stringFormatter: StringFormatter,
