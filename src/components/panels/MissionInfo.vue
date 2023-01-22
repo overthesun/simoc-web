@@ -21,9 +21,9 @@
             </template>
             <template v-else-if="simLocation === 'b2'">
                 <dt>Start Date:</dt>
-                <dd>{{startDate.toLocaleString()}}</dd>
+                <dd>{{startDate.toLocaleString('en', {dateStyle: 'medium', timeStyle: 'short'})}}</dd>
                 <dt>Current Date:</dt>
-                <dd>{{calcDate(currentStepBuffer).toLocaleString()}}</dd>
+                <dd>{{calcDate(currentStepBuffer).toLocaleString('en', {dateStyle: 'medium', timeStyle: 'short'})}}</dd>
             </template>
             <dt>Inhabitants:</dt>
             <dd>{{humanCount()}}/{{configuration.humans.amount}}</dd>
