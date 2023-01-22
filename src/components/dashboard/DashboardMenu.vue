@@ -39,18 +39,18 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            isTimerRunning, activePanels, gameCurrencies, currentMode,
-            kioskMode, menuActive, leaveWithoutConfirmation,
+            isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
+            menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
-            setDefaultPanels,
+            getLayoutName, setDefaultPanels,
         } = dashboard
         const {configuration, activeConfigType} = storeToRefs(wizard)
         return {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
-            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped,
-            startTimer, pauseTimer, setDefaultPanels, configuration, activeConfigType,
+            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped, startTimer,
+            pauseTimer, getLayoutName, setDefaultPanels, configuration, activeConfigType,
         }
     },
     data() {
@@ -100,12 +100,14 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.activePanels)
-            localStorage.setItem(`panels-layout-${this.currentMode}`, panelsLayout)
+            const layout = this.getLayoutName
+            localStorage.setItem(`panels-layout-${layout}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            localStorage.removeItem(`panels-layout-${this.currentMode}`)
-            this.setDefaultPanels(this.currentMode, this.kioskMode)
+            const layout = this.getLayoutName
+            localStorage.removeItem(`panels-layout-${layout}`)
+            this.setDefaultPanels(layout)
         },
         // Logout button route
         async logout() {

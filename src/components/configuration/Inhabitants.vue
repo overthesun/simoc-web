@@ -21,7 +21,7 @@
             <div class="input-description">Select the size of each Biosphere 2 biome.</div>
             <template v-for="(val, key) in biomes" :key="key + '-input'">
                 <label class="list-input">
-                    <input :ref="key" v-model="biomes[key]" :min="0" :max="1e4"
+                    <input :ref="key" v-model="biomes[key]" min="0" max="10000"
                            class="input-field-number" type="number" step="1" pattern="^\d+$"
                            placeholder="Square Meters" required @input="setInhabitantsHandler">
                     m<sup>2</sup> {{stringFormatter(key)}}
