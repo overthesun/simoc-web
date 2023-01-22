@@ -109,7 +109,7 @@ export default {
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         return {currentStepBuffer, simLocation, getData, configuration, getTotalMissionHours}
     },
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     data() {
         return {
             info_section: 'mission-status',

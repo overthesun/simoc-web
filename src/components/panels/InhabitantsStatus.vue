@@ -52,7 +52,7 @@ This is probably a more appropriate method and should be implemented everywhere.
 
 export default {
     panelTitle: 'Inhabitants Status',
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
