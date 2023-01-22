@@ -14,7 +14,12 @@ Future version should also automatically switch the selected preset to 'custom' 
             <div class="input-title" @click="setActiveRefEntry('Presets')">
                 Presets <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
+            <div v-if="simLocation === 'mars'" class="input-description">
+                Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.
+            </div>
+            <div v-else-if="simLocation === 'b2'" class="input-description">
+                Employ preset configurations to explore and build on the <a class="reference-link" href="#" @click="setActiveRefEntry('Presets')">historical Biosphere 2 missions</a>.
+            </div>
             <div>
                 <div class="presets-dropdown">
                     <select v-if="simLocation === 'mars'" ref="preset_dropdown" v-model="selected"

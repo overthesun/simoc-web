@@ -14,7 +14,7 @@
         </div>
         <div v-else-if="simLocation === 'b2'">
             <label class="input-wrapper">
-                <div class="input-title" @click="setActiveRefEntry('ECLSS')">
+                <div class="input-title" @click="setActiveRefEntry('CO2Management')">
                     CO<sub>2</sub> Management <fa-icon :icon="['fa-solid','circle-info']" />
                 </div>
                 <div class="input-description">Choose the ambient CO<sub>2</sub> level (%) at which CO<sub>2</sub>-removal equipment is activated.</div>
@@ -43,7 +43,7 @@
                 </label>
             </label>
             <label class="input-wrapper">
-                <div class="input-title" @click="setActiveRefEntry('ECLSS')">
+                <div class="input-title" @click="setActiveRefEntry('O2Management')">
                     O<sub>2</sub> Management <fa-icon :icon="['fa-solid','circle-info']" />
                 </div>
                 <div class="input-description">Choose the ambient O<sub>2</sub> level (%) at which O<sub>2</sub> is added back into the atmosphere from storage, and what reserves to begin with.</div>
