@@ -33,13 +33,14 @@ export default {
                 // agent: [production, consumption],
                 // these only produce
                 plantSpecies: [0, null],
+                biomes_produce: [0, null],
                 // these only consume
                 humans: [null, 0],
-                soil: [null, 0],
+                biomes_consume: [null, 0]
             },
             // these two arrays should match the items in this.o2
-            labels: ['Plants', 'Humans', 'Soil'],
-            colors: ['#0000ff', '#ff0000', '#ee0000', '#dd0000', '#cc0000'],
+            labels: ['Plants', 'Biomes', 'Humans', 'Biomes'],
+            colors: ['#0000ff', '#0000dd', '#ff0000', '#dd0000'],
         }
     },
     computed: {
@@ -49,8 +50,8 @@ export default {
         humans() {
             return this.configuration.humans
         },
-        soil() {
-            return this.configuration.soil
+        biomes() {
+            return this.configuration.biomes
         },
     },
     watch: {
@@ -85,14 +86,16 @@ export default {
             immediate: true,
             deep: true,
         },
-        soil: {
+        biomes: {
             handler() {
-                this.o2.soil = [0, 0]
-                this.retrieveO2('soil', this.configuration.soil.amount, response => {
-                    const {o2} = response
-                    this.o2.soil[0] += o2.output
-                    this.o2.soil[1] += o2.input
-                    this.updateChart()
+                this.o2.biomes = [0, 0]
+                Object.entries(this.configuration.biomes).forEach(([biome, amount]) => {
+                    this.retrieveO2(`${biome}_biome`, amount, response => {
+                        const {o2} = response
+                        this.o2.biomes_produce[0] += o2.output
+                        this.o2.biomes_consume[1] += o2.input
+                        this.updateChart()
+                    })
                 })
             },
             immediate: true,

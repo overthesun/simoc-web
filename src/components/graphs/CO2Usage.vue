@@ -34,14 +34,15 @@ export default {
                 // agent: [production, consumption],
                 // these only produce
                 plantSpecies: [0, null],
+                biomes_consume: [0, null],
                 // these only consume
                 humans: [null, 0],
-                soil: [null, 0],
                 concrete: [null, 0],
+                biomes_produce: [null, 0],
             },
             // these two arrays should match the items in cthis.co2
-            labels: ['Plants', 'Humans', 'Soil', 'Concrete'],
-            colors: ['#ff0000', '#0000ff', '#0000ee', '#ee0000'],
+            labels: ['Plants', 'Biomes', 'Humans', 'Concrete', 'Biomes'],
+            colors: ['#ff0000', '#dd0000', '#0000ff', '#dd0000', '#0000bb'],
         }
     },
     computed: {
@@ -51,8 +52,8 @@ export default {
         humans() {
             return this.configuration.humans
         },
-        soil() {
-            return this.configuration.soil
+        biomes() {
+            return this.configuration.biomes
         },
         concrete() {
             return this.configuration.concrete
@@ -90,14 +91,16 @@ export default {
             immediate: true,
             deep: true,
         },
-        soil: {
+        biomes: {
             handler() {
-                this.co2.soil = [0, 0]
-                this.retrieveCO2('soil', this.configuration.soil.amount, response => {
-                    const {co2} = response
-                    this.co2.soil[0] += co2.output
-                    this.co2.soil[1] += co2.input
-                    this.updateChart()
+                this.co2.biomes = [0, 0]
+                Object.entries(this.configuration.biomes).forEach(([biome, amount]) => {
+                    this.retrieveCO2(`${biome}_biome`, amount, response => {
+                        const {co2} = response
+                        this.co2.biomes_produce[0] += co2.output
+                        this.co2.biomes_consume[1] += co2.input
+                        this.updateChart()
+                    })
                 })
             },
             immediate: true,
