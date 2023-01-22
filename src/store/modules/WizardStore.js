@@ -81,6 +81,7 @@ export const useWizardStore = defineStore('WizardStore', {
             humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
             food: {type: 'food_storage', amount: 500, units: 'kg'},
             crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+            biomes: {rainforest: 2000, desert: 1400, ocean: 863, savannah: 1637},
             eclss: {
                 type: 'eclss',
                 amount: 1,
@@ -250,6 +251,7 @@ export const useWizardStore = defineStore('WizardStore', {
                          pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+                biomes: {rainforest: 2000, desert: 1400, ocean: 863, savannah: 1637},
                 eclss: {type: 'eclss', amount: 1, units: '',
                         o2Reserves: 0,          // kg
                         o2LowerLimit: 20,       // %
@@ -286,6 +288,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: '',
                                o2: 1967, co2: 42, h2o: 120, n2: 11025},
+                biomes: {rainforest: 2000, desert: 1400, ocean: 863, savannah: 1637},
                 eclss: {type: 'eclss', amount: 1, units: '',
                         o2Reserves: 11288,      // kg
                         o2LowerLimit: 20,       // %
@@ -324,6 +327,7 @@ export const useWizardStore = defineStore('WizardStore', {
                          pestPicking: null},
                 food: {type: 'food_storage', amount: 500, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
+                biomes: {rainforest: 2000, desert: 1400, ocean: 863, savannah: 1637},
                 eclss: {type: 'eclss', amount: 1, units: '',
                         o2Reserves: 0,          // kg
                         o2LowerLimit: 20,       // %
@@ -413,6 +417,9 @@ export const useWizardStore = defineStore('WizardStore', {
             if (state.configuration.crewQuarters.type !== 'none') {
                 fconfig.habitat = config.crewQuarters.type
             }
+            if ('biomes' in state.configuration) {
+                fconfig.biomes = config.biomes
+            }
             config.plantSpecies.forEach(element => {
                 // ignore plants if the plant type is not selected
                 if (element.type !== '') {
@@ -477,6 +484,10 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration.humans = humans
             this.configuration.food = food
             this.configuration.crewQuarters = crewQuarters
+            if ('biomes' in value) {
+                const {biomes} = value
+                this.configuration.biomes = biomes
+            }
         },
         setECLSS(value) {
             this.configuration.eclss = value
