@@ -119,7 +119,7 @@ export default {
                 solarGain: {mars: '500 W/m²', b2: '2000 W/m²'},
                 atmosphericPressure: {mars: '0.636 kPa', b2: '101 kPa'},
                 gravity: {mars: '3.71 m/s²', b2: '9.81 m/s²'},
-            }
+            },
         }
     },
     computed: {
@@ -127,9 +127,11 @@ export default {
 
         startDate() {
             if (this.simLocation === 'b2') {
-                return new Date(Date.parse(this.configuration.startDate + ' 00:00:00'))
+                return new Date(Date.parse(`${this.configuration.startDate} 00:00:00`))
+            } else {
+                return null
             }
-        }
+        },
     },
     methods: {
         stringFormatter: StringFormatter,
@@ -161,7 +163,7 @@ export default {
             const startDate = new Date(this.startDate)
             const currentMS = startDate.setHours(this.startDate.getHours() + stepBuffer)
             return new Date(currentMS)
-        }
+        },
     },
 }
 </script>
