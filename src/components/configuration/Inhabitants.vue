@@ -78,6 +78,13 @@ export default {
         ranges() {
             return this.validValues  // return the valid ranges for humans/food
         },
+        inhabitantActivities() {
+            const {weeding, pestPicking} = this.configuration.humans
+            return {
+                weeding,
+                pestPicking
+            }
+        },
     },
     watch: {
         // When the values in the store are changed, update the form and validate it.
@@ -117,21 +124,10 @@ export default {
             }
             this.validateRef('humans')
         },
-        'configuration.humans.weeding': function() {
+        inhabitantActivities: function() {
             const {humans} = this.configuration
             this.humans = humans
-            const working_hours_invalid = (humans.weeding > 16 || humans.weeding +
-                                          humans.pestPicking > 16)
-            this.$refs.humans.setCustomValidity(
-                working_hours_invalid ? 'Hours spent working must total 16 hours/day or less.' : ''
-            )
-            this.validateRef('humans')
-        },
-        'configuration.humans.pestPicking': function() {
-            const {humans} = this.configuration
-            this.humans = humans
-            const working_hours_invalid = (humans.weeding > 16 || humans.weeding +
-                                          humans.pestPicking > 16)
+            const working_hours_invalid = (humans.weeding + humans.pestPicking) > 16
             this.$refs.humans.setCustomValidity(
                 working_hours_invalid ? 'Hours spent working must total 16 hours/day or less.' : ''
             )
@@ -190,6 +186,6 @@ export default {
     @import '../../sass/components/configuration-input';
 
     .list-input {
-        margin-top: 8px;
+        margin-top: 0.5em;
     }
 </style>
