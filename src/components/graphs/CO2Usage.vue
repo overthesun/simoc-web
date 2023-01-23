@@ -93,7 +93,8 @@ export default {
         },
         biomes: {
             handler() {
-                this.co2.biomes = [0, 0]
+                this.co2.biomes_consume = [0, null]
+                this.co2.biomes_produce = [null, 0]
                 Object.entries(this.configuration.biomes).forEach(([biome, amount]) => {
                     this.retrieveCO2(`${biome}_biome`, amount, response => {
                         const {co2} = response
