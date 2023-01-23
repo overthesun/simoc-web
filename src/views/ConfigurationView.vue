@@ -251,7 +251,7 @@ export default {
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset
-            const presets = this.getPresets()
+            const presets = this.getPresets
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
                 const data = await this.importPresetData(presets[preset_name])
