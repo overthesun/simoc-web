@@ -82,7 +82,7 @@ export default {
             const {weeding, pestPicking} = this.configuration.humans
             return {
                 weeding,
-                pestPicking
+                pestPicking,
             }
         },
     },
@@ -124,7 +124,7 @@ export default {
             }
             this.validateRef('humans')
         },
-        inhabitantActivities: function() {
+        'inhabitantActivities': function() {
             const {humans} = this.configuration
             this.humans = humans
             const working_hours_invalid = (humans.weeding + humans.pestPicking) > 16

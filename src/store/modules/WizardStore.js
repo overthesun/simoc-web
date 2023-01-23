@@ -377,9 +377,9 @@ export const useWizardStore = defineStore('WizardStore', {
         },
 
         getPresets(state) {
-            let locPresets = Object.assign({}, state.presets)
-            for (var preset in locPresets) {
-                if (locPresets[preset]['location'] != state.presetLocation) {
+            const locPresets = {...state.presets}
+            for (const preset in locPresets) {
+                if (locPresets[preset].location != state.presetLocation) {
                     delete locPresets[preset]
                 }
             }
