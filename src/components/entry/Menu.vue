@@ -50,12 +50,12 @@ export default {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
-        const {activeConfigType} = storeToRefs(wizard)
+        const {activeConfigType, presetLocation} = storeToRefs(wizard)
         const {setConfiguration, setLiveConfig} = wizard
         return {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
             setSimulationData, activeConfigType, setConfiguration,
-            setLiveConfig,
+            setLiveConfig, presetLocation,
         }
     },
     data() {
@@ -78,6 +78,7 @@ export default {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
             this.simLocation = location
+            this.presetLocation = location
             this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },

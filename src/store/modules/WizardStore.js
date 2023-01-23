@@ -19,6 +19,7 @@ export const useWizardStore = defineStore('WizardStore', {
         // the base url for the cached simdata
         simdataLocation: 'https://simoc.space/download/simdata/',
         // valid values and ranges for the form inputs
+        presetLocation: '',
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
             locations: ['mars', 'b2'],
@@ -112,7 +113,7 @@ export const useWizardStore = defineStore('WizardStore', {
             concrete: {amount: 15800},
             soil: {amount: 16720},
         },
-        mars_presets: {
+        presets: {
             one_human: {
                 name: '1 Human',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
@@ -239,8 +240,6 @@ export const useWizardStore = defineStore('WizardStore', {
                 greenhouse: {type:'greenhouse_small', amount:1, units:''},
                 plantSpecies: [{type:'wheat', amount:100}],
             },*/
-        },
-        b2_presets: {
             b2_mission_1a: {
                 name: 'Mission 1a',
                 simdata_file: 'simoc-simdata-b2-mission-1a.json',
@@ -377,12 +376,14 @@ export const useWizardStore = defineStore('WizardStore', {
             return totalHours
         },
 
-        getPresets(state, location = 'mars') {
-            if (location === 'b2') {
-                return state.b2_presets
-            } else {
-                return state.mars_presets
+        getPresets(state) {
+            let locPresets = Object.assign({}, state.presets)
+            for (var preset in locPresets) {
+                if (locPresets[preset]['location'] != state.presetLocation) {
+                    delete locPresets[preset]
+                }
             }
+            return locPresets
         },
 
         // Returns a formatted configuration object in the format required by the backend.
@@ -465,9 +466,9 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         setPreset(name, location) {
             if (location === 'b2') {
-                this.setConfiguration(this.b2_presets[name], location)
+                this.setConfiguration(this.presets[name], location)
             } else if (location === 'mars') {
-                this.setConfiguration(this.mars_presets[name], location)
+                this.setConfiguration(this.presets[name], location)
             }
         },
         setLiveConfig(duration, location) {
