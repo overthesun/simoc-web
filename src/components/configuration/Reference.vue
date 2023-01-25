@@ -8,10 +8,17 @@ using v-for to populate all links with the title and the approriate value for th
 
 <template>
     <div class="encyclopedia-wrapper">
-        <ReferenceItem v-if="activeRefEntry === 'Welcome'" heading="Welcome To SIMOC">
+        <ReferenceItem v-if="(activeRefEntry === 'Welcome') && (simLocation === 'mars')" heading="Welcome To SIMOC">
             <p>Welcome to SIMOC, a scalable, interactive model of an off-world community. Here you will enjoy the challenges and rewards of designing a habitat for <a class="reference-link" href="#" @click="setActiveRefEntry('Inhabitants')">humans</a> and <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> using data from four decades of NASA research that defines the simulated interactions.</p>
             <p>Great effort has been made to develop a realistic model. Your goal is to learn which combination of mechanical life support systems (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>) and biological components (<a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>) will provide clean air, water, and food for a long-term mission.</p>
             <p><i>Sound easy?</i> Let’s see how your design works on Mars...</p>
+            <i>You can click on the <fa-icon :icon="['fa-solid','circle-info']" />
+                icons on the left to navigate to the corresponding entries.</i>
+        </ReferenceItem>
+        <ReferenceItem v-if="(activeRefEntry === 'Welcome') && (simLocation === 'b2')" heading="Welcome To SIMOC">
+            <p>Welcome to SIMOC B2, a Scalable, Interactive Model of an Off-world Community applied to the world renowned University of Arizona Biosphere 2. Here you will rediscover the challenges and find solutions for the first and second missions inside one of the world’s most audacious experiments in closed ecosystem design and habitation.</p>
+            <p>Great effort has been made to develop this computer model. SIMOC B2 is built upon authentic NASA and Biosphere 2 data, publications, and feedback from those who designed, built, and lived and worked inside of Biosphere 2. Your goal is to learn why the oxygen level fell and how you could adjust the design parameters to achieve a longer mission.</p>
+            <p><i>Sound easy?</i> Let’s see how long your crew members will survive! A few months? 500 days? The full two years?</p>
             <i>You can click on the <fa-icon :icon="['fa-solid','circle-info']" />
                 icons on the left to navigate to the corresponding entries.</i>
         </ReferenceItem>
@@ -37,7 +44,7 @@ using v-for to populate all links with the title and the approriate value for th
                 <dt style="min-width: 8em;"><h3>Mission 2</h3></dt>
                 <dd>The second historical mission, with ideal sunlight and improved crop management practices. How do these factors affect plant productivity?</dd>
             </dl>
-            <p>You can select a preset and launch a simulation as-is to see historical data, or select a preset and customize it, and explore how the simulation responds. Try changing the amounts and types of plants, and adjust your CO₂ and O₂ reserves and limits. Can you finish the simulation with healthier, happier biospherians?</p>
+            <p>You can select a preset and launch a simulation as-is to watch the historical missions unfold as they did from 1991-93, and in 1994, or select a preset, customize the settings, then explore how the simulation responds. Try changing the amount and types of plants, and adjust your CO2 and O2 reserves and limits. Can you finish the simulation with healthier, happier biospherians?</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'StartDate'" heading="Start Date">
@@ -46,8 +53,14 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'Duration'" heading="Mission Duration">
             <p>The duration of your mission may be set in hours, days, or years. Each unit of simulated time (a "time step") is equivalent to one hour Earth time. Therefore a duration of 240 time steps is a simulation of 10 Earth days. While the rotational period for each celestial body is unique from that of Earth, SIMOC is set to Earth time due to the fact that the human body is biologically set to Earth time, and the growth cycle of the available <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a>, as defined by data provided by NASA, is also measured in Earth time.</p>
-            <p>When establishing the duration of your mission, consider the goals and intended outcome. For example, if you are staying for just two weeks, you will not have time to raise and harvest plants. Therefore, all atmosphere, water, and waste recycling must come from the physico-chemical Environmental Control and Life Support System (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>), as on the International Space Station. Your <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food</a> will be brought with you from Earth as dehydrated rations.</p>
-            <p>If you are staying a few months or longer, you may consider maintaining a <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> to reduce the quantity of food you must bring from Earth, and experiment in long term sustainability. Upon arrival you will still need ECLSS and rations, but over time the plants will work in conjunction with the ECLSS for a hybrid, physico-chemical / bioregenerative system. This is where SIMOC becomes interesting, for the delicate balance required to support human life for long duration missions may require a few simulations to discover.</p>
+            <template v-if="simLocation === 'mars'">
+                <p>When establishing the duration of your mission, consider the goals and intended outcome. For example, if you are staying for just two weeks, you will not have time to raise and harvest plants. Therefore, all atmosphere, water, and waste recycling must come from the physico-chemical Environmental Control and Life Support System (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>), as on the International Space Station. Your <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food</a> will be brought with you from Earth as dehydrated rations.</p>
+                <p>If you are staying a few months or longer, you may consider maintaining a <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> to reduce the quantity of food you must bring from Earth, and experiment in long term sustainability. Upon arrival you will still need ECLSS and rations, but over time the plants will work in conjunction with the ECLSS for a hybrid, physico-chemical / bioregenerative system. This is where SIMOC becomes interesting, for the delicate balance required to support human life for long duration missions may require a few simulations to discover.</p>
+            </template>
+            <template v-if="simLocation === 'b2'">
+                <p>When establishing the duration of your mission, consider the goals and intended outcome. For example, if you are reproducing the original B2 missions, you might keep the mission durations unchanged. Or you might extend the second mission to match the first, for a full two years.</p>
+                <p>If you shortened either of the missions, consider that your food cultivars ideally have ample time to see harvest, replanting, and a second growth period to demonstrate a sustainable solution.</p>
+            </template>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Inhabitants'" heading="Inhabitants">
@@ -59,15 +72,16 @@ using v-for to populate all links with the title and the approriate value for th
             <p>Biosphere 2 includes 5 unique biomes: Rainforest, Desert, Savannah, Ocean and Greenhouse.</p>
             <p>All biomes include some combination of air, soil and vegetation, and each of these performs a different function:</p>
             <ul>
-                <li><b>Air</b> circulates between all the biomes, as well as the lungs and crew habitat. A larger air 'sink' means the daily and seasonal fluctuations of O₂ and CO₂ are less in terms of %, which makes it easier to maintain the right composition for humans and plants</li>
-                <li><b>Soil</b> is included in all biomes except the ocean. Soil microorganisms respiration, or consume O₂ and produce CO₂, just like humans.</li>
+                <li><b>Air</b> circulates between all the biomes, as well as the lungs and crew habitat. A larger air 'sink' means the daily and seasonal fluctuations of O₂ and CO₂ are less in terms of %, which makes it easier to maintain the right composition for humans and plants.</li>
+                <li><b>Soil</b> is included in all biomes except the ocean. Soil microorganisms perform respiration, or consume O₂ and produce CO₂, just like humans.</li>
                 <li><b>Vegetation</b> varies between biomes, but it always performs photosynthesis, which consumes CO₂ and produces O₂. All biomes include vegetation except for the ocean, which is offset by coral activity, and the IAB, for which the vegetation is the plants, defined below.</li>
             </ul>
             <p>Each biome has different amounts of the above, giving it different exchanges.</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Food'" heading="Food Supply">
-            <p>It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
+            <p v-if="simLocation === 'mars'">It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
+            <p v-if="simLocation === 'b2'">The Biospherians entered Biosphere 2 with food cultivars fully grown, many ready for harvest. This reduced their need to call upon food rations from day-one. But as you consider the subsequent harvest and planting cycles, it is imperative that your crew have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('Plants')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Biomes')">greenhouse</a>. Consider that the plants are unable to produce edible fruit and vegetables until they are ready to harvest. Furthermore, their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
             <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (e.g. cabbage) while others offer very little for the human to digest (e.g. wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO₂ reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
             <p v-if="simLocation === 'b2'">During the <a class="reference-link" href="#" @click="setActiveRefEntry('Presets')">Biosphere 2 missions</a>, the crew consumed a low-calorie, nutrient-dense diet prescribed by biospherian Roy Walford. In SIMOC-B2 simulations, this is reflected as a 50% reduction from the default, high-calorie astronaut diet modeled in SIMOC. This change is also reflected in the table below.</p>
             <p>The following table can be used as a reference for the amount of food required (in kg):</p>
