@@ -15,51 +15,51 @@
         <div v-else-if="simLocation === 'b2'">
             <label class="input-wrapper">
                 <div class="input-title" @click="setActiveRefEntry('CO2Management')">
-                    CO<sub>2</sub> Management <fa-icon :icon="['fa-solid','circle-info']" />
+                    CO₂ Management <fa-icon :icon="['fa-solid','circle-info']" />
                 </div>
-                <div class="input-description">Choose the ambient CO<sub>2</sub> level (%) at which CO<sub>2</sub>-removal equipment is activated.</div>
+                <div class="input-description">Choose the ambient CO₂ level (%) at which CO₂-removal equipment is activated.</div>
                 <label class="list-input">
                     <input ref="co2UpperLimit" v-model="eclss.co2UpperLimit" :min="ranges.eclss.co2UpperLimit.min"
                            :max="ranges.eclss.co2UpperLimit.max" class="input-field-number"
                            type="number" step=".01" pattern="^\d+$" placeholder="Percent" required
                            @input="setECLSSHandler"> %
-                    Upper Limit CO<sub>2</sub>
+                    Upper Limit CO₂
                 </label>
                 <!-- CO2 Resupply -->
-                <div class="input-description">Choose the ambient CO<sub>2</sub> level (%) at which CO<sub>2</sub> is added back into the atmosphere from storage, and what reserves to begin with.</div>
+                <div class="input-description">Choose the ambient CO₂ level (%) at which CO₂ is added back into the atmosphere from storage, and what reserves to begin with.</div>
                 <label class="list-input">
                     <input ref="co2Reserves" v-model="eclss.co2Reserves" :min="ranges.eclss.co2Reserves.min"
                            :max="ranges.eclss.co2Reserves.max" class="input-field-number"
                            type="number" pattern="^\d+$" placeholder="Amount" required
                            @input="setECLSSHandler"> kg
-                    CO<sub>2</sub> Reserves
+                    CO₂ Reserves
                 </label>
                 <label class="list-input">
                     <input ref="co2LowerLimit" v-model="eclss.co2LowerLimit" :min="ranges.eclss.co2LowerLimit.min"
                            :max="ranges.eclss.co2LowerLimit.max" class="input-field-number"
                            type="number" step=".01" pattern="^\d+$" placeholder="Percent" required
                            @input="setECLSSHandler"> %
-                    Lower Limit CO<sub>2</sub>
+                    Lower Limit CO₂
                 </label>
             </label>
             <label class="input-wrapper">
                 <div class="input-title" @click="setActiveRefEntry('O2Management')">
-                    O<sub>2</sub> Management <fa-icon :icon="['fa-solid','circle-info']" />
+                    O₂ Management <fa-icon :icon="['fa-solid','circle-info']" />
                 </div>
-                <div class="input-description">Choose the ambient O<sub>2</sub> level (%) at which O<sub>2</sub> is added back into the atmosphere from storage, and what reserves to begin with.</div>
+                <div class="input-description">Choose the ambient O₂ level (%) at which O₂ is added back into the atmosphere from storage, and what reserves to begin with.</div>
                 <label class="list-input">
                     <input ref="o2Reserves" v-model="eclss.o2Reserves" :min="ranges.eclss.o2Reserves.min"
                            :max="ranges.eclss.o2Reserves.max" class="input-field-number"
                            type="number" pattern="^\d+$" placeholder="Amount" required
                            @input="setECLSSHandler"> kg
-                    O<sub>2</sub> Reserves
+                    O₂ Reserves
                 </label>
                 <label class="list-input">
                     <input ref="o2LowerLimit" v-model="eclss.o2LowerLimit" :min="ranges.eclss.o2LowerLimit.min"
                            :max="ranges.eclss.o2LowerLimit.max" class="input-field-number"
                            type="number" step=".01" pattern="^\d+$" placeholder="Percent" required
                            @input="setECLSSHandler"> %
-                    Lower Limit O<sub>2</sub>
+                    Lower Limit O₂
                 </label>
             </label>
         </div>

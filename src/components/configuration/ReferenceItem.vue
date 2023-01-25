@@ -12,11 +12,16 @@
 </template>
 
 <script>
+import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     props: {
-        setActiveRefEntry: {type: Function, required: true},
         heading: {type: String, required: true},
+    },
+    setup() {
+        const wizard = useWizardStore()
+        const {setActiveRefEntry} = wizard
+        return {setActiveRefEntry}
     },
 }
 </script>
