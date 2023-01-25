@@ -27,7 +27,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="(activeRefEntry === 'Presets') && (simLocation === 'b2')"
                        :set-active-ref-entry="setActiveRefEntry" heading="Presets">
-            <p>The Presets represent three key phases of the Biosphere 2 experiements:</p>
+            <p>The Presets represent three key phases of the Biosphere 2 experiments:</p>
             <table class="mission-table">
                 <tr>
                     <td style="min-width: 8em;"><h3>Mission 1a</h3></td>
@@ -47,7 +47,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'StartDate'" :set-active-ref-entry="setActiveRefEntry"
                        heading="Start Date">
-            <p>The historical Biosphere 2 missions took place between 1991 and 1995. SIMOC uses historical sunlight data from this period. The B2-Sun agent produces more light in the summer months, and annual output is lower during 1991-1992 due to an El Nino event.</p>
+            <p>The historical Biosphere 2 missions took place between 1991 and 1995. SIMOC uses historical sunlight data from this period. The B2-Sun agent produces more light in the summer months, and annual output is lower during 1991-1992 due to an El Niño event.</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Duration'" :set-active-ref-entry="setActiveRefEntry"
@@ -68,7 +68,7 @@ using v-for to populate all links with the title and the approriate value for th
             <p>All biomes include some combination of air, soil and vegetation, and each of these performs a different function:</p>
             <ul>
                 <li><b>Air</b> circulates between all the biomes, as well as the lungs and crew habitat. A larger air 'sink' means the daily and seasonal fluctuations of O<sub>2</sub> and CO<sub>2</sub> are less in terms of %, which makes it easier to maintain the right composition for humans and plants</li>
-                <li><b>Soil</b> is included in all biomes except the ocean. Soil microorganisms respiration, or consume O<sub>2</sub> and produce CO<sub>2</sub>, just like humans.</li>
+                <li><b>Soil</b> is included in all biomes except the ocean. Soil microorganisms respiration consume O<sub>2</sub> and produce CO<sub>2</sub>, just like humans.</li>
                 <li><b>Vegetation</b> varies between biomes, but it always performs photosynthesis, which consumes CO<sub>2</sub> and produces O<sub>2</sub>. All biomes include vegetation except for the ocean, which is offset by coral activity, and the IAB, for which the vegetation is the plants, defined below.</li>
             </ul>
             <p>Each biome has different amounts of the above, giving it different exchanges.</p>
@@ -76,7 +76,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'Food'" :set-active-ref-entry="setActiveRefEntry" heading="Food Supply">
             <p>It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
-            <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (cabbage) while others offer very little for the human to digest (wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO2 reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
+            <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (e.g. cabbage) while others offer very little for the human to digest (e.g. wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO<sub>2</sub> reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
             <p>The following table can be used as a reference for the amount of food required (in kg):</p>
             <table id="food-table">
                 <tr><td colspan="2" rowspan="2" /><th colspan="7">Mission Duration (Earth days)</th></tr>
@@ -139,12 +139,12 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'ImprovedCropManagement'" :set-active-ref-entry="setActiveRefEntry"
                        heading="Improved Crop Management">
-            <p>For the second historical Biosphere 2 mission, Tilak Mahato, a controlled-agriculture researcher with an indigenous farming background, implemented several new procedures which improved plant productivity significantly. These included:</p>
+            <p>For the second historical Biosphere 2 mission, Tilak Mahato, a controlled-agriculture researcher with an indigenous farming background, implemented several new procedures which improved plant productivity and well-being significantly. These included:</p>
             <ul>
                 <li>Removing pests immediately. Because pest populations grow so quickly, catching and remediating an infestation early has an outsized impact.</li>
                 <li>Taking care not spread pests, fungi or diseases via contaminated tools.</li>
-                <li>Washing diseased leaves with soap & water.</li>
-                <li>Protect seedling growing areas from roaches and other pests</li>
+                <li>Washing diseased leaves with soap and water.</li>
+                <li>Protect seedling growing areas from roaches and other pests.</li>
                 <li>Pollinating plants by hand. During Mission 1, the entire corn crop had failed to produce food because there was no wind to spread pollen from the (male) tassels to the (female) silk. Other plants' pollen had been washed away by overhead irrigation.</li>
             </ul>
         </ReferenceItem>

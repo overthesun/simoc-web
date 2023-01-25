@@ -40,7 +40,7 @@ export default {
                 concrete: [null, 0],
                 biomes_produce: [null, 0],
             },
-            // these two arrays should match the items in cthis.co2
+            // these two arrays should match the items in this.co2
             labels: ['Plants', 'Biomes', 'Humans', 'Concrete', 'Biomes'],
             colors: ['#ff0000', '#dd0000', '#0000ff', '#dd0000', '#0000bb'],
         }
