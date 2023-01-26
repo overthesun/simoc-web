@@ -536,7 +536,7 @@ export const useWizardStore = defineStore('WizardStore', {
         resetConfigDefault(value) {
             this.configuration = value === 'b2' ? this.defaultB2Config : this.defaultConfig
             this.activeFormIndex = 0
-            this.activeReference = 'Layout'
+            this.activeReference = value === 'mars' ? 'Layout' : 'Reference'
             this.activeRefEntry = 'Welcome'
         },
     },
