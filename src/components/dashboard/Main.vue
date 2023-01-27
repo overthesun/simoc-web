@@ -45,7 +45,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
             </template>
             <template #panel-content>
                 <component :is="panelName" :canvas-number="index" :panel-index="index"
-                           :panel-section="panelSection" :fullscreen="isFullscreen"
+                           :panel-section="panelSection" :fullscreen="isFullscreenPanel(index)"
                            @panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
@@ -129,6 +129,9 @@ export default {
                 this.fullscreenStatus[index] = 'panel-fullscreen'
             }
             this.closePanelMenu()
+        },
+        isFullscreenPanel(index) {
+            return this.fullscreenStatus[index] === 'panel-fullscreen'
         },
 
         openPanelMenu(index) {
