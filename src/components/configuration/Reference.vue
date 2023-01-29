@@ -198,16 +198,6 @@ export default {
         const {setActiveRefEntry} = wizard
         return {activeRefEntry, setActiveRefEntry, activeReference, simLocation}
     },
-    computed: {
-        food() {
-            const DEFAULT_RATE = 1.5  // kg per day
-            if (this.simLocation === 'b2') {
-                return DEFAULT_RATE / 2
-            } else {
-                return DEFAULT_RATE
-            }
-        }
-    },
     data() {
         return {
             marsTOC: [
@@ -237,6 +227,16 @@ export default {
                 {ref: 'ImprovedCropManagement', label: 'Improved Crop Management'},
             ],
         }
+    },
+    computed: {
+        food() {
+            const DEFAULT_RATE = 1.5  // kg per day
+            if (this.simLocation === 'b2') {
+                return DEFAULT_RATE / 2
+            } else {
+                return DEFAULT_RATE
+            }
+        },
     },
 }
 </script>

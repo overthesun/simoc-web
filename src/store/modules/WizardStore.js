@@ -109,8 +109,7 @@ export const useWizardStore = defineStore('WizardStore', {
             ],
             improvedCropManagement: false,
             startWithM1EndingAtmosphere: false,
-            concrete: {amount: 15800},
-            soil: {amount: 16720},
+            concrete: {amount: 15800, carbonation: 0.00458},
         },
         mars_presets: {
             one_human: {
@@ -275,8 +274,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 improvedCropManagement: false,
                 startWithM1EndingAtmosphere: false,
-                concrete: {amount: 15800},
-                soil: {amount: 16720},
+                concrete: {amount: 15800, carbonation: 0.00458},
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
@@ -314,8 +312,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: true,
                 improvedCropManagement: false,
-                concrete: {amount: 15800},
-                soil: {amount: 16720},
+                concrete: {amount: 15800, carbonation: 0.02962},
             },
             b2_mission_2: {
                 name: 'Mission 2',
@@ -351,8 +348,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: false,
                 improvedCropManagement: true,
-                concrete: {amount: 15800},
-                soil: {amount: 16720},
+                concrete: {amount: 15800, carbonation: 0.04099},
             },
         },
     }),
@@ -400,7 +396,6 @@ export const useWizardStore = defineStore('WizardStore', {
                 power_storage: {kwh: parseInt(config.powerStorage.amount, 10)},
                 nutrient_storage: {fertilizer: config.location === 'b2' ? 10000 : 300},
                 concrete: config.concrete,
-                soil: config.soil,
                 single_agent: 1,
                 plants: [],
             }
