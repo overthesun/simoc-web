@@ -46,7 +46,15 @@ export const parseData = (data, path) => {
                 return output
             } else {
                 // Return the sum of all entries (value only)
-                return Object.values(output).reduce((a, b) => a + b)
+                const values = Object.values(output)
+                if (typeof values[0] === 'object') {
+                    // for arrays, combine the elements so that e.g. [0,1,2] + [3,4,5] == [3,5,7]
+                    return values.reduce((acc, array) => acc.map((sum, i) => sum + array[i]),
+                                         new Array(values[0].length).fill(0))
+                } else {
+                    // otherwise just add together all the values
+                    return values.reduce((a, b) => a + b)
+                }
             }
         } else if (Object.keys(data).includes(index)) {
             // Single Key
