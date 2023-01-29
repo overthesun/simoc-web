@@ -16,7 +16,7 @@ using v-for to populate all links with the title and the approriate value for th
                 icons on the left to navigate to the corresponding entries.</i>
         </ReferenceItem>
         <ReferenceItem v-if="(activeRefEntry === 'Welcome') && (simLocation === 'b2')" heading="Welcome To SIMOC">
-            <p>Welcome to SIMOC B2, a Scalable, Interactive Model of an Off-world Community applied to the world renowned University of Arizona Biosphere 2. Here you will rediscover the challenges and find solutions for the first and second missions inside one of the world’s most audacious experiments in closed ecosystem design and habitation.</p>
+            <p>Welcome to SIMOC B2, a scalable, interactive model of an off-world Community applied to the world-renowned University of Arizona Biosphere 2. Here you will rediscover the challenges and find solutions for the first and second missions inside one of the world’s most audacious experiments in closed ecosystem design and habitation.</p>
             <p>Great effort has been made to develop this computer model. SIMOC B2 is built upon authentic NASA and Biosphere 2 data, publications, and feedback from those who designed, built, and lived and worked inside of Biosphere 2. Your goal is to learn why the oxygen level fell and how you could adjust the design parameters to achieve a longer mission.</p>
             <p><i>Sound easy?</i> Let’s see how long your crew members will survive! A few months? 500 days? The full two years?</p>
             <i>You can click on the <fa-icon :icon="['fa-solid','circle-info']" />
@@ -44,7 +44,7 @@ using v-for to populate all links with the title and the approriate value for th
                 <dt style="min-width: 8em;"><h3>Mission 2</h3></dt>
                 <dd>The second historical mission, with ideal sunlight and improved crop management practices. How do these factors affect plant productivity?</dd>
             </dl>
-            <p>You can select a preset and launch a simulation as-is to watch the historical missions unfold as they did from 1991-93, and in 1994, or select a preset, customize the settings, then explore how the simulation responds. Try changing the amount and types of plants, and adjust your CO2 and O2 reserves and limits. Can you finish the simulation with healthier, happier biospherians?</p>
+            <p>You can select a preset and launch a simulation as-is to watch the historical missions unfold as they did from 1991-93, and in 1994, or select a preset, customize the settings, then explore how the simulation responds. Try changing the amount and types of plants, and adjust your CO₂ and O₂ reserves and limits. Can you finish the simulation with healthier, happier biospherians?</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'StartDate'" heading="Start Date">
