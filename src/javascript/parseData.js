@@ -1,7 +1,7 @@
 // Recursive function to extract data at path from arbitrary object
 export const parseData = (data, path) => {
     // Return what's at the end of the path
-    if (!data && data !== 0) {
+    if (!data && data !== 0 && data !== false) {
         return null
     } else if (path.length === 0) {
         return data === null ? 0 : data
@@ -36,7 +36,7 @@ export const parseData = (data, path) => {
             const output = {}
             Object.keys(data).forEach(key => {
                 const res = parseData(data[key], remainder)
-                if (res || res === 0) {
+                if (res !== null) {
                     output[key] = res
                 }
             })
@@ -67,7 +67,7 @@ export const parseData = (data, path) => {
                 // eslint-disable-next-line no-restricted-syntax
                 for (const i of indices) {
                     const res = parseData(data[i], remainder)
-                    if (res || res === 0) {
+                    if (res !== null) {
                         output[i] = res
                     }
                 }
