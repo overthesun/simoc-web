@@ -38,7 +38,13 @@ export default {
         return {
             prevStep: 0,
             datasetsIndex: {},
-            unit: 'kg',
+            unit: 'kg',  // TODO: In some cases it also includes kwh, so this is inaccurate.
+            colors: [
+                '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
+                '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
+                '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
+                '#000000',
+            ],  // A long arbitrary list of colors, copied from GreenhouseDoughnut (and elsewhere)
         }
     },
     computed: {
@@ -107,11 +113,11 @@ export default {
             const fields = Object.keys(data)
             this.datasetsIndex = Object.fromEntries(  // create a currency:index map
                 Object.entries(fields).map(([a, b]) => [b, parseInt(a)]))
-            const datasets = fields.map(item => ({
+            const datasets = fields.map((item, i) => ({
                 lineTension: 0,
                 data: Array(this.nsteps),
                 label: StringFormatter(item),
-                borderColor: '#0000ff',
+                borderColor: this.colors[i],
                 fill: false,
                 pointStyle: 'line',
             }))

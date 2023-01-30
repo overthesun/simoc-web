@@ -2,11 +2,11 @@
     <div class="panel-graph">
         <div>
             <select @change="handleSelectAgent($event)" required>
-                <option v-for="a in agents" :key="`agent-exp-option-${a}`" :selected="agent === a"
+                <option v-for="a in agents" :key="`${panelIndex}-select-agent-${a}`" :selected="agent === a"
                         :value="a">{{stringFormatter(a)}}</option>
             </select>
             <select v-model="category" required>
-                <option v-for="c in categories" :key="`agent-exp-option-${c}`" :selected="category === c"
+                <option v-for="c in categories" :key="`${panelIndex}-select-cat-${c}`" :selected="category === c"
                         :value="c">{{stringFormatter(c)}}</option>
             </select>
         </div>

@@ -1,6 +1,12 @@
 // Misc util functions
 
 export function StringFormatter(value) {
+
+    // special case
+    if (value.toLowerCase() === 'kwh') {
+        return 'kWh'
+    }
+
     // replace underscores with spaces and capitalizes the first letter of each word
     // e.g. 'food_ration' -> 'Food Ration'
     let formatted = ''
