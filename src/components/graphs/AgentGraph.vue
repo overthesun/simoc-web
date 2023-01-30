@@ -1,9 +1,11 @@
 <!--
-Energy versus chart component used within the dashboard.
+Plots all fields/values for a given agent and category, e.g. 'human_agent:flows'. Based on VersusGraph.
 
-Updates values from the approriate step data getters when the currentStepBuffer value changes.
-
-See chart.js documentation for further details on the related mounted functions.
+Valid categories:
+  - flows: All exchanges as positive values
+  - storage: All currencies for which agent has capacity
+  - deprive: Remaining agent-hours before dying from lack
+  - growth: Class-specific attibutes which change over time, e.g. te_factor
 -->
 
 <template>
