@@ -90,13 +90,19 @@ export default {
 
     methods: {
         consolidateFlows(data) {
-            // The 'flows' category is different from others in that there are
-            // 2 additional levels of heirarchy: direction (in/out) and
-            // connection (who the flow is from/to). The latter can be summed
-            // by parseData, but the former has to be done manually.
-            return Object.values(data).reduce((prev, curr) => (
-                {...prev, ...curr}
-            ), {})
+            // Data for 'flows' contains an extra level of heirarchy, 'in' or 'out'.
+            // Here I remove that layer and instead make 'out' amounts negative.
+            const consolidated = {}
+            const directions = ['in', 'out']
+            directions.forEach(direction => {
+                if (data[direction]) {
+                    const multiplier = direction === 'out' ? -1 : 1
+                    Object.entries(data[direction]).forEach(([currency, amount]) => {
+                        consolidated[currency] = amount * multiplier
+                    })
+                }
+            })
+            return consolidated
         },
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
@@ -141,7 +147,14 @@ export default {
                             beginAtZero: true,
                             ticks: {
                                 callback: (value, index, values) => {
-                                    const val = value > 0 ? value : value.toPrecision(2)
+                                    let val = 0
+                                    if (value === 0) {
+                                        val = '0'
+                                    } else if (Math.abs(value) > 10) {
+                                        val = String(Math.round(value))
+                                    } else {
+                                        val = value.toPrecision(2)
+                                    }
                                     return `${val} ${this.unit}`
                                 },
                             },
