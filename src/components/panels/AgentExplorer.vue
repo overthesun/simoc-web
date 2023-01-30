@@ -1,7 +1,7 @@
 <template>
     <div class="panel-graph">
         <div>
-            <select @change="handleSelectAgent($event)" required>
+            <select required @change="handleSelectAgent($event)">
                 <option v-for="a in agents" :key="`${panelIndex}-select-agent-${a}`" :selected="agent === a"
                         :value="a">{{stringFormatter(a)}}</option>
             </select>
@@ -99,6 +99,8 @@ export default {
         handleSelectAgent(e) {
             const agent = e.target.value
             this.agent = agent
+            // The linter wants me to use forEach, but then I can't break.
+            /* eslint-disable no-restricted-syntax */
             if (!(this.category in this.activeData[agent])) {
                 for (const cat of this.validCategories) {
                     if (cat in this.activeData[agent]) {

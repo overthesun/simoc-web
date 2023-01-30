@@ -54,7 +54,7 @@ export default {
             } else {
                 return [this.agent, this.category, '*']
             }
-        }
+        },
     },
     watch: {
         // update the chart datasets and labels
@@ -112,7 +112,8 @@ export default {
             }
             const fields = Object.keys(data)
             this.datasetsIndex = Object.fromEntries(  // create a currency:index map
-                Object.entries(fields).map(([a, b]) => [b, parseInt(a)]))
+                Object.entries(fields).map(([a, b]) => [b, parseInt(a, 10)])
+            )
             const datasets = fields.map((item, i) => ({
                 lineTension: 0,
                 data: Array(this.nsteps),

@@ -1,7 +1,6 @@
 // Misc util functions
 
 export function StringFormatter(value) {
-
     // special case
     if (value.toLowerCase() === 'kwh') {
         return 'kWh'
