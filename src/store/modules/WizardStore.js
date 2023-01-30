@@ -1,7 +1,9 @@
 import {defineStore} from 'pinia'
+import {useDashboardStore} from './DashboardStore'
 
 export const useWizardStore = defineStore('WizardStore', {
     state: () => ({
+        dashboard: useDashboardStore(),
         // stores the configuration values
         configuration: {},
         // the type of configuration being used (e.g. Guided, Custom)
@@ -19,7 +21,6 @@ export const useWizardStore = defineStore('WizardStore', {
         // the base url for the cached simdata
         simdataLocation: 'https://simoc.space/download/simdata/',
         // valid values and ranges for the form inputs
-        presetLocation: '',
         // TODO: the valid values should probably be defined and sent by the server
         validValues: {
             locations: ['mars', 'b2'],
@@ -379,7 +380,7 @@ export const useWizardStore = defineStore('WizardStore', {
         getPresets(state) {
             const locPresets = {...state.presets}
             Object.keys(locPresets).forEach(preset => {
-                if (locPresets[preset].location !== state.presetLocation) {
+                if (locPresets[preset].location !== state.dashboard.simLocation) {
                     delete locPresets[preset]
                 }
             })
