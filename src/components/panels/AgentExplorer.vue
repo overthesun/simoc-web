@@ -1,18 +1,18 @@
 <template>
     <div class="panel-graph">
         <div>
-            <select v-model="agent" required>
-                <option v-for="a in agents" :selected="agent === a" :value="a"
-                        :key="`agent-exp-option-${a}`">{{stringFormatter(a)}}</option>
+            <select @change="handleSelectAgent($event)" required>
+                <option v-for="a in agents" :key="`agent-exp-option-${a}`" :selected="agent === a"
+                        :value="a">{{stringFormatter(a)}}</option>
             </select>
             <select v-model="category" required>
-                <option v-for="s in categories" :selected="category === s" :value="s"
-                        :key="`agent-exp-option-${s}`">{{stringFormatter(s)}}</option>
+                <option v-for="c in categories" :key="`agent-exp-option-${c}`" :selected="category === c"
+                        :value="c">{{stringFormatter(c)}}</option>
             </select>
         </div>
         <div v-if="(agent && category)">
             <AgentGraph :id="'canvas-pc-' + canvasNumber" :agent="agent" :category="category"
-                         :fullscreen="fullscreen" :nsteps="fullscreen ? getTotalMissionHours : 24" />
+                        :fullscreen="fullscreen" :nsteps="fullscreen ? getTotalMissionHours : 24" />
         </div>
     </div>
 </template>
@@ -50,6 +50,7 @@ export default {
         return {
             agent: '',
             category: '',
+            validCategories: ['storage', 'flows', 'growth', 'deprive'],
         }
     },
     computed: {
@@ -57,15 +58,30 @@ export default {
             return Object.keys(this.activeData)
         },
         categories() {
-            let categories = ['storage', 'flows', 'growth', 'deprive']
             if (this.agent in this.activeData) {
-                categories = categories.filter(s => s in this.activeData[this.agent])
+                return this.validCategories.filter(c => c in this.activeData[this.agent])
+            } else {
+                return []
             }
-            return categories
-        }
+        },
+    },
+    watch: {
+        agent() {
+            this.updateSection()
+        },
+        category() {
+            this.updateSection()
+        },
+        activePanels() {
+            // update section when the user clicks on the reset panels button of the dashboard menu
+            this.agent = this.activePanels[this.panelIndex].split(':')[1]
+            this.category = this.activePanels[this.panelIndex].split(':')[2]
+        },
     },
     mounted() {
-        const [_, activeAgent, activeCategory] = this.activePanels[this.panelIndex].split(':', 2)
+        const panel = this.activePanels[this.panelIndex].split(':', 2)
+        const activeAgent = panel[1]
+        const activeCategory = panel[2]
         if (activeAgent) {
             this.agent = activeAgent
         } else {
@@ -80,24 +96,23 @@ export default {
     methods: {
         stringFormatter: StringFormatter,
 
+        handleSelectAgent(e) {
+            const agent = e.target.value
+            this.agent = agent
+            if (!(this.category in this.activeData[agent])) {
+                for (const cat of this.validCategories) {
+                    if (cat in this.activeData[agent]) {
+                        this.category = cat
+                        break
+                    }
+                }
+            }
+        },
+
         updateSection() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
             this.$emit('panel-section-changed', this.panelIndex, `${this.agent}:${this.category}`)
-        }
-    },
-    watch: {
-        agent() {
-            this.updateSection()
-        },
-        category() {
-            this.updateSection()
-        },
-        activePanels() {
-            // update section when the user clicks on the reset panels button of the dashboard menu
-            console.log(this.activePanels[this.panelIndex])
-            this.agent = this.activePanels[this.panelIndex].split(':')[1]
-            this.category = this.activePanels[this.panelIndex].split(':')[2]
         },
     },
 }

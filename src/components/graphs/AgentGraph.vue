@@ -15,6 +15,7 @@ import {Chart, LineController, LineElement,
         LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {StringFormatter} from '../../javascript/utils'
 
 Chart.register(LineController, LineElement,
                LinearScale, CategoryScale, Tooltip, Legend)
@@ -22,8 +23,8 @@ Chart.register(LineController, LineElement,
 export default {
     props: {
         id: {type: String, required: true},
-        agent: {type: String, default: 'SUM'},
-        category: {type: String, default: 'flows'},
+        agent: {type: String, required: true},
+        category: {type: String, required: true},
         fullscreen: {type: Boolean, default: false},
         nsteps: {type: Number, required: true},
     },
@@ -36,9 +37,19 @@ export default {
     data() {
         return {
             prevStep: 0,
+            datasetsIndex: {},
+            unit: 'kg',
         }
     },
-
+    computed: {
+        stub() {  // The path without the last value (step index)
+            if (this.category === 'flows') {
+                return [this.agent, 'flows', '*', '*', 'SUM']
+            } else {
+                return [this.agent, this.category, '*']
+            }
+        }
+    },
     watch: {
         // update the chart datasets and labels
         // when the current step buffer changes
@@ -56,7 +67,7 @@ export default {
         agent() {
             this.initChart()
         },
-        section() {
+        category() {
             this.initChart()
         },
         // re-init the chart when we change the number of steps displayed
@@ -70,6 +81,15 @@ export default {
     },
 
     methods: {
+        consolidateFlows(data) {
+            // The 'flows' category is different from others in that there are
+            // 2 additional levels of heirarchy: direction (in/out) and
+            // connection (who the flow is from/to). The latter can be summed
+            // by parseData, but the former has to be done manually.
+            return Object.values(data).reduce((prev, curr) => (
+                {...prev, ...curr}
+            ), {})
+        },
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
             if (this.chart) {
@@ -78,29 +98,30 @@ export default {
                 this.chart.destroy()
             }
             const canvas = document.getElementById(this.id)
+
+            // Build the datasets object, and corresponding index, from the selected data
+            let data = this.getData(this.stub.concat([1]))
+            if (this.category === 'flows') {
+                data = this.consolidateFlows(data)
+            }
+            const fields = Object.keys(data)
+            this.datasetsIndex = Object.fromEntries(  // create a currency:index map
+                Object.entries(fields).map(([a, b]) => [b, parseInt(a)]))
+            const datasets = fields.map(item => ({
+                lineTension: 0,
+                data: Array(this.nsteps),
+                label: StringFormatter(item),
+                borderColor: '#0000ff',
+                fill: false,
+                pointStyle: 'line',
+            }))
+
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(this.nsteps).fill(''),
-                    datasets: [
-                        {
-                            lineTension: 0,
-                            data: Array(this.nsteps),
-                            label: 'Produced',
-                            borderColor: '#0000ff',
-                            fill: false,
-                            pointStyle: 'line',
-                        },
-                        {
-                            lineTension: 0,
-                            data: Array(this.nsteps),
-                            label: 'Consumed',
-                            borderColor: '#cd0000',
-                            fill: false,
-                            pointStyle: 'line',
-                        },
-                    ],
+                    datasets: datasets,
                 },
                 options: {
                     responsive: true,
@@ -168,24 +189,23 @@ export default {
             // this will do 1 iteration when startingStep == endingStep
             for (let step = startingStep; step <= endingStep; step++) {
                 // remove the oldest values
-                data.datasets[0].data.shift()
-                data.datasets[1].data.shift()
+                data.datasets.forEach(ds => ds.data.shift())
                 data.labels.shift()
                 if (step > 0) {
-                    const productionPath = [this.agent, this.category, 'out', this.currency, 'SUM', step]
-                    const consumptionPath = [this.agent, this.category, 'in', this.currency, 'SUM', step]
-                    const production = this.getData(productionPath)
-                    console.log(production)
-                    const consumption = this.getData(consumptionPath)
-                    // add the new values
-                    data.datasets[0].data.push(production)
-                    data.datasets[1].data.push(consumption)
+                    const path = this.stub.concat([step])
+                    let result = this.getData(path)
+                    if (this.category === 'flows') {
+                        result = this.consolidateFlows(result)
+                    }
+                    Object.entries(result).forEach(([field, amount]) => {
+                        const index = this.datasetsIndex[field]
+                        data.datasets[index].data.push(amount)
+                    })
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has nsteps total items and is not stretched
-                    data.datasets[0].data.push(undefined)
-                    data.datasets[1].data.push(undefined)
+                    data.datasets.forEach(ds => ds.data.push(undefined))
                     data.labels.push('')
                 }
             }
