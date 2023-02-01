@@ -96,7 +96,7 @@ export default {
             const directions = ['in', 'out']
             directions.forEach(direction => {
                 if (data[direction]) {
-                    const multiplier = direction === 'out' ? -1 : 1
+                    const multiplier = ({'in': 1, 'out': -1})[direction]
                     Object.entries(data[direction]).forEach(([currency, amount]) => {
                         consolidated[currency] = amount * multiplier
                     })
@@ -147,15 +147,11 @@ export default {
                             beginAtZero: true,
                             ticks: {
                                 callback: (value, index, values) => {
-                                    let val = 0
-                                    if (value === 0) {
-                                        val = '0'
-                                    } else if (Math.abs(value) > 10) {
-                                        val = String(Math.round(value))
+                                    if (value === 0 || Math.abs(value) > 10) {
+                                        return `${Math.round(value)} ${this.unit}`
                                     } else {
-                                        val = value.toPrecision(2)
+                                        return `${value.toPrecision(2)} ${this.unit}`
                                     }
-                                    return `${val} ${this.unit}`
                                 },
                             },
                         },

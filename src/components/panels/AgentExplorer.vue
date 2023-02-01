@@ -26,7 +26,7 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Agent Explorer',
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     components: {
         AgentGraph,
     },
