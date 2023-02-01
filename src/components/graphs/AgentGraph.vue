@@ -91,7 +91,7 @@ export default {
             const directions = ['in', 'out']
             directions.forEach(direction => {
                 if (data[direction]) {
-                    const multiplier = ({'in': 1, 'out': -1})[direction]
+                    const multiplier = ({in: 1, out: -1})[direction]
                     Object.entries(data[direction]).forEach(([currency, amount]) => {
                         consolidated[currency] = amount * multiplier
                     })
