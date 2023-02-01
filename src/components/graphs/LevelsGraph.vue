@@ -184,8 +184,8 @@ export default {
                 endingStep = currentStep
                 range = currentStep
             }
-            // this is an object with the elem names as key, and either a number (for single steps)
-            // or an array of numbers (for ranges)
+            // this is an object with the elements names as keys,
+            // and either a number (for single steps) or an array of numbers (for ranges)
             const storage = this.getData([this.storage_name, 'storage', '*', range])
             // this is either a number (for single steps) or an array of numbers (for ranges)
             const tot_storage = this.getData([this.storage_name, 'storage', 'SUM', range])
