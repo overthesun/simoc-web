@@ -144,10 +144,10 @@ export default {
             this.updateChart()
         },
         makeLabels(start, end, nsteps) {
-          // create nsteps labels from start to end, possibly adding empty slots at the beginning
-          const s = Math.max(start+1, 1)  // don't generate steps <1
-          const len = (end+1) - s
-          return Array(nsteps-len).concat(Array(len).fill().map((d, i) => i + s))
+            // create nsteps labels from start to end, possibly adding empty slots at the beginning
+            const s = Math.max(start+1, 1)  // don't generate steps <1
+            const len = (end+1) - s
+            return Array(nsteps-len).concat(Array(len).fill().map((d, i) => i + s))
         },
         updateChart() {
             const currentStep = this.currentStepBuffer
@@ -175,8 +175,8 @@ export default {
             }
             const productionPath = ['SUM', 'flows', 'out', this.plottedValue, 'SUM', range]
             const consumptionPath = ['SUM', 'flows', 'in', this.plottedValue, 'SUM', range]
-            let production = this.getData(productionPath)
-            let consumption = this.getData(consumptionPath)
+            const production = this.getData(productionPath)
+            const consumption = this.getData(consumptionPath)
             if (typeof production === 'object') {
                 // replace current range with the new range (in place)
                 data.datasets[0].data.splice(0, production.length, ...production)
@@ -184,8 +184,7 @@ export default {
                 const labels = this.makeLabels(startingStep, endingStep, this.nsteps)
                 data.labels.splice(0, labels.length, ...labels)
                 this.chart.update('none')
-            }
-            else {
+            } else {
                 // shift and add a single value at the end
                 data.datasets[0].data.shift()
                 data.datasets[1].data.shift()

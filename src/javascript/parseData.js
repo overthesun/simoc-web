@@ -36,7 +36,8 @@ export const parseData = (data, path) => {
         if (idx[0] < 0) {
             // if the start index is negative, prepend empty values and clip the index to 0
             return Array(Math.abs(idx[0])).concat(
-                data.slice(0, idx[1]).map(d => parseData(d, remainder)))
+                data.slice(0, idx[1]).map(d => parseData(d, remainder))
+            )
         } else {
             return data.slice(idx[0], idx[1]).map(d => parseData(d, remainder))
         }
