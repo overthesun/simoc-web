@@ -109,15 +109,11 @@ export default {
                             beginAtZero: true,
                             ticks: {
                                 callback: (value, index, values) => {
-                                    let val = 0
-                                    if (value === 0) {
-                                        val = '0'
-                                    } else if (Math.abs(value) > 10) {
-                                        val = String(Math.round(value))
+                                    if (value === 0 || Math.abs(value) > 10) {
+                                        return `${Math.round(value)} ${this.unit}`
                                     } else {
-                                        val = value.toPrecision(2)
+                                        return `${value.toPrecision(2)} ${this.unit}`
                                     }
-                                    return `${val} ${this.unit}`
                                 },
                             },
                         },

@@ -10,7 +10,7 @@
                         :value="c">{{stringFormatter(c)}}</option>
             </select>
         </div>
-        <div v-if="(agent && category)">
+        <div v-if="(agent && category)" class="chart-area">
             <AgentGraph :id="'canvas-pc-' + canvasNumber" :agent="agent" :category="category"
                         :fullscreen="fullscreen" :nsteps="fullscreen ? getTotalMissionHours : 24" />
         </div>
@@ -99,16 +99,7 @@ export default {
         handleSelectAgent(e) {
             const agent = e.target.value
             this.agent = agent
-            // The linter wants me to use forEach, but then I can't break.
-            /* eslint-disable no-restricted-syntax */
-            if (!(this.category in this.activeData[agent])) {
-                for (const cat of this.validCategories) {
-                    if (cat in this.activeData[agent]) {
-                        this.category = cat
-                        break
-                    }
-                }
-            }
+            this.category = this.validCategories.find(c => c in this.activeData[agent])
         },
 
         updateSection() {
@@ -128,7 +119,7 @@ export default {
 .panel-graph select {
     width: 50%;
 }
-.panel-graph select + div {
+.chart-area {
     /* see https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 */
     min-width: 0;
     min-height: 0;

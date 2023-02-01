@@ -17,7 +17,7 @@ import {Chart, LineController, LineElement,
         LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {StringFormatter} from '../../javascript/utils'
+import {StringFormatter, colors} from '../../javascript/utils'
 
 Chart.register(LineController, LineElement,
                LinearScale, CategoryScale, Tooltip, Legend)
@@ -41,12 +41,7 @@ export default {
             prevStep: 0,
             datasetsIndex: {},
             unit: 'kg',  // TODO: In some cases it also includes kwh, so this is inaccurate.
-            colors: [
-                '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
-                '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
-                '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
-                '#000000',
-            ],  // A long arbitrary list of colors, copied from GreenhouseDoughnut (and elsewhere)
+            colors: colors,
         }
     },
     computed: {

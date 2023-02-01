@@ -19,7 +19,7 @@ import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
-import {StringFormatter} from '../../javascript/utils'
+import {StringFormatter, colors} from '../../javascript/utils'
 
 Chart.register(DoughnutController, ArcElement, Legend, Tooltip)
 
@@ -47,12 +47,7 @@ export default {
 
             // Enough colors to cover all the plant types.
             // Used to specify the color for each section of the pie chart.
-            backgroundColor: [
-                '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
-                '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
-                '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
-                '#000000',
-            ],
+            backgroundColor: colors,
         }
     },
     computed: {
