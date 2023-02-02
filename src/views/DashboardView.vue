@@ -47,7 +47,8 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted && !this.kioskMode) {
+            if (!this.getSurveyWasPrompted && !this.kioskMode &&
+                import.meta.env.MODE !== 'development') {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
                 confirmExit()
