@@ -79,7 +79,7 @@ export default {
         },
     },
     mounted() {
-        const panel = this.activePanels[this.panelIndex].split(':', 2)
+        const panel = this.activePanels[this.panelIndex].split(':', 3)
         const activeAgent = panel[1]
         const activeCategory = panel[2]
         if (activeAgent) {
