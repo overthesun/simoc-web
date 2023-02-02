@@ -14,6 +14,7 @@ See chart.js documentation for further details on the related mounted functions.
 import {Chart, LineController, LineElement,
         LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
+import {make_labels} from '../../javascript/utils'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 Chart.register(LineController, LineElement,
@@ -150,43 +151,44 @@ export default {
             // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
             let endingStep
+            let range
             if (this.fullscreen) {
                 // show the full graph
                 startingStep = 0
                 endingStep = this.nsteps
+                range = `*`
             } else if (currentStep !== this.prevStep+1) {
                 // replace the last nsteps values
-                startingStep = currentStep - (this.nsteps-1)
+                startingStep = currentStep - this.nsteps
                 endingStep = currentStep
+                range = `${startingStep}:${endingStep}`
             } else {
                 // add the latest value
                 startingStep = currentStep
                 endingStep = currentStep
+                range = currentStep
             }
-            // this will do 1 iteration when startingStep == endingStep
-            for (let step = startingStep; step <= endingStep; step++) {
-                // remove the oldest values
+            const productionPath = ['SUM', 'flows', 'out', this.plottedValue, 'SUM', range]
+            const consumptionPath = ['SUM', 'flows', 'in', this.plottedValue, 'SUM', range]
+            const production = this.getData(productionPath)
+            const consumption = this.getData(consumptionPath)
+            if (typeof production === 'object') {
+                // replace current range with the new range (in place)
+                data.datasets[0].data.splice(0, production.length, ...production)
+                data.datasets[1].data.splice(0, consumption.length, ...consumption)
+                const labels = make_labels(startingStep, endingStep, this.nsteps)
+                data.labels.splice(0, labels.length, ...labels)
+                this.chart.update('none')
+            } else {
+                // shift and add a single value at the end
                 data.datasets[0].data.shift()
                 data.datasets[1].data.shift()
                 data.labels.shift()
-                if (step > 0) {
-                    const productionPath = ['SUM', 'flows', 'out', this.plottedValue, 'SUM', step]
-                    const consumptionPath = ['SUM', 'flows', 'in', this.plottedValue, 'SUM', step]
-                    const production = this.getData(productionPath)
-                    const consumption = this.getData(consumptionPath)
-                    // add the new values
-                    data.datasets[0].data.push(production)
-                    data.datasets[1].data.push(consumption)
-                    data.labels.push(step)
-                } else {
-                    // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has nsteps total items and is not stretched
-                    data.datasets[0].data.push(undefined)
-                    data.datasets[1].data.push(undefined)
-                    data.labels.push('')
-                }
+                data.datasets[0].data.push(production)
+                data.datasets[1].data.push(consumption)
+                data.labels.push(currentStep)
+                this.chart.update()
             }
-            this.chart.update()
             this.prevStep = currentStep
         },
     },
