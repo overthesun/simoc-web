@@ -373,14 +373,6 @@ export const useWizardStore = defineStore('WizardStore', {
             return totalHours
         },
 
-        getPresets(state, location = 'mars') {
-            if (location === 'b2') {
-                return state.b2_presets
-            } else {
-                return state.mars_presets
-            }
-        },
-
         // Returns a formatted configuration object in the format required by the backend.
         getFormattedConfiguration(state) {
             const config = state.configuration
@@ -433,6 +425,13 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
+        getPresets(location='mars') {
+            if (location === 'b2') {
+                return this.b2_presets
+            } else {
+                return this.mars_presets
+            }
+        },
         setConfiguration(value, location) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
