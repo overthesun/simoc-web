@@ -273,7 +273,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 ],
                 // TODO: replace with B2-related panels
                 'sim:b2': [
-                    'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
+                    'MissionInfo', 'Concrete', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
                 'live': [
