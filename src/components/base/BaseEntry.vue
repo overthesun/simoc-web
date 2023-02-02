@@ -226,39 +226,17 @@ export default {
     }
 
     .btn-mars, .btn-biosphere2 {
-        width: 122px;
-        height: 122px;
-        min-height: 122px;
-        font-size: 14px;
-        color: transparent;
         background: transparent;
-
-        &:hover{
-            cursor: pointer;
-            color: rgba(255,255,255,1);
-            transition: color 0.5s;
-        }
-
-        &:focus{
-            outline:none;
-        }
+        background-size: cover;
+        background-position: center;
     }
 
     .btn-mars {
-        background-image: url(../../assets/Mars-Ft-Calgary-small.jpg);
-        margin-right: 12px;
-
-        &:hover{
-            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary-small.jpg);
-        }
+        background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary.jpg);
     }
 
     .btn-biosphere2 {
-        background-image: url(../../assets/biosphere2-small.jpg);
-
-        &:hover{
-            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/biosphere2-small.jpg);
-        }
+        background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/biosphere2.jpg);
     }
 
     .btn-warning {
