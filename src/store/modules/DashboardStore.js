@@ -183,8 +183,19 @@ export const useDashboardStore = defineStore('DashboardStore', {
             })
         },
         getData(path) {
-            // Return a subset of data from path
-            return parseData(this.data, path)
+            if (Object.keys(this.data).length === 0) {
+                // Before data is loaded, return undefined(s) of correct shape
+                const index = path[path.length - 1]
+                if (typeof index === 'string' && index !== '*') {
+                    const [start, end] = index.split(':').map(Number)
+                    return Array(end - start)
+                } else {
+                    return undefined
+                }
+            } else {
+                // Return a subset of data from path
+                return parseData(this.data, path)
+            }
         },
 
         /**
