@@ -80,10 +80,7 @@ export default {
         },
         inhabitantActivities() {
             const {weeding, pestPicking} = this.configuration.humans
-            return {
-                weeding,
-                pestPicking,
-            }
+            return {weeding, pestPicking}
         },
     },
     watch: {
