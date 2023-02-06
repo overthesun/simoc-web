@@ -17,7 +17,7 @@ import {Chart, LineController, LineElement,
         LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {StringFormatter, colors} from '../../javascript/utils'
+import {StringFormatter, make_labels, colors} from '../../javascript/utils'
 
 Chart.register(LineController, LineElement,
                LinearScale, CategoryScale, Tooltip, Legend)
@@ -40,8 +40,9 @@ export default {
         return {
             prevStep: 0,
             datasetsIndex: {},
-            unit: 'kg',  // TODO: In some cases it also includes kwh, so this is inaccurate.
+            unit: 'kg',  // TODO: In some cases it also includes kwh and ratios, so this is inaccurate.
             colors: colors,
+            loading: false,
         }
     },
     computed: {
@@ -58,7 +59,10 @@ export default {
         // when the current step buffer changes
         currentStepBuffer() {
             // fullscreen charts show all the values and need no updates
-            if (!this.fullscreen) {
+            if (this.loading) {
+                this.loading = false
+                this.initChart()
+            } else if (!this.fullscreen) {
                 this.updateChart()
             }
         },
@@ -93,7 +97,11 @@ export default {
                 if (data[direction]) {
                     const multiplier = ({in: 1, out: -1})[direction]
                     Object.entries(data[direction]).forEach(([currency, amount]) => {
-                        consolidated[currency] = amount * multiplier
+                        if (typeof amount === 'object') {
+                            consolidated[currency] = amount.map(a => a * multiplier)
+                        } else {
+                            consolidated[currency] = amount * multiplier
+                        }
                     })
                 }
             })
@@ -110,21 +118,28 @@ export default {
 
             // Build the datasets object, and corresponding index, from the selected data
             let data = this.getData(this.stub.concat([1]))
-            if (this.category === 'flows') {
-                data = this.consolidateFlows(data)
+            let datasets
+            if (data === undefined) {
+                // Before the first packet of data is sent.
+                this.loading = true
+                datasets = []
+            } else {
+                if (this.category === 'flows') {
+                    data = this.consolidateFlows(data)
+                }
+                const fields = Object.keys(data)
+                this.datasetsIndex = Object.fromEntries(  // create a currency:index map
+                    Object.entries(fields).map(([a, b]) => [b, parseInt(a, 10)])
+                )
+                datasets = fields.map((item, i) => ({
+                    lineTension: 0,
+                    data: Array(this.nsteps),
+                    label: StringFormatter(item),
+                    borderColor: this.colors[i],
+                    fill: false,
+                    pointStyle: 'line',
+                }))
             }
-            const fields = Object.keys(data)
-            this.datasetsIndex = Object.fromEntries(  // create a currency:index map
-                Object.entries(fields).map(([a, b]) => [b, parseInt(a, 10)])
-            )
-            const datasets = fields.map((item, i) => ({
-                lineTension: 0,
-                data: Array(this.nsteps),
-                label: StringFormatter(item),
-                borderColor: this.colors[i],
-                fill: false,
-                pointStyle: 'line',
-            }))
 
             this.chart = new Chart(canvas, {
                 type: 'line',
@@ -186,42 +201,46 @@ export default {
             // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
             let endingStep
+            let range
             if (this.fullscreen) {
                 // show the full graph
                 startingStep = 0
                 endingStep = this.nsteps
+                range = `*`
             } else if (currentStep !== this.prevStep+1) {
                 // replace the last nsteps values
-                startingStep = currentStep - (this.nsteps-1)
+                startingStep = currentStep - this.nsteps
                 endingStep = currentStep
+                range = `${startingStep}:${endingStep}`
             } else {
                 // add the latest value
                 startingStep = currentStep
                 endingStep = currentStep
+                range = currentStep
             }
-            // this will do 1 iteration when startingStep == endingStep
-            for (let step = startingStep; step <= endingStep; step++) {
-                // remove the oldest values
-                data.datasets.forEach(ds => ds.data.shift())
-                data.labels.shift()
-                if (step > 0) {
-                    const path = this.stub.concat([step])
-                    let result = this.getData(path)
-                    if (this.category === 'flows') {
-                        result = this.consolidateFlows(result)
+            const path = this.stub.concat([range])
+            let allResults = this.getData(path)
+            if (this.category === 'flows') {
+                allResults = this.consolidateFlows(allResults)
+            }
+            Object.entries(allResults).forEach(([field, result], i) => {
+                const index = this.datasetsIndex[field]
+                if (typeof result === 'object') {
+                    // replace current range with the new range (in place)
+                    data.datasets[index].data.splice(0, result.length, ...result)
+                    if (i === 0) {
+                        const labels = make_labels(startingStep, endingStep, this.nsteps)
+                        data.labels.splice(0, labels.length, ...labels)
                     }
-                    Object.entries(result).forEach(([field, amount]) => {
-                        const index = this.datasetsIndex[field]
-                        data.datasets[index].data.push(amount)
-                    })
-                    data.labels.push(step)
                 } else {
-                    // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has nsteps total items and is not stretched
-                    data.datasets.forEach(ds => ds.data.push(undefined))
-                    data.labels.push('')
+                    data.datasets[index].data.shift()
+                    data.datasets[index].data.push(result)
+                    if (i === 0) {
+                        data.labels.shift()
+                        data.labels.push(currentStep)
+                    }
                 }
-            }
+            })
             this.chart.update()
             this.prevStep = currentStep
         },

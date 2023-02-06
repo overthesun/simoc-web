@@ -30,3 +30,10 @@ export const colors = [
     '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
     '#000000',
 ]  // A long arbitrary list of colors, used by GreenhouseDoughnut and AgentExplorer
+
+export function make_labels(start, end, nsteps) {
+    // create nsteps labels from start to end, possibly adding empty slots at the beginning
+    const s = Math.max(start+1, 1)  // don't generate steps <1
+    const len = (end+1) - s
+    return Array(nsteps-len).concat(Array(len).fill().map((d, i) => i + s))
+}
