@@ -184,7 +184,8 @@ export const useDashboardStore = defineStore('DashboardStore', {
         },
         getData(path) {
             if (Object.keys(this.data).length === 0) {
-                // Before data is loaded, return undefined(s) of correct shape
+                // If data is empty, return undefined. If the last element of path
+                // is a range, return an array of undefineds of the correct length.
                 const index = path[path.length - 1]
                 if (typeof index === 'string' && index !== '*') {
                     const [start, end] = index.split(':').map(Number)
