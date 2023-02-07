@@ -1,7 +1,9 @@
 import {defineStore} from 'pinia'
+import {useDashboardStore} from './DashboardStore'
 
 export const useWizardStore = defineStore('WizardStore', {
     state: () => ({
+        dashboard: useDashboardStore(),
         // stores the configuration values
         configuration: {},
         // the type of configuration being used (e.g. Guided, Custom)
@@ -111,7 +113,7 @@ export const useWizardStore = defineStore('WizardStore', {
             startWithM1EndingAtmosphere: false,
             concrete: {amount: 15800, carbonation: 0.00458},
         },
-        mars_presets: {
+        presets: {
             one_human: {
                 name: '1 Human',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
@@ -238,8 +240,6 @@ export const useWizardStore = defineStore('WizardStore', {
                 greenhouse: {type:'greenhouse_small', amount:1, units:''},
                 plantSpecies: [{type:'wheat', amount:100}],
             },*/
-        },
-        b2_presets: {
             b2_mission_1a: {
                 name: 'Mission 1a',
                 simdata_file: 'simoc-simdata-b2-mission-1a.json',
@@ -373,12 +373,14 @@ export const useWizardStore = defineStore('WizardStore', {
             return totalHours
         },
 
-        getPresets(state, location = 'mars') {
-            if (location === 'b2') {
-                return state.b2_presets
-            } else {
-                return state.mars_presets
-            }
+        getPresets(state) {
+            const locPresets = {}
+            Object.entries(state.presets).forEach(([name, preset]) => {
+                if (preset.location === state.dashboard.simLocation) {
+                    locPresets[name] = preset
+                }
+            })
+            return locPresets
         },
 
         // Returns a formatted configuration object in the format required by the backend.
@@ -460,9 +462,9 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         setPreset(name, location) {
             if (location === 'b2') {
-                this.setConfiguration(this.b2_presets[name], location)
+                this.setConfiguration(this.presets[name], location)
             } else if (location === 'mars') {
-                this.setConfiguration(this.mars_presets[name], location)
+                this.setConfiguration(this.presets[name], location)
             }
         },
         setLiveConfig(duration, location) {

@@ -22,18 +22,11 @@ Future version should also automatically switch the selected preset to 'custom' 
             </div>
             <div>
                 <div class="presets-dropdown">
-                    <select v-if="simLocation === 'mars'" ref="preset_dropdown" v-model="selected"
+                    <select ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, name) in mars_presets" :key="name"
+                        <option v-for="(preset, name) in getPresets" :key="name"
                                 :value="name">{{preset.name}}</option>
-                        <option :value="CUSTOM">[Custom]</option>
-                    </select>
-                    <select v-else ref="preset_dropdown" v-model="selected"
-                            class="input-field-select" @change="updateConfig(selected)">
-                        <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, b2_name) in b2_presets" :key="b2_name"
-                                :value="b2_name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
@@ -60,13 +53,13 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {simLocation} = storeToRefs(dashboard)
-        const {configuration, resetConfig, b2_presets, mars_presets} = storeToRefs(wizard)
+        const {configuration, resetConfig, getPresets} = storeToRefs(wizard)
         const {
             setActiveRefEntry, resetConfigDefault,
             setConfiguration, setPreset,
         } = wizard
         return {
-            simLocation, configuration, resetConfig, b2_presets, mars_presets, setActiveRefEntry,
+            simLocation, configuration, resetConfig, getPresets, setActiveRefEntry,
             resetConfigDefault, setConfiguration, setPreset,
         }
     },
