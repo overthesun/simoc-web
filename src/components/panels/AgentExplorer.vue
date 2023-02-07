@@ -74,27 +74,29 @@ export default {
         },
         activePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
-            this.agent = this.activePanels[this.panelIndex].split(':')[1]
-            this.category = this.activePanels[this.panelIndex].split(':')[2]
+            this.setFromActivePanels()
         },
     },
     mounted() {
-        const panel = this.activePanels[this.panelIndex].split(':', 3)
-        const activeAgent = panel[1]
-        const activeCategory = panel[2]
-        if (activeAgent) {
-            this.agent = activeAgent
-        } else {
-            this.agent = this.agents.length > 0 ? this.agents[0] : ''
-        }
-        if (activeCategory) {
-            this.category = activeCategory
-        } else {
-            this.category = this.categories.length > 0 ? this.categories[0] : ''
-        }
+        this.setFromActivePanels()
     },
     methods: {
         stringFormatter: StringFormatter,
+
+        setFromActivePanels() {
+            const panel = this.activePanels[this.panelIndex].split(':')[1]
+            const [activeAgent, activeCategory] = panel ? panel.split('/') : ['', '']
+            if (activeAgent) {
+                this.agent = activeAgent
+            } else {
+                this.agent = this.agents.length > 0 ? this.agents[0] : ''
+            }
+            if (activeCategory) {
+                this.category = activeCategory
+            } else {
+                this.category = this.categories.length > 0 ? this.categories[0] : ''
+            }
+        },
 
         handleSelectAgent(e) {
             const agent = e.target.value
@@ -105,7 +107,7 @@ export default {
         updateSection() {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
-            this.$emit('panel-section-changed', this.panelIndex, `${this.agent}:${this.category}`)
+            this.$emit('panel-section-changed', this.panelIndex, `${this.agent}/${this.category}`)
         },
     },
 }

@@ -42,7 +42,7 @@ export default {
             datasetsIndex: {},
             unit: 'kg',  // TODO: In some cases it also includes kwh and ratios, so this is inaccurate.
             colors: colors,
-            loading: false,
+            notInitialized: false,
         }
     },
     computed: {
@@ -55,14 +55,17 @@ export default {
         },
     },
     watch: {
-        // update the chart datasets and labels
-        // when the current step buffer changes
+        // update the chart datasets and labels when the current step buffer changes
         currentStepBuffer() {
-            // fullscreen charts show all the values and need no updates
-            if (this.loading) {
-                this.loading = false
+            if (this.notInitialized) {
+                // ChartJS needs a 'datasets' object to initialize. Since this panel is dynamic and
+                // the number/type of datasets is not known until the first step, we initialize it
+                // with empty datasets while its loading (triggered by the call to initChart in
+                // mounted), and update them here when the first step is ready.
+                this.notInitialized = false
                 this.initChart()
             } else if (!this.fullscreen) {
+                // fullscreen charts show all the values and need no updates
                 this.updateChart()
             }
         },
@@ -121,7 +124,7 @@ export default {
             let datasets
             if (data === undefined) {
                 // Before the first packet of data is sent.
-                this.loading = true
+                this.notInitialized = true
                 datasets = []
             } else {
                 if (this.category === 'flows') {
@@ -145,7 +148,7 @@ export default {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
-                    labels: Array(this.nsteps).fill(''),
+                    labels: Array(this.nsteps),
                     datasets: datasets,
                 },
                 options: {
