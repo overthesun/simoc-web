@@ -48,7 +48,7 @@
                           class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> kg</label>
         </label>
-        <label class="input-wrapper">
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Concrete')">
                 Concrete <fa-icon :icon="['fa-solid','circle-info']" />
             </div>

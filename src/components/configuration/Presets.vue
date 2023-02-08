@@ -25,7 +25,7 @@ Future version should also automatically switch the selected preset to 'custom' 
                     <select ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, name) in presets" :key="name"
+                        <option v-for="(preset, name) in getPresets(simLocation)" :key="name"
                                 :value="name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
@@ -73,14 +73,6 @@ export default {
             custom: CUSTOM,  // custom preset, loaded from localstorage
             dont_set_custom: false,  // when true, avoids setting the custom preset
         }
-    },
-    computed: {
-        presets() {
-            // return the presets for the current sim location
-            const p = this.getPresets(this.simLocation)
-            console.log(p)
-            return p
-        },
     },
     watch: {
         resetConfig() {
