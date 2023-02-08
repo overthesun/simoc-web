@@ -229,11 +229,11 @@ export default {
         background: transparent;
         background-size: cover;
         background-position: center;
-        text-shadow: rgb(110, 110, 110) 1px 0px 0px;
+        text-shadow: rgb(110, 110, 110) 1px 0 0;
         transition: text-shadow 0.5s;
 
         &:hover{
-            text-shadow: rgb(20,20,20) 2px 0px 0px;
+            text-shadow: rgb(20,20,20) 2px 0 0;
         }
     }
 
