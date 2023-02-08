@@ -226,38 +226,30 @@ export default {
     }
 
     .btn-mars, .btn-biosphere2 {
-        width: 122px;
-        height: 122px;
-        min-height: 122px;
-        font-size: 14px;
-        color: transparent;
         background: transparent;
+        background-size: cover;
+        background-position: center;
+        text-shadow: rgb(110, 110, 110) 1px 0 0;
+        transition: text-shadow 0.5s;
 
         &:hover{
-            cursor: pointer;
-            color: rgba(255,255,255,1);
-            transition: color 0.5s;
-        }
-
-        &:focus{
-            outline:none;
+            text-shadow: rgb(20,20,20) 2px 0 0;
         }
     }
 
     .btn-mars {
-        background-image: url(../../assets/Mars-Ft-Calgary-small.jpg);
-        margin-right: 12px;
+        background-image: linear-gradient(to bottom, rgba(180,180,180,0.5), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary.jpg);
 
         &:hover{
-            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/Mars-Ft-Calgary-small.jpg);
+            background-image: linear-gradient(to bottom, rgba(180,180,180,0.1), rgba(100,100,100,0.3)), url(../../assets/Mars-Ft-Calgary.jpg);
         }
     }
 
     .btn-biosphere2 {
-        background-image: url(../../assets/biosphere2-small.jpg);
+        background-image: linear-gradient(to bottom, rgba(180,180,180,0.5), rgba(100,100,100,0.5)), url(../../assets/biosphere2.jpg);
 
         &:hover{
-            background-image: linear-gradient(to bottom, rgba(180,180,180,0.3), rgba(100,100,100,0.5)), url(../../assets/biosphere2-small.jpg);
+            background-image: linear-gradient(to bottom, rgba(180,180,180,0.1), rgba(100,100,100,0.3)), url(../../assets/biosphere2.jpg);
         }
     }
 
