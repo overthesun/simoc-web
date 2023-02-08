@@ -113,7 +113,7 @@ export const useWizardStore = defineStore('WizardStore', {
             startWithM1EndingAtmosphere: false,
             concrete: {amount: 15800, carbonation: 0.00458},
         },
-        presets: {
+        mars_presets: {
             one_human: {
                 name: '1 Human',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
@@ -240,6 +240,8 @@ export const useWizardStore = defineStore('WizardStore', {
                 greenhouse: {type:'greenhouse_small', amount:1, units:''},
                 plantSpecies: [{type:'wheat', amount:100}],
             },*/
+        },
+        b2_presets: {
             b2_mission_1a: {
                 name: 'Mission 1a',
                 simdata_file: 'simoc-simdata-b2-mission-1a.json',
@@ -373,16 +375,6 @@ export const useWizardStore = defineStore('WizardStore', {
             return totalHours
         },
 
-        getPresets(state) {
-            const locPresets = {}
-            Object.entries(state.presets).forEach(([name, preset]) => {
-                if (preset.location === state.dashboard.simLocation) {
-                    locPresets[name] = preset
-                }
-            })
-            return locPresets
-        },
-
         // Returns a formatted configuration object in the format required by the backend.
         getFormattedConfiguration(state) {
             const config = state.configuration
@@ -435,6 +427,13 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
+        getPresets(location) {
+            if (location === 'b2') {
+                return this.b2_presets
+            } else {
+                return this.mars_presets
+            }
+        },
         setConfiguration(value, location) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
@@ -461,11 +460,8 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration = newconfig
         },
         setPreset(name, location) {
-            if (location === 'b2') {
-                this.setConfiguration(this.presets[name], location)
-            } else if (location === 'mars') {
-                this.setConfiguration(this.presets[name], location)
-            }
+            const preset = this[location + '_presets'][name]
+            this.setConfiguration(preset, location)
         },
         setLiveConfig(duration, location) {
             console.log('Updating mission time...')
