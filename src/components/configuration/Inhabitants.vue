@@ -53,9 +53,10 @@
                 Concrete <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
             <div class="input-description">How much <a class="reference-link" href="#" @click="setActiveRefEntry('Concrete')">carbonation</a> has occured? Concrete in high-CO₂ environments can reach up to .1 moles over 20 years.</div>
-            <label><input ref="concrete" v-model="concrete.carbonation" :min="ranges.concrete.min" :max="ranges.concrete.max"
-                          class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity" step="0.001"
-                          required @input="setInhabitantsHandler"> moles per m²</label>
+            <label><input ref="concrete" v-model="concrete.carbonation" :min="ranges.concrete.min"
+                          :max="ranges.concrete.max" class="input-field-number" type="number" pattern="^\d+$"
+                          placeholder="Quantity" step="0.001" required @input="setInhabitantsHandler">
+                moles per m²</label>
         </label>
     </div>
 </template>

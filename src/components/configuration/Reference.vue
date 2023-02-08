@@ -63,12 +63,12 @@ using v-for to populate all links with the title and the approriate value for th
             </template>
         </ReferenceItem>
 
-        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'mars')"  heading="Inhabitants">
+        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'mars')" heading="Inhabitants">
             <p>While you can use SIMOC to simulate a plant-only configuration, if you design a mission that includes humans, then Environmental Control and Life Support System (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>), <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food</a>, and a <a class="reference-link" href="#" @click="setActiveRefEntry('CrewQuarters')">crew quarters</a> are required. It is assumed the food and life support required to bring the humans from Earth to Mars are already accounted for, your SIMOC mission starting the day you land and occupy the habitat. Be certain to provide ample food for the astronauts to consume until the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> produces the first edible <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a>. You must include at least one ECLSS to maintain breathable air and potable water, as well as manage human waste products. The ELCSS will likely continue to be used when the plants are harvested or plant growth is not maintained due to environmental constraints.</p>
             <p><i>ASTRONAUTS are not required for a plant-only simulation.</i></p>
         </ReferenceItem>
 
-        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'b2')"  heading="Inhabitants">
+        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'b2')" heading="Inhabitants">
             <h3>Mission 1</h3>
             <ul class="inhabitants">
                 <li><b>Sally Silverstone</b>: In charge of finances and day-to-day activities. Background in social studies and management of hostels and drought relief in India.</li>

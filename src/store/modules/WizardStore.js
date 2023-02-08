@@ -461,7 +461,7 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration = newconfig
         },
         setPreset(name, location) {
-            const preset = this[location + '_presets'][name]
+            const preset = this[`${location}_presets`][name]
             this.setConfiguration(preset, location)
         },
         setLiveConfig(duration, location) {
