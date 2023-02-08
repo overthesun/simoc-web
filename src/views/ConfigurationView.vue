@@ -107,9 +107,9 @@ export default {
         const {
             configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
-            simdataLocation, getPresets,
+            simdataLocation,
         } = storeToRefs(wizard)
-        const {resetConfigDefault, setConfiguration} = wizard
+        const {resetConfigDefault, setConfiguration, getPresets} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
@@ -251,7 +251,7 @@ export default {
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset
-            const presets = this.getPresets
+            const presets = this.getPresets(this.simLocation)
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
                 const data = await this.importPresetData(presets[preset_name])
