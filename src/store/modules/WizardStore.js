@@ -55,6 +55,7 @@ export const useWizardStore = defineStore('WizardStore', {
                                'greenhouse_sam', 'greenhouse_b2'],
             // TODO: the list of plants is downloaded and should be cached
             // the valid range for plants is calculated dinamically
+            concrete: {min: 0, max: 0.1},
             generator_types: ['none', 'solar_pv_array_mars', 'b2_power_gen'],
             generator: {min: 0, max: 5000},
             storage: {min: 0, max: 10000},
@@ -111,7 +112,7 @@ export const useWizardStore = defineStore('WizardStore', {
             ],
             improvedCropManagement: false,
             startWithM1EndingAtmosphere: false,
-            concrete: {amount: 15800, carbonation: 0.00458},
+            concrete: {amount: 15800, carbonation: 0},
         },
         mars_presets: {
             one_human: {
@@ -276,7 +277,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 improvedCropManagement: false,
                 startWithM1EndingAtmosphere: false,
-                concrete: {amount: 15800, carbonation: 0.00458},
+                concrete: {amount: 15800, carbonation: 0.004},  // Actual: 0.00458
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
@@ -314,7 +315,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: true,
                 improvedCropManagement: false,
-                concrete: {amount: 15800, carbonation: 0.02962},
+                concrete: {amount: 15800, carbonation: 0.03},  // Actual: 0.02962
             },
             b2_mission_2: {
                 name: 'Mission 2',
@@ -350,7 +351,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: false,
                 improvedCropManagement: true,
-                concrete: {amount: 15800, carbonation: 0.04099},
+                concrete: {amount: 15800, carbonation: 0.04},  // Actual: 0.04099
             },
         },
     }),

@@ -79,6 +79,13 @@ using v-for to populate all links with the title and the approriate value for th
             <p>Each biome has different amounts of the above, giving it different exchanges.</p>
         </ReferenceItem>
 
+        <ReferenceItem v-if="activeRefEntry === 'Concrete'" heading="Concrete">
+            <p>When fresh concrete is poured, two process begin simultaneously: <b>curing</b>, or the hardening of the concrete and <b>carbonation</b>, the conversion of interal calcium hydroxide (CA(OH)₂) and ambient CO₂ into internal calcium carbonate CaCO₃. The second process, carbonation, is affected by the level of ambient CO₂ in the air.</p>
+            <p>The Biosphere 2 biomes contain a combined 16,000 m² of exposed, unpainted concrete, which were poured in 1989. Increased CO₂ consumption due to concrete carbonation was not considered before Mission 1, and was identified as a major CO₂ sink as a result of research done after the mission.</p>
+            <p>In SIMOC, carbonation is measured in moles per square meter. At earth-normal (350 ppm), about 0.005 moles of CO₂ are absorbed out of the atmosphere per square meter of concrete over a period of 1-2 years. At elevated CO₂ levels, like during the Biosphere 2 missions, this process occurs much faster, and for a longer period, reaching up to .01 moles per square meter over 20 years.</p>
+            <p>The B2 preset missions include actual concrete carbonation at the start of each mission. For custom simulations, you set the initial amount of concrete carbonation between 0 (freshly poured) and 0.1 (after 20 years of elevated-CO₂ exposure). How can you adjust the starting carbonation to your benefit?</p>
+        </ReferenceItem>
+
         <ReferenceItem v-if="activeRefEntry === 'Food'" heading="Food Supply">
             <p v-if="simLocation === 'mars'">It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
             <p v-if="simLocation === 'b2'">The Biospherians entered Biosphere 2 with food cultivars fully grown, many ready for harvest. This reduced their need to call upon food rations from day-one. But as you consider the subsequent harvest and planting cycles, it is imperative that your crew have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('Plants')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Biomes')">greenhouse</a>. Consider that the plants are unable to produce edible fruit and vegetables until they are ready to harvest. Furthermore, their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
@@ -220,6 +227,7 @@ export default {
                 {ref: 'Duration', label: 'Mission Duration'},
                 {ref: 'Inhabitants', label: 'Inhabitants'},
                 {ref: 'Biomes', label: 'Biomes'},
+                {ref: 'Concrete', label: 'Concrete'},
                 {ref: 'Food', label: 'Food Supply'},
                 {ref: 'CO2Management', label: 'CO₂ Management'},
                 {ref: 'O2Management', label: 'O₂ Management'},
