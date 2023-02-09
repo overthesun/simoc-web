@@ -94,27 +94,27 @@ export default {
         // When the values in the store are changed, update the form and validate it.
         // The validation doesn't happen in setECLSSHandler because this is also triggered
         // when a config file is uploaded
-        'configuration.eclss.amount'() {
+        'configuration.eclss.amount': function() {
             this.eclss.amount = this.configuration.eclss.amount
             this.validateRef('eclssAmount')
         },
-        'configuration.eclss.co2UpperLimit'() {
+        'configuration.eclss.co2UpperLimit': function() {
             this.eclss.co2UpperLimit = this.configuration.eclss.co2UpperLimit
             this.validateRef('co2UpperLimit')  // wait until the min/max are updated to validate
         },
-        'configuration.eclss.co2Reserves'() {
+        'configuration.eclss.co2Reserves': function() {
             this.eclss.co2Reserves = this.configuration.eclss.co2Reserves
             this.validateRef('co2Reserves')
         },
-        'configuration.eclss.co2LowerLimit'() {
+        'configuration.eclss.co2LowerLimit': function() {
             this.eclss.co2LowerLimit = this.configuration.eclss.co2LowerLimit
             this.validateRef('co2LowerLimit')
         },
-        'configuration.eclss.o2Reserves'() {
+        'configuration.eclss.o2Reserves': function() {
             this.eclss.o2Reserves = this.configuration.eclss.o2Reserves
             this.validateRef('o2Reserves')
         },
-        'configuration.eclss.o2LowerLimit'() {
+        'configuration.eclss.o2LowerLimit': function() {
             this.eclss.o2LowerLimit = this.configuration.eclss.o2LowerLimit
             this.validateRef('o2LowerLimit')
         },
