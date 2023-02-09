@@ -1,7 +1,7 @@
 <!-- This chart compares the total production and consumption of energy in the config wizard. -->
 
 <template>
-    <canvas :id="id" style="height: 100%" />
+    <canvas :id="id" />
 </template>
 
 <script>

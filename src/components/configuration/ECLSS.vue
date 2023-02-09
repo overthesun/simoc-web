@@ -94,47 +94,29 @@ export default {
         // When the values in the store are changed, update the form and validate it.
         // The validation doesn't happen in setECLSSHandler because this is also triggered
         // when a config file is uploaded
-        'configuration.eclss.amount': {
-            handler() {
-                this.eclss.amount = this.configuration.eclss.amount
-                this.validateRef('eclssAmount')
-            },
-            deep: true,
+        'configuration.eclss.amount'() {
+            this.eclss.amount = this.configuration.eclss.amount
+            this.validateRef('eclssAmount')
         },
-        'configuration.eclss.co2UpperLimit': {
-            handler() {
-                this.eclss.co2UpperLimit = this.configuration.eclss.co2UpperLimit
-                this.validateRef('co2UpperLimit')  // wait until the min/max are updated to validate
-            },
-            deep: true, // Must be used if the watched value is an object.
+        'configuration.eclss.co2UpperLimit'() {
+            this.eclss.co2UpperLimit = this.configuration.eclss.co2UpperLimit
+            this.validateRef('co2UpperLimit')  // wait until the min/max are updated to validate
         },
-        'configuration.eclss.co2Reserves': {
-            handler() {
-                this.eclss.co2Reserves = this.configuration.eclss.co2Reserves
-                this.validateRef('co2Reserves')
-            },
-            deep: true,
+        'configuration.eclss.co2Reserves'() {
+            this.eclss.co2Reserves = this.configuration.eclss.co2Reserves
+            this.validateRef('co2Reserves')
         },
-        'configuration.eclss.co2LowerLimit': {
-            handler() {
-                this.eclss.co2LowerLimit = this.configuration.eclss.co2LowerLimit
-                this.validateRef('co2LowerLimit')
-            },
-            deep: true,
+        'configuration.eclss.co2LowerLimit'() {
+            this.eclss.co2LowerLimit = this.configuration.eclss.co2LowerLimit
+            this.validateRef('co2LowerLimit')
         },
-        'configuration.eclss.o2Reserves': {
-            handler() {
-                this.eclss.o2Reserves = this.configuration.eclss.o2Reserves
-                this.validateRef('o2Reserves')
-            },
-            deep: true,
+        'configuration.eclss.o2Reserves'() {
+            this.eclss.o2Reserves = this.configuration.eclss.o2Reserves
+            this.validateRef('o2Reserves')
         },
-        'configuration.eclss.o2LowerLimit': {
-            handler() {
-                this.eclss.o2LowerLimit = this.configuration.eclss.o2LowerLimit
-                this.validateRef('o2LowerLimit')
-            },
-            deep: true,
+        'configuration.eclss.o2LowerLimit'() {
+            this.eclss.o2LowerLimit = this.configuration.eclss.o2LowerLimit
+            this.validateRef('o2LowerLimit')
         },
     },
     beforeMount() {

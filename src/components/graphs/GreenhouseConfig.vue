@@ -1,7 +1,7 @@
 <!-- This chart compares the total and the used space of the greenhouse in the config wizard. -->
 
 <template>
-    <canvas :id="id" style="height: 100%" />
+    <canvas :id="id" />
 </template>
 
 <script>
@@ -72,7 +72,7 @@ export default {
                 datasets: [],  // see updateChart for info
             },
             options: {
-                responsive: false,
+                responsive: true,
                 maintainAspectRatio: false,
                 indexAxis: 'y',
                 scales: {

@@ -80,7 +80,9 @@ export const useWizardStore = defineStore('WizardStore', {
             location: 'b2',
             startDate: '1991-01-01',
             duration: {type: 'none', amount: 30, units: 'day'},
-            // TODO: Implement weeding and pestPicking on backend, connect
+            // Note: Weeding and Pest Picking were part of hte original vision for SIMOC-B2 but
+            // did not make it into the initial backend implementation. We leave the scaffolding
+            // here in case they are implemented in a future version.
             humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
             food: {type: 'food_storage', amount: 500, units: 'kg'},
             crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},

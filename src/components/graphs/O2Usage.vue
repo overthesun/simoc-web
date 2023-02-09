@@ -3,7 +3,7 @@ This chart compares the total production and consumption of O2 in the config wiz
 It was adapted from PowerUsage.vue and mirrors CO2Usage.vue
 -->
 <template>
-    <canvas :id="id" style="height: 100%" />
+    <canvas :id="id" />
 </template>
 
 <script>

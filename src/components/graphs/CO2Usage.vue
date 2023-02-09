@@ -4,7 +4,7 @@ It was adapted from PowerUsage.vue and mirrors O2Usage.vue
 -->
 
 <template>
-    <canvas :id="id" style="height: 100%" />
+    <canvas :id="id" />
 </template>
 
 <script>
