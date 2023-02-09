@@ -6,7 +6,7 @@
             </option>
             <option :selected="currency === 'o2'" value="o2">Oxygen (O₂)</option>
             <option :selected="currency === 'potable'" value="potable">Potable Water</option>
-            <option :selected="currency === 'kwh'" value="kwh">Energy</option>
+            <option v-if="simLocation !== 'b2'" :selected="currency === 'kwh'" value="kwh">Energy</option>
         </select>
         <div>
             <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency"
@@ -40,9 +40,9 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {activePanels} = storeToRefs(dashboard)
+        const {activePanels, simLocation} = storeToRefs(dashboard)
         const {getTotalMissionHours} = storeToRefs(wizard)
-        return {activePanels, getTotalMissionHours}
+        return {activePanels, getTotalMissionHours, simLocation}
     },
     data() {
         return {

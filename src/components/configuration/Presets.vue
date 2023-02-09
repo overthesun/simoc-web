@@ -25,7 +25,7 @@ Future version should also automatically switch the selected preset to 'custom' 
                     <select ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
                         <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, name) in getPresets" :key="name"
+                        <option v-for="(preset, name) in getPresets(simLocation)" :key="name"
                                 :value="name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
@@ -53,10 +53,10 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {simLocation} = storeToRefs(dashboard)
-        const {configuration, resetConfig, getPresets} = storeToRefs(wizard)
+        const {configuration, resetConfig} = storeToRefs(wizard)
         const {
             setActiveRefEntry, resetConfigDefault,
-            setConfiguration, setPreset,
+            setConfiguration, getPresets, setPreset,
         } = wizard
         return {
             simLocation, configuration, resetConfig, getPresets, setActiveRefEntry,

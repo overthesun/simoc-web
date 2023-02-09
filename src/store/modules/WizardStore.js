@@ -55,6 +55,7 @@ export const useWizardStore = defineStore('WizardStore', {
                                'greenhouse_sam', 'greenhouse_b2'],
             // TODO: the list of plants is downloaded and should be cached
             // the valid range for plants is calculated dinamically
+            concrete: {min: 0, max: 0.1},
             generator_types: ['none', 'solar_pv_array_mars', 'b2_power_gen'],
             generator: {min: 0, max: 5000},
             storage: {min: 0, max: 10000},
@@ -111,9 +112,9 @@ export const useWizardStore = defineStore('WizardStore', {
             ],
             improvedCropManagement: false,
             startWithM1EndingAtmosphere: false,
-            concrete: {amount: 15800, carbonation: 0.00458},
+            concrete: {amount: 15800, carbonation: 0},
         },
-        presets: {
+        mars_presets: {
             one_human: {
                 name: '1 Human',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
@@ -240,6 +241,8 @@ export const useWizardStore = defineStore('WizardStore', {
                 greenhouse: {type:'greenhouse_small', amount:1, units:''},
                 plantSpecies: [{type:'wheat', amount:100}],
             },*/
+        },
+        b2_presets: {
             b2_mission_1a: {
                 name: 'Mission 1a',
                 simdata_file: 'simoc-simdata-b2-mission-1a.json',
@@ -274,7 +277,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 improvedCropManagement: false,
                 startWithM1EndingAtmosphere: false,
-                concrete: {amount: 15800, carbonation: 0.00458},
+                concrete: {amount: 15800, carbonation: 0.004},  // Actual: 0.00458
             },
             b2_mission_1b: {
                 name: 'Mission 1b',
@@ -312,7 +315,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: true,
                 improvedCropManagement: false,
-                concrete: {amount: 15800, carbonation: 0.02962},
+                concrete: {amount: 15800, carbonation: 0.03},  // Actual: 0.02962
             },
             b2_mission_2: {
                 name: 'Mission 2',
@@ -348,7 +351,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
                 startWithM1EndingAtmosphere: false,
                 improvedCropManagement: true,
-                concrete: {amount: 15800, carbonation: 0.04099},
+                concrete: {amount: 15800, carbonation: 0.04},  // Actual: 0.04099
             },
         },
     }),
@@ -371,16 +374,6 @@ export const useWizardStore = defineStore('WizardStore', {
             }
 
             return totalHours
-        },
-
-        getPresets(state) {
-            const locPresets = {}
-            Object.entries(state.presets).forEach(([name, preset]) => {
-                if (preset.location === state.dashboard.simLocation) {
-                    locPresets[name] = preset
-                }
-            })
-            return locPresets
         },
 
         // Returns a formatted configuration object in the format required by the backend.
@@ -435,6 +428,13 @@ export const useWizardStore = defineStore('WizardStore', {
         },
     },
     actions: {
+        getPresets(location) {
+            if (location === 'b2') {
+                return this.b2_presets
+            } else {
+                return this.mars_presets
+            }
+        },
         setConfiguration(value, location) {
             // Make sure the config contains all required items:
             // initialize the config with the default, then add
@@ -461,11 +461,8 @@ export const useWizardStore = defineStore('WizardStore', {
             this.configuration = newconfig
         },
         setPreset(name, location) {
-            if (location === 'b2') {
-                this.setConfiguration(this.presets[name], location)
-            } else if (location === 'mars') {
-                this.setConfiguration(this.presets[name], location)
-            }
+            const preset = this[`${location}_presets`][name]
+            this.setConfiguration(preset, location)
         },
         setLiveConfig(duration, location) {
             console.log('Updating mission time...')

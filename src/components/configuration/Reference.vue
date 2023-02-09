@@ -63,9 +63,33 @@ using v-for to populate all links with the title and the approriate value for th
             </template>
         </ReferenceItem>
 
-        <ReferenceItem v-if="activeRefEntry === 'Inhabitants'" heading="Inhabitants">
+        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'mars')" heading="Inhabitants">
             <p>While you can use SIMOC to simulate a plant-only configuration, if you design a mission that includes humans, then Environmental Control and Life Support System (<a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a>), <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food</a>, and a <a class="reference-link" href="#" @click="setActiveRefEntry('CrewQuarters')">crew quarters</a> are required. It is assumed the food and life support required to bring the humans from Earth to Mars are already accounted for, your SIMOC mission starting the day you land and occupy the habitat. Be certain to provide ample food for the astronauts to consume until the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> produces the first edible <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a>. You must include at least one ECLSS to maintain breathable air and potable water, as well as manage human waste products. The ELCSS will likely continue to be used when the plants are harvested or plant growth is not maintained due to environmental constraints.</p>
             <p><i>ASTRONAUTS are not required for a plant-only simulation.</i></p>
+        </ReferenceItem>
+
+        <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'b2')" heading="Inhabitants">
+            <h3>Mission 1</h3>
+            <ul class="inhabitants">
+                <li><b>Sally Silverstone</b>: In charge of finances and day-to-day activities. Background in social studies and management of hostels and drought relief in India.</li>
+                <li><b>Mark van Thillo</b>: In charge of technical systems. Background as mechanic and ship's engineer.</li>
+                <li><b>Abigail Alling</b>: Coordinated ocean and marsh design. Background in biology with a master's degree from Yale.</li>
+                <li><b>Linda Leigh</b>: Coordinated land sections and plant transfer. Background in botany and field ecology.</li>
+                <li><b>Taber McCallum</b>: In charge of water, air, soil, and tissue analysis lab. Worked on research vessel.</li>
+                <li><b>Mark Nelson</b>: In charge of animal systems and data relay. Background in philosophy and agronomy.</li>
+                <li><b>Jane Poynter</b>: In charge of agriculture systems. Background in ecological management.</li>
+                <li><b>Dr. Roy Walford</b>: In charge of biospherians' health. Gerontologist with a background in caloric restriction research.</li>
+            </ul>
+            <h3>Mission 2</h3>
+            <ul class="inhabitants">
+                <li><b>Bernd Zabel</b>: Physician and researcher, replaced Capt. Norberto Alvarez-Romo.</li>
+                <li><b>John Druitt</b>: Agricultural engineer. Background in sustainable agriculture and aquaculture systems.</li>
+                <li><b>Matt Finn</b>: Ecologist. Developed the atmospheric and hydrological systems within Biosphere 2.</li>
+                <li><b>Pascale Maslin</b>: Ecologist. focused on soil and plant ecology.</li>
+                <li><b>Charlotte Godfrey</b>: Environmental researcher. specialized in closed ecosystems and their interactions with the atmosphere.</li>
+                <li><b>Rodrigo Romo</b>: Engineer. responsible for technical systems and maintenance.</li>
+                <li><b>Tilak Mahato</b>: Agronomist. Expert in <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">crop management</a>, in charge of the food production systems.</li>
+            </ul>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Biomes'" heading="Biomes">
@@ -77,6 +101,13 @@ using v-for to populate all links with the title and the approriate value for th
                 <li><b>Vegetation</b> varies between biomes, but it always performs photosynthesis, which consumes CO₂ and produces O₂. All biomes include vegetation except for the ocean, which is offset by coral activity, and the IAB, for which the vegetation is the plants, defined below.</li>
             </ul>
             <p>Each biome has different amounts of the above, giving it different exchanges.</p>
+        </ReferenceItem>
+
+        <ReferenceItem v-if="activeRefEntry === 'Concrete'" heading="Concrete">
+            <p>When fresh concrete is poured, two processes begin simultaneously: <b>curing</b>, or the hardening of the concrete, and <b>carbonation</b>, the conversion of internal calcium hydroxide (CA(OH)₂) and ambient CO₂ into internal calcium carbonate CaCO₃ and retained moisture. The second process, carbonation, is affected by the level of ambient CO₂ in the air.</p>
+            <p>The Biosphere 2 biomes contain a combined 16,000 m² of exposed, unpainted concrete, which were poured in 1989. Increased CO₂ consumption due to concrete carbonation was not considered before Mission 1, and was identified as a major CO₂ sink as a result of research done after the mission.</p>
+            <p>In SIMOC, carbonation is measured in moles per square meter. At earth-normal (350 ppm), about 0.005 moles of CO₂ are absorbed out of the atmosphere per square meter of concrete over a period of 1-2 years. At elevated CO₂ levels, like during the Biosphere 2 missions, this process occurs much faster, and for a longer period, reaching up to .1 moles per square meter over 20 years.</p>
+            <p>The B2 preset missions include actual concrete carbonation at the start of each mission. For custom simulations, you can set the initial amount of concrete carbonation between 0 (freshly poured) and 0.1. How can you adjust the starting carbonation to your benefit?</p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Food'" heading="Food Supply">
@@ -113,7 +144,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'CO2Management'" heading="CO₂ Management">
             <p>Carbon dioxide (CO₂) is critical for plant growth, but can be harmful to humans above a certain level.</p>
-            <p>The average concentration of CO₂ in earth's atmosphere was roughly 415 parts per million (ppm) in 2022 (up from 300 ppm in 1900). During the Biosphere 2 experiments, CO₂ was maintained at roughly 2,500 ppm. Humans can survive in up to 10,000 ppm, but experience negative health effects above 5,000 ppm and feel drowsy above 2,500 ppm.</p>
+            <p>The average concentration of CO₂ in earth's atmosphere was roughly 415 parts per million (ppm) in 2022 (up from 300 ppm in 1900). During the Biosphere 2 experiments, CO₂ was maintained at roughly 2,500 ppm. Humans can survive in up to 10,000 ppm, but may experience negative health effects above 5,000 ppm and feel drowsy above 2,500 ppm.</p>
             <p>Plants use CO₂ to generate new biomass via photosynthesis. Most plants grow 30-40% bigger when CO₂ is increased to 1,000 ppm, and there's some evidence this effect continues at even higher levels.</p>
             <p>In SIMOC, your atmosphere starts at 415 ppm. The Upper Limit determines when the scrubbers are activated and CO₂ is removed from the atmosphere. When it's removed, it's added to the CO₂ storage, along with your starting reserves. The Lower Limit determines when CO₂ is released from storage into the atmosphere. Try reducing the Upper Limit to earth-normal (415 ppm) and see plant productivity is affected.</p>
         </ReferenceItem>
@@ -130,16 +161,22 @@ using v-for to populate all links with the title and the approriate value for th
             <p><i>A GREENHOUSE is not required, even if astronauts are selected.</i></p>
         </ReferenceItem>
 
-        <ReferenceItem v-if="activeRefEntry === 'PlantSpecies'" heading="Plant Species">
-            <p>If your elect to provide your astronauts with something more interesting than <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food rations</a> for a long <a class="reference-link" href="#" @click="setActiveRefEntry('Duration')">duration</a> mission, a <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> and plants are a welcomed respite from the monotony of meals in squeeze bottles and aluminum foil containers. Not only do fruits and vegetables provide nutrients and calories, they also help maintain a breathable atmosphere and clean water, off-setting, maybe even replacing the function of the <a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a> modules. When selecting your plants you will also select the percentage of the total volume of the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> allocated to each plant species.</p>
+        <ReferenceItem v-if="(activeRefEntry === 'PlantSpecies') && (simLocation === 'mars')" heading="Plant Species">
+            <p>If you elect to provide your astronauts with something more interesting than <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food rations</a> for a long <a class="reference-link" href="#" @click="setActiveRefEntry('Duration')">duration</a> mission, a <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> and plants are a welcomed respite from the monotony of meals in squeeze bottles and aluminum foil containers. Not only do fruits and vegetables provide nutrients and calories, they also help maintain a breathable atmosphere and clean water, off-setting, maybe even replacing the function of the <a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a> modules. When selecting your plants you will also select the percentage of the total volume of the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> allocated to each plant species.</p>
             <p>Keep in mind that you will be starting your plants from seeds, not seedlings or mature transplants. So make certain you have provided your astronauts with ample food rations for the time it takes to raise the plants from seed to harvest.</p>
             <p>Note that each plant is associated with a particular power requirement, that is, the amount of synthetic light required to grow the plants. This is based on NASA data for each included plant species. As such, when you select a higher volume of plants that require more lighting, the <a class="reference-link" href="#" @click="setActiveRefEntry('PowerGeneration')">power generation</a> and <a class="reference-link" href="#" @click="setActiveRefEntry('PowerStorage')">storage</a> requirement will increase accordingly.</p>
             <p>Refer to the <a class="reference-link" target="_blank" href="https://simoc.space">SIMOC website</a> to learn more about the plant species made available to you.</p>
             <p>PLANTS are not required, even if astronauts are selected.</p>
         </ReferenceItem>
 
+        <ReferenceItem v-if="(activeRefEntry === 'PlantSpecies') && (simLocation === 'b2')" heading="Plant Species">
+            <p>If you elect to provide your astronauts with something more interesting than <a class="reference-link" href="#" @click="setActiveRefEntry('Food')">food rations</a> for a long <a class="reference-link" href="#" @click="setActiveRefEntry('Duration')">duration</a> mission, a <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> and plants are a welcomed respite from the monotony of meals in squeeze bottles and aluminum foil containers. Not only do fruits and vegetables provide nutrients and calories, they also help maintain a breathable atmosphere and clean water, off-setting, maybe even replacing the function of the <a class="reference-link" href="#" @click="setActiveRefEntry('ECLSS')">ECLSS</a> modules. When selecting your plants you will also select the percentage of the total volume of the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a> allocated to each plant species.</p>
+            <p>Keep in mind that when the initial, mature plants are harvested, you will be starting new plants from seeds, not seedlings or mature transplants. While NASA would provide ample food rations in the case of failure of one or more crops in the greenhouse, those in the Biosphere 2 had no backup, no reserves. While sealed inside they were nutritionally well fed but hungry from the start due to a low caloric intake.</p>
+            <p>Refer to the <a class="reference-link" target="_blank" href="https://simoc.space">SIMOC website</a> to learn more about the plant species made available to you.</p>
+        </ReferenceItem>
+
         <ReferenceItem v-if="activeRefEntry === 'ImprovedCropManagement'" heading="Improved Crop Management">
-            <p>For the second historical Biosphere 2 mission, Tilak Mahato, a controlled-agriculture researcher with an indigenous farming background, implemented several new procedures, including:</p>
+            <p>For the second historical Biosphere 2 mission, <a class="reference-link" href="#" @click="setActiveRefEntry('Inhabitants')">Tilak Mahato</a>, a controlled-agriculture researcher with an indigenous farming background, implemented several new procedures, including:</p>
             <ul>
                 <li>Removing pests immediately. Because pest populations grow so quickly, catching and remediating an infestation early has an outsized impact.</li>
                 <li>Taking care not spread pests, fungi or diseases via contaminated tools.</li>
@@ -220,6 +257,7 @@ export default {
                 {ref: 'Duration', label: 'Mission Duration'},
                 {ref: 'Inhabitants', label: 'Inhabitants'},
                 {ref: 'Biomes', label: 'Biomes'},
+                {ref: 'Concrete', label: 'Concrete'},
                 {ref: 'Food', label: 'Food Supply'},
                 {ref: 'CO2Management', label: 'CO₂ Management'},
                 {ref: 'O2Management', label: 'O₂ Management'},
@@ -284,5 +322,9 @@ export default {
     }
     #food-table td {
         text-align: right;
+    }
+
+    .inhabitants li {
+        margin-bottom: 0.5em;
     }
 </style>
