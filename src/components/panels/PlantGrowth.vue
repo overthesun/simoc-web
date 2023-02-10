@@ -4,7 +4,7 @@
             <tr>
                 <th>Plant Species</th>
                 <th>Qty</th>
-                <th title="Number of hours remaining until plant is harvested for food">Hrs to Harvest</th>
+                <th title="Number of hours remaining until plant is harvested for food (this will happen regardless of the growth percentage)">Hrs to Harvest</th>
                 <th title="Ratio of current stored biomass to maximum lifetime biomass under ideal growing conditions">% of Growth</th>
             </tr>
             <tr v-for="(item, index) in getPlants" :key="index">
