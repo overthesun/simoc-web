@@ -4,11 +4,13 @@
             <tr>
                 <th>Plant Species</th>
                 <th>Qty</th>
-                <th title="Based on expected growth at earth-normal growing conditions. Other factors (e.g. CO2 concentrations > 350ppm) may cause actual growth to be greater than 100%.">% of Growth</th>
+                <th title="Number of hours remaining until plant is harvested for food">Hrs to Harvest</th>
+                <th title="Ratio of current stored biomass to maximum lifetime biomass under ideal growing conditions">% of Growth</th>
             </tr>
             <tr v-for="(item, index) in getPlants" :key="index">
                 <td>{{stringFormatter(item.type)}}</td>
                 <td>{{item.amount}}</td>
+                <td>{{getAgentAge(item.type)}}</td>
                 <td>{{getAgentGrowthPerc(item.type)}}</td>
             </tr>
         </table>
@@ -53,6 +55,11 @@ export default {
                 return `${perc.toFixed(4)}%`
             }
         },
+        getAgentAge(plant) {
+            const age = this.getData([plant, 'growth', 'agent_step_num', this.currentStepBuffer])
+            const lifetime = this.getData([plant, 'lifetime'])
+            return lifetime - age
+        }
     },
 }
 </script>
