@@ -43,6 +43,10 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 494,
+                // This doesn't match the agent_desc, but the B2 greenhouse is intentionally
+                // over-loaded to account for crops grown in other biomes. Here it is set to the
+                // actual amount of crops in the b2 preset configuration(s) to avoid confusion.
+                greenhouse_b2: 3600,
             },
 
             // Enough colors to cover all the plant types.
@@ -182,7 +186,8 @@ export default {
                 // otherwise show both the doughnut and the text
                 this.chart.data.datasets[0].data.pop()
                 this.chart.data.datasets[0].data = data
-                text = `${data[0]} m³ / ${this.greenhouseSize[greenhouse.type]} m³`
+                const usedSpace = Object.values(data.slice(1)).reduce((a, b) => a + b, 0)
+                text = `${usedSpace} m² / ${this.greenhouseSize[greenhouse.type]} m²`
             }
             this.chart.options.elements.centerText.text = text
             this.chart.update()
