@@ -33,7 +33,7 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const {
-            isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict
+            isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
         } = storeToRefs(dashboard)
         const {getData} = dashboard
         return {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
@@ -114,18 +114,18 @@ export default {
 
             // For Inhabitants, the number of potential 'food' fields is excessive,
             // so we combile them all into a single field, 'food'.
-            if (this.agent == 'human_agent') {
+            if (this.agent === 'human_agent' && !('food' in consolidated)) {
                 const foodFields = Object.keys(consolidated)
-                    .filter(f => this.currencyDict[f].currencyClass === 'food')
-                foodFields.forEach((field) => {
+                        .filter(f => this.currencyDict[f].currencyClass === 'food')
+                foodFields.forEach(field => {
                     const amount = consolidated[field]
                     delete consolidated[field]
                     if (!('food' in consolidated)) {
-                        consolidated['food'] = amount
+                        consolidated.food = amount
                     } else if (typeof amount === 'object') {
-                        consolidated['food'] = consolidated['food'].map((a, i) => a + amount[i])
+                        consolidated.food = consolidated.food.map((a, i) => a + amount[i])
                     } else {
-                        consolidated['food'] += amount
+                        consolidated.food += amount
                     }
                 })
             }
@@ -164,7 +164,7 @@ export default {
                 })
                 // Return true if there is more than one different value for 'unit' in datasetsData
                 const allUnits = new Set(Object.values(datasetsData).map(d => d.unit))
-                this.unit = allUnits.size == 1 ? allUnits.values().next().value : ''
+                this.unit = allUnits.size === 1 ? allUnits.values().next().value : ''
                 datasets = Object.values(datasetsData).map(({unit, label}, i) => ({
                     lineTension: 0,
                     data: Array(this.nsteps),

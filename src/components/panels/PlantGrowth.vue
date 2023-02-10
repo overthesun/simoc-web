@@ -59,7 +59,7 @@ export default {
             const age = this.getData([plant, 'growth', 'agent_step_num', this.currentStepBuffer])
             const lifetime = this.getData([plant, 'lifetime'])
             return lifetime - age
-        }
+        },
     },
 }
 </script>
