@@ -209,18 +209,12 @@ export default {
         async importPresetData(preset) {
             // import cached simulation data for the preset
             try {
-                console.log('* Loading cached simdata...')
+                // Retrieve simdata file from the backend
                 const fname = preset.simdata_file.split('.')[0]
-                // Two important things happen here:
-                // 1) the import should happen asynchronously
-                // 2) webpack shouldn't bundle the simdata with the rest
-                // Using this form of await import(stringliteral + var + stringliteral)
-                // should ensure that webpack/babel recognize that these modules are
-                // imported dynamically and lazily and that they shoultn't be bundled
-                // (note: template strings don't work here, so add a linter exception)
-                // eslint-disable-next-line prefer-template
-                const simdata = await import(`../assets/simdata/${fname}.json`)
-                return simdata.default  // get the actual data out of the module object
+                console.log(`* Loading cached <${fname}> simdata ...`)
+                const simdata = await axios.get(`/simdata/${fname}.json`)
+                return simdata.data  // get the actual data out of the module object
+
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
                 console.error(error)
