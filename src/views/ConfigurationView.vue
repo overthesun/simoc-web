@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{ 'background-image': `url(${bgImageUrl})` }">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{ 'background-image': 'url(' + bgImage + ')' }">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -136,9 +136,12 @@ export default {
         }
     },
     computed: {
-        async bgImageUrl() {
-            const image = await import('@/assets/${this.simLocation}-bg.jpg');
-            return image.default;
+        bgImage() {
+            if (this.simLocation === 'b2') {
+                return 'src/assets/b2-bg.jpg'
+            } else if (this.simLocation === 'mars') {
+                return 'src/assets/mars-bg.jpg'
+            }
         },
         // Used to hide the normal button and display the active button
         isFinalForm() {
