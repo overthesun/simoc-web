@@ -137,7 +137,7 @@ export default {
     },
     computed: {
         async bgImageUrl() {
-            const image = await import('@/assets/${this.simLocation}-bg.jpg');
+            const image = await import('../assets/${this.simLocation}-bg.jpg');
             return image.default;
         },
         // Used to hide the normal button and display the active button
