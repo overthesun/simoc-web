@@ -1,6 +1,5 @@
 <template>
-    <div class="base-dashboard-wrapper" :style="{'backgroundImage':
-        'url(../src/assets/' + simLocation + '-bg.jpg)'}">
+    <div class="base-dashboard-wrapper" :style="{ 'background-image': 'url(' + bgImage + ')' }">
         <router-view />
     </div>
 </template>
@@ -16,6 +15,8 @@ import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {useLiveStore} from '../store/modules/LiveStore'
+import b2Url from '@/assets/b2-bg.jpg'
+import marsUrl from '@/assets/mars-bg.jpg'
 
 export default {
     mixins: [idleMixin],
@@ -95,6 +96,14 @@ export default {
         // getters from the vuex stores
         ...mapGetters(['getGameID']),
         ...mapGetters('modal', ['getSurveyWasPrompted', 'getCountdownEnded']),
+        // Returns the imported static urls for the page backgrounds of mars and earth
+        bgImage() {
+            if (this.simLocation === 'b2') {
+                return b2Url
+            } else {
+                return marsUrl
+            }
+        },
     },
 
     watch: {

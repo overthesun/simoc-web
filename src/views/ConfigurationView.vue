@@ -1,5 +1,6 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{ 'background-image': 'url(' + bgImage + ')' }">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{
+        'background-image': 'url(' + bgImage + ')' }">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -138,10 +139,11 @@ export default {
         }
     },
     computed: {
+        // Returns the imported static urls for the page backgrounds of mars and earth
         bgImage() {
             if (this.simLocation === 'b2') {
                 return b2Url
-            } else if (this.simLocation === 'mars') {
+            } else {
                 return marsUrl
             }
         },
