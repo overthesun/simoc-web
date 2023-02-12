@@ -9,12 +9,12 @@ if [ ! -e node_modules ]; then
 fi
 
 echo '* Updating/downloading simdata/models/skybox files...'
-cd public/simdata
+cd public
 wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
     --accept="*.json,*.glb,*.jpg" \
     https://simoc.space/download/simdata/
 echo '* Simdata files downloaded to <public/simdata>'
-cd ../..
+cd ..
 cd src/assets
 wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
     --accept="*.json,*.glb,*.jpg" \
