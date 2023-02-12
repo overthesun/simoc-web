@@ -79,6 +79,8 @@ import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
+import b2Url from '@/assets/b2-bg.jpg'
+import marsUrl from '@/assets/mars-bg.jpg'
 
 export default {
     components: {
@@ -138,9 +140,9 @@ export default {
     computed: {
         bgImage() {
             if (this.simLocation === 'b2') {
-                return 'src/assets/b2-bg.jpg'
+                return b2Url
             } else if (this.simLocation === 'mars') {
-                return 'src/assets/mars-bg.jpg'
+                return marsUrl
             }
         },
         // Used to hide the normal button and display the active button
