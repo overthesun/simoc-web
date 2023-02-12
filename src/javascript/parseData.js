@@ -1,7 +1,7 @@
 // Recursive function to extract data at path from arbitrary object
 export const parseData = (data, path) => {
     // Return what's at the end of the path
-    if (!data && data !== 0) {
+    if (!data && data !== 0 && data !== false) {
         return null
     } else if (path.length === 0) {
         return data === null ? 0 : data
@@ -17,18 +17,30 @@ export const parseData = (data, path) => {
                     .map(d => parseData(d, remainder))
                     .filter(d => d.length !== 0)
             return output
-        // Array indexing is 0-based, but the stepBuffer system is 1-based;
-        // Correct manually here by subtracting 1 from indices in path.
         } else if (typeof index === 'number') {
             // Single index (number)
+            // Array indexing is 0-based, but the stepBuffer system is 1-based;
+            // Correct manually here by subtracting 1 from indices in path,
+            // so that requesting e.g. step 1 will return data[0]
             return parseData(data[index-1], remainder)
         }
         // Range i:j (string)
-        const idx = index.split(':')
+        // The range is 0-based, so for 0:24 it will return from data[0] to data[23]
+        // and in the dashboard (1-based) these will correspond to steps 1 to 24
+        const idx = index.split(':').map(Number)
         if (idx.length !== 2) {
             throw EvalError('Array index must be "*", numbers, or range "i:j".')
+        } else if (idx[0] > idx[1]) {
+            throw EvalError(`Invalid range ${idx[0]}:${idx[1]}.`)
         }
-        return data.slice(idx[0]-1, idx[1]-1).map(d => parseData(d, remainder))
+        if (idx[0] < 0) {
+            // if the start index is negative, prepend empty values and clip the index to 0
+            return Array(Math.abs(idx[0])).concat(
+                data.slice(0, idx[1]).map(d => parseData(d, remainder))
+            )
+        } else {
+            return data.slice(idx[0], idx[1]).map(d => parseData(d, remainder))
+        }
     } else if (typeof data === 'object') {
         // OBJECTS
         if (index === '*' || index === 'SUM') {
@@ -36,7 +48,7 @@ export const parseData = (data, path) => {
             const output = {}
             Object.keys(data).forEach(key => {
                 const res = parseData(data[key], remainder)
-                if (res || res === 0) {
+                if (res !== null) {
                     output[key] = res
                 }
             })
@@ -67,7 +79,7 @@ export const parseData = (data, path) => {
                 // eslint-disable-next-line no-restricted-syntax
                 for (const i of indices) {
                     const res = parseData(data[i], remainder)
-                    if (res || res === 0) {
+                    if (res !== null) {
                         output[i] = res
                     }
                 }

@@ -14,6 +14,7 @@ See chart.js documentation for further details on the related mounted functions.
 import {Chart, LineController, LineElement, PointElement,
         LinearScale, CategoryScale, Tooltip, Legend, Filler} from 'chart.js'
 import {storeToRefs} from 'pinia'
+import {make_labels} from '../../javascript/utils'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 Chart.register(LineController, LineElement, PointElement,
@@ -156,6 +157,9 @@ export default {
             })
             this.updateChart()
         },
+        calc_perc(amount, total) {
+            return (amount * 100 / total).toFixed(4)
+        },
         updateChart() {
             const currentStep = this.currentStepBuffer
             const {data} = this.chart
@@ -163,44 +167,55 @@ export default {
             // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
             let endingStep
+            let range
             if (this.fullscreen) {
                 // show the full graph
                 startingStep = 0
                 endingStep = this.nsteps
+                range = `*`
             } else if (currentStep !== this.prevStep+1) {
                 // replace the last nsteps values
-                startingStep = currentStep - (this.nsteps-1)
+                startingStep = currentStep - this.nsteps
                 endingStep = currentStep
+                range = `${startingStep}:${endingStep}`
             } else {
                 // add the latest value
                 startingStep = currentStep
                 endingStep = currentStep
+                range = currentStep
             }
-            // this will do 1 iteration when startingStep == endingStep
-            for (let step = startingStep; step <= endingStep; step++) {
-                // remove the oldest values and labels
-                Object.values(data.datasets).forEach(dataset => dataset.data.shift())
+            // this is an object with the elements names as keys,
+            // and either a number (for single steps) or an array of numbers (for ranges)
+            const storage = this.getData([this.storage_name, 'storage', '*', range])
+            // this is either a number (for single steps) or an array of numbers (for ranges)
+            const tot_storage = this.getData([this.storage_name, 'storage', 'SUM', range])
+            if (typeof tot_storage === 'object') {
+                // replace current range with the new range (in place)
+                Object.entries(storage).forEach(
+                    ([elem, amounts]) => {
+                        // find dataset index, calc ratios, and add the ratios to the dataset
+                        const index = this.setsinfo[this.storage_type].order[elem]
+                        const ratios = amounts.map((amt, i) => this.calc_perc(amt, tot_storage[i]))
+                        data.datasets[index].data.splice(0, ratios.length, ...ratios)
+                    }
+                )
+                const labels = make_labels(startingStep, endingStep, this.nsteps)
+                data.labels.splice(0, labels.length, ...labels)
+                this.chart.update('none')
+            } else {
+                // shift and add a single value at the end
+                Object.entries(storage).forEach(
+                    ([elem, amount]) => {
+                        // find dataset index, calc ratio, and add the ratio to the dataset
+                        const index = this.setsinfo[this.storage_type].order[elem]
+                        const ratio = this.calc_perc(amount, tot_storage)
+                        data.datasets[index].data.shift()
+                        data.datasets[index].data.push(ratio)
+                    }
+                )
                 data.labels.shift()
-                // add the new values
-                if (step > 0) {
-                    const storagePath = [this.storage_name, 'storage', '*', step]
-                    const storage = this.getData(storagePath)
-                    const tot_storage = Object.values(storage).reduce((a, b) => a + b)
-                    Object.entries(storage).forEach(
-                        ([key, elem]) => {
-                            // find dataset index, calc ratio, and add the ratio to the dataset
-                            const index = this.setsinfo[this.storage_type].order[key]
-                            const ratio = (elem * 100 / tot_storage).toFixed(4)
-                            data.datasets[index].data.push(ratio)
-                        }
-                    )
-                    data.labels.push(step)
-                } else {
-                    // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has nsteps total items and is not stretched
-                    Object.values(data.datasets).forEach(dataset => dataset.data.push(undefined))
-                    data.labels.push('')
-                }
+                data.labels.push(currentStep)
+                this.chart.update()
             }
             this.chart.update()
             this.prevStep = currentStep
