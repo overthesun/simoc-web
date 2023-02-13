@@ -19,7 +19,7 @@
     "chartjs-plugin-annotation": "^2.1.2",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
-    "postcss-nesting": "^10.1.10",
+    "postcss-nesting": "^11.2.0",
     "lodash": "^4.17.21",
     "pinia": "^2.0.29",
     "socket.io-client": "^4.5.4",
