@@ -1,6 +1,6 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{'backgroundImage':
-        'url(../src/assets/' + simLocation + '-bg.jpg)'}">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{
+        'background-image': 'url(' + bgImage + ')' }">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -80,6 +80,8 @@ import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
+import b2Url from '@/assets/b2-bg.jpg'
+import marsUrl from '@/assets/mars-bg.jpg'
 
 export default {
     components: {
@@ -137,6 +139,14 @@ export default {
         }
     },
     computed: {
+        // Returns the imported static urls for the page backgrounds of mars and earth
+        bgImage() {
+            if (this.simLocation === 'b2') {
+                return b2Url
+            } else {
+                return marsUrl
+            }
+        },
         // Used to hide the normal button and display the active button
         isFinalForm() {
             return (this.formOrder.length-1) === this.formIndex
