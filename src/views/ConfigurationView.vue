@@ -1,6 +1,5 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{
-        'background-image': 'url(' + bgImage + ')' }">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -177,6 +176,9 @@ export default {
         this.resetConfigDefault(this.simLocation)
         this.menuActive = false
         this.activeForm = this.getActiveForm
+    },
+    mounted() {
+        document.body.style.backgroundImage = `url(${this.bgImage})`
     },
     methods: {
         ...mapMutations(['SETGAMEID']),

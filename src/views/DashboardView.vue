@@ -1,5 +1,5 @@
 <template>
-    <div class="base-dashboard-wrapper" :style="{ 'background-image': 'url(' + bgImage + ')' }">
+    <div class="base-dashboard-wrapper">
         <router-view />
     </div>
 </template>
@@ -181,6 +181,7 @@ export default {
     },
 
     mounted() {
+        document.body.style.backgroundImage = `url(${this.bgImage})`
         // add keyboard shortcuts -- see the keyListener method below
         window.addEventListener('keydown', this.keyListener)
     },

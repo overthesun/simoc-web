@@ -1,5 +1,5 @@
 <template>
-    <div class="app">
+    <div class="app" @mousemove="updateBackgroundPosition">
         <div class="orientation-portrait">
             <img src="./assets/orientation.svg" class="orientation-logo">
         </div>
@@ -13,6 +13,21 @@
 
 <script setup>
 import ModalWindow from '@/components/menu/ModalWindow.vue'
+</script>
+
+
+<script>
+export default {
+    methods: {
+        updateBackgroundPosition(event) {
+            const {body} = document
+            const {clientX, clientY} = event
+            const x = (clientX / window.innerWidth) * 5
+            const y = (clientY / window.innerHeight) * 5
+            body.style.backgroundPosition = `calc(50% + ${x}%) calc(50% + ${y}%)`
+        },
+    },
+}
 </script>
 
 
