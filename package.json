@@ -21,7 +21,7 @@
     "json-loader": "^0.5.7",
     "postcss-nesting": "^10.1.10",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.29",
+    "pinia": "^2.0.32",
     "socket.io-client": "^4.6.0",
     "three": "^0.148.0",
     "vue": "^3.2.47",
