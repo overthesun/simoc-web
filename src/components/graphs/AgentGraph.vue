@@ -227,6 +227,16 @@ export default {
                     },
                 },
             })
+
+            // Hide these fields initially, but still make them accessible.
+            const hiddenByDefault = ['agent_step_num']
+            hiddenByDefault.forEach(field => {
+                const index = this.datasetsIndex[field]
+                if (index !== undefined) {
+                    this.chart.getDatasetMeta(index).hidden = true
+                }
+            })
+
             this.updateChart()
         },
         updateChart() {

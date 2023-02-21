@@ -55,7 +55,10 @@ export default {
     },
     computed: {
         agents() {
-            return Object.keys(this.activeData)
+            return Object.keys(this.activeData).filter(a => {
+                // Exclude agents without any valid categories, e.g. 'atmosphere_equalizer'
+                return this.validCategories.some(c => c in this.activeData[a])
+            })
         },
         categories() {
             if (this.agent in this.activeData) {

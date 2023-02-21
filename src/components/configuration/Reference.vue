@@ -34,15 +34,15 @@ using v-for to populate all links with the title and the approriate value for th
             <p>The Presets represent three key phases of the Biosphere 2 experiements:</p>
             <dl>
                 <dt style="min-width: 8em;"><h3>Mission 1a</h3></dt>
-                <dd>The first historical mission, up until day 475 when supplemental O₂ was added. Keep an eye on oxygen producers (plants) and consumers (humans and soil). How do their rates change over the course of the simulation, and why?</dd>
+                <dd>The first historical mission, up until day 475 when supplemental O₂ was added. Keep an eye on oxygen producers (plants) and consumers (humans and biomes). How do their rates change over the course of the simulation, and why? How does the concrete affect CO₂?</dd>
             </dl>
             <dl>
                 <dt style="min-width: 8em;"><h3>Mission 1b</h3></dt>
-                <dd>The first historical mission, from the point at which O₂ was added to the end. Includes starting O₂ reserves and a modified greenhouse layout. How does the updated layout impact food production and O₂/CO₂ exchange?</dd>
+                <dd>The first historical mission, from the point at which O₂ was added to the end. In SIMOC, this means the composition of the atmosphere and concrete carbonation match the end of Mission 1a. Mission 1b also includes starting O₂ reserves and a modified greenhouse layout. How does the updated layout impact food production and O₂/CO₂ exchange?</dd>
             </dl>
             <dl>
                 <dt style="min-width: 8em;"><h3>Mission 2</h3></dt>
-                <dd>The second historical mission, with ideal sunlight and improved crop management practices. How do these factors affect plant productivity?</dd>
+                <dd>The second historical mission, with ideal sunlight and improved crop management practices. How do these factors affect plant productivity? It also includes concrete carbonation accumulated during Mission 1. How does this affect the concrete's CO₂ flows? (see <a class="reference-link" href="#" @click="setActiveRefEntry('Concrete')">Concrete</a>)</dd>
             </dl>
             <p>You can select a preset and launch a simulation as-is to watch the historical missions unfold as they did from 1991-93, and in 1994, or select a preset, customize the settings, then explore how the simulation responds. Try changing the amount and types of plants, and adjust your CO₂ and O₂ reserves and limits. Can you finish the simulation with healthier, happier biospherians?</p>
         </ReferenceItem>
@@ -69,16 +69,17 @@ using v-for to populate all links with the title and the approriate value for th
         </ReferenceItem>
 
         <ReferenceItem v-if="(activeRefEntry === 'Inhabitants') && (simLocation === 'b2')" heading="Inhabitants">
+            <p>Biosphere 2 was originally designed for a crew of 8, and Mission 2 included only 7 crew. Below is a short biography of each crew member (at the time of their Mission) and external links, where applicable:</p>
             <h3>Mission 1</h3>
             <ul class="inhabitants">
                 <li><b>Sally Silverstone</b>: In charge of finances and day-to-day activities. Background in social studies and management of hostels and drought relief in India.</li>
                 <li><b>Mark van Thillo</b>: In charge of technical systems. Background as mechanic and ship's engineer.</li>
                 <li><b>Abigail Alling</b>: Coordinated ocean and marsh design. Background in biology with a master's degree from Yale.</li>
                 <li><b>Linda Leigh</b>: Coordinated land sections and plant transfer. Background in botany and field ecology.</li>
-                <li><b>Taber McCallum</b>: In charge of water, air, soil, and tissue analysis lab. Worked on research vessel.</li>
-                <li><b>Mark Nelson</b>: In charge of animal systems and data relay. Background in philosophy and agronomy.</li>
-                <li><b>Jane Poynter</b>: In charge of agriculture systems. Background in ecological management.</li>
-                <li><b>Dr. Roy Walford</b>: In charge of biospherians' health. Gerontologist with a background in caloric restriction research.</li>
+                <li><b>Taber McCallum</b>: In charge of water, air, soil, and tissue analysis lab. Worked on research vessel. <a class="external-link" href="https://en.wikipedia.org/wiki/Taber_MacCallum" target="_blank">Wikipedia</a></li>
+                <li><b>Mark Nelson</b>: In charge of animal systems and data relay. Background in philosophy and agronomy. <a class="external-link" href="https://en.wikipedia.org/wiki/Mark_Nelson_(scientist" target="_blank">Wikipedia</a></li>
+                <li><b>Jane Poynter</b>: In charge of agriculture systems. Background in ecological management. <a class="external-link" href="https://en.wikipedia.org/wiki/Jane_Poynter" target="_blank">Wikipedia</a></li>
+                <li><b>Dr. Roy Walford</b>: In charge of biospherians' health. Gerontologist with a background in caloric restriction research. <a class="external-link" href="https://en.wikipedia.org/wiki/Roy_Walford" target="_blank">Wikipedia</a></li>
             </ul>
             <h3>Mission 2</h3>
             <ul class="inhabitants">
@@ -101,6 +102,13 @@ using v-for to populate all links with the title and the approriate value for th
                 <li><b>Vegetation</b> varies between biomes, but it always performs photosynthesis, which consumes CO₂ and produces O₂. All biomes include vegetation except for the ocean, which is offset by coral activity, and the IAB, for which the vegetation is the plants, defined below.</li>
             </ul>
             <p>Each biome has different amounts of the above, giving it different exchanges.</p>
+            <table id="biomes-table">
+                <tr><th>Biome</th><th>Ceiling Height</th><th>Soil Depth</th><th>O₂ in(out)</th><th>CO₂ in(out)</th></tr>
+                <tr><td>Savannah</td><td>16.4 m</td><td>2.4 m</td><td>0.13 g/m²</td><td>(0.37 g/m²)</td></tr>
+                <tr><td>Ocean</td><td>16.6 m</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td>Desert</td><td>12.6 m</td><td>2.86 m</td><td>(0.03 g/m²)</td><td>0.09 g/m²</td></tr>
+                <tr><td>Rainforest</td><td>14.5 m</td><td>3.0 m</td><td>0.09 g/m²</td><td>(0.26 g/m²)</td></tr>
+            </table>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'Concrete'" heading="Concrete">
@@ -112,7 +120,7 @@ using v-for to populate all links with the title and the approriate value for th
 
         <ReferenceItem v-if="activeRefEntry === 'Food'" heading="Food Supply">
             <p v-if="simLocation === 'mars'">It is imperative that your astronauts have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Greenhouse')">greenhouse</a>. The plants are unable to produce edible fruit and vegetables until they are ready to harvest. Their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
-            <p v-if="simLocation === 'b2'">The Biospherians entered Biosphere 2 with food cultivars fully grown, many ready for harvest. This reduced their need to call upon food rations from day-one. But as you consider the subsequent harvest and planting cycles, it is imperative that your crew have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('Plants')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Biomes')">greenhouse</a>. Consider that the plants are unable to produce edible fruit and vegetables until they are ready to harvest. Furthermore, their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
+            <p v-if="simLocation === 'b2'">The Biospherians entered Biosphere 2 with food cultivars fully grown, many ready for harvest. This reduced their need to call upon pre-grown food from day-one. But as you consider the subsequent harvest and planting cycles, it is imperative that your crew have ample food supply while the <a class="reference-link" href="#" @click="setActiveRefEntry('Plants')">plants</a> are growing in the <a class="reference-link" href="#" @click="setActiveRefEntry('Biomes')">greenhouse</a>. Consider that the plants are unable to produce edible fruit and vegetables until they are ready to harvest. Furthermore, their capacity for carbon dioxide sequestration and oxygen production start at a very minimal level, increasing to their full capacity as a sigmoid (“S”) function.</p>
             <p>When the plants are harvested, each has a unique ratio of edible -vs- inedible biomass. Some plants are almost entirely edible (e.g. cabbage) while others offer very little for the human to digest (e.g. wheat). Yet, wheat offers the most nutrients and as you will find, is an excellent CO₂ reduction agent. At harvest, edible biomass is stored as food while inedible biomass is returned to the plants as nutrients.</p>
             <p v-if="simLocation === 'b2'">During the <a class="reference-link" href="#" @click="setActiveRefEntry('Presets')">Biosphere 2 missions</a>, the crew consumed a low-calorie, nutrient-dense diet prescribed by biospherian Roy Walford. In SIMOC-B2 simulations, this is reflected as a 50% reduction from the default, high-calorie astronaut diet modeled in SIMOC. This change is also reflected in the table below.</p>
             <p>The following table can be used as a reference for the amount of food required (in kg):</p>
@@ -124,7 +132,7 @@ using v-for to populate all links with the title and the approriate value for th
                 <tr><th>5</th><td>{{food*5}}</td><td>{{food*5*7}}</td><td>{{food*5*30}}</td><td>{{food*5*90}}</td><td>{{food*5*180}}</td><td>{{food*5*365}}</td></tr>
                 <tr><th>10</th><td>{{food*10}}</td><td>{{food*10*7}}</td><td>{{food*10*30}}</td><td>{{food*10*90}}</td><td>{{food*10*180}}</td><td>{{food*10*365}}</td></tr>
             </table>
-            <p><i>FOOD is not required if no astronauts are selected.</i></p>
+            <p v-if="simLocation === 'mars'"><i>FOOD is not required if no astronauts are selected.</i></p>
         </ReferenceItem>
 
         <ReferenceItem v-if="activeRefEntry === 'CrewQuarters'" heading="Crew Quarters">
@@ -322,6 +330,19 @@ export default {
     }
     #food-table td {
         text-align: right;
+    }
+
+    #biomes-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #eeeeee;
+        text-align: right;
+        & td:first-child, & th:first-child {
+            text-align: left;
+        }
+        & th {
+            border-bottom: 1px solid #eeeeee;
+        }
     }
 
     .inhabitants li {
