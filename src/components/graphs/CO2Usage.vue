@@ -180,7 +180,8 @@ export default {
         // TODO request all data as a single json, do math client-side
         retrieveCO2(agent, amount, callback) {
             axios.defaults.withCredentials = true
-            const params = {agent_name: agent, quantity: amount ?? 1}
+            const params = {agent_name: agent, quantity: amount ?? 1,
+                            location: this.configuration.location}
             return axios.get('/get_o2_co2', {params})
                     .then(response => {
                         if (response.status === 200) {

@@ -148,8 +148,20 @@ export default {
         'configuration.biomes': {
             handler() {
                 this.biomes = this.configuration.biomes
-                Object.keys(this.biomes).forEach(biome => {
+                const MAX_BIOMES = 12500
+                let totalBiomes = 0
+                let reportedMax = false
+                Object.entries(this.biomes).forEach(([biome, amount]) => {
                     this.validateRef(biome)
+                    totalBiomes += amount
+                    if (totalBiomes > MAX_BIOMES && !reportedMax) {
+                        this.$refs[biome][0].setCustomValidity(
+                            `The total area of biomes must be ${MAX_BIOMES} m² or less.`
+                        )
+                        reportedMax = true
+                    } else {
+                        this.$refs[biome][0].setCustomValidity('')
+                    }
                 })
             },
             deep: true,
