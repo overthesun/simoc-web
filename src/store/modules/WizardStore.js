@@ -408,27 +408,26 @@ export const useWizardStore = defineStore('WizardStore', {
             })
             return fconfig
         },
+        getPresets: state => location => location === 'b2' ? state.b2_presets : state.mars_presets,
         getDefaultPresetName: state => location => state.defaultConfigs[location],
         getDefaultPreset: state => location => {
             // return a copy of the default preset for the given location
             const preset_name = state.getDefaultPresetName(location)
             return JSON.parse(JSON.stringify(state.getPresets(location)[preset_name]))
         },
-        getPresets: state => location => {
-            if (location === 'b2') {
-                return state.b2_presets
-            } else {
-                return state.mars_presets
-            }
+        getEmptyConfig: state => location => {
+            // return a copy of the empty config for the given location
+            const emptyconfig = location === 'b2' ? state.emptyB2Config : state.emptyMarsConfig
+            return JSON.parse(JSON.stringify(emptyconfig))
         },
     },
     actions: {
         setConfiguration(value, location) {
             // Make sure the config contains all required items:
-            // initialize the config with the default, then add
+            // initialize with an empty config, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            const newconfig = location === 'b2' ? this.emptyB2Config : this.emptyMarsConfig
+            const newconfig = this.getEmptyConfig(location)
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
