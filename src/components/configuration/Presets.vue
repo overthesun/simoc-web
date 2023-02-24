@@ -121,7 +121,7 @@ export default {
                 confirmCallback: () => {
                     try {
                         const config = JSON.stringify(this.configuration)
-                        localStorage.setItem('custom-config', config)
+                        localStorage.setItem(`custom-config-${this.simLocation}`, config)
                         this.alert('Custom preset saved.')
                     } catch (e) {
                         this.alert(`An error occurred while saving the configuration: ${e}`)
@@ -134,7 +134,7 @@ export default {
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
             const loadPreset = () => {
-                const config = localStorage.getItem('custom-config')
+                const config = localStorage.getItem(`custom-config-${this.simLocation}`)
                 if (config) {
                     this.setConfiguration(JSON.parse(config), this.simLocation)
                 } else {
