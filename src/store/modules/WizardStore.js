@@ -408,12 +408,16 @@ export const useWizardStore = defineStore('WizardStore', {
             })
             return fconfig
         },
-        getPresets: state => location => location === 'b2' ? state.b2_presets : state.mars_presets,
         getDefaultPresetName: state => location => state.defaultConfigs[location],
         getDefaultPreset: state => location => {
             // return a copy of the default preset for the given location
             const preset_name = state.getDefaultPresetName(location)
             return JSON.parse(JSON.stringify(state.getPresets(location)[preset_name]))
+        },
+        getPresets: state => location => {
+            // return an object with all the presets for the given location
+            const presets = location === 'b2' ? state.b2_presets : state.mars_presets
+            return presets
         },
         getEmptyConfig: state => location => {
             // return a copy of the empty config for the given location
