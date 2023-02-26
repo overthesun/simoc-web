@@ -232,6 +232,7 @@ export default {
             })
             socket.on('steps_sent', msg => {
                 console.log(msg.message)
+                this.terminated = true
                 // disconnect once we got all the steps
                 this.tearDownWebSocket()
             })

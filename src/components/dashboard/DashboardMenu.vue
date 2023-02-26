@@ -40,7 +40,7 @@ export default {
         const wizard = useWizardStore()
         const {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
-            menuActive, leaveWithoutConfirmation,
+            terminated, menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
@@ -49,8 +49,9 @@ export default {
         const {configuration, activeConfigType} = storeToRefs(wizard)
         return {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
-            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped, startTimer,
-            pauseTimer, getLayoutName, setDefaultPanels, configuration, activeConfigType,
+            terminated, menuActive, leaveWithoutConfirmation,
+            getSimulationData, setStopped, startTimer, pauseTimer,
+            getLayoutName, setDefaultPanels, configuration, activeConfigType,
         }
     },
     data() {
@@ -73,10 +74,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions('modal', ['confirm']),
+        ...mapActions('modal', ['confirm', 'alert']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
+            // currently disabled
             this.pauseTimer()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
             this.setStopped(true)  // this will call DashboardView.stopSimulation
@@ -85,6 +87,11 @@ export default {
         downloadSimData() {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
+            if (!this.terminated) {
+                this.alert('The simulation is still running,\n' +
+                           'please wait until all data are received.')
+                return
+            }
             const simdata = this.getSimulationData
             simdata.configuration = this.configuration
             simdata.currency_desc = this.gameCurrencies
