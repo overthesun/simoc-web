@@ -147,6 +147,9 @@ export default {
         },
         'configuration.biomes': {
             handler() {
+                if (this.simLocation !== 'b2') {
+                    return  // only applies to b2 sims
+                }
                 this.biomes = this.configuration.biomes
                 const MAX_BIOMES = 12500
                 let totalBiomes = 0
@@ -168,6 +171,9 @@ export default {
         },
         'configuration.concrete': {
             handler() {
+                if (this.simLocation !== 'b2') {
+                    return  // only applies to b2 sims
+                }
                 this.concrete = this.configuration.concrete
                 this.validateRef('concrete')
             },

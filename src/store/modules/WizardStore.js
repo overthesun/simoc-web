@@ -60,7 +60,8 @@ export const useWizardStore = defineStore('WizardStore', {
             generator: {min: 0, max: 5000},
             storage: {min: 0, max: 10000},
         },
-        defaultConfig: {
+        defaultConfigs: {mars: 'one_human_radish', b2: 'b2_mission_1a'},
+        emptyMarsConfig: {
             name: 'Default config',
             simdata_file: '',
             location: 'mars',
@@ -74,47 +75,26 @@ export const useWizardStore = defineStore('WizardStore', {
             greenhouse: {type: 'none', amount: 0, units: ''},
             plantSpecies: [{type: '', amount: ''}],
         },
-        defaultB2Config: {
+        emptyB2Config: {
             name: 'Default config Biosphere 2',
             simdata_file: '',
             location: 'b2',
-            startDate: '1991-01-01',
-            duration: {type: 'none', amount: 30, units: 'day'},
-            // Note: Weeding and Pest Picking were part of the original vision for SIMOC-B2 but
-            // did not make it into the initial backend implementation. We leave the scaffolding
-            // here in case they are implemented in a future version.
-            humans: {type: 'human_agent', amount: 8, units: '', weeding: null, pestPicking: null},
-            food: {type: 'food_storage', amount: 500, units: 'kg'},
-            crewQuarters: {type: 'crew_habitat_b2', amount: 1, units: ''},
-            biomes: {rainforest: 2000, desert: 1400, ocean: 863, savannah: 1637},
-            eclss: {
-                type: 'eclss',
-                amount: 1,
-                units: '',
-                o2Reserves: 0,      // kg
-                o2LowerLimit: 20,   // %
-                co2Reserves: 0,     // kg
-                co2LowerLimit: 0,   // %
-                co2UpperLimit: 0.25, // %
-            },
-            powerGeneration: {type: 'b2_power_gen', amount: 1, units: ''},
-            powerStorage: {type: 'power_storage', amount: 1000, units: 'kWh'},
-            greenhouse: {type: 'greenhouse_b2', amount: 1, units: ''},
-            plantSpecies: [
-                {type: 'rice', amount: 530},
-                {type: 'wheat', amount: 370},
-                {type: 'sorghum', amount: 261},
-                {type: 'peanut', amount: 168},
-                {type: 'corn', amount: 488},
-                {type: 'dry_bean', amount: 222},
-                {type: 'sweet_potato', amount: 261},
-                {type: 'vegetables', amount: 348},
-                {type: 'soybean', amount: 326},
-                {type: 'orchard', amount: 646},
-            ],
+            startDate: '',
+            duration: {type: 'none', amount: null, units: 'day'},
+            humans: {type: 'human_agent', amount: null, units: '',
+                     weeding: null, pestPicking: null},
+            food: {type: 'food_storage', amount: null, units: 'kg'},
+            crewQuarters: {type: 'crew_habitat_b2', amount: 0, units: ''},
+            biomes: {rainforest: 0, desert: 0, ocean: 0, savannah: 0},
+            eclss: {type: 'eclss', amount: null, units: '', o2Reserves: 0, o2LowerLimit: 0,
+                    co2Reserves: 0, co2LowerLimit: 0, co2UpperLimit: 0},
+            powerGeneration: {type: 'b2_power_gen', amount: null, units: ''},
+            powerStorage: {type: 'power_storage', amount: null, units: 'kWh'},
+            greenhouse: {type: 'greenhouse_b2', amount: 0, units: ''},
+            plantSpecies: [{type: '', amount: ''}],
             improvedCropManagement: false,
             startWithM1EndingAtmosphere: false,
-            concrete: {amount: 15800, carbonation: 0},
+            concrete: {amount: 0, carbonation: 0},
         },
         mars_presets: {
             one_human: {
@@ -428,21 +408,30 @@ export const useWizardStore = defineStore('WizardStore', {
             })
             return fconfig
         },
+        getDefaultPresetName: state => location => state.defaultConfigs[location],
+        getDefaultPreset: state => location => {
+            // return a copy of the default preset for the given location
+            const preset_name = state.getDefaultPresetName(location)
+            return JSON.parse(JSON.stringify(state.getPresets(location)[preset_name]))
+        },
+        getPresets: state => location => {
+            // return an object with all the presets for the given location
+            const presets = location === 'b2' ? state.b2_presets : state.mars_presets
+            return presets
+        },
+        getEmptyConfig: state => location => {
+            // return a copy of the empty config for the given location
+            const emptyconfig = location === 'b2' ? state.emptyB2Config : state.emptyMarsConfig
+            return JSON.parse(JSON.stringify(emptyconfig))
+        },
     },
     actions: {
-        getPresets(location) {
-            if (location === 'b2') {
-                return this.b2_presets
-            } else {
-                return this.mars_presets
-            }
-        },
         setConfiguration(value, location) {
             // Make sure the config contains all required items:
-            // initialize the config with the default, then add
+            // initialize with an empty config, then add
             // all valid keys from "value" and report invalid ones.
             const newvalue = JSON.parse(JSON.stringify(value))
-            const newconfig = location === 'b2' ? this.defaultB2Config : this.defaultConfig
+            const newconfig = this.getEmptyConfig(location)
             const valid_keys = []
             const invalid_keys = []
             Object.keys(newvalue).forEach((key, i) => {
@@ -529,10 +518,10 @@ export const useWizardStore = defineStore('WizardStore', {
             this.activeReference = 'Reference'
             this.activeRefEntry = value
         },
-        resetConfigDefault(value) {
-            this.configuration = value === 'b2' ? this.defaultB2Config : this.defaultConfig
+        resetConfigDefault(location) {
+            this.configuration = this.getDefaultPreset(location)
             this.activeFormIndex = 0
-            this.activeReference = value === 'mars' ? 'Layout' : 'Reference'
+            this.activeReference = location === 'mars' ? 'Layout' : 'Reference'
             this.activeRefEntry = 'Welcome'
         },
     },
