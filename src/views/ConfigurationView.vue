@@ -106,11 +106,11 @@ export default {
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
         const {
-            configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
+            configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
             simdataLocation,
         } = storeToRefs(wizard)
-        const {resetConfigDefault, setConfiguration, getPresets} = wizard
+        const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
