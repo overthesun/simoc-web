@@ -260,9 +260,10 @@ export default {
             if (preset_name in presets) {
                 let data
                 try {
-                    if (this.simLocation == 'b2') {
+                    if (this.simLocation === 'b2') {
                         this.SETMODALPARAMS({
-                            message: 'Downloading simulation data.\nPlease wait, this could take a few seconds...',
+                            message: 'Downloading simulation data.\n' +
+                                     'Please wait, this could take a few seconds...',
                         })
                         this.SETMODALACTIVE(true)
                     }
