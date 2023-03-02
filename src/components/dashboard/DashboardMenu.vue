@@ -89,7 +89,7 @@ export default {
             // TODO: this is duplicated in the config menu
             if (!this.terminated) {
                 this.alert('The simulation is still running,\n' +
-                           'please wait until all data are received.')
+                           'please wait until all the data is received.')
                 return
             }
             const simdata = this.getSimulationData
