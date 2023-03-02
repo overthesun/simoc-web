@@ -156,11 +156,13 @@ export default {
         if (this.currentMode === 'live') {
             console.log('Starting live dashboard')
             this.maxStepBuffer = 0  // Reset the max buffer value
-            this.initBundleNum = null // Reset initBundleNum to null
+            this.initBundleNum = null  // Reset initBundleNum to null
             this.setupLiveWebsocket()
-        } else if (!this.loadFromSimData) {
-            // if we load the simulation data, there's nothing else to do, otherwise
-            // we have to reset a few more values, init the game, and request steps
+        } else if (this.loadFromSimData) {
+            // if we load simdata, we only need to set terminated to true
+            this.terminated = true
+        } else {
+            // for new sims, reset a few more values, init the game, and request steps
             this.maxStepBuffer = 0  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
             this.initGame(this.getGameID)
@@ -232,6 +234,7 @@ export default {
             })
             socket.on('steps_sent', msg => {
                 console.log(msg.message)
+                this.terminated = true
                 // disconnect once we got all the steps
                 this.tearDownWebSocket()
             })
