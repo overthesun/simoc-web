@@ -115,7 +115,9 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 const {configuration, currency_desc, ...simdata} = json_data
-                this.setConfiguration(configuration, this.simLocation)
+                const {location} = configuration
+                this.simLocation = location
+                this.setConfiguration(configuration, location)
                 this.setSimulationData({simdata, currency_desc})
             } catch (error) {
                 console.error(error)  // report full error in the console
