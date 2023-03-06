@@ -181,6 +181,7 @@ export default {
     methods: {
         ...mapMutations(['SETGAMEID']),
         ...mapActions('modal', ['alert']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALPARAMS']),
 
         toggleMenu() {
             this.menuActive = !this.menuActive
@@ -257,7 +258,19 @@ export default {
             const presets = this.getPresets(this.simLocation)
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const data = await this.importPresetData(presets[preset_name])
+                let data
+                try {
+                    if (this.simLocation === 'b2') {
+                        this.SETMODALPARAMS({
+                            message: 'Downloading simulation data.\n' +
+                                     'Please wait, this could take a few seconds...',
+                        })
+                        this.SETMODALACTIVE(true)
+                    }
+                    data = await this.importPresetData(presets[preset_name])
+                } finally {
+                    this.SETMODALACTIVE(false)
+                }
                 // Get currency_desc from backend
                 const response = await axios.get('/get_currency_desc')
                 const {currency_desc} = response.data
