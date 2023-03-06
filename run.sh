@@ -11,13 +11,13 @@ fi
 echo '* Updating/downloading simdata/models/skybox files...'
 cd public
 wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
-    --accept="*.json,*.glb,*.jpg" \
+    --accept="*.gz" \
     https://simoc.space/download/simdata/
 echo '* Simdata files downloaded to <public/simdata>'
 cd ..
 cd src/assets
 wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
-    --accept="*.json,*.glb,*.jpg" \
+    --accept="*.glb,*.jpg" \
     https://simoc.space/download/models/ \
     https://simoc.space/download/skybox/
 echo '* Models and skybox files downloaded to <src/assets>'
