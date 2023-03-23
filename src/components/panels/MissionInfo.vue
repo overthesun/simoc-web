@@ -8,7 +8,7 @@
 
         <dl v-if="info_section == 'mission-status'">
             <dt v-if="parameters.game_id">Mission ID:</dt>
-            <dd v-if="parameters.game_id">{{getGameId}}</dd>
+            <dd v-if="parameters.game_id">{{parameters.game_id}}</dd>
             <dt>Location:</dt>
             <dd>{{stringFormatter(simLocation)}}</dd>
             <template v-if="simLocation === 'mars'">
@@ -128,9 +128,6 @@ export default {
             } else {
                 return null
             }
-        },
-        getGameId() {
-            return this.parameters.game_id
         },
     },
     methods: {
