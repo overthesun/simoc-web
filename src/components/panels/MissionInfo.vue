@@ -7,8 +7,8 @@
         </select>
 
         <dl v-if="info_section == 'mission-status'">
-            <dt v-if="getGameID">Mission ID:</dt>
-            <dd v-if="getGameID">{{getGameID}}</dd>
+            <dt v-if="parameters.game_id">Mission ID:</dt>
+            <dd v-if="parameters.game_id">{{getGameId}}</dd>
             <dt>Location:</dt>
             <dd>{{stringFormatter(simLocation)}}</dd>
             <template v-if="simLocation === 'mars'">
@@ -87,7 +87,6 @@
             <dt>Gravity:</dt>
             <dd>{{locationInfo.gravity[simLocation]}}</dd>
         </dl>
-
     </section>
 </template>
 
@@ -104,10 +103,10 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentStepBuffer, simLocation} = storeToRefs(dashboard)
+        const {currentStepBuffer, simLocation, parameters} = storeToRefs(dashboard)
         const {getData} = dashboard
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
-        return {currentStepBuffer, simLocation, getData, configuration, getTotalMissionHours}
+        return {currentStepBuffer, simLocation, parameters, getData, configuration, getTotalMissionHours}
     },
     modes: ['sim'],
     data() {
@@ -123,14 +122,15 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getGameID']),
-
         startDate() {
             if (this.simLocation === 'b2') {
                 return new Date(Date.parse(`${this.configuration.startDate} 00:00:00`))
             } else {
                 return null
             }
+        },
+        getGameId() {
+            return this.parameters.game_id
         },
     },
     methods: {

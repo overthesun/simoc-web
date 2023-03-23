@@ -77,7 +77,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getGameID']),
         step() {
             return this.currentStepBuffer
         },

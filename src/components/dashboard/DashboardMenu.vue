@@ -59,9 +59,6 @@ export default {
             timerWasRunning: null,  // the status of timer before opening the menu
         }
     },
-    computed: {
-        ...mapGetters(['getGameID']),
-    },
     mounted() {
         // save the status of the timer and pause it when the menu is opened
         this.timerWasRunning = this.isTimerRunning
