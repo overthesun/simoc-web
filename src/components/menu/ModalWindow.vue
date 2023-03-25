@@ -50,7 +50,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getSecondsLeft']),
+        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getSecondsLeft',
+                                'getCountdownEnded']),
     },
     watch: {
         // Watch params in store/modal, use to show/hide the menu and determine layout
@@ -72,7 +73,7 @@ export default {
     },
     methods: {
         ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS',
-                                  'STARTCOUNTDOWNTIMER']),
+                                  'STARTCOUNTDOWNTIMER', 'STOPCOUNTDOWNTIMER']),
 
         async handleClick(callback) {
             callback()
@@ -85,6 +86,12 @@ export default {
             }
             this.SETMODALACTIVE(false)
             this.RESETMODALPARAMS()
+
+            // The user clicked outside of the timeout modal before the countdown ended
+            // which cancels the callback function that would have been called at 0.
+            if (this.getModalParams.type === 'timeout' && !this.getCountdownEnded) {
+                this.STOPCOUNTDOWNTIMER()
+            }
         },
     },
 }
