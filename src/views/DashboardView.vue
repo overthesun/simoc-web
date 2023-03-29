@@ -304,7 +304,8 @@ export default {
             // tell the backend how many steps we need for this game
 
             // use the total number of mission hours as the number of steps to be calculated
-            const stepToParams = {step_num: this.getTotalMissionHours, game_id: this.parameters.game_id}
+            const stepToParams = {step_num: this.getTotalMissionHours,
+                                  game_id: this.parameters.game_id}
             try {
                 // begin creating the step buffer on the backend using
                 // the entire length of the simulation as the base

@@ -106,7 +106,8 @@ export default {
         const {currentStepBuffer, simLocation, parameters} = storeToRefs(dashboard)
         const {getData} = dashboard
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
-        return {currentStepBuffer, simLocation, parameters, getData, configuration, getTotalMissionHours}
+        return {currentStepBuffer, simLocation, parameters, getData, configuration,
+                getTotalMissionHours}
     },
     modes: ['sim'],
     data() {
