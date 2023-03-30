@@ -23,7 +23,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.0.29",
     "socket.io-client": "^4.6.0",
-    "three": "^0.148.0",
+    "three": "^0.151.0",
     "vue": "^3.2.47",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.1.6",
