@@ -223,7 +223,7 @@ export default {
                 // Retrieve simdata file from the backend
                 const fname = preset.simdata_file.split('.')[0]
                 console.log(`* Loading cached <${fname}> simdata ...`)
-                const response = await axios.get(`/simdata/${fname}.json`)
+                const response = await axios.get(`/simdata/${fname}.json.gz`)
                 return response.data  // get the actual data out of the response object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
