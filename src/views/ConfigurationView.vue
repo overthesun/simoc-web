@@ -1,5 +1,6 @@
 <template>
-    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper">
+    <div :class="{'waiting': awaiting_response}" class="base-configuration-wrapper" :style="{
+        'background-image': 'url(' + bgImage + ')' }">
         <TheTopBar />
         <!-- Show the configuration menu component when getMenuActive is true. -->
         <ConfigurationMenu v-if="menuActive" />
@@ -29,8 +30,9 @@
                             <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
                             <Initial ref="initial" />
                             <Inhabitants ref="inhabitants" />
+                            <ECLSS ref="eclss" />
                             <Greenhouse ref="greenhouse" />
-                            <Energy ref="energy" />
+                            <Energy v-if="simLocation === 'mars'" ref="energy" />
                             <!--
                             This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
                             <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
@@ -52,7 +54,6 @@
                         <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                     </nav>
                 </template>
-
                 <template #main-wizard-reference>
                     <!-- Display the component with the name stored in the variable-->
                     <keep-alive>
@@ -76,9 +77,11 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {TheTopBar} from '../components/bars'
-import {ConfigurationMenu, Presets, Initial, Inhabitants,
+import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
+import b2Url from '@/assets/b2-bg.jpg'
+import marsUrl from '@/assets/mars-bg.jpg'
 
 export default {
     components: {
@@ -87,6 +90,7 @@ export default {
         Presets,
         Initial,
         Inhabitants,
+        ECLSS,
         Greenhouse,
         Energy,
         Reference,
@@ -99,17 +103,18 @@ export default {
         const wizard = useWizardStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
+            simLocation,
         } = storeToRefs(dashboard)
         const {setGameParams, setSimulationData} = dashboard
         const {
-            configuration, getFormattedConfiguration, activeConfigType, getActiveForm,
+            configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
-            getPresets, simdataLocation,
+            simdataLocation,
         } = storeToRefs(wizard)
         const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            setGameParams, setSimulationData, configuration, getFormattedConfiguration,
+            simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
             activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
             activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
             setConfiguration,
@@ -134,6 +139,14 @@ export default {
         }
     },
     computed: {
+        // Returns the imported static urls for the page backgrounds of mars and earth
+        bgImage() {
+            if (this.simLocation === 'b2') {
+                return b2Url
+            } else {
+                return marsUrl
+            }
+        },
         // Used to hide the normal button and display the active button
         isFinalForm() {
             return (this.formOrder.length-1) === this.formIndex
@@ -161,13 +174,14 @@ export default {
         },
     },
     beforeMount() {
-        this.resetConfigDefault()
+        this.resetConfigDefault(this.simLocation)
         this.menuActive = false
         this.activeForm = this.getActiveForm
     },
     methods: {
         ...mapMutations(['SETGAMEID']),
         ...mapActions('modal', ['alert']),
+        ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALPARAMS']),
 
         toggleMenu() {
             this.menuActive = !this.menuActive
@@ -206,18 +220,11 @@ export default {
         async importPresetData(preset) {
             // import cached simulation data for the preset
             try {
-                console.log('* Loading cached simdata...')
+                // Retrieve simdata file from the backend
                 const fname = preset.simdata_file.split('.')[0]
-                // Two important things happen here:
-                // 1) the import should happen asynchronously
-                // 2) webpack shouldn't bundle the simdata with the rest
-                // Using this form of await import(stringliteral + var + stringliteral)
-                // should ensure that webpack/babel recognize that these modules are
-                // imported dynamically and lazily and that they shoultn't be bundled
-                // (note: template strings don't work here, so add a linter exception)
-                // eslint-disable-next-line prefer-template
-                const simdata = await import(`../assets/simdata/${fname}.json`)
-                return simdata.default  // get the actual data out of the module object
+                console.log(`* Loading cached <${fname}> simdata ...`)
+                const response = await axios.get(`/simdata/${fname}.json.gz`)
+                return response.data  // get the actual data out of the response object
             } catch (error) {
                 console.log('* Loading cached simdata failed, falling back on regular request')
                 console.error(error)
@@ -248,19 +255,31 @@ export default {
             await new Promise(r => setTimeout(r, 10))  // await for 10ms
 
             // load cached simdata if the user selects a preset
-            const presets = this.getPresets
+            const presets = this.getPresets(this.simLocation)
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
             if (preset_name in presets) {
-                const data = await this.importPresetData(presets[preset_name])
+                let data
+                try {
+                    if (this.simLocation === 'b2') {
+                        this.SETMODALPARAMS({
+                            message: 'Downloading simulation data.\n' +
+                                     'Please wait, this could take a few seconds...',
+                        })
+                        this.SETMODALACTIVE(true)
+                    }
+                    data = await this.importPresetData(presets[preset_name])
+                } finally {
+                    this.SETMODALACTIVE(false)
+                }
                 // Get currency_desc from backend
                 const response = await axios.get('/get_currency_desc')
                 const {currency_desc} = response.data
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
-                        this.setConfiguration(configuration)
+                        this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData({simdata, currency_desc})
-                        this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                        this.currentMode = 'sim'
                         this.isLive = false
                         this.loadFromSimData = true
                         this.$router.push('dashboard')
@@ -294,7 +313,7 @@ export default {
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
                 })
-                this.currentMode = this.currentMode !== 'kiosk' ? 'sim' : 'kiosk'
+                this.currentMode = 'sim'
                 this.isLive = false
                 this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
@@ -318,6 +337,9 @@ export default {
     min-height: 100vh;
     display: grid;
     grid-template-rows: 50px minmax(0px,1fr);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 50% 10%;
 }
 
     .form-wrapper{

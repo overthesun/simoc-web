@@ -1,5 +1,5 @@
 <template>
-    <div class="base-dashboard-wrapper">
+    <div class="base-dashboard-wrapper" :style="{ 'background-image': 'url(' + bgImage + ')' }">
         <router-view />
     </div>
 </template>
@@ -15,6 +15,8 @@ import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {useLiveStore} from '../store/modules/LiveStore'
+import b2Url from '@/assets/b2-bg.jpg'
+import marsUrl from '@/assets/mars-bg.jpg'
 
 export default {
     mixins: [idleMixin],
@@ -29,13 +31,13 @@ export default {
         // Ensure the menu on the Dashboard is closed before showing any modal.
         this.menuActive = false
         if (this.leaveWithoutConfirmation ||
-            (this.currentMode === 'kiosk' && this.getCountdownEnded)) {
+            (this.kioskMode && this.getCountdownEnded)) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Stop/close the countdown modal if it's still open
             // (e.g. when the user press the back button during the countdown)
-            if (this.currentMode === 'kiosk') {
+            if (this.kioskMode) {
                 this.STOPCOUNTDOWNTIMER()
             }
             // Make user to confirm before exiting.
@@ -46,7 +48,7 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted && this.currentMode !== 'kiosk' &&
+            if (!this.getSurveyWasPrompted && !this.kioskMode &&
                 import.meta.env.MODE !== 'development') {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
@@ -62,7 +64,7 @@ export default {
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation,
+            menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
@@ -75,7 +77,7 @@ export default {
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
-            menuActive, currentMode, leaveWithoutConfirmation,
+            menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
             configuration, getTotalMissionHours,
@@ -94,6 +96,14 @@ export default {
         // getters from the vuex stores
         ...mapGetters(['getGameID']),
         ...mapGetters('modal', ['getSurveyWasPrompted', 'getCountdownEnded']),
+        // Returns the imported static urls for the page backgrounds of mars and earth
+        bgImage() {
+            if (this.simLocation === 'b2') {
+                return b2Url
+            } else {
+                return marsUrl
+            }
+        },
     },
 
     watch: {
@@ -146,11 +156,13 @@ export default {
         if (this.currentMode === 'live') {
             console.log('Starting live dashboard')
             this.maxStepBuffer = 0  // Reset the max buffer value
-            this.initBundleNum = null // Reset initBundleNum to null
+            this.initBundleNum = null  // Reset initBundleNum to null
             this.setupLiveWebsocket()
-        } else if (!this.loadFromSimData) {
-            // if we load the simulation data, there's nothing else to do, otherwise
-            // we have to reset a few more values, init the game, and request steps
+        } else if (this.loadFromSimData) {
+            // if we load simdata, we only need to set terminated to true
+            this.terminated = true
+        } else {
+            // for new sims, reset a few more values, init the game, and request steps
             this.maxStepBuffer = 0  // Reset the max buffer value
             // init a new game, set game id, reset all data buffers
             this.initGame(this.getGameID)
@@ -222,6 +234,7 @@ export default {
             })
             socket.on('steps_sent', msg => {
                 console.log(msg.message)
+                this.terminated = true
                 // disconnect once we got all the steps
                 this.tearDownWebSocket()
             })
@@ -265,7 +278,7 @@ export default {
                 }
                 // Send bundle to parseData in the livedata store for parsing
                 this.parseData(data)
-                this.setLiveConfig({duration: {amount: this.bundleNum}})  // Sets the totalMissionHours
+                this.setLiveConfig({duration: {amount: this.bundleNum}}, this.simLocation)  // Sets the totalMissionHours
                 this.maxStepBuffer = this.bundleNum
             })
             socket.on('disconnect', msg => {
@@ -451,5 +464,8 @@ export default {
         min-height: 100vh;
         overflow:hidden;
         position:relative;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: 50% 10%;
     }
 </style>

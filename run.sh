@@ -9,13 +9,18 @@ if [ ! -e node_modules ]; then
 fi
 
 echo '* Updating/downloading simdata/models/skybox files...'
+cd public
+wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
+    --accept="*.gz" \
+    https://simoc.space/download/simdata/
+echo '* Simdata files downloaded to <public/simdata>'
+cd ..
 cd src/assets
-wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent\
-    --accept="*.json,*.glb,*.jpg" \
-    https://simoc.space/download/simdata/ \
+wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
+    --accept="*.glb,*.jpg" \
     https://simoc.space/download/models/ \
     https://simoc.space/download/skybox/
-echo '* Simdata/models/skybox files downloaded to <src/assets>'
+echo '* Models and skybox files downloaded to <src/assets>'
 cd ../..
 
 echo '* To start the dev server use: npm run dev'

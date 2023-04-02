@@ -32,9 +32,12 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {isTimerRunning, currentStepBuffer, maxStepBuffer} = storeToRefs(dashboard)
+        const {
+            isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
+        } = storeToRefs(dashboard)
         const {getData} = dashboard
-        return {isTimerRunning, currentStepBuffer, maxStepBuffer, getData}
+        return {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
+                getData}
     },
     data() {
         return {
@@ -108,6 +111,25 @@ export default {
                     })
                 }
             })
+
+            // For Inhabitants, the number of potential 'food' fields is excessive,
+            // so we combile them all into a single field, 'food'.
+            if (this.agent === 'human_agent' && !('food' in consolidated)) {
+                const foodFields = Object.keys(consolidated)
+                        .filter(f => this.currencyDict[f].currencyClass === 'food')
+                foodFields.forEach(field => {
+                    const amount = consolidated[field]
+                    delete consolidated[field]
+                    if (!('food' in consolidated)) {
+                        consolidated.food = amount
+                    } else if (typeof amount === 'object') {
+                        consolidated.food = consolidated.food.map((a, i) => a + amount[i])
+                    } else {
+                        consolidated.food += amount
+                    }
+                })
+            }
+
             return consolidated
         },
         // TODO: this code is very similar to LevelsGraph.vue
@@ -130,14 +152,24 @@ export default {
                 if (this.category === 'flows') {
                     data = this.consolidateFlows(data)
                 }
-                const fields = Object.keys(data)
-                this.datasetsIndex = Object.fromEntries(  // create a currency:index map
-                    Object.entries(fields).map(([a, b]) => [b, parseInt(a, 10)])
-                )
-                datasets = fields.map((item, i) => ({
+                this.datasetsIndex = {}
+                const datasetsData = {}
+                Object.keys(data).forEach((field, index) => {
+                    this.datasetsIndex[field] = parseInt(index, 10)
+                    const cd = (field in this.currencyDict) ? this.currencyDict[field] : null
+                    datasetsData[field] = {
+                        unit: cd ? cd.unit : '',
+                        label: cd ? (cd.short || cd.label) : StringFormatter(field),
+                    }
+                })
+                // Return true if there is more than one different value for 'unit' in datasetsData
+                const allUnits = new Set(Object.values(datasetsData).map(d => d.unit))
+                this.unit = allUnits.size === 1 ? allUnits.values().next().value : ''
+                datasets = Object.values(datasetsData).map(({unit, label}, i) => ({
                     lineTension: 0,
                     data: Array(this.nsteps),
-                    label: StringFormatter(item),
+                    label: label + ((unit && !this.unit) ? ` (${unit})` : ''),
+                    // TODO: Get field-specific color from currencyDict or fieldDict
                     borderColor: this.colors[i],
                     fill: false,
                     pointStyle: 'line',
@@ -157,7 +189,7 @@ export default {
                     color: '#eeeeee',
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            beginAtZero: false,
                             ticks: {
                                 callback: (value, index, values) => {
                                     if (value === 0 || Math.abs(value) > 10) {
@@ -195,6 +227,16 @@ export default {
                     },
                 },
             })
+
+            // Hide these fields initially, but still make them accessible.
+            const hiddenByDefault = ['agent_step_num']
+            hiddenByDefault.forEach(field => {
+                const index = this.datasetsIndex[field]
+                if (index !== undefined) {
+                    this.chart.getDatasetMeta(index).hidden = true
+                }
+            })
+
             this.updateChart()
         },
         updateChart() {

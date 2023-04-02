@@ -57,7 +57,9 @@ import {parseData} from '../../javascript/parseData'
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
         // Game Management
-        currentMode: '',
+        currentMode: '',  // either 'sim' or 'live'
+        kioskMode: false,  // if true, enable kiosk mode
+        simLocation: 'mars',
         activePanels: [],
         loadFromSimData: false,  // if true, load from imported sim data, not from the server
         terminated: false,       // true if we stopped or retrieved all steps from the server
@@ -97,6 +99,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 steps: state.maxStepBuffer,
                 parameters: state.parameters,
                 data: state.data,
+            }
+        },
+        getLayoutName(state) {
+            // return the panel layout name, either `sim:mars`, `sim:b2`, or `live`
+            if (state.currentMode === 'sim') {
+                return `${state.currentMode}:${state.simLocation}`
+            } else {
+                return state.currentMode
             }
         },
     },
@@ -255,26 +265,22 @@ export const useDashboardStore = defineStore('DashboardStore', {
             const {step_num: step} = min
             this.parameters.min_step_num = Math.max(step+1, this.parameters.min_step_num)
         },
-        /**
-         * Sets the default panels.
-         *
-         * @param mode
-         */
-        setDefaultPanels(mode) {
+
+        setDefaultPanels(layout) {
             this.activePanels = {
-                sim: [
+                'sim:mars': [
                     'MissionInfo', 'ProductionConsumption:kwh', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
-                kiosk: [
-                    'MissionInfo', 'ThreeDPanel', 'InhabitantsStatus',
-                    'ProductionConsumption:kwh', 'AtmosphericMonitors', 'StorageLevels',
+                'sim:b2': [
+                    'MissionInfo', 'Concrete', 'StorageLevels',
+                    'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
-                live: [
+                'live': [
                     'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
                     'RelativeHumidity',
                 ],
-            }[mode]
+            }[layout]
         },
         /**
          * Initializes a new game. Constructs the parameters state variable and initializes

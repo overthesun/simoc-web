@@ -2,7 +2,7 @@
 *.diff
 node_modules
 /dist
-src/assets/simdata/
+public/simdata/
 src/assets/models/
 src/assets/skybox/
 

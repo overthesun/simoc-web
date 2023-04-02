@@ -7,7 +7,7 @@ use some of these features.
         <template #menu-title>
             Dashboard Menu
         </template>
-        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
+        <template v-if="!kioskMode" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button @click="downloadSimData">Download Simulation Data</button>
@@ -39,18 +39,19 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            isTimerRunning, activePanels, gameCurrencies, currentMode,
-            menuActive, leaveWithoutConfirmation,
+            isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
+            terminated, menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
-            setDefaultPanels,
+            getLayoutName, setDefaultPanels,
         } = dashboard
         const {configuration, activeConfigType} = storeToRefs(wizard)
         return {
-            isTimerRunning, activePanels, gameCurrencies, currentMode,
-            menuActive, leaveWithoutConfirmation, getSimulationData, setStopped,
-            startTimer, pauseTimer, setDefaultPanels, configuration, activeConfigType,
+            isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
+            terminated, menuActive, leaveWithoutConfirmation,
+            getSimulationData, setStopped, startTimer, pauseTimer,
+            getLayoutName, setDefaultPanels, configuration, activeConfigType,
         }
     },
     data() {
@@ -73,10 +74,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions('modal', ['confirm']),
+        ...mapActions('modal', ['confirm', 'alert']),
 
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
+            // currently disabled
             this.pauseTimer()  // pause the step timer
             this.timerWasRunning = false  // make sure the timer doesn't restart
             this.setStopped(true)  // this will call DashboardView.stopSimulation
@@ -85,6 +87,11 @@ export default {
         downloadSimData() {
             // create a json file with the sim data for the user to download
             // TODO: this is duplicated in the config menu
+            if (!this.terminated) {
+                this.alert('The simulation is still running,\n' +
+                           'please wait until all the data is received.')
+                return
+            }
             const simdata = this.getSimulationData
             simdata.configuration = this.configuration
             simdata.currency_desc = this.gameCurrencies
@@ -100,14 +107,14 @@ export default {
         // Save Panels Layout button
         savePanelsLayout() {
             const panelsLayout = JSON.stringify(this.activePanels)
-            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            const layout = this.getLayoutName
             localStorage.setItem(`panels-layout-${layout}`, panelsLayout)
         },
         // Reset Panels Layout button
         resetPanelsLayout() {
-            const layout = this.currentMode === 'live' ? 'live' : 'sim'
+            const layout = this.getLayoutName
             localStorage.removeItem(`panels-layout-${layout}`)
-            this.setDefaultPanels(this.currentMode)
+            this.setDefaultPanels(layout)
         },
         // Logout button route
         async logout() {
@@ -141,7 +148,7 @@ export default {
                     // the user already confirmed, don't ask twice
                     this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim
-                    if (this.currentMode !== 'kiosk') {
+                    if (!this.kioskMode) {
                         this.$router.push('menu')
                     } else {
                         this.$router.push('configuration')

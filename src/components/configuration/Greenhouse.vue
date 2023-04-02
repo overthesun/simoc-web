@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper">
+        <label v-if="simLocation === 'mars'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Greenhouse')">
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
@@ -19,7 +19,6 @@
             <div class="input-title" @click="setActiveRefEntry('PlantSpecies')">
                 Plant Species <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-
             <div class="input-description">Select plants to grow in your greenhouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <!-- This is the row object for each plant entry within the wizard.
                   v-for automatically rebuilds the fields if one is added or deleted.
@@ -44,25 +43,39 @@
                 </fa-layers>
             </div>
         </label>
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('ImprovedCropManagement')">
+                Improved Crop Management <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>
+            <label class="input-description crop-mgmt-description">
+                <input v-model="configuration.improvedCropManagement" type="checkbox"
+                       style="margin-right: 10px" @change="updateCropManagementHandler">
+                <span>Adjusts crop management to the benefit of your inhabitants. See <a class="reference-link" href="#" @click="setActiveRefEntry('ImprovedCropManagement')">reference</a> for more information.</span>
+            </label>
+        </label>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {configuration, validValues, activeReference} = storeToRefs(wizard)
         const {
             setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,
-            setActiveRefEntry,
+            setCropManagement, setActiveRefEntry,
         } = wizard
         return {
-            configuration, validValues, setGreenhouse, addPlantSpecies, updatePlantSpecies,
-            removePlantSpecies, setActiveRefEntry, activeReference,
+            simLocation, configuration, validValues, setGreenhouse, addPlantSpecies,
+            updatePlantSpecies, removePlantSpecies, setCropManagement,
+            setActiveRefEntry, activeReference,
         }
     },
     data() {
@@ -75,6 +88,7 @@ export default {
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
             plant_selects: {},  // map index -> <select> for the plant type dropdown
             plant_inputs: {},  // map index -> <input> for the plant amount
+            improvedCropManagement: false,
         }
     },
 
@@ -85,6 +99,12 @@ export default {
         'configuration.plantSpecies': {
             handler() {
                 this.updateAndValidate()
+            },
+            deep: true,
+        },
+        'configuration.improvedCropManagement': {
+            handler() {
+                this.improvedCropManagement = this.configuration.improvedCropManagement
             },
             deep: true,
         },
@@ -148,6 +168,10 @@ export default {
             this.greenhouse.amount = this.greenhouse.type === 'none' ? 0 : 1
             const value = {greenhouse: this.greenhouse}
             this.setGreenhouse(value)
+        },
+
+        updateCropManagementHandler(e) {
+            this.setCropManagement(e.target.checked)
         },
 
         /*
@@ -230,10 +254,12 @@ export default {
             // validate and update greenhouse type
             const {greenhouse} = this.configuration
             const gh_is_valid = this.validValues.greenhouse_types.includes(greenhouse.type)
-            this.$refs.greenhouse_type.setCustomValidity(
-                gh_is_valid ? '' : 'Please select a valid greenhouse type.'
-            )
-            this.$refs.greenhouse_type.reportValidity()
+            if (this.simLocation === 'mars') {
+                this.$refs.greenhouse_type.setCustomValidity(
+                    gh_is_valid ? '' : 'Please select a valid greenhouse type.'
+                )
+                this.$refs.greenhouse_type.reportValidity()
+            }
             this.greenhouse = greenhouse
 
             // validate and update plants
@@ -245,6 +271,7 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 494,
+                greenhouse_b2: 4000,
             }[this.greenhouse.type]
             // calculate the used and free space, then set the max space that can
             // be used by each plant in order not to overflow the greenhouse size
@@ -339,4 +366,11 @@ export default {
 
         margin-right:24px;
     }
+
+.crop-mgmt-description{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 2em;
+}
 </style>

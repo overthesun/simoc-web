@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="input-wrapper">
+        <label v-if="simLocation === 'mars'" class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('CrewQuarters')">
                 Crew Quarters <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
@@ -14,11 +14,27 @@
                 <option value="crew_habitat_sam">SAM (272 m³)</option>
             </select>
         </label>
+        <label v-else class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('Biomes')">
+                Biomes <fa-icon :icon="['fa-solid','circle-info']" />
+            </div>
+            <div class="input-description">Select the size of each Biosphere 2 biome.</div>
+            <template v-for="(val, key) in biomes" :key="key + '-input'">
+                <label class="list-input">
+                    <input :ref="key" v-model="biomes[key]" min="0" max="10000"
+                           class="input-field-number" type="number" step="1" pattern="^\d+$"
+                           placeholder="Square Meters" required @input="setInhabitantsHandler">
+                    m<sup>2</sup> {{stringFormatter(key)}}
+                </label>
+            </template>
+        </label>
         <label class="input-wrapper">
             <div class="input-title" @click="setActiveRefEntry('Inhabitants')">
                 Inhabitants <fa-icon :icon="['fa-solid','circle-info']" />
             </div>  <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
-            <div class="input-description">The number of astronaut explorers to live in your habitat.</div>
+            <div class="input-description">The number of
+                {{{'mars': 'astronaut explorers', 'b2': 'biospherians'}[simLocation]}}
+                to live in your habitat.</div>
             <input ref="humans" v-model="humans.amount" :min="ranges.humans.min" :max="ranges.humans.max"
                    class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                    required @input="setInhabitantsHandler">
@@ -32,41 +48,50 @@
                           class="input-field-number" type="number" pattern="^\d+$" placeholder="Quantity"
                           required @input="setInhabitantsHandler"> kg</label>
         </label>
-        <label class="input-wrapper">
-            <div class="input-title" @click="setActiveRefEntry('ECLSS')">
-                Life Support <fa-icon :icon="['fa-solid','circle-info']" />
+        <label v-if="simLocation === 'b2'" class="input-wrapper">
+            <div class="input-title" @click="setActiveRefEntry('Concrete')">
+                Concrete <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">As with the International Space Station, the Environmental Control &amp; Life Support System (ECLSS) cleans your air and water.</div>
-            <label><input ref="eclss" v-model="eclss.amount" :min="ranges.eclss.min"
-                          :max="ranges.eclss.max" class="input-field-number"
-                          type="number" pattern="^\d+$" placeholder="Quantity"
-                          required @input="setInhabitantsHandler"> ECLSS modules</label>
+            <div class="input-description">How much <a class="reference-link" href="#" @click="setActiveRefEntry('Concrete')">carbonation</a> has occured? Concrete in high-CO₂ environments can reach up to .1 moles over 20 years.</div>
+            <label><input ref="concrete" v-model="concrete.carbonation" :min="ranges.concrete.min"
+                          :max="ranges.concrete.max" class="input-field-number" type="number" pattern="^\d+$"
+                          placeholder="Quantity" step="0.001" required @input="setInhabitantsHandler">
+                moles per m²</label>
         </label>
     </div>
 </template>
 
 <script>
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {StringFormatter} from '../../javascript/utils'
 
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {configuration, validValues} = storeToRefs(wizard)
         const {setInhabitants, setActiveRefEntry} = wizard
-        return {configuration, validValues, setInhabitants, setActiveRefEntry}
+        return {simLocation, configuration, validValues, setInhabitants, setActiveRefEntry}
     },
     data() {
         return {
             humans: undefined,
             food: undefined,
             crewQuarters: undefined,
-            eclss: undefined,
+            biomes: undefined,
+            concrete: undefined,
         }
     },
     computed: {
         ranges() {
-            return this.validValues  // return the valid ranges for humans/food/eclss
+            return this.validValues  // return the valid ranges for humans/food
+        },
+        inhabitantActivities() {
+            const {weeding, pestPicking} = this.configuration.humans
+            return {weeding, pestPicking}
         },
     },
     watch: {
@@ -75,31 +100,44 @@ export default {
         // when a config file is uploaded
         'configuration.crewQuarters': {
             handler() {
-                const {crewQuarters} = this.configuration
-                // TODO: maybe the amount should be a hidden field
-                if (crewQuarters.type === 'none') {
-                    this.humans.amount = 0  // can't have humans without crew quarters
-                    crewQuarters.amount = 0
-                } else {
-                    crewQuarters.amount = 1
-                    this.$refs.humans.setCustomValidity('')  // remove custom error
-                }
-                this.validateRef('humans')  // wait until the min/max are updated to validate
+                if (this.simLocation === 'mars') {
+                    const {crewQuarters} = this.configuration
+                    // TODO: maybe the amount should be a hidden field
+                    if (crewQuarters.type === 'none') {
+                        this.humans.amount = 0  // can't have humans without crew quarters
+                        crewQuarters.amount = 0
+                    } else {
+                        crewQuarters.amount = 1
+                        this.$refs.humans.setCustomValidity('')  // remove custom error
+                    }
+                    this.validateRef('humans')  // wait until the min/max are updated to validate
 
-                this.crewQuarters = crewQuarters
-                this.$refs.crew_quarters_type.reportValidity()
+                    this.crewQuarters = crewQuarters
+                    this.$refs.crew_quarters_type.reportValidity()
+                }
             },
             deep: true, // Must be used if the watched value is an object.
         },
         'configuration.humans.amount': function() {
             const {humans} = this.configuration
             this.humans = humans
-            // if we have humans, check that the crew quarter is selected before checking the ranges
-            const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||
-                                               !this.$refs.crew_quarters_type.checkValidity())
-            const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
+            if (this.simLocation === 'mars') {
+                // if we have humans, check that the crew quarter is selected before checking the ranges
+                const crew_quarters_are_invalid = (this.crewQuarters.type === 'none' ||
+                                                   !this.$refs.crew_quarters_type.checkValidity())
+                const humans_are_invalid = (humans.amount > 0 && crew_quarters_are_invalid)
+                this.$refs.humans.setCustomValidity(
+                    humans_are_invalid ? 'Please select a crew quarters type.' : ''
+                )
+            }
+            this.validateRef('humans')
+        },
+        'inhabitantActivities': function() {
+            const {humans} = this.configuration
+            this.humans = humans
+            const working_hours_invalid = (humans.weeding + humans.pestPicking) > 16
             this.$refs.humans.setCustomValidity(
-                humans_are_invalid ? 'Please select a crew quarters type.' : ''
+                working_hours_invalid ? 'Hours spent working must total 16 hours/day or less.' : ''
             )
             this.validateRef('humans')
         },
@@ -107,29 +145,73 @@ export default {
             this.food = this.configuration.food
             this.validateRef('food')
         },
-        'configuration.eclss.amount': function() {
-            this.eclss = this.configuration.eclss
-            this.validateRef('eclss')
+        'configuration.biomes': {
+            handler() {
+                if (this.simLocation !== 'b2') {
+                    return  // only applies to b2 sims
+                }
+                this.biomes = this.configuration.biomes
+                const MAX_BIOMES = 12500
+                let totalBiomes = 0
+                let reportedMax = false
+                Object.entries(this.biomes).forEach(([biome, amount]) => {
+                    this.validateRef(biome)
+                    totalBiomes += amount
+                    if (totalBiomes > MAX_BIOMES && !reportedMax) {
+                        this.$refs[biome][0].setCustomValidity(
+                            `The total area of biomes must be ${MAX_BIOMES} m² or less.`
+                        )
+                        reportedMax = true
+                    } else {
+                        this.$refs[biome][0].setCustomValidity('')
+                    }
+                })
+            },
+            deep: true,
+        },
+        'configuration.concrete': {
+            handler() {
+                if (this.simLocation !== 'b2') {
+                    return  // only applies to b2 sims
+                }
+                this.concrete = this.configuration.concrete
+                this.validateRef('concrete')
+            },
+            deep: true,
         },
     },
     beforeMount() {
         // Get the values from the configuration that is initially set
-        const {humans, food, crewQuarters, eclss} = this.configuration
+        const {humans, food, crewQuarters} = this.configuration
         this.humans = humans
         this.food = food
         this.crewQuarters = crewQuarters
-        this.eclss = eclss
+        if (this.simLocation === 'b2') {
+            const {biomes, concrete} = this.configuration
+            this.biomes = biomes
+            this.concrete = concrete
+        }
     },
     methods: {
+        stringFormatter: StringFormatter,
         setInhabitantsHandler() {
             // Sets all related values for the inhabitants form into the wizard store.
-            const value = {humans: this.humans, food: this.food,
-                           crewQuarters: this.crewQuarters, eclss: this.eclss}
+            const value = {humans: this.humans, food: this.food, crewQuarters: this.crewQuarters}
+            if (this.simLocation === 'b2') {
+                value.biomes = this.biomes
+                value.concrete = this.concrete
+            }
             this.setInhabitants(value)
         },
         validateRef(ref) {
             // wait for the fields to be updated before attempting validation
-            this.$nextTick(() => this.$refs[ref].reportValidity())
+            this.$nextTick(() => {
+                let r = this.$refs[ref]
+                if (Array.isArray(r)) {
+                    r = r[0]
+                }
+                r.reportValidity()
+            })
         },
     },
 }
@@ -137,4 +219,8 @@ export default {
 
 <style lang="scss" scoped>
     @import '../../sass/components/configuration-input';
+
+    .list-input {
+        margin-top: 0.5em;
+    }
 </style>

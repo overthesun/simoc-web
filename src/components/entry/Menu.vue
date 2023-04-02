@@ -8,7 +8,8 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template #entry-main>
-                <button form="login-form" class="btn-normal" @click="toConfiguration">NEW CONFIGURATION</button>
+                <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
+                <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
@@ -44,13 +45,13 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
+            maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
         const {setSimulationData} = dashboard
         const {activeConfigType} = storeToRefs(wizard)
         const {setConfiguration, setLiveConfig} = wizard
         return {
-            maxStepBuffer, loadFromSimData, currentMode, parameters, isLive,
+            maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
             setSimulationData, activeConfigType, setConfiguration,
             setLiveConfig,
         }
@@ -71,9 +72,10 @@ export default {
         ...mapMutations('modal', ['SETSURVEYWASPROMPTED']),
         ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
-        toConfiguration() {
+        toConfiguration(location) {
             // menuconfig is currently skipped, we default on Custom config
             // this.$router.push('menuconfig')
+            this.simLocation = location
             this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
@@ -94,7 +96,7 @@ export default {
             // duplicated in Login.vue
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
-            this.setLiveConfig({duration: {amount: 0}})  // set duration in wizard store
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
             this.$router.push('dashboard')
         },
         // TODO: Duplicated code; replace with /menu/Upload.vue
@@ -113,7 +115,9 @@ export default {
             try {
                 const json_data = JSON.parse(e.target.result)
                 const {configuration, currency_desc, ...simdata} = json_data
-                this.setConfiguration(configuration)
+                const {location} = configuration
+                this.simLocation = location
+                this.setConfiguration(configuration, location)
                 this.setSimulationData({simdata, currency_desc})
             } catch (error) {
                 console.error(error)  // report full error in the console
@@ -145,7 +149,7 @@ export default {
             if (e.ctrlKey && e.key === 'k') {
                 e.preventDefault()  // prevent event from propagating to browser
                 this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
-                this.currentMode = 'kiosk'
+                this.kioskMode = true
                 this.$router.push('/')
             }
 

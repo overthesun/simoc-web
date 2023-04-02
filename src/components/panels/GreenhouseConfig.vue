@@ -10,7 +10,7 @@ import {GreenhouseDoughnut} from '../graphs'
 
 export default {
     panelTitle: 'Greenhouse Configuration',
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     components: {
         GreenhouseDoughnut,
     },

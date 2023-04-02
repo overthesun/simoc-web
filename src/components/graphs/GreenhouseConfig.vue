@@ -30,6 +30,7 @@ export default {
                 greenhouse_medium: 2454,
                 greenhouse_large: 5610,
                 greenhouse_sam: 272,
+                greenhouse_b2: 4000,
             },
             // colors used for the plants in the graphs
             colors: ['#ff0000', '#ee0000', '#dd0000', '#cc0000', '#bb0000', '#aa0000',

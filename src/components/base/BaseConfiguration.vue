@@ -36,7 +36,8 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div :class="{'option-item-active' : activeReference === 'Layout'}"
+                <div v-if="simLocation === 'mars'"
+                     :class="{'option-item-active' : activeReference === 'Layout'}"
                      class="option-item" @click="activeReference = 'Layout'">LAYOUT</div>
                 <div :class="{'option-item-active' : activeReference === 'Graphs'}"
                      class="option-item" @click="activeReference = 'Graphs'">GRAPHS</div>
@@ -61,12 +62,15 @@ menu button being present on other unrelated configurations.
 import {mapState, mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     setup() {
         const wizard = useWizardStore()
+        const dashboard = useDashboardStore()
+        const {simLocation} = storeToRefs(dashboard)
         const {activeConfigType, activeReference} = storeToRefs(wizard)
-        return {activeConfigType, activeReference}
+        return {activeConfigType, activeReference, simLocation}
     },
 }
 </script>

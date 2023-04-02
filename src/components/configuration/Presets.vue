@@ -14,13 +14,18 @@ Future version should also automatically switch the selected preset to 'custom' 
             <div class="input-title" @click="setActiveRefEntry('Presets')">
                 Presets <fa-icon :icon="['fa-solid','circle-info']" />
             </div>
-            <div class="input-description">Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.</div>
+            <div v-if="simLocation === 'mars'" class="input-description">
+                Employ preset configurations to learn from basic agent interactions. Some succeed. Some fail.
+            </div>
+            <div v-else-if="simLocation === 'b2'" class="input-description">
+                Employ preset configurations to explore and build on the <a class="reference-link" href="#" @click="setActiveRefEntry('Presets')">historical Biosphere 2 missions</a>.
+            </div>
             <div>
                 <div class="presets-dropdown">
                     <select ref="preset_dropdown" v-model="selected"
                             class="input-field-select" @change="updateConfig(selected)">
-                        <option :value="EMPTY" hidden disabled selected>Preset</option>
-                        <option v-for="(preset, name) in getPresets" :key="name" :value="name">{{preset.name}}</option>
+                        <option v-for="(preset, name) in getPresets(simLocation)" :key="name"
+                                :value="name">{{preset.name}}</option>
                         <option :value="CUSTOM">[Custom]</option>
                     </select>
                 </div>
@@ -36,31 +41,28 @@ Future version should also automatically switch the selected preset to 'custom' 
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
-// global constants used to mark the empty and custom presets
-const EMPTY = 'empty'
+// global constant used to mark the custom preset
 const CUSTOM = 'custom'
 export default {
     setup() {
+        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {configuration, resetConfig, getPresets} = storeToRefs(wizard)
-        const {
-            setActiveRefEntry, resetConfigDefault,
-            setConfiguration, setPreset,
-        } = wizard
+        const {simLocation} = storeToRefs(dashboard)
+        const {configuration, resetConfig, getDefaultPresetName, getPresets} = storeToRefs(wizard)
+        const {setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset} = wizard
         return {
-            configuration, resetConfig, getPresets, setActiveRefEntry,
-            resetConfigDefault, setConfiguration, setPreset,
+            simLocation, configuration, resetConfig, getDefaultPresetName, getPresets,
+            setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset,
         }
     },
     data() {
         return {
-            // copied constants to access them in html template
-            EMPTY: EMPTY,
+            // copied constants to access them in html template\
             CUSTOM: CUSTOM,
-            selected: EMPTY,   // the selected preset name is saved here
-            none: EMPTY,  // initial empty preset
+            selected: null,   // set to the default by ConfigurationView
             custom: CUSTOM,  // custom preset, loaded from localstorage
             dont_set_custom: false,  // when true, avoids setting the custom preset
         }
@@ -73,9 +75,9 @@ export default {
             }
             // avoid changing the selected preset to custom
             this.dont_set_custom = true
-            // reset the config to the empty preset
-            this.selected = EMPTY
-            this.resetConfigDefault()
+            // reset the config to the default preset for the location
+            this.selected = this.getDefaultPresetName(this.simLocation)
+            this.resetConfigDefault(this.simLocation)
             // restore the var to false
             this.resetConfig = false
         },
@@ -95,6 +97,11 @@ export default {
             deep: true,
         },
     },
+    mounted() {
+        // the actual default preset is loaded in ConfigurationView,
+        // here we just update the name in the presets dropdown to match it
+        this.selected = this.getDefaultPresetName(this.simLocation)
+    },
     methods: {
         ...mapActions('modal', ['alert', 'confirm']),
 
@@ -104,7 +111,7 @@ export default {
             if (name === CUSTOM) {
                 this.loadFromLocalStorage()
             } else {
-                this.setPreset(name)
+                this.setPreset(name, this.simLocation)
             }
         },
         saveToLocalStorage() {
@@ -114,7 +121,7 @@ export default {
                 confirmCallback: () => {
                     try {
                         const config = JSON.stringify(this.configuration)
-                        localStorage.setItem('custom-config', config)
+                        localStorage.setItem(`custom-config-${this.simLocation}`, config)
                         this.alert('Custom preset saved.')
                     } catch (e) {
                         this.alert(`An error occurred while saving the configuration: ${e}`)
@@ -127,9 +134,9 @@ export default {
             // when the user presses reset and it will load the custom
             // preset from the local storage if available
             const loadPreset = () => {
-                const config = localStorage.getItem('custom-config')
+                const config = localStorage.getItem(`custom-config-${this.simLocation}`)
                 if (config) {
-                    this.setConfiguration(JSON.parse(config))
+                    this.setConfiguration(JSON.parse(config), this.simLocation)
                 } else {
                     this.alert('No Custom preset found. Use the Save button to save one.')
                 }

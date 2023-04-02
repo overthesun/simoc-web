@@ -68,10 +68,11 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, activePanels} = storeToRefs(dashboard)
-        const {setDefaultPanels} = dashboard
+        const {currentMode, simLocation, activePanels} = storeToRefs(dashboard)
+        const {setDefaultPanels, getLayoutName} = dashboard
         const {configuration} = storeToRefs(wizard)
-        return {currentMode, setDefaultPanels, getActivePanels: activePanels, configuration}
+        return {currentMode, simLocation, setDefaultPanels, getLayoutName,
+                getActivePanels: activePanels, configuration}
     },
     data() {
         return {
@@ -90,7 +91,8 @@ export default {
             // return a sorted array of [[title, name], [..., ...], ...]
             const sorted = []
             Object.entries(this.panels).forEach(([panelName, panel]) => {
-                if (panel.modes.includes(this.currentMode)) {
+                if (panel.modes.includes(this.currentMode) ||
+                    panel.modes.includes(`${this.currentMode}:${this.simLocation}`)) {
                     sorted.push([panel.panelTitle, panelName])
                 }
             })
@@ -109,12 +111,12 @@ export default {
     },
     beforeMount() {
         // load saved panels from local storage or use default layout
-        const layout = this.currentMode === 'live' ? 'live' : 'sim'
+        const layout = this.getLayoutName
         const savedPanels = localStorage.getItem(`panels-layout-${layout}`)
         if (savedPanels) {
             this.activePanels = JSON.parse(savedPanels)
         } else {
-            this.setDefaultPanels(this.currentMode)
+            this.setDefaultPanels(layout)
         }
     },
     methods: {

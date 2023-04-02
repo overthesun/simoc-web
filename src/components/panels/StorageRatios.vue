@@ -23,7 +23,7 @@ import {LevelsGraph} from '../graphs'
 
 export default {
     panelTitle: 'Storage Ratios',
-    modes: ['sim', 'kiosk'],
+    modes: ['sim'],
     components: {
         LevelsGraph,
     },

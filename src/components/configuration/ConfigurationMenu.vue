@@ -3,7 +3,7 @@
         <template #menu-title>
             Configuration Menu
         </template>
-        <template v-if="currentMode !== 'kiosk'" #menu-buttons>
+        <template v-if="!kioskMode" #menu-buttons>
             <DownloadConfig
                 :is-valid="isValid"
                 :config="configuration"
@@ -38,10 +38,10 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode} = storeToRefs(dashboard)
+        const {kioskMode, simLocation} = storeToRefs(dashboard)
         const {configuration, resetConfig} = storeToRefs(wizard)
         const {setConfiguration} = wizard
-        return {currentMode, configuration, resetConfig, setConfiguration}
+        return {kioskMode, simLocation, configuration, resetConfig, setConfiguration}
     },
     computed: {
         isValid() {
@@ -57,7 +57,7 @@ export default {
     methods: {
         ...mapActions('modal', ['confirm']),
         handleUpload(json_config) {
-            this.setConfiguration(json_config)
+            this.setConfiguration(json_config, this.simLocation)
         },
         resetConfigHandler() {
             this.confirm({
