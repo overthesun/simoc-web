@@ -8,8 +8,9 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
         faCircleDot, faCirclePlus, faPerson, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import store from './store/index'
-import router from './router'
 import App from './App.vue'
+
+import {registerPlugins} from './plugins'
 
 library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
             faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
@@ -25,8 +26,11 @@ if (window.location.hostname.startsWith('beta')) {
     tracking_id = 'UA-29092818-6'  // NGS id
 }
 
-createApp(App)
-        .use(router)
+const app = createApp(App)
+
+registerPlugins(app)
+
+app
         .use(store)
         .use(VueGtag, {
             isEnabled: import.meta.env.MODE === 'production',
@@ -38,4 +42,4 @@ createApp(App)
         .mount('#app')
 
 // Enable Analytics tracking for SPAs
-trackRouter(router)
+// trackRouter(router)

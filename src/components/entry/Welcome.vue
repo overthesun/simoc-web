@@ -48,7 +48,9 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <button class="btn-normal" @click="toLogin">PROCEED</button>
+                <v-btn class="btn-normal" @click="toLogin">
+                    PROCEED
+                </v-btn>
             </template>
         </BaseEntry>
         <!-- Kiosk Mode -->
@@ -122,6 +124,30 @@ export default {
 .welcome-title {
     margin-top: 0;
     font-weight: bold;
+}
+
+// need to remove once we figure out vue component styling scope in vuetify
+.btn-normal {
+    width: 256px;
+    height: 48px;
+    vertical-align: top;
+    min-height: 48px;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #0099ee;
+    border: none;
+    color: #eee;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:focus {
+        outline: none;
+    }
 }
 
 p {
