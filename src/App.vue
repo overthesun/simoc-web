@@ -41,6 +41,8 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     font-family: "Open Sans", sans-serif;
     background: url('./assets/mars-bg.jpg');
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     background-position: 50% 10%;
     background-color: #1e1e1e;
     color: #eee;

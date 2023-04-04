@@ -1,4 +1,4 @@
-import '../sass/main.scss'
+import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 
 export default createVuetify({
@@ -6,4 +6,12 @@ export default createVuetify({
     theme: {
         defaultTheme: 'dark',
     },
+    defaults:{
+        VBtn: {
+            class: 'text-none',
+            color: '#0099ee',
+            width: '256px',
+            height: '48px',
+        }
+    }
 })

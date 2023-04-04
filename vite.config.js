@@ -48,7 +48,7 @@ export default defineConfig({
         vuetify({
             autoImport: true,
             styles: {
-                configFile: 'src/sass/main.scss',
+                configFile: 'src/sass/vuetify.scss',
             },
         }),
     ],
