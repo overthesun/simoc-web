@@ -161,6 +161,8 @@ export default {
 </style>
 
 <style lang="scss">
+@use '../../sass/components/settings';
+
 .option-item {
     box-sizing: border-box;
     margin: 0px 16px;
@@ -204,18 +206,14 @@ export default {
 }
 
 .btn-normal {
-    width: 256px;
-    height: 48px;
     vertical-align: top;
     min-height: 48px;
     margin-bottom: 12px;
     border-radius: 5px;
     padding: 12px 16px;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: #0099ee;
+    font-size: settings.$button-font-size;
+    font-weight: settings.$button-font-weight;
     border: none;
-    color: #eee;
 
     &:hover {
         cursor: pointer;

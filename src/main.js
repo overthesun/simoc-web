@@ -7,6 +7,7 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
         faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
         faCircleDot, faCirclePlus, faPerson, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
+import router from './router'
 import store from './store/index'
 import App from './App.vue'
 
@@ -31,6 +32,7 @@ const app = createApp(App)
 registerPlugins(app)
 
 app
+        .use(router)
         .use(store)
         .use(VueGtag, {
             isEnabled: import.meta.env.MODE === 'production',
@@ -42,4 +44,4 @@ app
         .mount('#app')
 
 // Enable Analytics tracking for SPAs
-// trackRouter(router)
+trackRouter(router)

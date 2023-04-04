@@ -1,13 +1,19 @@
 <template>
-    <div class="app">
-        <div class="orientation-portrait">
+  <v-app>
+    <v-main>
+      <v-container class="bg" fluid>
+        <div class="app">
+          <div class="orientation-portrait">
             <img src="./assets/orientation.svg" class="orientation-logo">
-        </div>
-        <div class="normal orientation-landscape">
+          </div>
+          <div class="normal orientation-landscape">
             <ModalWindow />
             <router-view />
+          </div>
         </div>
-    </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 
@@ -17,63 +23,65 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
 
 
 <style lang="scss">
-  /* Use Roboto for the dashboard, Open Sans for everything else */
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Roboto:100,300,400,500,700,900&display=swap');
-  /* Use Nasalization for the logo */
-  @font-face{
-      font-family:'Nasalization';
-      src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
-  }
-  body{
-    font-family: "Open Sans", sans-serif;
-    padding: 0px;
-    margin: 0px;
-    background-image:url('./assets/mars-bg.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: 50% 10%;
-    background-color: #1e1e1e;
-    color: #eee;
-  }
+/* Use Roboto for the dashboard, Open Sans for everything else */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Roboto:100,300,400,500,700,900&display=swap');
 
-  .orientation-portrait{
-    display:none;
-  }
+/* Use Nasalization for the logo */
+@font-face {
+  font-family: 'Nasalization';
+  src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
+}
 
-  .orientation-landscape{
-    display:block;
-  }
+body {
+  font-family: "Open Sans", sans-serif;
+  padding: 0;
+  margin: 0;
+}
 
-  .orientation-logo{
-    width: 256px;
-    height: auto;
-  }
+.bg {
+  background: url('./assets/mars-bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 50% 10%;
+}
 
-   .app{
-    width: 100vw;
-    height: 100vh;
-    min-width: 600px;
-    //position: relative;
+.orientation-portrait {
+  display: none;
+}
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  }
+.orientation-landscape {
+  display: block;
+}
 
-   @media all and (orientation: portrait){
-    .orientation-portrait{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(#1e1e1e,.75);
-    }
+.orientation-logo {
+  width: 256px;
+  height: auto;
+}
 
-    .orientation-landscape{
-      display:none;
-    }
+.app {
+  width: 100vw;
+  height: 100vh;
+  min-width: 600px;
+  //position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media all and (orientation: portrait) {
+  .orientation-portrait {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(#1e1e1e, .75);
   }
 
+  .orientation-landscape {
+    display: none;
+  }
+}
 </style>
