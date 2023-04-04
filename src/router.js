@@ -2,6 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import EntryView from '@/views/EntryView.vue'
 
+// https://github.com/vitejs/vite/issues/11804
+// Potential issue with dynamic imports in vite
 export default createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [

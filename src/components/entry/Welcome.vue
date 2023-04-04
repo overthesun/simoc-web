@@ -84,6 +84,11 @@ import { useDashboardStore } from '../../store/modules/DashboardStore'
 import { useWizardStore } from '../../store/modules/WizardStore'
 import { BaseEntry } from '../base'
 
+// https://vuetifyjs.com/en/features/treeshaking/
+// see section about limitations when using dynamic imports
+import { VBtn } from 'vuetify/components/VBtn'
+import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard'
+
 export default {
     components: {
         BaseEntry,

@@ -36,6 +36,8 @@ body {
   font-family: "Open Sans", sans-serif;
   padding: 0;
   margin: 0;
+  // not working correctly possibly due to vuetify component
+  overflow: hidden;
 }
 
 .bg {
@@ -44,6 +46,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 50% 10%;
+  height: auto;
 }
 
 .orientation-portrait {
