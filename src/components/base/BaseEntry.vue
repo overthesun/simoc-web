@@ -1,7 +1,7 @@
 <!-- component used for the holding the login / registration components. See EntryView for further details-->
 
 <template>
-    <div class="entry-wrapper">
+    <v-card class="entry-wrapper">
         <header class="header">
             <img src="../../assets/simoc-logo.svg" class="simoc-logo">
             <span class="simoc-logo-title">SIMOC</span>
@@ -28,7 +28,7 @@
                 EULA
             </a>
         </footer>
-    </div>
+    </v-card>
 </template>
 
 <script>

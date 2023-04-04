@@ -1,4 +1,4 @@
-@forward 'vuetify/lib/styles/settings';
+@use 'vuetify/lib/styles/settings';
 
 @import 'components/configuration-input';
 @import 'components/menu';

@@ -2,15 +2,17 @@
   <v-app>
     <v-main>
       <v-container class="bg" fluid>
-        <div class="app">
-          <div class="orientation-portrait">
-            <img src="./assets/orientation.svg" class="orientation-logo">
+        <v-responsive class="d-flex align-center text-center fill-height">
+          <div class="app">
+            <div class="orientation-portrait">
+              <img src="./assets/orientation.svg" class="orientation-logo">
+            </div>
+            <div class="normal orientation-landscape">
+              <ModalWindow />
+              <router-view />
+            </div>
           </div>
-          <div class="normal orientation-landscape">
-            <ModalWindow />
-            <router-view />
-          </div>
-        </div>
+        </v-responsive>
       </v-container>
     </v-main>
   </v-app>

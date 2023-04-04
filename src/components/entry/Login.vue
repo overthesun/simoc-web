@@ -61,7 +61,6 @@
                 <a class='link link-disabled'>Forgot Password?</a>
             </template>-->
         </BaseEntry>
-
     </div>
 </template>
 
