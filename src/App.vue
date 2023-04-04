@@ -1,19 +1,13 @@
 <template>
-    <v-app>
-        <v-main>
-            <v-container class="bg" fluid>
-                <div class="app">
-                    <div class="orientation-portrait">
-                        <img src="./assets/orientation.svg" class="orientation-logo">
-                    </div>
-                    <div class="normal orientation-landscape">
-                        <ModalWindow />
-                        <router-view />
-                    </div>
-                </div>
-            </v-container>
-        </v-main>
-    </v-app>
+    <div class="app">
+        <div class="orientation-portrait">
+            <img src="./assets/orientation.svg" class="orientation-logo">
+        </div>
+        <div class="normal orientation-landscape">
+            <ModalWindow />
+            <router-view />
+        </div>
+    </div>
 </template>
 
 
@@ -30,16 +24,11 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
       font-family:'Nasalization';
       src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
   }
-
-  body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .bg{
+  body{
     font-family: "Open Sans", sans-serif;
-    background: url('./assets/mars-bg.jpg');
+    padding: 0px;
+    margin: 0px;
+    background-image:url('./assets/mars-bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -61,11 +50,11 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     height: auto;
   }
 
-  .app{
+   .app{
     width: 100vw;
     height: 100vh;
     min-width: 600px;
-    //position: absolute;
+    //position: relative;
 
     display:flex;
     justify-content:center;

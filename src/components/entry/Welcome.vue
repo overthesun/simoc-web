@@ -107,6 +107,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../../sass/components/settings';
+
 .entry-wrapper {
     height: 100%;
     width: 100%;
@@ -130,6 +131,11 @@ export default {
 // need to remove once we figure out vue component styling scope in vuetify
 
 .btn-normal {
+    
+    vertical-align: top;
+    min-height: 48px;
+    margin-bottom: 12px;
+    border-radius: 5px;
     padding: 12px 16px;
     font-size: settings.$button-font-size;
     font-weight: settings.$button-font-weight;
