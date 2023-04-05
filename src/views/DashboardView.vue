@@ -166,7 +166,7 @@ export default {
             // init a new game, set game id, reset all data buffers
             this.initGame(this.parameters.game_id)
 
-            console.log('Starting simulation', this.this.parameters.game_id)
+            console.log('Starting simulation', this.parameters.game_id)
 
             // Ask the user confirmation if they try to leave (by closing
             // the tab/window, by refreshing, or by navigating elsewhere)

@@ -171,7 +171,6 @@ export const useDashboardStore = defineStore('DashboardStore', {
         },
         parseStep(value) {
             const {
-                game_id,       // Same for each batch
                 n_steps,       // N steps contained in this batch
                 step_num,      // Latest step sent
                 ...agent_data  // Agent-specific data
