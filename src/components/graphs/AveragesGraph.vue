@@ -48,6 +48,8 @@ export default {
         color: {type: String, required: true},
         unit: {type: String, required: true},
         currencySensorInfo: {type: Object, required: true},
+        fullscreen: {type: Boolean, default: false},
+        nsteps: {type: Number, required: true},
     },
     setup() {
         const dashboard = useDashboardStore()
@@ -76,6 +78,10 @@ export default {
         },
         currencySensorInfo() {
             this.updateActiveSensors()
+            this.initChart()
+        },
+        // re-init the chart when we change the number of steps displayed
+        nsteps() {
             this.initChart()
         },
     },
@@ -107,7 +113,7 @@ export default {
                     : sensor_id
                 return {
                     lineTension: 0,
-                    data: Array(10),
+                    data: Array(this.nsteps),
                     label: name,
                     borderColor: colors[i],
                     fill: false,
@@ -118,7 +124,7 @@ export default {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
-                    labels: Array(10).fill(''),
+                    labels: Array(this.nsteps).fill(''),
                     // TODO: Create total number of datasets equal to total number of CO2 sensors
                     datasets: datasets,
                 },
@@ -166,14 +172,14 @@ export default {
             const currentStep = this.currentStepBuffer
             const {data} = this.chart
             // if the currentStep is not prevStep + 1 (e.g. when the user moved the scrubber)
-            // we need to redraw the previous 10 steps, otherwise we just add one step
+            // we need to redraw the previous nsteps steps, otherwise we just add one step
             let startingStep
             if (currentStep !== this.prevStep + 1) {
-                startingStep = currentStep - 10  // replace all 10 values
+                startingStep = currentStep - this.nsteps  // replace all nsteps values
             } else {
                 startingStep = currentStep  // add the latest value
             }
-            // this will do 1 or 10 iterations (maybe refactor it to something better)
+            // this will do 1 or nsteps iterations (maybe refactor it to something better)
             for (let step = startingStep; step <= currentStep; step++) {
                 // remove the oldest values
                 data.datasets.forEach(set => set.data.shift())
@@ -194,7 +200,7 @@ export default {
                     data.labels.push(step)
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
-                    // so that the plot still has 10 total items and is not stretched
+                    // so that the plot still has nsteps total items and is not stretched
                     data.datasets.forEach(set => set.data.push(undefined))
                     data.labels.push('')
                 }
