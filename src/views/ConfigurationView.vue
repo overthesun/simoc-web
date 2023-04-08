@@ -114,10 +114,10 @@ export default {
         const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            simLocation, setGameParams, setSimulationData, setGameId, configuration, getFormattedConfiguration,
-            activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
-            activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
-            setConfiguration,
+            simLocation, setGameParams, setSimulationData, setGameId, configuration,
+            getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
+            getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
+            resetConfigDefault, activeFormIndex, setConfiguration,
         }
     },
     data() {
