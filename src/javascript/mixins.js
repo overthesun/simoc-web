@@ -1,15 +1,21 @@
 import IdleJs from 'idle-js'
 
 import {storeToRefs} from 'pinia'
-import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
+import {useModalStore} from '../store/modules/ModalStore'
 
 // mixin used to handle idle timeouts in kiosk mode
 export const idleMixin = {
     setup() {
         const dashboard = useDashboardStore()
+        const modal = useModalStore()
         const {kioskMode} = storeToRefs(dashboard)
-        return {kioskMode}
+
+        const {getCountdownIsRunning, countdownEnded} = storeToRefs(modal)
+
+        const {timeout, stopCountdownTimer} = modal
+
+        return {kioskMode, getCountdownIsRunning, countdownEnded, timeout, stopCountdownTimer}
     },
     data() {
         return {
@@ -19,24 +25,20 @@ export const idleMixin = {
                 onIdle: () => {
                     // start the countdown modal on idle
                     this.showIdleCountdown(() => {
-                        this.SETCOUNTDOWNENDED(true)
+                        this.countdownEnded = true
                         this.$router.push('/')
                     })
                 },
                 onActive: () => {
                     // abort the countdown on activity
                     if (this.getCountdownIsRunning) {
-                        this.STOPCOUNTDOWNTIMER()
+                        this.stopCountdownTimer()
                     }
                 },
                 keepTracking: true,  // false tracks for idleness only once
                 startAtIdle: false,  // true starts in the idle state
             }),
         }
-    },
-
-    computed: {
-        ...mapGetters('modal', ['getCountdownIsRunning']),
     },
     beforeMount() {
         if (this.kioskMode) {
@@ -45,13 +47,11 @@ export const idleMixin = {
     },
     beforeUnmount() {
         if (this.kioskMode) {
-            this.STOPCOUNTDOWNTIMER()
+            this.stopCountdownTimer()
             this.idle.stop()
         }
     },
     methods: {
-        ...mapActions('modal', ['timeout']),
-        ...mapMutations('modal', ['SETCOUNTDOWNENDED', 'STOPCOUNTDOWNTIMER']),
         showIdleCountdown(next) {
             this.timeout({
                 message: ('Terminating mission due to inactivity.\n' +

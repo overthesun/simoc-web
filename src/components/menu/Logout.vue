@@ -4,12 +4,15 @@
 
 <script>
 import axios from 'axios'
-import {mapActions} from 'vuex'
+import {useModalStore} from '../../store/modules/ModalStore'
 
 export default {
+    setup() {
+        const modal = useModalStore()
+        const {confirm} = modal
+        return {confirm}
+    },
     methods: {
-        ...mapActions('modal', ['confirm']),
-
         async logout() {
             this.confirm({
                 message: 'Do you want to log out?',

@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -38,10 +38,15 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const modal = useModalStore()
+
         const {kioskMode, simLocation} = storeToRefs(dashboard)
         const {configuration, resetConfig} = storeToRefs(wizard)
+
         const {setConfiguration} = wizard
-        return {kioskMode, simLocation, configuration, resetConfig, setConfiguration}
+        const {confirm} = modal
+
+        return {kioskMode, simLocation, configuration, resetConfig, setConfiguration, confirm}
     },
     computed: {
         isValid() {
@@ -55,7 +60,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions('modal', ['confirm']),
         handleUpload(json_config) {
             this.setConfiguration(json_config, this.simLocation)
         },

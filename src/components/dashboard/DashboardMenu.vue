@@ -25,10 +25,11 @@ use some of these features.
 
 <script>
 import axios from 'axios'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {BaseMenu} from '../base'
 
 export default {
@@ -38,20 +39,25 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const modal = useModalStore()
+
         const {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
             terminated, menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
+        const {configuration, activeConfigType} = storeToRefs(wizard)
+
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
             getLayoutName, setDefaultPanels,
         } = dashboard
-        const {configuration, activeConfigType} = storeToRefs(wizard)
+        const {confirm, alert} = modal
+
         return {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
             terminated, menuActive, leaveWithoutConfirmation,
             getSimulationData, setStopped, startTimer, pauseTimer,
-            getLayoutName, setDefaultPanels, configuration, activeConfigType,
+            getLayoutName, setDefaultPanels, configuration, activeConfigType, confirm, alert,
         }
     },
     data() {
@@ -74,8 +80,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions('modal', ['confirm', 'alert']),
-
         // Stop Simulation button, this stops the timers and the simulation
         async stopSimulation() {
             // currently disabled

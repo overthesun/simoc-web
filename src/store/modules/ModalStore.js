@@ -17,27 +17,10 @@ The main tasks of the store are:
 4. Store the modalActive variable. This is set by ModalWindow but used by other
    components, e.g. by BaseDashboard to pause the timer when modal is open.
 */
+import {defineStore} from 'pinia'
 
-const getParams = () => ({
-    type: null,
-    logo: false,
-    title: null,
-    message: null,
-    survey: false,
-    join: false,
-    buttons: [],
-    onLoad: null,
-    onUnload: null,
-})
-
-const getButton = () => ({
-    type: null,
-    text: '',
-    callback: () => {},
-})
-
-export default {
-    state: {
+export const useModalStore = defineStore('ModalStore', {
+    state: () => ({
         modalActive: false,
         modalParams: {},
 
@@ -49,23 +32,33 @@ export default {
         timeoutCallback: null,  //  Timeout callback next() set in BaseDashboard.
         timer: null,  //  Built-in JavaScript function setInterval shared between components.
         secondsLeft: 0,  // The total time to react if the Dashboard detects an idle state.
-    },
-    getters: {
-        getModalActive: state => state.modalActive,
-        getModalParams: state => state.modalParams,
-        getSurveyWasPrompted: state => state.surveyWasPrompted,
-        getCountdownIsRunning: state => state.secondsLeft !== null,
-        getCountdownEnded: state => state.countdownEnded,
-        getSecondsLeft: state => state.secondsLeft,
-    },
-    mutations: {
-        SETMODALACTIVE(state, value) {
-            state.modalActive = value
+
+        defaultParams: {
+            type: null,
+            logo: false,
+            title: null,
+            message: null,
+            survey: false,
+            join: false,
+            buttons: [],
+            onLoad: null,
+            onUnload: null,
         },
-        SETMODALPARAMS(state, payload) {
+
+        defaultButton: {
+            type: null,
+            text: '',
+            callback: () => {},
+        },
+    }),
+    getters: {
+        getCountdownIsRunning: state => state.secondsLeft !== null,
+    },
+    actions: {
+        setModalParams(payload) {
             // Start with a blank list of params that the ModalWindow component can take.
             // Go through each argument in payload. If it's on the list, use its value.
-            const params = getParams()
+            const params = {...this.defaultParams}
             Object.keys(payload).forEach(arg => {
                 if (!(arg in params)) {
                     throw new Error(`invalid parameter passed to modal: ${arg}`)
@@ -75,7 +68,7 @@ export default {
                 if (arg === 'buttons') {
                     const buttons = []
                     payload.buttons.forEach(button => {
-                        const newButton = getButton()
+                        const newButton = {...this.defaultButton}
                         Object.entries(button).forEach(([key, value]) => {
                             if (key in newButton) {
                                 newButton[key] = value
@@ -88,64 +81,50 @@ export default {
                     params[arg] = payload[arg]
                 }
             })
-            state.modalParams = params
+            this.modalParams = params
         },
-        RESETMODALPARAMS(state) {
-            state.params = getParams()
-        },
-        SETSURVEYWASPROMPTED(state, value) {
-            state.surveyWasPrompted = value
-        },
-        SETCOUNTDOWNENDED(state, value) {
-            state.countdownEnded = value
+        resetModalParams() {
+            this.modalParams = this.defaultParams
         },
         // This mutator is called in the ModalWindow for modals of type timeout.
-        STARTCOUNTDOWNTIMER(state) {
+        startCountdownTimer() {
             // Updates secondsLeft displayed in the ModalWindow decremented every 1 second.
-            state.timer = setInterval(() => {
-                if (state.secondsLeft <= 0) {
-                    clearInterval(state.timer)
-                    state.modalActive = false
-                    state.params = getParams()
-                    state.timeoutCallback()
+            this.timer = setInterval(() => {
+                if (this.secondsLeft <= 0) {
+                    clearInterval(this.timer)
+                    this.modalActive = false
+                    this.modalParams = this.defaultParams
+                    this.timeoutCallback()
                 } else {
-                    state.secondsLeft -= 1
+                    this.secondsLeft -= 1
                 }
             }, 1000)
         },
         // This mutator is called in DashboardView when a user reacts to the idle state.
-        STOPCOUNTDOWNTIMER(state) {
+        stopCountdownTimer() {
             // Clear the current timer and hide the modal window.
-            clearInterval(state.timer)
-            state.countdownEnded = false
-            state.secondsLeft = null
-            state.modalActive = false
-            state.params = getParams()
+            clearInterval(this.timer)
+            this.countdownEnded = false
+            this.secondsLeft = null
+            this.modalActive = false
+            this.modalParams = this.defaultParams
         },
-        SETTIMEOUTCALLBACK(state, value) {
-            state.timeoutCallback = value
-        },
-        SETSECONDSLEFT(state, value) {
-            state.secondsLeft = value
-        },
-    },
-    actions: {
         // Show top-level navigation. Typically used by menu icon in nav bar.
-        showMenu({commit}, message) {
-            commit('SETMODALPARAMS', message)
+        showMenu(message) {
+            this.setModalParams(message)
         },
         // Show a text message with 'ok' button.
-        alert({commit}, message) {
-            commit('SETMODALPARAMS', {
+        alert(message) {
+            this.setModalParams({
                 type: 'alert',
                 message: message,
                 buttons: [{text: 'Ok'}],
             })
         },
         // Show text with ok / cancel buttons, execute a callback function if user clicks 'ok'
-        confirm({commit}, payload) {
+        confirm(payload) {
             const {message, confirmCallback} = payload
-            commit('SETMODALPARAMS', {
+            this.setModalParams({
                 type: 'confirm',
                 message: message,
                 buttons: [
@@ -155,23 +134,22 @@ export default {
             })
         },
         // Show text with countdown, executes callback function if secondsLeft counts down to 0.
-        timeout({commit}, payload) {
+        timeout(payload) {
             const {message, secondsLeft, timeoutCallback} = payload
-            commit('SETMODALPARAMS', {
+            this.setModalParams({
                 type: 'timeout',
                 message: message,
             })
-
-            commit('SETTIMEOUTCALLBACK', timeoutCallback)
-            commit('SETSECONDSLEFT', secondsLeft)
+            this.timeoutCallback = timeoutCallback
+            this.secondsLeft = secondsLeft
         },
         // Show the user survey. Typically used by a 'Give Feedback' button.
-        showSurvey({commit}, payload) {
+        showSurvey(payload) {
             const {prompt, onUnload} = payload
             if (prompt) {
-                commit('SETSURVEYWASPROMPTED', true)
+                this.surveyWasPrompted = true
             }
-            commit('SETMODALPARAMS', {
+            this.setModalParams({
                 logo: true,
                 title: 'Survey',
                 survey: true,
@@ -179,4 +157,4 @@ export default {
             })
         },
     },
-}
+})

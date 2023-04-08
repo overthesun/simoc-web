@@ -39,10 +39,10 @@ Future version should also automatically switch the selected preset to 'custom' 
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {useModalStore} from '../../store/modules/ModalStore'
 
 // global constant used to mark the custom preset
 const CUSTOM = 'custom'
@@ -50,12 +50,17 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const modal = useModalStore()
+
         const {simLocation} = storeToRefs(dashboard)
         const {configuration, resetConfig, getDefaultPresetName, getPresets} = storeToRefs(wizard)
+
         const {setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset} = wizard
+        const {alert, confirm} = modal
+
         return {
             simLocation, configuration, resetConfig, getDefaultPresetName, getPresets,
-            setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset,
+            setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset, alert, confirm,
         }
     },
     data() {
@@ -103,8 +108,6 @@ export default {
         this.selected = this.getDefaultPresetName(this.simLocation)
     },
     methods: {
-        ...mapActions('modal', ['alert', 'confirm']),
-
         updateConfig(name) {
             // don't set [custom] if the user picks a preset
             this.dont_set_custom = true
