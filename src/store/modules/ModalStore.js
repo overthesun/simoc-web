@@ -84,7 +84,7 @@ export const useModalStore = defineStore('ModalStore', {
             this.modalParams = params
         },
         resetModalParams() {
-            this.modalParams = this.defaultParams
+            this.params = this.defaultParams
         },
         // This mutator is called in the ModalWindow for modals of type timeout.
         startCountdownTimer() {
@@ -93,7 +93,7 @@ export const useModalStore = defineStore('ModalStore', {
                 if (this.secondsLeft <= 0) {
                     clearInterval(this.timer)
                     this.modalActive = false
-                    this.modalParams = this.defaultParams
+                    this.params = this.defaultParams
                     this.timeoutCallback()
                 } else {
                     this.secondsLeft -= 1
@@ -107,7 +107,7 @@ export const useModalStore = defineStore('ModalStore', {
             this.countdownEnded = false
             this.secondsLeft = null
             this.modalActive = false
-            this.modalParams = this.defaultParams
+            this.params = this.defaultParams
         },
         // Show top-level navigation. Typically used by menu icon in nav bar.
         showMenu(message) {
