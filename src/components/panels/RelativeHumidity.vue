@@ -9,7 +9,8 @@
         <div>
             <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
                            :currency="currency" :color="'#46f0f0'" :unit="'%'"
-                           :currency-sensor-info="currencySensorInfo" />
+                           :currency-sensor-info="currencySensorInfo"
+                           :fullscreen="fullscreen" :nsteps="fullscreen?600:60" />
         </div>
     </div>
 </template>
@@ -33,6 +34,7 @@ export default {
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
         panelSection: {type: String, default: null},
+        fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
     setup() {
