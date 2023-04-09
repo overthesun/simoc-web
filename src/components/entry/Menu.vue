@@ -152,7 +152,7 @@ export default {
 
             if (e.ctrlKey && e.key === 'k') {
                 e.preventDefault()  // prevent event from propagating to browser
-                this.surveyWasPrompted(true)  // do not prompt with survey in kiosk mode
+                this.surveyWasPrompted = true  // do not prompt with survey in kiosk mode
                 this.kioskMode = true
                 this.$router.push('/')
             }
