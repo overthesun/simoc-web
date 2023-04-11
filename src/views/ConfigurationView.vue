@@ -105,7 +105,7 @@ export default {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation,
         } = storeToRefs(dashboard)
-        const {setGameParams, setSimulationData} = dashboard
+        const {setGameParams, setSimulationData, setGameId} = dashboard
         const {
             configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
@@ -114,10 +114,10 @@ export default {
         const {resetConfigDefault, setConfiguration} = wizard
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
-            activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
-            activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
-            setConfiguration,
+            simLocation, setGameParams, setSimulationData, setGameId, configuration,
+            getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
+            getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
+            resetConfigDefault, activeFormIndex, setConfiguration,
         }
     },
     data() {
@@ -179,7 +179,6 @@ export default {
         this.activeForm = this.getActiveForm
     },
     methods: {
-        ...mapMutations(['SETGAMEID']),
         ...mapActions('modal', ['alert']),
         ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALPARAMS']),
 
@@ -308,7 +307,7 @@ export default {
                 // Wait for the new game to be created
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
-                this.SETGAMEID(response.data.game_id)
+                this.setGameId(response.data.game_id)
                 this.setGameParams({
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
