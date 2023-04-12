@@ -115,7 +115,7 @@ export default {
         } = storeToRefs(wizard)
         const {modalActive} = storeToRefs(modal)
 
-        const {setGameParams, setSimulationData} = dashboard
+        const {setGameParams, setSimulationData, setGameId} = dashboard
         const {resetConfigDefault, setConfiguration} = wizard
         const {alert, setModalParams} = modal
 
@@ -124,7 +124,7 @@ export default {
             simLocation, setGameParams, setSimulationData, setGameId, configuration,
             getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
             getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
-            resetConfigDefault, activeFormIndex, setConfiguration, alert, modalActive, 
+            resetConfigDefault, activeFormIndex, setConfiguration, alert, modalActive,
             setModalParams,
         }
     },
