@@ -8,6 +8,8 @@ import subprocess
 
 IMGNAME = 'frontend-dev'
 SIMOC_WEB_DIR = pathlib.Path(__file__).resolve().parent
+# both dirs *should* have the same parent dir
+SIMOC_DIR = SIMOC_WEB_DIR.parent / 'simoc'
 
 COMMANDS = {}
 
@@ -40,9 +42,11 @@ def docker_run(*args):
     cp = subprocess.run(['docker', 'network', 'inspect', net_name],
                         capture_output=True)
     net_args = ['--network', net_name] if cp.returncode == 0 else []
-    fe_branch = f'VITE_FE_BRANCH={get_current_branch()}'
+    fe_branch = f'VITE_FE_BRANCH={get_current_branch(SIMOC_WEB_DIR)}'
+    be_branch = f'VITE_BE_BRANCH={get_current_branch(SIMOC_DIR)}'
     return run(['docker', 'run', '--rm', *net_args, '-p', '8080:8080',
-                '-e', fe_branch, '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
+                '-e', fe_branch, '-e', be_branch,
+                '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
 
 def install_docker():
     """Install docker and docker-compose."""
@@ -69,10 +73,10 @@ def install_docker_linux():
     print()
     return False
 
-def get_current_branch():
+def get_current_branch(dir):
     branch_cmd = ['git', 'branch', '--show-current']
     try:
-        return subprocess.check_output(branch_cmd).decode().strip()
+        return subprocess.check_output(branch_cmd, cwd=dir).decode().strip()
     except subprocess.CalledProcessError:
         return 'unknown'
 
@@ -105,7 +109,7 @@ def build():
 def copy_dist_dir():
     """Copy the dist dir into the "simoc" repo."""
     # assume that both the simoc and simoc-web repos are in the same dir
-    simoc_server_dir = SIMOC_WEB_DIR.parent / 'simoc' / 'simoc_server'
+    simoc_server_dir = SIMOC_DIR / 'simoc_server'
     simoc_web_dist_dir = SIMOC_WEB_DIR / 'dist'
     if not simoc_server_dir.exists():
         print(f'* <{simoc_server_dir}> does not exist')
