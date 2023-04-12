@@ -42,7 +42,7 @@ export default {
     data() {
         return {
             env: import.meta.env,
-            is_ngs: window.location.hostname.startsWith('ngs')
+            is_ngs: window.location.hostname.startsWith('ngs'),
         }
     },
 }
