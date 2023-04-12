@@ -73,7 +73,6 @@
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
 // import form components
-import {mapMutations} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {useModalStore} from '../store/modules/ModalStore'
@@ -108,6 +107,7 @@ export default {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation,
         } = storeToRefs(dashboard)
+
         const {
             configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
@@ -121,10 +121,11 @@ export default {
 
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            simLocation, setGameParams, setSimulationData, configuration, getFormattedConfiguration,
-            activeConfigType, getActiveForm, formOrder, getTotalMissionHours, activeReference,
-            activeRefEntry, getPresets, simdataLocation, resetConfigDefault, activeFormIndex,
-            setConfiguration, alert, modalActive, setModalParams,
+            simLocation, setGameParams, setSimulationData, setGameId, configuration,
+            getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
+            getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
+            resetConfigDefault, activeFormIndex, setConfiguration, alert, modalActive, 
+            setModalParams,
         }
     },
     data() {
@@ -186,8 +187,6 @@ export default {
         this.activeForm = this.getActiveForm
     },
     methods: {
-        ...mapMutations(['SETGAMEID']),
-
         toggleMenu() {
             this.menuActive = !this.menuActive
         },
@@ -313,7 +312,7 @@ export default {
                 // Wait for the new game to be created
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
-                this.SETGAMEID(response.data.game_id)
+                this.setGameId(response.data.game_id)
                 this.setGameParams({
                     game_config: response.data.game_config,
                     currency_desc: response.data.currency_desc,
