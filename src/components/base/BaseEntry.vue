@@ -30,7 +30,7 @@
             </a>
         </footer>
         <div v-if="!is_ngs" id="branch">
-            dev build
+            {{env.MODE}} build
             <template v-if="env.VITE_FE_BRANCH">/ fe: {{env.VITE_FE_BRANCH}}</template>
             <template v-if="env.VITE_BE_BRANCH"> / be: {{env.VITE_BE_BRANCH}}</template>
         </div>
