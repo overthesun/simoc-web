@@ -40,8 +40,9 @@ def docker_run(*args):
     cp = subprocess.run(['docker', 'network', 'inspect', net_name],
                         capture_output=True)
     net_args = ['--network', net_name] if cp.returncode == 0 else []
+    fe_branch = f'VITE_FE_BRANCH={get_current_branch()}'
     return run(['docker', 'run', '--rm', *net_args, '-p', '8080:8080',
-                '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
+                '-e', fe_branch, '-v', f'{SIMOC_WEB_DIR}:/frontend', *args])
 
 def install_docker():
     """Install docker and docker-compose."""
@@ -67,6 +68,13 @@ def install_docker_linux():
     print('After logging back in, you can resume the installation of SIMOC.')
     print()
     return False
+
+def get_current_branch():
+    branch_cmd = ['git', 'branch', '--show-current']
+    try:
+        return subprocess.check_output(branch_cmd).decode().strip()
+    except subprocess.CalledProcessError:
+        return 'unknown'
 
 @cmd
 def build_image():

@@ -29,12 +29,21 @@
                 EULA
             </a>
         </footer>
+        <div v-if="env.DEV" id="branch">
+            dev build
+            <template v-if="env.VITE_FE_BRANCH">/ fe: {{env.VITE_FE_BRANCH}}</template>
+            <template v-if="env.VITE_BE_BRANCH"> / be: {{env.VITE_BE_BRANCH}}</template>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-
+    data() {
+        return {
+            env: import.meta.env,
+        }
+    },
 }
 </script>
 
@@ -158,6 +167,11 @@ export default {
         display:flex;
         justify-content:space-evenly;
         align-items:center;
+    }
+    #branch {
+        margin-top: 1em;
+        color: #666666;
+        font-size: 80%;
     }
 </style>
 
