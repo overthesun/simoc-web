@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import eslint from 'vite-plugin-eslint'
+import vuetify from 'vite-plugin-vuetify';
 import postcssNesting from 'postcss-nesting';
 import path from 'path';
 
@@ -45,6 +45,11 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        //eslint(),
+        vuetify({
+            autoImport: true,
+            styles: {
+                configFile: /* import scss file here */
+            },
+        }),
     ],
 });

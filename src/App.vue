@@ -1,13 +1,19 @@
 <template>
-    <div class="app">
-        <div class="orientation-portrait">
-            <img src="./assets/orientation.svg" class="orientation-logo">
-        </div>
-        <div class="normal orientation-landscape">
+  <v-app>
+    <v-main>
+      <v-container class="bg" fluid>
+          <div class="app">
+            <div class="orientation-portrait">
+              <img src="./assets/orientation.svg" class="orientation-logo">
+            </div>
+          <div class="normal orientation-landscape">
             <ModalWindow />
             <router-view />
+          </div>
         </div>
-    </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 
@@ -28,13 +34,16 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     font-family: "Open Sans", sans-serif;
     padding: 0px;
     margin: 0px;
-    background-image:url('./assets/mars-bg.jpg');
+    overflow: hidden;
+  }
+
+ .bg {
+    background: url('./assets/mars-bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: 50% 10%;
     background-color: #1e1e1e;
-    color: #eee;
   }
 
   .orientation-portrait{
