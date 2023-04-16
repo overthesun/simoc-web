@@ -76,9 +76,11 @@ def install_docker_linux():
 def get_current_branch(dir):
     branch_cmd = ['git', 'branch', '--show-current']
     try:
-        return subprocess.check_output(branch_cmd, cwd=dir).decode().strip()
-    except subprocess.CalledProcessError:
-        return 'unknown'
+        branch = subprocess.check_output(branch_cmd, cwd=dir).decode().strip()
+        return branch or '[unknown]'
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        print(e)
+        return '[error]'
 
 @cmd
 def build_image():
