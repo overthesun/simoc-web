@@ -1,6 +1,7 @@
 echo '* Running <run.sh>...'
 echo "* Current working directory: $(pwd)"
 echo "* Current node/npm versions: node $(node --version); npm $(npm --version)"
+echo "* Current fe/be branches: $VITE_FE_BRANCH; $VITE_BE_BRANCH"
 
 if [ ! -e node_modules ]; then
     echo '* No node_modules/ dir found, installing dependencies...'
