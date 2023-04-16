@@ -171,10 +171,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
         },
         parseStep(value) {
             const {
+                game_id,
                 n_steps,       // N steps contained in this batch
                 step_num,      // Latest step sent
                 ...agent_data  // Agent-specific data
             } = value
+            if (!this.gameId) {
+                this.gameId = game_id
+            }
             console.log(`Received ${n_steps} new steps (${step_num} total).`)
             this.maxStepBuffer = step_num
 
