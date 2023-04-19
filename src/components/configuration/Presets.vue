@@ -51,13 +51,10 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-
         const {simLocation} = storeToRefs(dashboard)
         const {configuration, resetConfig, getDefaultPresetName, getPresets} = storeToRefs(wizard)
-
         const {setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset} = wizard
         const {alert, confirm} = modal
-
         return {
             simLocation, configuration, resetConfig, getDefaultPresetName, getPresets,
             setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset, alert, confirm,

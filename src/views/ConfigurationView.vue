@@ -102,23 +102,19 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation,
         } = storeToRefs(dashboard)
-
         const {
             configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
             simdataLocation,
         } = storeToRefs(wizard)
         const {modalActive} = storeToRefs(modal)
-
         const {setGameParams, setSimulationData, setGameId} = dashboard
         const {resetConfigDefault, setConfiguration} = wizard
         const {alert, setModalParams} = modal
-
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation, setGameParams, setSimulationData, setGameId, configuration,

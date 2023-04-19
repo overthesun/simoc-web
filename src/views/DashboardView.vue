@@ -62,7 +62,6 @@ export default {
         const wizard = useWizardStore()
         const liveStore = useLiveStore()
         const modal = useModalStore()
-
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
@@ -71,7 +70,6 @@ export default {
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         const {bundleNum, initBundleNum} = storeToRefs(liveStore)
         const {surveyWasPrompted, countdownEnded} = storeToRefs(modal)
-
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
@@ -79,7 +77,6 @@ export default {
         const {setLiveConfig} = wizard
         const {setHabitatInfo, setSensorInfo, parseData} = liveStore
         const {confirm, showSurvey, stopCountdownTimer} = modal
-
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,

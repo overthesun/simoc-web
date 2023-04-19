@@ -39,13 +39,10 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-
         const {kioskMode, simLocation} = storeToRefs(dashboard)
         const {configuration, resetConfig} = storeToRefs(wizard)
-
         const {setConfiguration} = wizard
         const {confirm} = modal
-
         return {kioskMode, simLocation, configuration, resetConfig, setConfiguration, confirm}
     },
     computed: {

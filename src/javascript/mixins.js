@@ -10,11 +10,8 @@ export const idleMixin = {
         const dashboard = useDashboardStore()
         const modal = useModalStore()
         const {kioskMode} = storeToRefs(dashboard)
-
         const {getCountdownIsRunning, countdownEnded} = storeToRefs(modal)
-
         const {timeout, stopCountdownTimer} = modal
-
         return {kioskMode, getCountdownIsRunning, countdownEnded, timeout, stopCountdownTimer}
     },
     data() {
