@@ -268,7 +268,6 @@ export default {
                 this.socket.emit('send-step-data')
             })
             socket.on('step-batch', data => {
-                console.log(`Received a bundle from the server:`)
                 // If initBundleNum is null set it to the first n sent in the bundle of data.
                 // This indicates that a client has made an initial connection to the live dashboard.
                 if (this.initBundleNum === null) {

@@ -84,7 +84,6 @@ export const useLiveStore = defineStore('LiveStore', {
          *  the entire object and destructuring it in the associated variable mutator.
          */
         parseData(bundles) {
-            console.log(bundles)
             this.setDataBundles(bundles)
 
             bundles.forEach(item => {

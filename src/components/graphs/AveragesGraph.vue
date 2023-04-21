@@ -56,8 +56,8 @@ export default {
         const liveStore = useLiveStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
         const {sensorInfo} = storeToRefs(liveStore)
-        const {getReadings} = liveStore
-        return {currentStepBuffer, sensorInfo, getReadings}
+        const {getReadings, getTimestamp} = liveStore
+        return {currentStepBuffer, sensorInfo, getReadings, getTimestamp}
     },
     data() {
         return {
@@ -96,6 +96,10 @@ export default {
             } else {
                 this.activeSensors = [this.plottedValue]
             }
+        },
+        stepnum2timestamp(step) {
+            const time = this.getTimestamp(step)
+            return (time === undefined) ? '00:00:00' : time.time
         },
         initChart() {
             if (this.chart) {
@@ -197,7 +201,7 @@ export default {
                         data.datasets[i].data.push(value)
                     })
                     // add the new values
-                    data.labels.push(step)
+                    data.labels.push(this.stepnum2timestamp(step))
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels
                     // so that the plot still has nsteps total items and is not stretched
