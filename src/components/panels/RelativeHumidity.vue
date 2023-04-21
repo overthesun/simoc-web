@@ -10,7 +10,7 @@
             <AveragesGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="location"
                            :currency="currency" :color="'#46f0f0'" :unit="'%'"
                            :currency-sensor-info="currencySensorInfo"
-                           :fullscreen="fullscreen" :nsteps="fullscreen?600:60" />
+                           :fullscreen="fullscreen" :nsteps="fullscreen?4320:60" />
         </div>
     </div>
 </template>
