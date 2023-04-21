@@ -276,9 +276,10 @@ export const useDashboardStore = defineStore('DashboardStore', {
                     'MissionInfo', 'Concrete', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
+                // Sensors is duplicated so there's more room to see the values of all sensors
                 'live': [
-                    'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
-                    'RelativeHumidity',
+                    'Sensors', 'AtmosphericCO2', 'AtmosphericO2',
+                    'Sensors', 'Temperature', 'RelativeHumidity',
                 ],
             }[layout]
         },
