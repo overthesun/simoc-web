@@ -39,6 +39,7 @@ export default createRouter({
         {
             path: '/ace',
             name: 'ace',
+            conponent: () => import('@/views/AceView.vue'),
         },
         {
             path: '/configuration',
