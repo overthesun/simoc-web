@@ -7,16 +7,19 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {useModalStore} from '../../store/modules/ModalStore'
 
 export default {
     props: {
         handleFile: {type: Function, required: true},
         buttonText: {type: String, default: 'Upload Configuration'},
     },
+    setup() {
+        const modal = useModalStore()
+        const {alert} = modal
+        return {alert}
+    },
     methods: {
-        ...mapActions('modal', ['alert']),
-
         uploadConfig() {
             this.$refs.configInputFile.click()
         },

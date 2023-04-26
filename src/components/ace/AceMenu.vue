@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {BaseMenu} from '../base'
 import {DownloadConfig, UploadConfig, Logout} from '../menu'
 
@@ -29,13 +30,17 @@ export default {
         UploadConfig: UploadConfig,
         Logout: Logout,
     },
+    setup() {
+        const modal = useModalStore()
+        const {confirm} = modal
+        return {confirm}
+    },
     computed: {
         ...mapGetters('ace', ['getDefaultAgentDesc', 'getResetAgentDesc',
                               'getActiveAgentDesc', 'getEditorValid']),
     },
     methods: {
         ...mapMutations('ace', ['SETAGENTDESC']),
-        ...mapActions('modal', ['confirm']),
 
         handleUpload(file) {
             this.SETAGENTDESC({

@@ -73,9 +73,9 @@
 import axios from 'axios'
 import {storeToRefs} from 'pinia'
 // import form components
-import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
+import {useModalStore} from '../store/modules/ModalStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
         Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
@@ -101,23 +101,27 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const modal = useModalStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation,
         } = storeToRefs(dashboard)
-        const {setGameParams, setSimulationData, setGameId} = dashboard
         const {
             configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
             activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
             simdataLocation,
         } = storeToRefs(wizard)
+        const {modalActive} = storeToRefs(modal)
+        const {setGameParams, setSimulationData, setGameId} = dashboard
         const {resetConfigDefault, setConfiguration} = wizard
+        const {alert, setModalParams} = modal
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
             simLocation, setGameParams, setSimulationData, setGameId, configuration,
             getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
             getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
-            resetConfigDefault, activeFormIndex, setConfiguration,
+            resetConfigDefault, activeFormIndex, setConfiguration, alert, modalActive,
+            setModalParams,
         }
     },
     data() {
@@ -179,9 +183,6 @@ export default {
         this.activeForm = this.getActiveForm
     },
     methods: {
-        ...mapActions('modal', ['alert']),
-        ...mapMutations('modal', ['SETMODALACTIVE', 'SETMODALPARAMS']),
-
         toggleMenu() {
             this.menuActive = !this.menuActive
         },
@@ -260,15 +261,15 @@ export default {
                 let data
                 try {
                     if (this.simLocation === 'b2') {
-                        this.SETMODALPARAMS({
+                        this.setModalParams({
                             message: 'Downloading simulation data.\n' +
                                      'Please wait, this could take a few seconds...',
                         })
-                        this.SETMODALACTIVE(true)
+                        this.modalActive = true
                     }
                     data = await this.importPresetData(presets[preset_name])
                 } finally {
-                    this.SETMODALACTIVE(false)
+                    this.modalActive = false
                 }
                 // Get currency_desc from backend
                 const response = await axios.get('/get_currency_desc')

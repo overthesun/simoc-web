@@ -21,9 +21,9 @@ future dashboard views
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {Timeline, LiveButton, PlayButton, StepControls,
         SpeedControls, Dashboard, DashboardMenu} from '../dashboard'
 import {TheTopBar} from '../bars'
@@ -41,22 +41,21 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
+        const modal = useModalStore()
         const {isTimerRunning, menuActive, currentMode} = storeToRefs(dashboard)
+        const {modalActive} = storeToRefs(modal)
         const {startTimer, pauseTimer} = dashboard
-        return {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer}
+        return {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer, modalActive}
     },
     data() {
         return {
             pausedForModal: false,
         }
     },
-    computed: {
-        ...mapGetters('modal', ['getModalActive']),
-    },
     watch: {
         // If a modal opens while the timer is on,
         // pause it, then start it again after modal closes.
-        getModalActive(newActive, oldActive) {
+        modalActive(newActive, oldActive) {
             if (oldActive === false && this.isTimerRunning === true) {
                 this.pauseTimer()
                 this.pausedForModal = true
