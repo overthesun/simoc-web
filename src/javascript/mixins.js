@@ -6,16 +6,13 @@ import {useModalStore} from '../store/modules/ModalStore'
 
 // mixin used to handle idle timeouts in kiosk mode
 export const idleMixin = {
-    setup() {
-        const dashboard = useDashboardStore()
-        const modal = useModalStore()
-        const {kioskMode} = storeToRefs(dashboard)
-        const {getCountdownIsRunning, countdownEnded} = storeToRefs(modal)
-        const {timeout, stopCountdownTimer} = modal
-        return {kioskMode, getCountdownIsRunning, countdownEnded, timeout, stopCountdownTimer}
-    },
     data() {
         return {
+            kioskMode: false,
+            getCountdownIsRunning: false,
+            countdownEnded: false,
+            timeout: null,
+            stopCountdownTimer: null,
             idle: new IdleJs({
                 idle: 60 * 3 * 1000,  // 3 min idle time (60s * 3m, in ms)
                 events: ['mousemove', 'keydown', 'mousedown', 'touchstart'],  // re-trigger events
@@ -38,6 +35,13 @@ export const idleMixin = {
         }
     },
     beforeMount() {
+        const dashboard = useDashboardStore()
+        const modal = useModalStore()
+        this.kioskMode = storeToRefs(dashboard).kioskMode
+        this.getCountdownIsRunning = storeToRefs(modal).getCountdownIsRunning
+        this.countdownEnded = storeToRefs(modal).countdownEnded
+        this.timeout = modal.timeout
+        this.stopCountdownTimer = modal.stopCountdownTimer
         if (this.kioskMode) {
             this.idle.start()
         }
