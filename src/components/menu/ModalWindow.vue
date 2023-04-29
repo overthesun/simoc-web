@@ -5,7 +5,7 @@ and it was thought simpler to have just a single component, and share functions
 to activate and populate it.
 
 <template>
-    <div v-if="getModalActive" id="main-menu-wrapper" @click.self="cleanup">
+    <div v-if="modalActive" id="main-menu-wrapper" @click.self="cleanup">
         <div id="menu-wrapper">
             <header v-show="params.logo">
                 <img src="../../assets/simoc-logo.svg" class="simoc-logo">
@@ -23,8 +23,8 @@ to activate and populate it.
                         {{button.text}}
                     </button>
                 </div>
-                <p v-if="getModalParams.type === 'timeout'" id="modal-time">
-                    {{getSecondsLeft > 0 ? `${getSecondsLeft} second(s) left` : "Mission terminated."}}
+                <p v-if="modalParams.type === 'timeout'" id="modal-time">
+                    {{secondsLeft > 0 ? `${secondsLeft} second(s) left` : "Mission terminated."}}
                 </p>
                 <!-- TODO: Use an slot instead, share with other non-standard modals -->
                 <div v-show="params.survey">
@@ -36,12 +36,19 @@ to activate and populate it.
 </template>
 
 <script>
-import {mapGetters, mapMutations, mapActions} from 'vuex'
+import {storeToRefs} from 'pinia'
 import Survey from './Survey.vue'
+import {useModalStore} from '../../store/modules/ModalStore'
 
 export default {
     components: {
         Survey,
+    },
+    setup() {
+        const modal = useModalStore()
+        const {modalActive, modalParams, secondsLeft} = storeToRefs(modal)
+        const {resetModalParams, startCountdownTimer} = modal
+        return {modalActive, modalParams, secondsLeft, resetModalParams, startCountdownTimer}
     },
     data() {
         return {
@@ -49,31 +56,25 @@ export default {
             params: {},
         }
     },
-    computed: {
-        ...mapGetters('modal', ['getModalActive', 'getModalParams', 'getSecondsLeft']),
-    },
     watch: {
         // Watch params in store/modal, use to show/hide the menu and determine layout
-        getModalParams: {
+        modalParams: {
             handler(updatedParams) {
                 const setModal = newParams => {
-                    this.SETMODALACTIVE(true)
+                    this.modalActive = true
                     this.params = newParams
                 }
                 // If modal is active, let it finish the cleanup() cycle before creating the new one
                 this.$nextTick(() => setModal(updatedParams))
 
-                if (this.getModalParams.type === 'timeout') {
-                    this.STARTCOUNTDOWNTIMER()
+                if (this.modalParams.type === 'timeout') {
+                    this.startCountdownTimer()
                 }
             },
             deep: true,
         },
     },
     methods: {
-        ...mapMutations('modal', ['SETMODALACTIVE', 'RESETMODALPARAMS',
-                                  'STARTCOUNTDOWNTIMER']),
-
         async handleClick(callback) {
             callback()
             this.cleanup()
@@ -83,8 +84,8 @@ export default {
             if (this.params.onUnload) {
                 this.params.onUnload()
             }
-            this.SETMODALACTIVE(false)
-            this.RESETMODALPARAMS()
+            this.modalActive = false
+            this.resetModalParams()
         },
     },
 }

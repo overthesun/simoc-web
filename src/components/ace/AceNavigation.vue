@@ -26,10 +26,16 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
+    setup() {
+        const modal = useModalStore()
+        const {confirm} = modal
+        return {confirm}
+    },
     data() {
         return {
             isOpen: {},
@@ -51,7 +57,6 @@ export default {
     },
     methods: {
         ...mapMutations('ace', ['SETACTIVEAGENT', 'SETACTIVESECTION', 'ADDAGENT', 'REMOVEAGENT']),
-        ...mapActions('modal', ['confirm']),
 
         stringFormatter: StringFormatter,
 
