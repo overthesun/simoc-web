@@ -47,9 +47,6 @@ export default defineConfig({
         vue(),
         vuetify({
             autoImport: true,
-            styles: {
-                configFile: /* import scss file here */
-            },
         }),
     ],
 });

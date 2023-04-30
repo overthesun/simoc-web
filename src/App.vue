@@ -1,17 +1,15 @@
 <template>
   <v-app>
-    <v-main>
-      <v-container class="bg" fluid>
-          <div class="app">
-            <div class="orientation-portrait">
-              <img src="./assets/orientation.svg" class="orientation-logo">
-            </div>
-          <div class="normal orientation-landscape">
-            <ModalWindow />
-            <router-view />
+    <v-main class="bg">
+        <div class="app">
+          <div class="orientation-portrait">
+            <img src="./assets/orientation.svg" class="orientation-logo">
           </div>
+        <div class="normal orientation-landscape">
+          <ModalWindow />
+          <router-view />
         </div>
-      </v-container>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -30,6 +28,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
       font-family:'Nasalization';
       src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
   }
+
   body{
     font-family: "Open Sans", sans-serif;
     padding: 0px;
