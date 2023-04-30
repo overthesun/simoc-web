@@ -456,7 +456,6 @@ export const useWizardStore = defineStore('WizardStore', {
             this.setConfiguration(preset, location)
         },
         setLiveConfig(duration, location) {
-            console.log('Updating mission time...')
             this.setConfiguration(duration, location)
         },
         setInitial(value) {

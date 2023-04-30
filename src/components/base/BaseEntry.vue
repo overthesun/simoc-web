@@ -29,12 +29,22 @@
                 EULA
             </a>
         </footer>
+        <div v-if="!is_ngs" id="branch">
+            {{env.MODE}} build
+            <template v-if="env.VITE_FE_BRANCH">/ fe: {{env.VITE_FE_BRANCH}}</template>
+            <template v-if="env.VITE_BE_BRANCH"> / be: {{env.VITE_BE_BRANCH}}</template>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-
+    data() {
+        return {
+            env: import.meta.env,
+            is_ngs: window.location.hostname.startsWith('ngs'),
+        }
+    },
 }
 </script>
 
@@ -158,6 +168,11 @@ export default {
         display:flex;
         justify-content:space-evenly;
         align-items:center;
+    }
+    #branch {
+        margin-top: 1em;
+        color: #666666;
+        font-size: 80%;
     }
 </style>
 

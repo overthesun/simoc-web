@@ -171,7 +171,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
         },
         parseStep(value) {
             const {
-                game_id,       // Same for each batch
+                game_id,
                 n_steps,       // N steps contained in this batch
                 step_num,      // Latest step sent
                 ...agent_data  // Agent-specific data
@@ -276,9 +276,10 @@ export const useDashboardStore = defineStore('DashboardStore', {
                     'MissionInfo', 'Concrete', 'StorageLevels',
                     'InhabitantsStatus', 'ProductionConsumption:co2', 'AtmosphericMonitors',
                 ],
+                // Sensors is duplicated so there's more room to see the values of all sensors
                 'live': [
-                    'Sensors', 'AtmosphericCO2', 'AtmosphericO2', 'Temperature',
-                    'RelativeHumidity',
+                    'Sensors', 'AtmosphericCO2', 'AtmosphericO2',
+                    'Sensors', 'Temperature', 'RelativeHumidity',
                 ],
             }[layout]
         },
