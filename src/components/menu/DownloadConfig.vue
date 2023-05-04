@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {useModalStore} from '../../store/modules/ModalStore'
 
 export default {
     props: {
@@ -13,9 +13,12 @@ export default {
         alertUserOnInvalid: {type: Boolean, default: false},
         buttonText: {type: String, default: 'Download Configuration'},
     },
+    setup() {
+        const modal = useModalStore()
+        const {alert} = modal
+        return {alert}
+    },
     methods: {
-        ...mapActions('modal', ['alert']),
-
         handleClick() {
             // abort if parent declares invalid
             if (!this.isValid) {

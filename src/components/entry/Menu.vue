@@ -31,10 +31,10 @@
 
 <script>
 import axios from 'axios'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import {useModalStore} from '../../store/modules/ModalStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -44,16 +44,19 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
+        const modal = useModalStore()
         const {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
-        const {setSimulationData} = dashboard
         const {activeConfigType} = storeToRefs(wizard)
+        const {surveyWasPrompted} = storeToRefs(modal)
+        const {setSimulationData} = dashboard
         const {setConfiguration, setLiveConfig} = wizard
+        const {alert, showSurvey} = modal
         return {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
-            setSimulationData, activeConfigType, setConfiguration,
-            setLiveConfig,
+            setSimulationData, activeConfigType, setConfiguration, setLiveConfig, surveyWasPrompted,
+            alert, showSurvey,
         }
     },
     data() {
@@ -69,8 +72,6 @@ export default {
         window.removeEventListener('keydown', this.keyListener)
     },
     methods: {
-        ...mapMutations('modal', ['SETSURVEYWASPROMPTED']),
-        ...mapActions('modal', ['alert', 'showSurvey']),
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration(location) {
             // menuconfig is currently skipped, we default on Custom config
@@ -147,7 +148,7 @@ export default {
             // }
             if (e.ctrlKey && e.key === 'k') {
                 e.preventDefault()  // prevent event from propagating to browser
-                this.SETSURVEYWASPROMPTED(true)  // do not prompt with survey in kiosk mode
+                this.surveyWasPrompted = true  // do not prompt with survey in kiosk mode
                 this.kioskMode = true
                 this.$router.push('/')
             }

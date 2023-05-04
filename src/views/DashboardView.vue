@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import axios from 'axios'
 
 import io from 'socket.io-client'
@@ -15,6 +14,7 @@ import {idleMixin} from '../javascript/mixins'
 import {useDashboardStore} from '../store/modules/DashboardStore'
 import {useWizardStore} from '../store/modules/WizardStore'
 import {useLiveStore} from '../store/modules/LiveStore'
+import {useModalStore} from '../store/modules/ModalStore'
 import b2Url from '@/assets/b2-bg.jpg'
 import marsUrl from '@/assets/mars-bg.jpg'
 
@@ -31,14 +31,14 @@ export default {
         // Ensure the menu on the Dashboard is closed before showing any modal.
         this.menuActive = false
         if (this.leaveWithoutConfirmation ||
-            (this.kioskMode && this.getCountdownEnded)) {
+            (this.kioskMode && this.countdownEnded)) {
             this.leaveWithoutConfirmation = false  // reset value
             next()  // proceed without asking questions
         } else {
             // Stop/close the countdown modal if it's still open
             // (e.g. when the user press the back button during the countdown)
             if (this.kioskMode) {
-                this.STOPCOUNTDOWNTIMER()
+                this.stopCountdownTimer()
             }
             // Make user to confirm before exiting.
             const confirmExit = () => {
@@ -48,7 +48,7 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.getSurveyWasPrompted && !this.kioskMode &&
+            if (!this.surveyWasPrompted && !this.kioskMode &&
                 import.meta.env.MODE !== 'development') {
                 this.showSurvey({prompt: true, onUnload: confirmExit})
             } else {
@@ -61,19 +61,22 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const liveStore = useLiveStore()
+        const modal = useModalStore()
         const {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
+        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
+        const {bundleNum, initBundleNum} = storeToRefs(liveStore)
+        const {surveyWasPrompted, countdownEnded} = storeToRefs(modal)
         const {
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
             stopTimer, setCurrentStepBuffer, setStopped,
         } = dashboard
-        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         const {setLiveConfig} = wizard
-        const {bundleNum, initBundleNum} = storeToRefs(liveStore)
         const {setHabitatInfo, setSensorInfo, parseData} = liveStore
+        const {confirm, showSurvey, stopCountdownTimer} = modal
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
@@ -82,7 +85,8 @@ export default {
             stopTimer, setCurrentStepBuffer, setStopped,
             configuration, getTotalMissionHours,
             setLiveConfig, bundleNum, initBundleNum,
-            setHabitatInfo, setSensorInfo, parseData,
+            setHabitatInfo, setSensorInfo, parseData, surveyWasPrompted, countdownEnded,
+            confirm, showSurvey, stopCountdownTimer,
         }
     },
 
@@ -93,8 +97,6 @@ export default {
     },
 
     computed: {
-        // getters from the vuex stores
-        ...mapGetters('modal', ['getSurveyWasPrompted', 'getCountdownEnded']),
         // Returns the imported static urls for the page backgrounds of mars and earth
         bgImage() {
             if (this.simLocation === 'b2') {
@@ -203,8 +205,6 @@ export default {
     },
 
     methods: {
-        ...mapActions('modal', ['confirm', 'showSurvey']),
-        ...mapMutations('modal', ['STOPCOUNTDOWNTIMER']),
         setupWebsocket() {
             const socket = io()
             this.socket = socket
