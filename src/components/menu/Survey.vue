@@ -55,6 +55,10 @@
                 <input v-model="email" name="email" class="text-input input-field-text" type="text"
                        pattern="^[^@\s]+@[^.\s]+\.\w+$" placeholder="Email (optional)">
             </div>
+            <div class="question">
+                <input v-model="yourName" name="yourName" class="text-input input-field-text" type="text"
+                       placeholder="First and Last Name (optional)">
+            </div>
             <input v-model="joinList" name="joinList" type="checkbox">
             Join our mailing list
             <a class="input-title" href="#" :title="MLHelpText">
@@ -96,6 +100,7 @@ export default {
             isWorking: 'yes',
             makeBetter: null,
             howUsing: null,
+            yourName: null,
             email: null,
             joinList: null,
         }
