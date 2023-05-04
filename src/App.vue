@@ -1,17 +1,17 @@
 <template>
-  <v-app>
-    <v-main class="bg">
-        <div class="app">
-          <div class="orientation-portrait">
-            <img src="./assets/orientation.svg" class="orientation-logo">
-          </div>
-        <div class="normal orientation-landscape">
-          <ModalWindow />
-          <router-view />
-        </div>
-      </div>
-    </v-main>
-  </v-app>
+    <v-app>
+        <v-main class="bg">
+            <div class="app">
+                <div class="orientation-portrait">
+                    <img src="./assets/orientation.svg" class="orientation-logo">
+                </div>
+                <div class="normal orientation-landscape">
+                    <ModalWindow />
+                    <router-view />
+                </div>
+            </div>
+        </v-main>
+    </v-app>
 </template>
 
 
