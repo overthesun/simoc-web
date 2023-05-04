@@ -48,7 +48,8 @@ export default {
                 })
             }
             // Prompt user to take the feedback survey *only* the first time (per session)
-            if (!this.surveyWasPrompted && !this.kioskMode) {
+            if (!this.surveyWasPrompted && !this.kioskMode &&
+                import.meta.env.MODE !== 'development') {
                 // Remove the listener so user can add spaces in survey fields
                 window.removeEventListener('keydown', this.keyListener)
                 this.showSurvey({prompt: true, onUnload: () => {
