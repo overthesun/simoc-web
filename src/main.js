@@ -9,6 +9,7 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import store from './store/index'
 import router from './router'
+import vuetify from './plugins/vuetify'
 import App from './App.vue'
 
 library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
@@ -27,6 +28,7 @@ if (window.location.hostname.startsWith('beta')) {
 
 createApp(App)
         .use(router)
+        .use(vuetify)
         .use(store)
         .use(VueGtag, {
             isEnabled: import.meta.env.MODE === 'production',
