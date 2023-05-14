@@ -8,6 +8,7 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
         faCircleDot, faCirclePlus, faPerson, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 import router from './router'
+import vuetify from './plugins/vuetify'
 import App from './App.vue'
 
 library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark,
@@ -26,6 +27,7 @@ if (window.location.hostname.startsWith('beta')) {
 
 createApp(App)
         .use(router)
+        .use(vuetify)
         .use(VueGtag, {
             isEnabled: import.meta.env.MODE === 'production',
             property: {id: tracking_id},
