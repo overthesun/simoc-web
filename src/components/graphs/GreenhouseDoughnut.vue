@@ -15,7 +15,6 @@ See chart.js documentation for more details.
 <script>
 import {Chart, DoughnutController, ArcElement, Legend, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
-import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'

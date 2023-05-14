@@ -54,7 +54,6 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <script>
 import {storeToRefs} from 'pinia'
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {BasePanel} from '../basepanel'
