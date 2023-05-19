@@ -204,7 +204,7 @@ export default {
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
-        handleAxiosError(error) {
+        handleAxiosError(error, msg) {
             const errmsg = error.response.data.message || error.message
             this.$gtag.exception({description: `Launch simulation: ${errmsg}`})
             console.error(error)
@@ -212,7 +212,7 @@ export default {
                 this.alert('Please log in again to continue.')
                 this.$router.push('entry')
             } else {
-                this.alert(error)
+                this.alert(msg || error)
             }
         },
 
@@ -319,7 +319,10 @@ export default {
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
             } catch (error) {
-                this.handleAxiosError(error)
+                const err_msg = ('We are working hard to run as many simulations\n' +
+                                 'as possible, but we currently reached capacity.\n' +
+                                 'Please try again in just a minute.')
+                this.handleAxiosError(error, err_msg)
             } finally {
                 this.awaiting_response = false
             }
