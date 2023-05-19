@@ -59,7 +59,6 @@ menu button being present on other unrelated configurations.
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
