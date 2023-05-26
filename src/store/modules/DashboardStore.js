@@ -173,18 +173,19 @@ export const useDashboardStore = defineStore('DashboardStore', {
             const {
                 game_id,
                 n_steps,       // N steps contained in this batch
-                step_num,      // Latest step sent
-                ...agent_data  // Agent-specific data
+                step_num,      // List of steps contained in this batch
+                agents,        // Agent-specific data
             } = value
             if (!this.gameId) {
                 this.gameId = game_id
             }
-            console.log(`Received ${n_steps} new steps (${step_num} total).`)
-            this.maxStepBuffer = step_num
+            const latest_step_num = step_num[step_num.length - 1]
+            console.log(`Received ${n_steps} new steps (${latest_step_num} total).`)
+            this.maxStepBuffer = latest_step_num
 
             // For arrays (timeseries data), concatenate value to state
             /* eslint-disable consistent-return */
-            _.mergeWith(this.data, agent_data, (a, b) => {
+            _.mergeWith(this.data, agents, (a, b) => {
                 // Define custom handler to for arrays
                 if (_.isArray(a)) {
                     return a.concat(b)
@@ -236,16 +237,12 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param config
          */
-        setGameParams(config) {
-            const {game_config, currency_desc} = config
-            this.gameCurrencies = currency_desc
-
-            // TODO: Revert ABM Workaround
-            const game_vars = parseUpdatedGameVars(game_config, currency_desc)
-            const {humanAtmosphere, currencyDict, gameConfig} = game_vars
-            this.humanAtmosphere = humanAtmosphere
-            this.currencyDict = currencyDict
-            this.gameConfig = gameConfig
+        setGameParams(game_config) {
+          this.gameConfig = game_config
+          this.currencyDict = game_config.currencies
+          if (Object.keys(game_config.agents).includes('human')) {
+            this.humanAtmosphere = game_config.agents.human.flows.in.o2.connections[0]
+          }
         },
 
         /**

@@ -309,10 +309,7 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.setGameId(response.data.game_id)
-                this.setGameParams({
-                    game_config: response.data.game_config,
-                    currency_desc: response.data.currency_desc,
-                })
+                this.setGameParams(response.data.game_config)
                 this.currentMode = 'sim'
                 this.isLive = false
                 this.loadFromSimData = false
