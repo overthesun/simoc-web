@@ -60,23 +60,13 @@ export default {
         const {getData} = dashboard
         return {humanAtmosphere, gameConfig, getData}
     },
-    computed: {
-        total_storage_capacity() {
-            let storage = this.gameConfig.storages[this.humanAtmosphere]
-            // TODO: Revert ABM Workaround
-            // gameConfig structure has been updated in the backend, but presets use old structure.
-            storage = Array.isArray(storage) ? storage[0] : storage
-            return storage.total_capacity.value
-        },
-    },
     methods: {
         airStorageGetter(currency) {
             // TODO: handle multiple air_storages with an optional dropdown
-            const {total_storage_capacity} = this
             return step => {
-                const path = [this.humanAtmosphere, 'storage', currency, step]
-                const amount = this.getData(path)
-                return amount / total_storage_capacity * 100
+                const amount = this.getData([this.humanAtmosphere, 'storage', currency, step])
+                const total = this.getData([this.humanAtmosphere, 'storage', 'SUM', step])
+                return amount / total * 100
             }
         },
     },

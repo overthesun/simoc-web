@@ -73,7 +73,7 @@ export default {
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
-        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
+        const {getTotalMissionHours} = storeToRefs(wizard)
         const {bundleNum, initBundleNum} = storeToRefs(liveStore)
         const {surveyWasPrompted, countdownEnded} = storeToRefs(modal)
         const {
@@ -88,8 +88,7 @@ export default {
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
-            stopTimer, setCurrentStepBuffer, setStopped,
-            configuration, getTotalMissionHours,
+            stopTimer, setCurrentStepBuffer, setStopped, getTotalMissionHours,
             setLiveConfig, bundleNum, initBundleNum,
             setHabitatInfo, setSensorInfo, parseData, surveyWasPrompted, countdownEnded,
             confirm, showSurvey, stopCountdownTimer,

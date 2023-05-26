@@ -134,7 +134,7 @@ export default {
         stringFormatter: StringFormatter,
         humanCount() {
             const agents = this.getData(
-                ['human_agent', 'amount', this.currentStepBuffer]
+                ['human', 'active', this.currentStepBuffer]
             )
             if (agents !== undefined && agents !== null) {
                 return agents

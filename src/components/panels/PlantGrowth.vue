@@ -45,7 +45,7 @@ export default {
         stringFormatter: StringFormatter,
         getAgentGrowthPerc(plant) {
             const agentGrowth = this.getData(
-                [plant, 'growth', 'growth_rate', this.currentStepBuffer]
+                [plant, 'attributes', 'growth_rate', this.currentStepBuffer]
             )
             if (agentGrowth === undefined || agentGrowth === null) {
                 return '[loading data...]'
@@ -55,9 +55,9 @@ export default {
             }
         },
         getAgentAge(plant) {
-            const age = this.getData([plant, 'growth', 'agent_step_num', this.currentStepBuffer])
-            const lifetime = this.getData([plant, 'lifetime'])
-            return lifetime - age
+            const age = this.getData([plant, 'attributes', 'age', this.currentStepBuffer])
+            const lifetime = this.getData([plant, 'static', 'properties', 'lifetime', 'value'])
+            return lifetime - age + 1
         },
     },
 }

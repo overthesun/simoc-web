@@ -1,9 +1,9 @@
 <template>
     <div class="panel-graph">
         <select v-model="storage" required>
-            <option v-for="[stor_name, stor_id] in getMultiCurrencyStorages"
-                    :key="`${stor_name}/${stor_id}`" :value="`${stor_name}/${stor_id}`">
-                {{stringFormatter(stor_name)}} {{stor_id}}
+            <option v-for="stor_name in getMultiCurrencyStorages"
+                    :key="stor_name" :value="stor_name">
+                {{stringFormatter(stor_name)}}
             </option>
         </select>
         <div>
@@ -51,27 +51,10 @@ export default {
     },
     computed: {
         getMultiCurrencyStorages() {
-            const {storages} = this.gameConfig
-            const allCurrencies = Object.keys(this.currencyDict)
-            // The storages var looks like:
-            // {air_storage: {0: {o2:..., co2,...}, 1: {...}}, food_storage: {...}, ...}
-            // Some storages (e.g. power_storage) only have 1 currency in the inner object,
-            // so it doesn't make much sense to calculate the ratios for those storages.
-            // This function takes all the storages that have at least 2 currencies,
-            // adds them to the filtered var, and returns them.
-            const filtered = []
-            Object.entries(storages).forEach(([stor_name, stor_group]) => {
-                stor_group.forEach((stor, stor_id) => {
-                    // TODO: Revert ABM Workaround
-                    // each stor has an additional id key, so we need >2 keys to have
-                    // two currencies (one id key + two or more currency keys)
-                    const currencies = Object.keys(stor).filter(c => allCurrencies.includes(c))
-                    if (currencies.length > 2) {
-                        filtered.push([stor_name, stor_id+1])
-                    }
-                })
-            })
-            return filtered
+            // Return a list of agents that store at least 2 different currencies.
+            return Object.entries(this.gameConfig.agents)
+                .filter(([agent_id, agent_data]) => Object.keys(agent_data.capacity).length > 1)
+                .map(([agent_id, agent_data]) => agent_id)
         },
     },
     watch: {
@@ -87,12 +70,14 @@ export default {
     },
     created() {
         // default on the first storage if we don't get anything (e.g. when using "Change panel")
-        this.storage = this.panelSection ?? this.getMultiCurrencyStorages[0].join('/')
-        Object.entries(this.gameConfig.storages).forEach(([storage_name, storage]) => {
-            if (storage[0].storageType) {
-                this.storagesMapping[storage_name] = storage[0].storageType[0]
+        const storages = this.getMultiCurrencyStorages
+        this.storage = this.panelSection ?? storages[0]
+        // Create a mapping between storage names and storage types for coloring purposes
+        storages.forEach(agent_id => {
+            if (['water_storage', 'nutrient_storage'].includes(agent_id)) {
+                this.storagesMapping[agent_id] = agent_id
             } else {
-                this.storagesMapping[storage_name] = storage_name
+                this.storagesMapping[agent_id] = 'air_storage'
             }
         })
     },

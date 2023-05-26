@@ -1,5 +1,5 @@
 <!--
-Plots all fields/values for a given agent and category, e.g. 'human_agent:flows'. Based on VersusGraph.
+Plots all fields/values for a given agent and category, e.g. 'human:flows'. Based on VersusGraph.
 
 Valid categories:
   - flows: All exchanges as positive values
@@ -52,7 +52,8 @@ export default {
         stub() {  // The path without the last value (step index)
             if (this.category === 'flows') {
                 return [this.agent, 'flows', '*', '*', 'SUM']
-            } else {
+            } elif (this.category === 'growth') {
+                // Growth and deprive
                 return [this.agent, this.category, '*']
             }
         },
@@ -114,9 +115,9 @@ export default {
 
             // For Inhabitants, the number of potential 'food' fields is excessive,
             // so we combile them all into a single field, 'food'.
-            if (this.agent === 'human_agent' && !('food' in consolidated)) {
+            if (this.agent === 'human' && !('food' in consolidated)) {
                 const foodFields = Object.keys(consolidated)
-                        .filter(f => this.currencyDict[f].currencyClass === 'food')
+                        .filter(f => this.currencyDict[f].category === 'food')
                 foodFields.forEach(field => {
                     const amount = consolidated[field]
                     delete consolidated[field]
