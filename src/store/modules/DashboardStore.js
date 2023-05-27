@@ -193,6 +193,27 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 // Others types are overwritten
             })
         },
+        parseAttributes(attributes) {
+            // Split list of attributes names into three categories
+            const output = {growth: [], deprive: [], attributes: []}
+            const plantGrowthAttrs = ['grown', 'par_factor', 'growth_rate', 'cu_factor', 'te_factor']
+            attributes.forEach(a => {
+                if (a.includes('deprive')) {
+                    output.deprive.push(a)
+                } else if (a.includes('growth') || plantGrowthAttrs.includes(a)) {
+                    output.growth.push(a)
+                } else {
+                    output.attributes.push(a)
+                }
+            })
+            // Return non-empty fields of output
+            Object.keys(output).forEach(k => {
+                if (output[k].length === 0) {
+                    delete output[k]
+                }
+            })
+            return output
+        },
         getData(path) {
             if (Object.keys(this.data).length === 0) {
                 // If data is empty, return undefined. If the last element of path

@@ -60,13 +60,17 @@ export default {
         const {getData} = dashboard
         return {humanAtmosphere, gameConfig, getData}
     },
+    computed: {
+        totalAtmosphere() {
+            return this.getData([this.humanAtmosphere, 'storage', 'SUM', 1])
+        },
+    },
     methods: {
         airStorageGetter(currency) {
             // TODO: handle multiple air_storages with an optional dropdown
             return step => {
                 const amount = this.getData([this.humanAtmosphere, 'storage', currency, step])
-                const total = this.getData([this.humanAtmosphere, 'storage', 'SUM', step])
-                return amount / total * 100
+                return amount / this.totalAtmosphere * 100
             }
         },
     },

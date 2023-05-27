@@ -43,14 +43,15 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {activePanels, data} = storeToRefs(dashboard)
+        const {parseAttributes} = dashboard
         const {getTotalMissionHours} = storeToRefs(wizard)
-        return {activePanels, getTotalMissionHours, activeData: data}
+        return {activePanels, parseAttributes, getTotalMissionHours, activeData: data}
     },
     data() {
         return {
             agent: '',
             category: '',
-            validCategories: ['storage', 'flows', 'growth', 'deprive'],
+            validCategories: ['storage', 'flows', 'growth', 'deprive', 'attributes'],
         }
     },
     computed: {
@@ -61,11 +62,27 @@ export default {
             ))
         },
         categories() {
+            // As of June 2023, 'growth' and 'deprive' were combined along with
+            // all other dynamic variables into the field 'attributes', but we
+            // still want to treat them separately for clarify and ease of use.
+            // The 'parseAttributes' method was added to the DashboardStore and
+            // is used here and in AgentGraph for this purpose. Attributes not
+            // in the 'growth' or 'deprive' categories are added to a new class
+            // just called 'attributes'.
+            let categories = []
             if (this.agent in this.activeData) {
-                return this.validCategories.filter(c => c in this.activeData[this.agent])
-            } else {
-                return []
+                const agentData = this.activeData[this.agent];
+                ['storage', 'flows'].forEach(cat => {
+                    if (agentData[cat]) {
+                        categories.push(cat)
+                    }
+                })
+                if (agentData.attributes) {
+                    const attrCats = this.parseAttributes(Object.keys(agentData.attributes))
+                    categories = categories.concat(Object.keys(attrCats))
+                }
             }
+            return categories
         },
     },
     watch: {

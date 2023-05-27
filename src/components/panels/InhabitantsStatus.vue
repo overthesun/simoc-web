@@ -140,6 +140,9 @@ export default {
                 return agents
             }
         },
+        totalAtmosphere() {
+            return this.getData([this.humanAtmosphere, 'storage', 'SUM', 1])
+        },
     },
     mounted() {
         // Compile a list of active food currencies
@@ -158,8 +161,7 @@ export default {
             if (Number.isNaN(amount) || this.currentStepBuffer === 0) {
                 throw Error('Nothing here yet..')
             }
-            const total = this.getData([this.humanAtmosphere, 'storage', 'SUM', this.step])
-            return amount / total * 100
+            return amount / this.totalAtmosphere * 100
         },
         attempt_read(func) {
             try {
