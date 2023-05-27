@@ -103,10 +103,8 @@ export default {
             // labels from the key. Some paths will return a single value or
             // Array; this function wraps them in an Object.
             const data = this.getData(path)
-            const arrayIsNotEmpty = (array) => {
-                // getData returns an empty array when data hasn't loaded.
-                return array.some((a, i) => i in array)
-            }
+            // getData returns an empty array when data hasn't loaded.
+            const arrayIsNotEmpty = array => array.some((a, i) => i in array)
             if (typeof data === 'number' ||
                 (Array.isArray(data) && arrayIsNotEmpty(data))) {
                 const key = this.stub[this.stub.length - 1]

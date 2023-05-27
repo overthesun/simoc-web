@@ -196,7 +196,8 @@ export const useDashboardStore = defineStore('DashboardStore', {
         parseAttributes(attributes) {
             // Split list of attributes names into three categories
             const output = {growth: [], deprive: [], attributes: []}
-            const plantGrowthAttrs = ['grown', 'par_factor', 'growth_rate', 'cu_factor', 'te_factor']
+            const plantGrowthAttrs = ['grown', 'par_factor', 'growth_rate', 'cu_factor',
+                                      'te_factor']
             attributes.forEach(a => {
                 if (a.includes('deprive')) {
                     output.deprive.push(a)
@@ -259,11 +260,11 @@ export const useDashboardStore = defineStore('DashboardStore', {
          * @param config
          */
         setGameParams(game_config) {
-          this.gameConfig = game_config
-          this.currencyDict = game_config.currencies
-          if (Object.keys(game_config.agents).includes('human')) {
-            this.humanAtmosphere = game_config.agents.human.flows.in.o2.connections[0]
-          }
+            this.gameConfig = game_config
+            this.currencyDict = game_config.currencies
+            if (Object.keys(game_config.agents).includes('human')) {
+                this.humanAtmosphere = game_config.agents.human.flows.in.o2.connections[0]
+            }
         },
 
         /**

@@ -53,8 +53,8 @@ export default {
         getMultiCurrencyStorages() {
             // Return a list of agents that store at least 2 different currencies.
             return Object.entries(this.gameConfig.agents)
-                .filter(([agent_id, agent_data]) => Object.keys(agent_data.capacity).length > 1)
-                .map(([agent_id, agent_data]) => agent_id)
+                    .filter(([agent, agent_data]) => Object.keys(agent_data.capacity).length > 1)
+                    .map(([agent, agent_data]) => agent)
         },
     },
     watch: {

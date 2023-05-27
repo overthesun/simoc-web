@@ -63,12 +63,12 @@ export default {
         },
         categories() {
             // As of June 2023, 'growth' and 'deprive' were combined along with
-            // all other dynamic variables into the field 'attributes', but we
-            // still want to treat them separately for clarify and ease of use.
-            // The 'parseAttributes' method was added to the DashboardStore and
-            // is used here and in AgentGraph for this purpose. Attributes not
-            // in the 'growth' or 'deprive' categories are added to a new class
-            // just called 'attributes'.
+            // all other dynamic variables in simoc_abm into the field
+            // 'attributes', but we still want to treat them separately here
+            // for clarity and ease of use. The 'parseAttributes' method was
+            // added to the DashboardStore and is used here and in AgentGraph
+            // for this purpose. Attributes not in the 'growth' or 'deprive'
+            // categories are added to a new category just called 'attributes'.
             let categories = []
             if (this.agent in this.activeData) {
                 const agentData = this.activeData[this.agent];
