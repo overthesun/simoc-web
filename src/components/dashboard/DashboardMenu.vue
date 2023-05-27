@@ -91,7 +91,6 @@ export default {
             }
             const simdata = this.getSimulationData
             simdata.configuration = this.configuration
-            simdata.currency_desc = this.gameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})

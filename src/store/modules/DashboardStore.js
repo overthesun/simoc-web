@@ -50,7 +50,6 @@
  */
 import {defineStore} from 'pinia'
 import _ from 'lodash'
-import {parseUpdatedGameVars} from '../../javascript/gameVars'
 import {StepTimer} from '../../javascript/stepTimer'
 import {parseData} from '../../javascript/parseData'
 
@@ -95,10 +94,12 @@ export const useDashboardStore = defineStore('DashboardStore', {
         getSimulationData(state) {
             return {
                 README: 'Format may vary, only import from the main menu.',
-                game_config: state.gameConfig,
+                gameConfig: state.gameConfig,
                 steps: state.maxStepBuffer,
                 parameters: state.parameters,
                 data: state.data,
+                currencyDict: state.currencyDict,
+                humanAtmosphere: state.humanAtmosphere,
             }
         },
         getLayoutName(state) {
@@ -117,18 +118,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param value
          */
-        setSimulationData({simdata, currency_desc}) {
-            this.gameCurrencies = currency_desc   // TODO: Duplicated by currencyDict
-            this.maxStepBuffer = simdata.steps
-            this.parameters = simdata.parameters  // TODO: Unnecessary with websocket
-            this.data = simdata.data
-
-            // TODO: Revert ABM Workaround
-            const game_vars = parseUpdatedGameVars(simdata.game_config, currency_desc)
-            const {humanAtmosphere, currencyDict, gameConfig} = game_vars
-            this.humanAtmosphere = humanAtmosphere
+        setSimulationData(simdata) {
+            const {gameConfig, steps, parameters, data, currencyDict, humanAtmosphere} = simdata
+            this.gameConfig = gameConfig
+            this.maxStepBuffer = steps
+            this.parameters = parameters
+            this.data = data
             this.currencyDict = currencyDict
-            this.gameConfig = gameConfig          // TODO: Use only one copy of config
+            this.humanAtmosphere = humanAtmosphere
         },
 
         // Time Control
