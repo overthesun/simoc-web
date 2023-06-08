@@ -22,7 +22,7 @@ let tracking_id = null
 if (window.location.hostname.startsWith('beta')) {
     tracking_id = 'G-6M7C80DGTR'  // beta id
 } else {
-    tracking_id = 'UA-29092818-6'  // NGS id
+    tracking_id = 'G-60FL6KJK4M'  // NGS id
 }
 
 createApp(App)
