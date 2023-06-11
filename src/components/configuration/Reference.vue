@@ -229,6 +229,8 @@ using v-for to populate all links with the title and the approriate value for th
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+
+// eslint-disable-next-line import/no-cycle
 import {ReferenceItem} from '.'
 
 export default {
