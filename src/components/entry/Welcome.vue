@@ -48,7 +48,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <button class="btn-normal" @click="toLogin">PROCEED</button>
+                <VBtnMenu @click="toLogin">PROCEED</VBtnMenu>
             </template>
         </BaseEntry>
         <!-- Kiosk Mode -->
@@ -122,6 +122,12 @@ export default {
 .welcome-title {
     margin-top: 0;
     font-weight: bold;
+}
+
+.v-btn.v-btn--menu {
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 p {
