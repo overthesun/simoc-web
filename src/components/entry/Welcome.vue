@@ -48,7 +48,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <VBtnMenu @click="toLogin">PROCEED</VBtnMenu>
+                <v-btn-menu @click="toLogin">PROCEED</v-btn-menu>
             </template>
         </BaseEntry>
         <!-- Kiosk Mode -->
