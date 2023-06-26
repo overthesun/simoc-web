@@ -30,7 +30,7 @@ export default createVuetify({
         VBtnMenu: {
             class: 'v-btn--menu',
             color: 'primary',
-            width: '200px',
+            width: '256px',
             height: '48px',
         },
     },
