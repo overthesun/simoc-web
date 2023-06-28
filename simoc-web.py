@@ -108,22 +108,28 @@ def build():
     return docker_run('-it', '--entrypoint', 'npm', IMGNAME, 'run', 'build')
 
 @cmd
-def copy_dist_dir():
+def copy_dist_dir(assume_yes=False):
     """Copy the dist dir into the "simoc" repo."""
     # assume that both the simoc and simoc-web repos are in the same dir
     simoc_server_dir = SIMOC_DIR / 'simoc_server'
     simoc_web_dist_dir = SIMOC_WEB_DIR / 'dist'
     if not simoc_server_dir.exists():
         print(f'* <{simoc_server_dir}> does not exist')
+        if not assume_yes:
+            return False
         p = input('* Please enter the path to the "simoc_server" dir: ')
         simoc_server_dir = pathlib.Path(p).resolve()
-    ans = input(f'* Copy <{simoc_web_dist_dir}> into <{simoc_server_dir}>? [Y/n] ')
+    ans = 'y'
+    if not assume_yes:
+        ans = input(f'* Copy <{simoc_web_dist_dir}> into <{simoc_server_dir}>? [Y/n] ')
     if ans.lower().strip() == 'n':
         print(f'* <{simoc_web_dist_dir}> not copied')
         return False
     simoc_dist_dir = simoc_server_dir / 'dist'
     if simoc_dist_dir.exists():
-        ans = input(f'* <{simoc_dist_dir}> already exist, remove it? [Y/n] ')
+        ans = 'y'
+        if not assume_yes:
+            ans = input(f'* <{simoc_dist_dir}> already exist, remove it? [Y/n] ')
         if ans.lower().strip() == 'n':
             print(f'* <{simoc_web_dist_dir}> not copied')
             return False
@@ -143,6 +149,12 @@ def setup():
     """Set up the docker image, build the frontend, and copy the dist dir."""
     return (install_docker() and build_image() and setup_deps() and
             build_and_copy())
+
+@cmd
+def deploy():
+    """Build the SIMOC frontend and copy it for deployment."""
+    return (build_image() and setup_deps() and build() and
+            copy_dist_dir(assume_yes=True))
 
 
 def create_help(cmds):
