@@ -40,7 +40,7 @@ def docker_run(*args):
     # detect and connect to the network if it's available
     net_name = 'simoc_simoc-net'
     cp = subprocess.run(['docker', 'network', 'inspect', net_name],
-                        capture_output=True)
+                        stdout=subprocess.DEVNULL)
     net_args = ['--network', net_name] if cp.returncode == 0 else []
     fe_branch = f'VITE_FE_BRANCH={get_current_branch(SIMOC_WEB_DIR)}'
     be_branch = f'VITE_BE_BRANCH={get_current_branch(SIMOC_DIR)}'
