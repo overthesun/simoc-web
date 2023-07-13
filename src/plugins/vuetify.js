@@ -1,5 +1,5 @@
 import {createVuetify} from 'vuetify'
-import {VBtn} from 'vuetify/components/VBtn'
+import {VBtn} from 'vuetify/components/VBtn.vue'
 
 const simocBaseTheme = {
     colors: {
