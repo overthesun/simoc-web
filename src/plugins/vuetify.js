@@ -1,5 +1,6 @@
 import {createVuetify} from 'vuetify'
-import {VBtn} from 'vuetify/components/VBtn.vue'
+// eslint-disable-next-line
+import {VBtn} from 'vuetify/components/VBtn'
 
 const simocBaseTheme = {
     colors: {
