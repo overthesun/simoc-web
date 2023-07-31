@@ -189,6 +189,9 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 }
                 // Others types are overwritten
             })
+            
+            // Keep up to date in case of disconnect/reconnect
+            this.updateMinStepNumber(latest_step_num)
         },
         parseAttributes(attributes) {
             // Split list of attributes names into three categories
@@ -278,8 +281,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
          * @param min
          */
         updateMinStepNumber(min) {
-            const {step_num: step} = min
-            this.parameters.min_step_num = Math.max(step+1, this.parameters.min_step_num)
+            this.parameters.min_step_num = Math.max(min, this.parameters.min_step_num)
         },
 
         setDefaultPanels(layout) {
