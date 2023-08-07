@@ -189,7 +189,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 }
                 // Others types are overwritten
             })
-            
+
             // Keep up to date in case of disconnect/reconnect
             this.updateMinStepNumber(latest_step_num)
         },
