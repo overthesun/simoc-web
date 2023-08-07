@@ -126,7 +126,13 @@ export default {
                 )
                 let foodValue = 0
                 Object.values(foodStorages).forEach(store => {
-                    foodValue += Object.values(store).reduce((a, b) => a + b)
+                    if (typeof store === 'number') {
+                        foodValue += store
+                    } else if (typeof store === 'object') {
+                        foodValue += Object.values(store).reduce((a, b) => a + b)
+                    } else {
+                        console.error('Unexpected food storage type', store)
+                    }
                 })
                 return `${foodValue.toFixed(3)} kg`
             })

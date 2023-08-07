@@ -46,7 +46,7 @@ export default {
         getAgentGrowthPerc(plant) {
             const agentGrowth = this.getData(
                 [plant, 'attributes', 'growth_rate', this.currentStepBuffer]
-            )
+            ) / 2 // divide by 2 because growth rate is 0-2
             if (agentGrowth === undefined || agentGrowth === null) {
                 return '[loading data...]'
             } else {
