@@ -79,14 +79,6 @@ export default {
         step() {
             return this.currentStepBuffer
         },
-        total_air_storage_capacity() {
-            // return the total capacity of the air storage
-            let storage = this.gameConfig.storages[this.humanAtmosphere]
-            // TODO: Revert ABM Workaround
-            // gameConfig structure has been updated in the backend, but presets use old structure.
-            storage = Array.isArray(storage) ? storage[0] : storage
-            return storage.total_capacity.value
-        },
         o2() {
             return this.attempt_read(() => {
                 const o2_perc = this.get_gas_percentage('o2')
@@ -134,13 +126,19 @@ export default {
                 )
                 let foodValue = 0
                 Object.values(foodStorages).forEach(store => {
-                    foodValue += Object.values(store).reduce((a, b) => a + b)
+                    if (typeof store === 'number') {
+                        foodValue += store
+                    } else if (typeof store === 'object') {
+                        foodValue += Object.values(store).reduce((a, b) => a + b)
+                    } else {
+                        console.error('Unexpected food storage type', store)
+                    }
                 })
                 return `${foodValue.toFixed(3)} kg`
             })
         },
         humans() {
-            const agents = this.getData(['human_agent', 'amount', this.currentStepBuffer])
+            const agents = this.getData(['human', 'active', this.currentStepBuffer])
             if (Number.isNaN(agents) || this.currentStepBuffer === 0) {
                 // if we don't know the humans count, return the initial value
                 return this.configuration.humans.amount
@@ -148,12 +146,15 @@ export default {
                 return agents
             }
         },
+        totalAtmosphere() {
+            return this.getData([this.humanAtmosphere, 'storage', 'SUM', 1])
+        },
     },
     mounted() {
         // Compile a list of active food currencies
         this.foodCurrencies = []
         Object.entries(this.currencyDict).forEach(([currency, data]) => {
-            if (data.currencyClass === 'food') {
+            if (data.category === 'food') {
                 this.foodCurrencies.push(currency)
             }
         })
@@ -162,13 +163,11 @@ export default {
         stringFormatter: StringFormatter,
         get_gas_percentage(currency) {
             // calculate and return the percentage of the given gas
-            const air_storage_value = this.getData(
-                [this.humanAtmosphere, 'storage', currency, this.step]
-            )
-            if (Number.isNaN(air_storage_value) || this.currentStepBuffer === 0) {
+            const amount = this.getData([this.humanAtmosphere, 'storage', currency, this.step])
+            if (Number.isNaN(amount) || this.currentStepBuffer === 0) {
                 throw Error('Nothing here yet..')
             }
-            return air_storage_value / this.total_air_storage_capacity * 100
+            return amount / this.totalAtmosphere * 100
         },
         attempt_read(func) {
             try {
