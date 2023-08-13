@@ -1,5 +1,5 @@
 <!--
-Plots all fields/values for a given agent and category, e.g. 'human_agent:flows'. Based on VersusGraph.
+Plots all fields/values for a given agent and category, e.g. 'human:flows'. Based on VersusGraph.
 
 Valid categories:
   - flows: All exchanges as positive values
@@ -32,12 +32,11 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {
-            isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
-        } = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
+               data} = storeToRefs(dashboard)
+        const {getData, parseAttributes} = dashboard
         return {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
-                getData}
+                getData, parseAttributes, activeData: data}
     },
     data() {
         return {
@@ -52,8 +51,13 @@ export default {
         stub() {  // The path without the last value (step index)
             if (this.category === 'flows') {
                 return [this.agent, 'flows', '*', '*', 'SUM']
-            } else {
+            } else if (this.category === 'storage') {
                 return [this.agent, this.category, '*']
+            } else {
+                const agentData = this.activeData[this.agent]
+                const attrCats = this.parseAttributes(Object.keys(agentData.attributes))
+                const attrFields = attrCats[this.category].join(',')
+                return [this.agent, 'attributes', attrFields]
             }
         },
     },
@@ -94,6 +98,21 @@ export default {
     },
 
     methods: {
+        getDataAsObject(path) {
+            // The code expects getData to return an Object, so it can build
+            // labels from the key. Some paths will return a single value or
+            // Array; this function wraps them in an Object.
+            const data = this.getData(path)
+            // getData returns an empty array when data hasn't loaded.
+            const arrayIsNotEmpty = array => array.some((a, i) => i in array)
+            if (typeof data === 'number' ||
+                (Array.isArray(data) && arrayIsNotEmpty(data))) {
+                const key = this.stub[this.stub.length - 1]
+                return {[key]: data}
+            } else {
+                return data
+            }
+        },
         consolidateFlows(data) {
             // Data for 'flows' contains an extra level of heirarchy, 'in' or 'out'.
             // Here I remove that layer and instead make 'out' amounts negative.
@@ -114,9 +133,9 @@ export default {
 
             // For Inhabitants, the number of potential 'food' fields is excessive,
             // so we combile them all into a single field, 'food'.
-            if (this.agent === 'human_agent' && !('food' in consolidated)) {
+            if (this.agent === 'human' && !('food' in consolidated)) {
                 const foodFields = Object.keys(consolidated)
-                        .filter(f => this.currencyDict[f].currencyClass === 'food')
+                        .filter(f => this.currencyDict[f].category === 'food')
                 foodFields.forEach(field => {
                     const amount = consolidated[field]
                     delete consolidated[field]
@@ -142,7 +161,7 @@ export default {
             const canvas = document.getElementById(this.id)
 
             // Build the datasets object, and corresponding index, from the selected data
-            let data = this.getData(this.stub.concat([1]))
+            let data = this.getDataAsObject(this.stub.concat([1]))
             let datasets
             if (data === undefined) {
                 // Before the first packet of data is sent.
@@ -264,7 +283,7 @@ export default {
                 range = currentStep
             }
             const path = this.stub.concat([range])
-            let allResults = this.getData(path)
+            let allResults = this.getDataAsObject(path)
             if (this.category === 'flows') {
                 allResults = this.consolidateFlows(allResults)
             }
