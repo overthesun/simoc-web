@@ -1,16 +1,22 @@
 <template>
     <div class="panel-graph">
         <select v-model="currency" required>
-            <option :selected="currency === 'co2' || !(currency in units)" value="co2">
-                Carbon dioxide (CO₂)
+            <option :selected="currency === 'co2'" value="co2">
+                {{getOptionLabel('co2')}}
             </option>
-            <option :selected="currency === 'o2'" value="o2">Oxygen (O₂)</option>
-            <option :selected="currency === 'potable'" value="potable">Potable Water</option>
-            <option v-if="simLocation !== 'b2'" :selected="currency === 'kwh'" value="kwh">Energy</option>
+            <option :selected="currency === 'o2'" value="o2">
+                {{getOptionLabel('o2')}}
+            </option>
+            <option :selected="currency === 'potable'" value="potable">
+                {{getOptionLabel('potable')}}
+            </option>
+            <option v-if="simLocation !== 'b2'" :selected="currency === 'kwh'" value="kwh">
+                {{getOptionLabel('kwh')}}
+            </option>
         </select>
         <div>
             <VersusGraph :id="'canvas-pc-' + canvasNumber" :plotted-value="currency"
-                         :unit="units[currency]" :fullscreen="fullscreen"
+                         :unit="getUnit(currency)" :fullscreen="fullscreen"
                          :nsteps="fullscreen?getTotalMissionHours:24" />
         </div>
     </div>
@@ -40,21 +46,15 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {activePanels, simLocation} = storeToRefs(dashboard)
+        const {activePanels, simLocation, currencyDict} = storeToRefs(dashboard)
         const {getTotalMissionHours} = storeToRefs(wizard)
-        return {activePanels, getTotalMissionHours, simLocation}
+        return {activePanels, getTotalMissionHours, simLocation, currencyDict}
     },
     data() {
         return {
             // default on 'co2' if we don't get anything
             // (e.g. when using "Change panel")
             currency: this.panelSection ?? 'co2',
-            units: {
-                co2: 'kg',
-                o2: 'kg',
-                potable: 'kg',
-                kwh: 'kW',
-            },
         }
     },
     watch: {
@@ -66,6 +66,19 @@ export default {
         activePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
             this.currency = this.activePanels[this.panelIndex].split(':')[1]
+        },
+    },
+    methods: {
+        getUnit(currency) {
+            const desc = this.currencyDict[currency]
+            return desc ? desc.unit : 'kg'
+        },
+        getOptionLabel(currency) {
+            const desc = this.currencyDict[currency]
+            if (!desc) {
+                return currency
+            }
+            return desc.label + (desc.short ? ` (${desc.short})` : '')
         },
     },
 }

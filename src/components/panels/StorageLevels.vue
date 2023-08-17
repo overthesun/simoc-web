@@ -10,10 +10,10 @@
                 <template v-for="(value, name) in stor_obj" :key="`tmpl_${name}`">
                     <dt v-if="name == 'co2'"
                         title="CO2 exchanges to/from storage are recorded as both production and consumption">
-                        {{label2name(name)}}
+                        {{getLabel(name)}}
                     </dt>
-                    <dt v-else>{{label2name(name)}}</dt>
-                    <dd>{{value.toFixed(3)}} kg</dd>
+                    <dt v-else>{{getLabel(name)}}</dt>
+                    <dd>{{value.toFixed(3)}} {{getUnit(name)}}</dd>
                 </template>
             </dl>
         </template>
@@ -57,26 +57,25 @@ export default {
             })
             return filteredStorage
         },
-        label2name(label) {
-            // TODO: ABM Redesign Workaround
-            const definedLocally = {
-                o2: 'Oxygen (O₂)',
-                co2: 'Carbon dioxide (CO₂)',
-                n2: 'Nitrogen (N₂)',
-                ch4: 'Methane (CH₄)',
-                h2: 'Free hydrogen (H₂)',
-                h2o: 'Water (H₂0) vapor',
-                potable: 'Potable',
-                urine: 'Urine',
-                feces: 'Waste (carries feces)',
-                treated: 'Treated',
-                fertilizer: 'Fertilizer',
-                waste: 'Unused salts',
-                ration: 'Food',
-                biomass: 'Biomass (edible, inedible)',
-                kwh: 'Energy (battery)',
+        getLabel(currency) {
+            const desc = this.currencyDict[currency]
+            if (!desc) {
+                return currency
             }
-            return definedLocally[label] ?? this.currencyDict[label].label
+            const substitutions = {
+                h2: 'Free hydrogen',  // replaces 'Hydrogen'
+                feces: 'Waste (carries feces)',  // replaces 'Waste'
+                waste: 'Unused salts',  // replaces 'Waste'
+                biomass: 'Biomass (edible, inedible)',  // replaces 'Biomass'
+                kwh: 'Energy (battery)',  // replaces 'Energy'
+            }
+            let label = substitutions[currency] ?? desc.label
+            label += (desc.short ? ` (${desc.short})` : '')
+            return label
+        },
+        getUnit(currency) {
+            const desc = this.currencyDict[currency]
+            return desc ? desc.unit : 'kg'
         },
     },
 }
