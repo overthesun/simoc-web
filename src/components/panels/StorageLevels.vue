@@ -31,8 +31,8 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
-        const {getData} = dashboard
-        return {currentStepBuffer, currencyDict, getData}
+        const {getData, getUnit} = dashboard
+        return {currentStepBuffer, currencyDict, getUnit, getData}
     },
     modes: ['sim'],
     methods: {
@@ -72,10 +72,6 @@ export default {
             let label = substitutions[currency] ?? desc.label
             label += (desc.short ? ` (${desc.short})` : '')
             return label
-        },
-        getUnit(currency) {
-            const desc = this.currencyDict[currency]
-            return desc ? desc.unit : 'kg'
         },
     },
 }

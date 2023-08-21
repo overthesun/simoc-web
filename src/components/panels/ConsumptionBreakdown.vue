@@ -28,8 +28,8 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
-        const {getData} = dashboard
-        return {currentStepBuffer, getData, currencyDict}
+        const {getData, getUnit} = dashboard
+        return {currentStepBuffer, getData, currencyDict, getUnit}
     },
     data() {
         return {
@@ -66,10 +66,6 @@ export default {
         getLabel(currency) {
             const desc = this.currencyDict[currency]
             return desc ? desc.label : currency
-        },
-        getUnit(currency) {
-            const desc = this.currencyDict[currency]
-            return desc ? desc.unit : 'kg'
         },
     },
 }

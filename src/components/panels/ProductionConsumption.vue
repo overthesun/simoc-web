@@ -48,7 +48,8 @@ export default {
         const wizard = useWizardStore()
         const {activePanels, simLocation, currencyDict} = storeToRefs(dashboard)
         const {getTotalMissionHours} = storeToRefs(wizard)
-        return {activePanels, getTotalMissionHours, simLocation, currencyDict}
+        const {getUnit} = dashboard
+        return {activePanels, getTotalMissionHours, simLocation, currencyDict, getUnit}
     },
     data() {
         return {
@@ -69,10 +70,6 @@ export default {
         },
     },
     methods: {
-        getUnit(currency) {
-            const desc = this.currencyDict[currency]
-            return desc ? desc.unit : 'kg'
-        },
         getOptionLabel(currency) {
             const desc = this.currencyDict[currency]
             if (!desc) {
