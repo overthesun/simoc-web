@@ -13,7 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/vue-fontawesome": "^3.0.2",
-    "@json-editor/json-editor": "^2.8.0",
+    "@json-editor/json-editor": "^2.10.1",
     "axios": "^1.2.2",
     "chart.js": "^4.2.0",
     "chartjs-plugin-annotation": "^2.1.2",
