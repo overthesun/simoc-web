@@ -124,12 +124,6 @@ export default {
     font-weight: bold;
 }
 
-.v-btn.v-btn--menu {
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
 p {
     font-family: "Open Sans", sans-serif;
 }

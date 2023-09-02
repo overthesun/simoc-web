@@ -3,6 +3,7 @@ import {createVuetify} from 'vuetify'
 import {VBtn} from 'vuetify/components/VBtn'
 
 const simocBaseTheme = {
+    dark: true,
     colors: {
         background: '#1e1e1e',
         primary: '#0099ee',
@@ -15,7 +16,6 @@ const b2BaseTheme = {
 }
 
 export default createVuetify({
-    dark: true,
     // https://vuetifyjs.com/en/features/theme/
     aliases: {
         VBtnMenu: VBtn,

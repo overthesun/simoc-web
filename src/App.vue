@@ -30,7 +30,6 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
   }
 
   body{
-    font-family: "Open Sans", sans-serif;
     padding: 0px;
     margin: 0px;
     overflow: hidden;
@@ -68,6 +67,15 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     justify-content:center;
     align-items:center;
   }
+
+  .v-application {
+    font-family: "Open Sans", sans-serif !important;
+  }
+
+  .v-btn.v-btn--menu{
+    font-family: sans-serif !important;
+    cursor: pointer;
+}
 
    @media all and (orientation: portrait){
     .orientation-portrait{
