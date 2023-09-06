@@ -11,10 +11,6 @@ const simocBaseTheme = {
     },
 }
 
-const b2BaseTheme = {
-
-}
-
 export default createVuetify({
     // https://vuetifyjs.com/en/features/theme/
     aliases: {
