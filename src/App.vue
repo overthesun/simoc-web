@@ -72,7 +72,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     font-family: "Open Sans", sans-serif !important;
   }
 
-  .v-btn.v-btn--menu{
+  .v-btn.v-btn--menu {
     font-family: sans-serif !important;
     cursor: pointer;
 }
