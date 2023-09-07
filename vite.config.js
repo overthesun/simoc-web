@@ -47,6 +47,9 @@ export default defineConfig({
         vue(),
         vuetify({
             autoImport: true,
+            styles: {
+                configFile: 'src/sass/components/_variables.scss',
+            }
         }),
     ],
 });
