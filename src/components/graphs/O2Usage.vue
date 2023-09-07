@@ -75,7 +75,7 @@ export default {
         humans: {
             handler() {
                 this.o2.humans = [0, 0]
-                this.retrieveO2('human_agent', this.configuration.humans.amount, response => {
+                this.retrieveO2('human', this.configuration.humans.amount, response => {
                     const {o2} = response
                     this.o2.humans[0] += o2.output
                     this.o2.humans[1] += o2.input

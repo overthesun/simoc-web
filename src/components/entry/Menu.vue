@@ -115,11 +115,11 @@ export default {
         readSimData(e) {
             try {
                 const json_data = JSON.parse(e.target.result)
-                const {configuration, currency_desc, ...simdata} = json_data
+                const {configuration, ...simdata} = json_data
                 const {location} = configuration
                 this.simLocation = location
                 this.setConfiguration(configuration, location)
-                this.setSimulationData({simdata, currency_desc})
+                this.setSimulationData(simdata)
             } catch (error) {
                 console.error(error)  // report full error in the console
                 this.alert('An error occurred while reading the file.')
