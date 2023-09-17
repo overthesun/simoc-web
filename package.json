@@ -15,7 +15,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.2",
     "@json-editor/json-editor": "^2.10.1",
     "axios": "^1.2.2",
-    "chart.js": "^4.2.0",
+    "chart.js": "^4.4.0",
     "chartjs-plugin-annotation": "^2.1.2",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
