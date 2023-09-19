@@ -24,33 +24,33 @@
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template #entry-main>
                 <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
-                    <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
-                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
-                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
-                    </form>
+                    <v-form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
+                        <v-text-field v-model="user.username" type="text" class="input-field-text" placeholder="Username"></v-text-field>
+                        <v-text-field v-model="user.password" type="password" class="input-field-text" placeholder="Password"></v-text-field>
+                    </v-form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                         Guest accounts are temporary and will be deleted on a regular basis.</p>
                     <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                 </section>
                 <section :class="{'entry-form-active': activeOption==='register'}"
                          class="entry-form entry-form-register">
-                    <form id="register-form" @submit.prevent="registerUser">
-                        <input v-model="register.username" type="text" class="input-field-text"
-                               placeholder="Choose Username">
-                        <input v-model="register.password" type="password" class="input-field-text"
-                               placeholder="Enter Password">
-                        <input v-model="register.confirmPassword" type="password" class="input-field-text"
-                               placeholder="Confirm Password">
-                    </form>
+                    <v-form id="register-form" @submit.prevent="registerUser">
+                        <v-text-field v-model="register.username" type="text" class="input-field-text"
+                               placeholder="Choose Username"></v-text-field>
+                        <v-text-field v-model="register.password" type="password" class="input-field-text"
+                               placeholder="Enter Password"></v-text-field>
+                        <v-text-field v-model="register.confirmPassword" type="password" class="input-field-text"
+                               placeholder="Confirm Password"></v-text-field>
+                    </v-form>
                 </section>
             </template>
             <!-- Uses class binding to show / hide the approriate section to the user -->
             <template #entry-button>
                 <div :class="{'btn-wrapper-active': activeOption==='login'}"
                      class="btn-wrapper btn-wrapper-login">
-                    <button v-if="activeGuestLogin" form="register-form" class="btn-normal"
-                            @click="guestLogin">SIGN IN AS GUEST</button>
-                    <button v-else form="login-form" class="btn-normal">SIGN IN</button>
+                    <v-btn-menu v-if="activeGuestLogin" form="register-form"
+                            @click="guestLogin">SIGN IN AS GUEST</v-btn-menu>
+                    <v-btn-menu v-else form="login-form">SIGN IN</v-btn-menu>
                 </div>
                 <div :class="{'btn-wrapper-active': activeOption==='register'}"
                      class="btn-wrapper btn-wrapper-register">

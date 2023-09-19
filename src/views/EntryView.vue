@@ -1,9 +1,9 @@
 <!-- Container for all entry related components -->
 
 <template>
-    <div class="base-entry-wrapper">
+    <v-container fluid class="base-entry-wrapper">
         <router-view />
-    </div>
+    </v-container>
 </template>
 
 <script>
