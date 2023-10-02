@@ -62,14 +62,7 @@ export default {
             if (!desc) {
                 return currency
             }
-            const substitutions = {
-                h2: 'Free hydrogen',  // replaces 'Hydrogen'
-                feces: 'Waste (carries feces)',  // replaces 'Waste'
-                waste: 'Unused salts',  // replaces 'Waste'
-                biomass: 'Biomass (edible, inedible)',  // replaces 'Biomass'
-                kwh: 'Energy (battery)',  // replaces 'Energy'
-            }
-            let label = substitutions[currency] ?? desc.label
+            let {label} = desc
             label += (desc.short ? ` (${desc.short})` : '')
             return label
         },
