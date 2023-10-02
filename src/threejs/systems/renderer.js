@@ -5,7 +5,6 @@ const buildRenderer = (containerId, settings) => {
         antialias: settings.antialias,
     })
 
-    renderer.physicallyCorrectLights = true
     if (settings.shadows) {
         renderer.shadowMap.enabled = true
     }
