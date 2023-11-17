@@ -12,7 +12,9 @@ menu button being present on other unrelated configurations.
 <template>
     <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
-        <section :class="{'no-form-select-dropdown': activeConfigType === 'Custom'}" class="wizard-wrapper">
+        <section
+            :class="{ 'no-form-select-dropdown': activeConfigType === 'Custom' }"
+            class="wizard-wrapper">
             <header>SIMULATION CONFIGURATION</header>
             <!-- Dropdown used to select sections, only available in Guided Configuration -->
             <nav v-if="activeConfigType === 'Guided'" class="navigation-wrapper">
@@ -36,13 +38,25 @@ menu button being present on other unrelated configurations.
               reference entry appearing on the right side.
             -->
             <nav class="configuration-options reference-options">
-                <div v-if="simLocation === 'mars'"
-                     :class="{'option-item-active' : activeReference === 'Layout'}"
-                     class="option-item" @click="activeReference = 'Layout'">LAYOUT</div>
-                <div :class="{'option-item-active' : activeReference === 'Graphs'}"
-                     class="option-item" @click="activeReference = 'Graphs'">GRAPHS</div>
-                <div :class="{'option-item-active': activeReference === 'Reference'}"
-                     class="option-item" @click="activeReference = 'Reference'">REFERENCE</div>
+                <div
+                    v-if="simLocation === 'mars'"
+                    :class="{ 'option-item-active': activeReference === 'Layout' }"
+                    class="option-item"
+                    @click="activeReference = 'Layout'">
+                    LAYOUT
+                </div>
+                <div
+                    :class="{ 'option-item-active': activeReference === 'Graphs' }"
+                    class="option-item"
+                    @click="activeReference = 'Graphs'">
+                    GRAPHS
+                </div>
+                <div
+                    :class="{ 'option-item-active': activeReference === 'Reference' }"
+                    class="option-item"
+                    @click="activeReference = 'Reference'">
+                    REFERENCE
+                </div>
                 <!--<div class='option-item' @click="activeReference = 'Recommended'"
                          :class="{'option-item-active' : 'Recommended'===activeReference}">RECOMMENDED</div>
                          Enabled Once Recommended Is Completed
@@ -76,145 +90,146 @@ export default {
 
 <style lang="scss" scoped>
 .configuration-wrapper {
-    position: relative;
-    height: 80vh;
-    width: 80vw;
-    max-width: 1200px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: minmax(0,1fr);
-    box-sizing: border-box;
-    background-color: #1e1e1eaa;
-    border: 1px solid #666;
-    border-radius: 5px;
+  position: relative;
+  height: 80vh;
+  width: 80vw;
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: minmax(0, 1fr);
+  box-sizing: border-box;
+  background-color: #1e1e1eaa;
+  border: 1px solid #666;
+  border-radius: 5px;
 }
 
-    .wizard-wrapper{
-        height:100%;
-        width:100%;
-        padding:16px;
-        border-right: 1px solid #666;
-        box-sizing:border-box;
-    }
+.wizard-wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  border-right: 1px solid #666;
+  box-sizing: border-box;
+}
 
-    .wizard-wrapper,.reference-wrapper{
-        display:grid;
-        grid-template-rows: 22px 32px minmax(0,1fr) 48px;
-        grid-row-gap: 32px;
-    }
+.wizard-wrapper,
+.reference-wrapper {
+  display: grid;
+  grid-template-rows: 22px 32px minmax(0, 1fr) 48px;
+  grid-row-gap: 32px;
+}
 
-    /* omit the form select dropdown from the Custom config grid template */
-    .wizard-wrapper.no-form-select-dropdown{
-        grid-template-rows: 22px minmax(0,1fr) 48px;
-    }
+/* omit the form select dropdown from the Custom config grid template */
+.wizard-wrapper.no-form-select-dropdown {
+  grid-template-rows: 22px minmax(0, 1fr) 48px;
+}
 
-.main-reference{
+.main-reference {
+  width: 100%;
+  overflow: hidden;
+}
+
+.reference-wrapper {
+  height: 100%;
+  max-width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+header {
+  font-family: "Nasalization", "Open Sans", sans-serif;
+  font-weight: 200;
+  font-size: 22px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+
+  &:after {
+    position: absolute;
+    content: "";
+    display: block;
     width: 100%;
-    overflow: hidden;
+    border-bottom: 2px solid #999;
+    left: 0;
+    top: 100%;
+    margin-top: 16px;
+  }
 }
 
-    .reference-wrapper{
-        height:100%;
-        max-width:100%;
-        padding:16px;
-        box-sizing:border-box;
-        overflow:hidden;
-    }
+.section-select {
+  border: none;
+  background: transparent;
+  color: #eee;
+  width: auto;
+  height: 100%;
+  //padding:2px 4px;
+  font-size: 24px;
+  font-weight: 600;
+  position: relative;
+  //text-decoration: underline;
+  //text-decoration-color: lightgreen;
 
-    header {
-        font-family: "Nasalization", "Open Sans", sans-serif;
-        font-weight: 200;
-        font-size: 22px;
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
-        position:relative;
+  &:hover {
+    cursor: pointer;
+  }
 
-       &:after{
-            position:absolute;
-            content:"";
-            display:block;
-            width:100%;
-            border-bottom:2px solid #999;
-            left:0;
-            top:100%;
-            margin-top:16px;
-        }
-    }
+  &:focus {
+    outline: none;
+  }
 
-    .section-select{
-        border:none;
-        background:transparent;
-        color: #eee;
-        width:auto;
-        height:100%;
-        //padding:2px 4px;
-        font-size:24px;
-        font-weight:600;
-        position:relative;
-        //text-decoration: underline;
-        //text-decoration-color: lightgreen;
+  option {
+    font-size: 16px;
+    color: #1e1e1e;
+  }
+}
 
-        &:hover{
-            cursor:pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-
-        option{
-            font-size: 16px;
-            color:#1e1e1e;
-        }
-    }
-
-    .configuration-options{
-        width:100%;
-        display:flex;
-        /* use this when Recommended is restored
+.configuration-options {
+  width: 100%;
+  display: flex;
+  /* use this when Recommended is restored
         justify-content:space-between;*/
-        justify-content: space-evenly;
-        align-items:center;
-        font-size:24px;
-        font-weight:600;
-    }
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 600;
+}
 
-    .main-wizard{
-        min-height:0;
-        height:100%;
-        overflow:hidden;
-        overflow-y:auto;
-        position:relative;
-    }
+.main-wizard {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  position: relative;
+}
 
-    .option-item{
-        position:relative;
-        font-size:0.9em;
+.option-item {
+  position: relative;
+  font-size: 0.9em;
 
-        &:hover{
-            cursor:pointer;
-        }
+  &:hover {
+    cursor: pointer;
+  }
 
-        &:after{
-            box-sizing:border-box;
-            position:absolute;
-            right:0;
-            top:100%;
-            content:"";
-            width:0;
-            border-bottom: 2px solid lightgreen;
-            transition: width .2s ease;
-        }
+  &:after {
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    content: "";
+    width: 0;
+    border-bottom: 2px solid lightgreen;
+    transition: width 0.2s ease;
+  }
 
-        &-active:after{
-            width:100%;
-            left:0;
-        }
+  &-active:after {
+    width: 100%;
+    left: 0;
+  }
 
-        &-disabled{
-            color:#999;
-        }
-    }
+  &-disabled {
+    color: #999;
+  }
+}
 </style>

@@ -1,6 +1,7 @@
+import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 // eslint-disable-next-line
-import {VBtn} from 'vuetify/components/VBtn'
+import { VBtn } from "vuetify/components/VBtn";
 
 const simocBaseTheme = {
     dark: true,

@@ -28,7 +28,7 @@ export default {
         return {menuActive}
     },
     methods: {
-        // TODO this should be moved out of the dashboard store
+    // TODO this should be moved out of the dashboard store
         closeMenu() {
             // if the other menus want to perform additional
             // actions they can use beforeDestroy
@@ -39,5 +39,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../sass/components/menu';
+@import "../../sass/components/menu";
 </style>
