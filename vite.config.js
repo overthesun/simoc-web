@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import vuetify from 'vite-plugin-vuetify';
-import postcssNesting from 'postcss-nesting';
-import path from 'path';
+import {defineConfig} from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
+import postcssNesting from 'postcss-nesting'
+import path from 'path'
 
 
 // This regex lists the paths that should NOT go to nginx, including
@@ -13,7 +13,7 @@ import path from 'path';
 //   favicon.ico: self explanatory
 //   *: the rest are the routers defined in router.js
 // These paths should go to vite, everything else will go to nginx.
-const nginx_paths = ('^/(?!$|@|src|node_modules|favicon\.ico|' +
+const nginx_paths = ('^/(?!$|@|src|node_modules|favicon\\.ico|' +
                      'entry|menu|menuconfig|configuration|dashboard|simdata)')
 
 // https://vitejs.dev/config/
@@ -21,8 +21,8 @@ export default defineConfig({
     assetsInclude: ['**/*.glb'],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, '/src')
-        }
+            '@': path.resolve(__dirname, '/src'),
+        },
     },
     server: {
         proxy: {
@@ -39,7 +39,7 @@ export default defineConfig({
     css: {
         postcss: {
             plugins: [
-                postcssNesting
+                postcssNesting,
             ],
         },
     },
@@ -49,14 +49,14 @@ export default defineConfig({
             autoImport: true,
             styles: {
                 configFile: 'src/sass/components/_variables.scss',
-            }
+            },
         }),
     ],
-    test:{
-        globals:true,
+    test: {
+        globals: true,
         environment: 'happy-dom',
         deps: {
             inline: ['vuetify'],
-      },
-    }
-});
+        },
+    },
+})
