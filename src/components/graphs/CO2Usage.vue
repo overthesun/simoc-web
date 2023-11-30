@@ -12,7 +12,6 @@ import axios from 'axios'
 import {Chart, BarController, BarElement,
         LinearScale, CategoryScale, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
-import {mapState, mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useWizardStore} from '../../store/modules/WizardStore'
 
@@ -81,7 +80,7 @@ export default {
         humans: {
             handler() {
                 this.co2.humans = [0, 0]
-                this.retrieveCO2('human_agent', this.configuration.humans.amount, response => {
+                this.retrieveCO2('human', this.configuration.humans.amount, response => {
                     const {co2} = response
                     this.co2.humans[0] += co2.output
                     this.co2.humans[1] += co2.input

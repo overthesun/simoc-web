@@ -25,7 +25,6 @@ use some of these features.
 
 <script>
 import axios from 'axios'
-import {mapGetters} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
@@ -92,7 +91,6 @@ export default {
             }
             const simdata = this.getSimulationData
             simdata.configuration = this.configuration
-            simdata.currency_desc = this.gameCurrencies
             // https://stackoverflow.com/a/48612128
             const data = JSON.stringify(simdata)
             const blob = new Blob([data], {type: 'application/json'})

@@ -14,7 +14,7 @@ import path from 'path';
 //   *: the rest are the routers defined in router.js
 // These paths should go to vite, everything else will go to nginx.
 const nginx_paths = ('^/(?!$|@|src|node_modules|favicon\.ico|' +
-                     'entry|menu|menuconfig|ace|configuration|dashboard|simdata)')
+                     'entry|menu|menuconfig|configuration|dashboard|simdata)')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -47,6 +47,9 @@ export default defineConfig({
         vue(),
         vuetify({
             autoImport: true,
+            styles: {
+                configFile: 'src/sass/components/_variables.scss',
+            }
         }),
     ],
 });

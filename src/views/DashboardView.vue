@@ -50,7 +50,13 @@ export default {
             // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.surveyWasPrompted && !this.kioskMode &&
                 import.meta.env.MODE !== 'development') {
-                this.showSurvey({prompt: true, onUnload: confirmExit})
+                // Remove the listener so user can add spaces in survey fields
+                window.removeEventListener('keydown', this.keyListener)
+                this.showSurvey({prompt: true, onUnload: () => {
+                    // Re-add listener in case user decides to stay
+                    window.addEventListener('keydown', this.keyListener)
+                    confirmExit()
+                }})
             } else {
                 confirmExit()
             }
@@ -67,7 +73,7 @@ export default {
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
         } = storeToRefs(dashboard)
-        const {configuration, getTotalMissionHours} = storeToRefs(wizard)
+        const {getTotalMissionHours} = storeToRefs(wizard)
         const {bundleNum, initBundleNum} = storeToRefs(liveStore)
         const {surveyWasPrompted, countdownEnded} = storeToRefs(modal)
         const {
@@ -82,8 +88,7 @@ export default {
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
             setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
-            stopTimer, setCurrentStepBuffer, setStopped,
-            configuration, getTotalMissionHours,
+            stopTimer, setCurrentStepBuffer, setStopped, getTotalMissionHours,
             setLiveConfig, bundleNum, initBundleNum,
             setHabitatInfo, setSensorInfo, parseData, surveyWasPrompted, countdownEnded,
             confirm, showSurvey, stopCountdownTimer,

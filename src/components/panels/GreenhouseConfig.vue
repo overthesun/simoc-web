@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {GreenhouseDoughnut} from '../graphs'
 
 export default {

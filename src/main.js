@@ -7,7 +7,6 @@ import {faPause, faPlay, faBackwardStep, faForwardStep, faMinus, faPlus, faXmark
         faBars, faArrowLeft, faArrowRight, faCircleInfo, faListUl, faCircle,
         faCircleDot, faCirclePlus, faPerson, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
-import store from './store/index'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import App from './App.vue'
@@ -21,15 +20,14 @@ library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faX
 // Tracking is only active in production mode
 let tracking_id = null
 if (window.location.hostname.startsWith('beta')) {
-    tracking_id = 'UA-29092818-7'  // beta id
+    tracking_id = 'G-6M7C80DGTR'  // beta id
 } else {
-    tracking_id = 'UA-29092818-6'  // NGS id
+    tracking_id = 'G-60FL6KJK4M'  // NGS id
 }
 
 createApp(App)
         .use(router)
         .use(vuetify)
-        .use(store)
         .use(VueGtag, {
             isEnabled: import.meta.env.MODE === 'production',
             property: {id: tracking_id},

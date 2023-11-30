@@ -19,7 +19,6 @@
 
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
@@ -46,8 +45,8 @@ export default {
         stringFormatter: StringFormatter,
         getAgentGrowthPerc(plant) {
             const agentGrowth = this.getData(
-                [plant, 'growth', 'growth_rate', this.currentStepBuffer]
-            )
+                [plant, 'attributes', 'growth_rate', this.currentStepBuffer]
+            ) / 2  // divide by 2 because growth rate is 0-2
             if (agentGrowth === undefined || agentGrowth === null) {
                 return '[loading data...]'
             } else {
@@ -56,9 +55,9 @@ export default {
             }
         },
         getAgentAge(plant) {
-            const age = this.getData([plant, 'growth', 'agent_step_num', this.currentStepBuffer])
-            const lifetime = this.getData([plant, 'lifetime'])
-            return lifetime - age
+            const age = this.getData([plant, 'attributes', 'age', this.currentStepBuffer])
+            const lifetime = this.getData([plant, 'static', 'properties', 'lifetime', 'value'])
+            return lifetime - age + 1
         },
     },
 }

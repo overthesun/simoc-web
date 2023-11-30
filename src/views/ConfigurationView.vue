@@ -204,7 +204,7 @@ export default {
             this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
-        handleAxiosError(error) {
+        handleAxiosError(error, msg) {
             const errmsg = error.response.data.message || error.message
             this.$gtag.exception({description: `Launch simulation: ${errmsg}`})
             console.error(error)
@@ -212,7 +212,7 @@ export default {
                 this.alert('Please log in again to continue.')
                 this.$router.push('entry')
             } else {
-                this.alert(error)
+                this.alert(msg || error)
             }
         },
 
@@ -271,14 +271,11 @@ export default {
                 } finally {
                     this.modalActive = false
                 }
-                // Get currency_desc from backend
-                const response = await axios.get('/get_currency_desc')
-                const {currency_desc} = response.data
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
                         this.setConfiguration(configuration, this.simLocation)
-                        this.setSimulationData({simdata, currency_desc})
+                        this.setSimulationData(simdata)
                         this.currentMode = 'sim'
                         this.isLive = false
                         this.loadFromSimData = true
@@ -309,17 +306,17 @@ export default {
                 const response = await axios.post('/new_game', configParams)
                 // store the game ID and full game_config from the response
                 this.setGameId(response.data.game_id)
-                this.setGameParams({
-                    game_config: response.data.game_config,
-                    currency_desc: response.data.currency_desc,
-                })
+                this.setGameParams(response.data.game_config)
                 this.currentMode = 'sim'
                 this.isLive = false
                 this.loadFromSimData = false
                 // If all is well then move the user to the dashboard screen
                 this.$router.push('dashboard')
             } catch (error) {
-                this.handleAxiosError(error)
+                const err_msg = ('We are working hard to run as many simulations\n' +
+                                 'as possible, but we currently reached capacity.\n' +
+                                 'Please try again in just a minute.')
+                this.handleAxiosError(error, err_msg)
             } finally {
                 this.awaiting_response = false
             }
