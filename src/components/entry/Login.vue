@@ -35,7 +35,7 @@
                     <section
                         :class="{ 'entry-form-active': activeOption === 'login' }"
                         class="entry-form entry-form-login">
-                        <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
+                        <v-form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
                             <v-text-field
                                 v-model="user.username"
                                 type="text"
@@ -53,7 +53,7 @@
                                 label="Password"
                                 placeholder="Password" />
                             <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
-                        </form>
+                        </v-form>
                         <p v-else>
                             If you don't want to create an account, you can log in as a Guest. Guest accounts are
                             temporary and will be deleted on a regular basis.
