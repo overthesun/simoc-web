@@ -76,9 +76,6 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     font-family: sans-serif !important;
     cursor: pointer;
 }
-  html {
-    overflow-y: auto
-  }
 
    @media all and (orientation: portrait){
     .orientation-portrait{

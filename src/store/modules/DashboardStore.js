@@ -50,7 +50,6 @@
  */
 import {defineStore} from 'pinia'
 import _ from 'lodash'
-import {parseUpdatedGameVars} from '../../javascript/gameVars'
 import {StepTimer} from '../../javascript/stepTimer'
 import {parseData} from '../../javascript/parseData'
 
@@ -95,10 +94,12 @@ export const useDashboardStore = defineStore('DashboardStore', {
         getSimulationData(state) {
             return {
                 README: 'Format may vary, only import from the main menu.',
-                game_config: state.gameConfig,
+                gameConfig: state.gameConfig,
                 steps: state.maxStepBuffer,
                 parameters: state.parameters,
                 data: state.data,
+                currencyDict: state.currencyDict,
+                humanAtmosphere: state.humanAtmosphere,
             }
         },
         getLayoutName(state) {
@@ -117,18 +118,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param value
          */
-        setSimulationData({simdata, currency_desc}) {
-            this.gameCurrencies = currency_desc   // TODO: Duplicated by currencyDict
-            this.maxStepBuffer = simdata.steps
-            this.parameters = simdata.parameters  // TODO: Unnecessary with websocket
-            this.data = simdata.data
-
-            // TODO: Revert ABM Workaround
-            const game_vars = parseUpdatedGameVars(simdata.game_config, currency_desc)
-            const {humanAtmosphere, currencyDict, gameConfig} = game_vars
-            this.humanAtmosphere = humanAtmosphere
+        setSimulationData(simdata) {
+            const {gameConfig, steps, parameters, data, currencyDict, humanAtmosphere} = simdata
+            this.gameConfig = gameConfig
+            this.maxStepBuffer = steps
+            this.parameters = parameters
+            this.data = data
             this.currencyDict = currencyDict
-            this.gameConfig = gameConfig          // TODO: Use only one copy of config
+            this.humanAtmosphere = humanAtmosphere
         },
 
         // Time Control
@@ -173,24 +170,50 @@ export const useDashboardStore = defineStore('DashboardStore', {
             const {
                 game_id,
                 n_steps,       // N steps contained in this batch
-                step_num,      // Latest step sent
-                ...agent_data  // Agent-specific data
+                step_num,      // List of steps contained in this batch
+                agents,        // Agent-specific data
             } = value
             if (!this.gameId) {
                 this.gameId = game_id
             }
-            console.log(`Received ${n_steps} new steps (${step_num} total).`)
-            this.maxStepBuffer = step_num
+            const latest_step_num = step_num[step_num.length - 1]
+            console.log(`Received ${n_steps} new steps (${latest_step_num} total).`)
+            this.maxStepBuffer = latest_step_num
 
             // For arrays (timeseries data), concatenate value to state
             /* eslint-disable consistent-return */
-            _.mergeWith(this.data, agent_data, (a, b) => {
+            _.mergeWith(this.data, agents, (a, b) => {
                 // Define custom handler to for arrays
                 if (_.isArray(a)) {
                     return a.concat(b)
                 }
                 // Others types are overwritten
             })
+
+            // Keep up to date in case of disconnect/reconnect
+            this.updateMinStepNumber(latest_step_num)
+        },
+        parseAttributes(attributes) {
+            // Split list of attributes names into three categories
+            const output = {growth: [], deprive: [], attributes: []}
+            const plantGrowthAttrs = ['grown', 'par_factor', 'growth_rate', 'cu_factor',
+                                      'te_factor']
+            attributes.forEach(a => {
+                if (a.includes('deprive')) {
+                    output.deprive.push(a)
+                } else if (a.includes('growth') || plantGrowthAttrs.includes(a)) {
+                    output.growth.push(a)
+                } else {
+                    output.attributes.push(a)
+                }
+            })
+            // Return non-empty fields of output
+            Object.keys(output).forEach(k => {
+                if (output[k].length === 0) {
+                    delete output[k]
+                }
+            })
+            return output
         },
         getData(path) {
             if (Object.keys(this.data).length === 0) {
@@ -236,16 +259,12 @@ export const useDashboardStore = defineStore('DashboardStore', {
          *
          * @param config
          */
-        setGameParams(config) {
-            const {game_config, currency_desc} = config
-            this.gameCurrencies = currency_desc
-
-            // TODO: Revert ABM Workaround
-            const game_vars = parseUpdatedGameVars(game_config, currency_desc)
-            const {humanAtmosphere, currencyDict, gameConfig} = game_vars
-            this.humanAtmosphere = humanAtmosphere
-            this.currencyDict = currencyDict
-            this.gameConfig = gameConfig
+        setGameParams(game_config) {
+            this.gameConfig = game_config
+            this.currencyDict = game_config.currencies
+            if (Object.keys(game_config.agents).includes('human')) {
+                this.humanAtmosphere = game_config.agents.human.flows.in.o2.connections[0]
+            }
         },
 
         /**
@@ -262,8 +281,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
          * @param min
          */
         updateMinStepNumber(min) {
-            const {step_num: step} = min
-            this.parameters.min_step_num = Math.max(step+1, this.parameters.min_step_num)
+            this.parameters.min_step_num = Math.max(min, this.parameters.min_step_num)
         },
 
         setDefaultPanels(layout) {

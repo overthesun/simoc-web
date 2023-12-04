@@ -76,7 +76,6 @@ to the entry screens to prevent this from popping up on repeat vistors.
                 </p>
             </div>
         </template>
-
         <template #entry-button>
             <button class="btn-normal" @click="toConfiguration">NEW MISSION</button>
         </template>
