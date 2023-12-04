@@ -1,5 +1,5 @@
 <template>
-    <div class="entry-wrapper">
+    <div class="d-flex flex-column justify-center align-center h-100 w-100">
         <!-- This section uses absolute positioning and overflow:hidden on the parent to hide
              it from the user.  class binding is used to display / hide the warning.
              v-if will simply display it or not, and will not activate the animation
@@ -43,8 +43,7 @@
                                 hide-details="auto"
                                 class="input-field-text"
                                 label="Username"
-                                placeholder="Username"
-                                rounded="l" />
+                                placeholder="Username" />
                             <v-text-field
                                 v-model="user.password"
                                 type="password"
@@ -52,8 +51,7 @@
                                 hide-details="auto"
                                 class="input-field-text"
                                 label="Password"
-                                placeholder="Password"
-                                rounded="l" />
+                                placeholder="Password" />
                             <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
                         </form>
                         <p v-else>
@@ -357,16 +355,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.entry-wrapper {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  box-sizing: border-box;
-  position: relative;
-}
 
 .input-field-text {
   height: 36px;
