@@ -3,38 +3,38 @@
         <div class="gauge-wrapper">
             <Gauge :id="'canvas1'+canvasNumber" :maximum="3"
                    :getter="airStorageGetter('co2')"
-                   color="#e6194b" label="CO₂" />
-            <div class="gauge-text">CO₂ (0-3%)</div>
+                   color="#e6194b" :label="getShortLabel('co2')" />
+            <div class="gauge-text">{{getShortLabel('co2')}} (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas2'+canvasNumber" :maximum="100"
                    :getter="airStorageGetter('o2')"
-                   color="#3cb44b" label="O₂" />
-            <div class="gauge-text">O₂ (0-100%)</div>
+                   color="#3cb44b" :label="getShortLabel('o2')" />
+            <div class="gauge-text">{{getShortLabel('o2')}} (0-100%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas3'+canvasNumber" :maximum="3"
                    :getter="airStorageGetter('h2o')"
-                   color="#46f0f0" label="H₂O Vapor" />
-            <div class="gauge-text">H₂O Vapor (0-3%)</div>
+                   color="#46f0f0" :label="getShortLabel('h2o')" />
+            <div class="gauge-text">{{getShortLabel('h2o')}} Vapor (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas4'+canvasNumber" :maximum="3"
                    :getter="airStorageGetter('h2')"
-                   color="#ffe119" label="H₂" />
-            <div class="gauge-text">H₂ (0-3%)</div>
+                   color="#ffe119" :label="getShortLabel('h2')" />
+            <div class="gauge-text">{{getShortLabel('h2')}} (0-3%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas5'+canvasNumber" :maximum="100"
                    :getter="airStorageGetter('n2')"
-                   color="#4363d8" label="N₂" />
-            <div class="gauge-text">N₂ (0-100%)</div>
+                   color="#4363d8" :label="getShortLabel('n2')" />
+            <div class="gauge-text">{{getShortLabel('n2')}} (0-100%)</div>
         </div>
         <div class="gauge-wrapper">
             <Gauge :id="'canvas6'+canvasNumber" :maximum="3"
                    :getter="airStorageGetter('ch4')"
-                   color="#f58231" label="CH₄" />
-            <div class="gauge-text">CH₄ (0-3%)</div>
+                   color="#f58231" :label="getShortLabel('ch4')" />
+            <div class="gauge-text">{{getShortLabel('ch4')}} (0-3%)</div>
         </div>
     </div>
 </template>
@@ -56,9 +56,9 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {humanAtmosphere, gameConfig} = storeToRefs(dashboard)
+        const {humanAtmosphere, gameConfig, currencyDict} = storeToRefs(dashboard)
         const {getData} = dashboard
-        return {humanAtmosphere, gameConfig, getData}
+        return {humanAtmosphere, gameConfig, getData, currencyDict}
     },
     computed: {
         totalAtmosphere() {
@@ -72,6 +72,10 @@ export default {
                 const amount = this.getData([this.humanAtmosphere, 'storage', currency, step])
                 return amount / this.totalAtmosphere * 100
             }
+        },
+        getShortLabel(currency) {
+            const desc = this.currencyDict[currency]
+            return desc ? desc.short : currency
         },
     },
 }

@@ -3,8 +3,8 @@
         <div v-if="currentStepBuffer < 1" class="storage-name">[Loading data ...]</div>
         <div v-else class="content">
             <select id="currency-select" v-model="activeCurrency" required>
-                <option v-for="(label, curr) in currencies" :key="curr" :value="curr">
-                    {{label}}
+                <option v-for="curr in currencies" :key="curr" :value="curr">
+                    {{getLabel(curr)}}
                 </option>
             </select>
             <DataDisplay :data="activeData" />
@@ -27,23 +27,15 @@ export default {
     modes: ['sim'],
     setup() {
         const dashboard = useDashboardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
-        const {getData} = dashboard
-        return {currentStepBuffer, getData}
+        const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
+        const {getData, getUnit} = dashboard
+        return {currentStepBuffer, getData, currencyDict, getUnit}
     },
     data() {
         return {
             activeCurrency: 'co2',
             activeData: {},
-            currencies: {
-                kwh: 'Energy',
-                co2: 'Carbon Dioxide (CO₂)',
-            },
-            // TODO: see comment in fix_unit
-            units: {
-                kwh: 'kW',
-                co2: 'kg',
-            },
+            currencies: ['kwh', 'co2'],
         }
     },
     watch: {
@@ -66,16 +58,14 @@ export default {
             Object.keys(activeData).forEach(key => {
                 let value = activeData[key]
                 value = Math.round(value*10000)/10000
-                activeData[key] = `${value} ${this.units[currency]}`
+                activeData[key] = `${value} ${this.getUnit(currency)}`
             })
             this.activeData = activeData
         },
         stringFormatter: StringFormatter,
-        fix_unit(unit) {
-            // TODO: this is currently unused.  The server either sends the
-            // unit or nothing if the value is 0, and if it's kWh we need to
-            // use kW, so use hardcoded units for now
-            return unit.split(' ')[1] || this.units[this.selected_currency]
+        getLabel(currency) {
+            const desc = this.currencyDict[currency]
+            return desc ? desc.label : currency
         },
     },
 }
