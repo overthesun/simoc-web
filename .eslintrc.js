@@ -11,10 +11,13 @@
 module.exports = {
     root: true,
     env: {
-        es2021: true,
+        'es2021': true,
+        'vitest-globals/env': true,
     },
     extends: [
-        'plugin:vue/vue3-recommended',  // rules list: https://eslint.vuejs.org/rules/
+        'plugin:vue/vue3-recommended',
+        'plugin:vitest/recommended',
+        'plugin:vitest-globals/recommended', // rules list: https://eslint.vuejs.org/rules/
         'airbnb-base',
     ],
     parser: 'vue-eslint-parser',
@@ -22,21 +25,23 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: [
-        'vue',
-    ],
+    plugins: ['vue', 'vitest'],
     rules: {
-        // SPACING
-        'indent': ['error', 4, {
-            SwitchCase: 1,
-            MemberExpression: 2,
-            ArrayExpression: 'first',
-            ObjectExpression: 'first',
-            ImportDeclaration: 'first',
-            FunctionDeclaration: {parameters: 'first'},
-            FunctionExpression: {parameters: 'first'},
-            CallExpression: {arguments: 'first'},
-        }],
+    // SPACING
+        'indent': [
+            'error',
+            4,
+            {
+                SwitchCase: 1,
+                MemberExpression: 2,
+                ArrayExpression: 'first',
+                ObjectExpression: 'first',
+                ImportDeclaration: 'first',
+                FunctionDeclaration: {parameters: 'first'},
+                FunctionExpression: {parameters: 'first'},
+                CallExpression: {arguments: 'first'},
+            },
+        ],
         'no-trailing-spaces': 'error',
         'comma-spacing': 'error',
         'space-in-parens': ['error', 'never'],
@@ -58,7 +63,7 @@ module.exports = {
         'computed-property-spacing': 'error',
 
         // STYLISTIC ISSUES
-        'max-len': ['warn', {code: 100}],  // overriden by vue/max-len for vue files
+        'max-len': ['warn', {code: 100}], // overriden by vue/max-len for vue files
 
         // VARIABLE & FUNCTION DECLARATION
         'camelcase': 'off',
@@ -75,43 +80,49 @@ module.exports = {
         'prefer-destructuring': ['warn', {object: true, array: false}],
         'dot-notation': 'error',
         'no-param-reassign': ['error', {props: false}],
-        'no-unused-vars': ['error', {
-            args: 'none',
-            varsIgnorePattern: 'mapState|mapGetters|mapMutations|mapActions',
-        }],
+        'no-unused-vars': [
+            'error',
+            {
+                args: 'none',
+                varsIgnorePattern: 'mapState|mapGetters|mapMutations|mapActions',
+            },
+        ],
         'object-shorthand': ['error', 'methods', {avoidQuotes: true}],
         'func-names': ['error', 'as-needed'],
-
 
         // OPERATORS
         'eqeqeq': 'error',
         'no-plusplus': ['error', {allowForLoopAfterthoughts: true}],
         'no-mixed-operators': ['error', {allowSamePrecedence: true}],
-        'space-infix-ops': 'off',  // annonying for e.g. 3*5 + 2*3
+        'space-infix-ops': 'off', // annonying for e.g. 3*5 + 2*3
         'space-unary-ops': 'error',
         'operator-linebreak': 'off',
 
-
         // SYNTAX
-        'comma-dangle': ['error', {
-            arrays: 'always-multiline',
-            objects: 'always-multiline',
-            imports: 'always-multiline',
-            exports: 'always-multiline',
-            functions: 'never',
-        }],
+        'comma-dangle': [
+            'error',
+            {
+                arrays: 'always-multiline',
+                objects: 'always-multiline',
+                imports: 'always-multiline',
+                exports: 'always-multiline',
+                functions: 'never',
+            },
+        ],
         'semi': ['error', 'never'],
         'brace-style': ['error', '1tbs', {allowSingleLine: true}],
-        'object-curly-newline': ['error', {
-            ObjectExpression: {consistent: true},
-            ObjectPattern: {consistent: true},
-            ImportDeclaration: 'never',
-            ExportDeclaration: 'never',
-        }],
+        'object-curly-newline': [
+            'error',
+            {
+                ObjectExpression: {consistent: true},
+                ObjectPattern: {consistent: true},
+                ImportDeclaration: 'never',
+                ExportDeclaration: 'never',
+            },
+        ],
         'quotes': ['error', 'single', {avoidEscape: true, allowTemplateLiterals: true}],
         'quote-props': ['error', 'consistent-as-needed'],
         'arrow-parens': ['error', 'as-needed'],
-
 
         // USE SPECIFIC OF FUNCTIONS
         'curly': 'error',
@@ -130,22 +141,24 @@ module.exports = {
         'no-array-constructor': 'error',
         'no-restricted-syntax': 'error',
 
-
         // VUE-SPECIFIC RULES
-        'vue/max-len': ['error', {
-            code: 100,
-            template: 120,
-            comments: 120,
-            ignorePattern: '',
-            ignoreComments: false,
-            ignoreTrailingComments: true,
-            ignoreUrls: true,
-            ignoreStrings: false,
-            ignoreTemplateLiterals: false,
-            ignoreRegExpLiterals: false,
-            ignoreHTMLAttributeValues: false,
-            ignoreHTMLTextContents: true,
-        }],
+        'vue/max-len': [
+            'error',
+            {
+                code: 100,
+                template: 120,
+                comments: 120,
+                ignorePattern: '',
+                ignoreComments: false,
+                ignoreTrailingComments: true,
+                ignoreUrls: true,
+                ignoreStrings: false,
+                ignoreTemplateLiterals: false,
+                ignoreRegExpLiterals: false,
+                ignoreHTMLAttributeValues: false,
+                ignoreHTMLTextContents: true,
+            },
+        ],
         'vue/html-indent': ['error', 4],
         'vue/html-quotes': ['error', 'double', {avoidEscape: true}],
         'vue/html-self-closing': 'error',
@@ -179,12 +192,11 @@ module.exports = {
         'vue/multiline-html-element-content-newline': 'off',
         'vue/multi-word-component-names': 'off',
 
-
         // IMPORT
         'import/newline-after-import': 'error',
         'import/first': 'error',
         'import/order': 'error',
-        'import/extensions': ['error', 'always', {'js': 'never'}],
+        'import/extensions': ['error', 'ignorePackages', {js: 'never'}],
         // eslint-import-resolver-alias has a way to specify an alias for '@'
         // that supposedly fixes some "Unable to resolve path to module" errors:
         //   settings: {'import/resolver': {alias: ['@', 'src']}}
@@ -199,10 +211,12 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'global-require': 'off',
     },
-    overrides: [{
-        files: ['*.vue'],
-        rules: {
-            'max-len': 'off',  // overriden by vue/max-len
+    overrides: [
+        {
+            files: ['*.vue'],
+            rules: {
+                'max-len': 'off', // overriden by vue/max-len
+            },
         },
-    }],
+    ],
 }

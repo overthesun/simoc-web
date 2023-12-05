@@ -318,5 +318,14 @@ export const useDashboardStore = defineStore('DashboardStore', {
             }
             this.data = {}
         },
+        getUnit(currency) {
+            const desc = this.currencyDict[currency]
+            if (desc?.unit) {
+                return desc.unit
+            } else {
+                console.log(`Missing units for currency ${currency}, using kg`)
+                return 'kg'
+            }
+        },
     },
 })
