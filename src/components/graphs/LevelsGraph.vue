@@ -24,6 +24,7 @@ export default {
     props: {
         id: {type: String, required: true},
         plottedStorage: {type: String, required: true},
+        plottedItems: {type: String, default: undefined},
         storagesMapping: {type: Object, required: true},  // TODO: Revert ABM Workaround
         fullscreen: {type: Boolean, default: false},
         nsteps: {type: Number, required: true},
@@ -75,6 +76,10 @@ export default {
         plottedStorage() {
             this.initChart()
         },
+        // re-init the chart when we plot something else
+        plottedItems() {
+            this.initChart()
+        },
         // re-init the chart when we change the number of steps displayed
         nsteps() {
             this.initChart()
@@ -89,6 +94,7 @@ export default {
         // TODO: this code is very similar to VersusGraph.vue
         initChart() {
             this.storage_name = this.plottedStorage
+            this.plotted_items = this.plottedItems?.split('|')
             this.storage_type = this.storagesMapping[this.storage_name]
             if (this.chart) {
                 // when switching chart we have to destroy
@@ -111,6 +117,7 @@ export default {
                             backgroundColor: color,
                             fill: true,
                             pointStyle: 'line',
+                            hidden: this.plotted_items !== undefined && !this.plotted_items.includes(label),
                         })
                     ),
                 },
@@ -143,6 +150,15 @@ export default {
                             labels: {
                                 boxWidth: 20,
                             },
+                            onClick: (event, legendItem, legend) => {
+                                legend.chart.setDatasetVisibility(
+                                    legendItem.datasetIndex,
+                                    !legend.chart.isDatasetVisible(legendItem.datasetIndex)
+                                )
+                                legend.chart.update()
+                                const plotted_items = legend.legendItems.filter(item => !item.hidden).map(item => item.text).join('|')
+                                this.$emit('plotted-items-changed', plotted_items)
+                            }
                         },
                         tooltip: {
                             mode: 'index', // show both values
