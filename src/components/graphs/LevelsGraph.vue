@@ -29,6 +29,7 @@ export default {
         fullscreen: {type: Boolean, default: false},
         nsteps: {type: Number, required: true},
     },
+    emits: ['plotted-items-changed'],
     setup() {
         const dashboard = useDashboardStore()
         const {currentStepBuffer} = storeToRefs(dashboard)
@@ -117,7 +118,8 @@ export default {
                             backgroundColor: color,
                             fill: true,
                             pointStyle: 'line',
-                            hidden: this.plotted_items !== undefined && !this.plotted_items.includes(label),
+                            hidden: (this.plotted_items !== undefined &&
+                                     !this.plotted_items.includes(label)),
                         })
                     ),
                 },
@@ -156,9 +158,11 @@ export default {
                                     !legend.chart.isDatasetVisible(legendItem.datasetIndex)
                                 )
                                 legend.chart.update()
-                                const plotted_items = legend.legendItems.filter(item => !item.hidden).map(item => item.text).join('|')
+                                const plotted_items = legend.legendItems
+                                                          .filter(item => !item.hidden)
+                                                          .map(item => item.text).join('|')
                                 this.$emit('plotted-items-changed', plotted_items)
-                            }
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values
