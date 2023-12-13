@@ -91,7 +91,6 @@ export default {
         stringFormatter: StringFormatter,
 
         updatePlottedItems(plottedItems) {
-            console.log('emitting panel-section-changed from updatePlottedItems', this.panelIndex, this.storage, plottedItems)
             this.$emit('panel-section-changed', this.panelIndex, this.storage, plottedItems)
         },
     },

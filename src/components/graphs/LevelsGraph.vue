@@ -159,8 +159,8 @@ export default {
                                 )
                                 legend.chart.update()
                                 const plotted_items = legend.legendItems
-                                                          .filter(item => !item.hidden)
-                                                          .map(item => item.text).join('|')
+                                        .filter(item => !item.hidden)
+                                        .map(item => item.text).join('|')
                                 this.$emit('plotted-items-changed', plotted_items)
                             },
                         },
