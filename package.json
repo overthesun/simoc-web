@@ -39,7 +39,7 @@
     "@vue/test-utils": "^2.4.3",
     "eslint": "^8.50.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-vitest": "^0.3.9",
+    "eslint-plugin-vitest": "^0.3.18",
     "eslint-plugin-vitest-globals": "^1.4.0",
     "eslint-plugin-vue": "^9.18.1",
     "happy-dom": "^12.1.5",
