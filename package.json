@@ -16,13 +16,13 @@
     "@fortawesome/vue-fontawesome": "^3.0.5",
     "@json-editor/json-editor": "^2.12.0",
     "@vitejs/plugin-vue": "^3.2.0",
-    "axios": "^1.2.2",
-    "chart.js": "^4.2.0",
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.1",
     "chartjs-plugin-annotation": "^3.0.1",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
-    "pinia": "^2.1.6",
+    "pinia": "^2.1.7",
     "postcss-nesting": "^12.0.1",
     "socket.io-client": "^4.7.2",
     "three": "^0.158.0",
@@ -31,7 +31,7 @@
     "vue": "^3.3.4",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.2.5",
-    "vuetify": "^3.4.2"
+    "vuetify": "^3.4.8"
   },
   "devDependencies": {
     "@pinia/testing": "^0.1.3",
