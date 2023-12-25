@@ -34,8 +34,8 @@ export default {
         // these are passed by dashboard/Main.vue and
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
-        panelSection: {type: String, default: null},
-        plottedItems: {type: String, default: null},
+        panelSection: {type: String, default: undefined},
+        plottedItems: {type: String, default: undefined},
         fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
