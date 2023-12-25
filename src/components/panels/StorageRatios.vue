@@ -67,7 +67,7 @@ export default {
             if (oldVal === undefined) {
                 return  // don't emit when loading the panel for the first time
             }
-            this.$emit('panel-section-changed', this.panelIndex, this.storage)
+            this.$emit('panel-section-changed', this.panelIndex, this.storage, undefined)
         },
         getActivePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
