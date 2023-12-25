@@ -98,8 +98,7 @@ export default {
             this.storage_type = this.storagesMapping[this.storage_name]
             if (this.plottedItems !== undefined && this.plottedItems.length) {
                 this.plotted_items = this.plottedItems.split('|')
-            }
-            else {
+            } else {
                 this.plotted_items = undefined  // no list of items to plot -- plot'em all
             }
             if (this.chart) {
