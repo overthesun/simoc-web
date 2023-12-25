@@ -95,7 +95,7 @@ export default {
         // TODO: this code is very similar to VersusGraph.vue
         initChart() {
             this.storage_name = this.plottedStorage
-            this.plotted_items = this.plottedItems.length ? this.plottedItems.split('|') : undefined
+            this.plotted_items = this.plottedItems?.length ? this.plottedItems.split('|') : undefined
             this.storage_type = this.storagesMapping[this.storage_name]
             if (this.chart) {
                 // when switching chart we have to destroy
