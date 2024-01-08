@@ -11,8 +11,10 @@
             </select>
         </div>
         <div v-if="(agent && category)" class="chart-area">
-            <AgentGraph :id="'canvas-pc-' + canvasNumber" :agent="agent" :category="category"
-                        :fullscreen="fullscreen" :nsteps="fullscreen ? getTotalMissionHours : 24" />
+            <AgentGraph :id="'canvas-pc-' + canvasNumber"
+                        :agent="agent" :category="category" :plotted-items="plottedItems"
+                        :fullscreen="fullscreen" :nsteps="fullscreen ? getTotalMissionHours : 24"
+                        @plotted-items-changed="updatePlottedItems" />
         </div>
     </div>
 </template>
@@ -35,7 +37,8 @@ export default {
         // these are passed by dashboard/Main.vue and
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
-        panelSection: {type: String, default: null},
+        panelSection: {type: String, default: undefined},
+        plottedItems: {type: String, default: undefined},
         fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
@@ -86,11 +89,11 @@ export default {
         },
     },
     watch: {
-        agent() {
-            this.updateSection()
+        agent(newVal, oldVal) {
+            this.updateSection(newVal, oldVal)
         },
-        category() {
-            this.updateSection()
+        category(newVal, oldVal) {
+            this.updateSection(newVal, oldVal)
         },
         activePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
@@ -105,7 +108,7 @@ export default {
 
         setFromActivePanels() {
             const panel = this.activePanels[this.panelIndex].split(':')[1]
-            const [activeAgent, activeCategory] = panel ? panel.split('/') : ['', '']
+            const [activeAgent, activeCategory] = panel ? panel.split('|') : ['', '']
             if (activeAgent) {
                 this.agent = activeAgent
             } else {
@@ -124,10 +127,18 @@ export default {
             this.category = this.validCategories.find(c => c in this.activeData[agent])
         },
 
-        updateSection() {
+        updateSection(newVal, oldVal) {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
-            this.$emit('panel-section-changed', this.panelIndex, `${this.agent}/${this.category}`)
+            if (oldVal === undefined) {
+                return  // don't emit when loading the panel for the first time
+            }
+            this.$emit('panel-section-changed', this.panelIndex,
+                       `${this.agent}|${this.category}`, undefined)
+        },
+        updatePlottedItems(plottedItems) {
+            this.$emit('panel-section-changed', this.panelIndex,
+                       `${this.agent}|${this.category}`, plottedItems)
         },
     },
 }
