@@ -157,6 +157,9 @@ export default {
 
             return consolidated
         },
+        formatLabel(label, unit) {
+            return label + (unit && !this.unit ? ` (${unit})` : '')
+        },
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
             if (this.plottedItems !== undefined && this.plottedItems.length) {
@@ -198,13 +201,13 @@ export default {
                 datasets = Object.values(datasetsData).map(({unit, label}, i) => ({
                     lineTension: 0,
                     data: Array(this.nsteps),
-                    label: label + ((unit && !this.unit) ? ` (${unit})` : ''),
+                    label: this.formatLabel(label, unit),
                     // TODO: Get field-specific color from currencyDict or fieldDict
                     borderColor: this.colors[i],
                     fill: false,
                     pointStyle: 'line',
                     hidden: (this.plotted_items !== undefined &&
-                             !this.plotted_items.includes(label + ((unit && !this.unit) ? ` (${unit})` : ''))),
+                             !this.plotted_items.includes(this.formatLabel(label, unit))),
                 }))
             }
 

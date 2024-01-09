@@ -52,8 +52,8 @@ export default {
     },
     data() {
         return {
-            agent: '',
-            category: '',
+            agent: undefined,
+            category: undefined,
             validCategories: ['storage', 'flows', 'growth', 'deprive', 'attributes'],
         }
     },
