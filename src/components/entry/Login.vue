@@ -1,16 +1,15 @@
 <template>
     <div class="d-flex flex-column justify-center align-center h-100 w-100">
-        <!-- This section uses absolute positioning and overflow:hidden on the parent to hide
-             it from the user.  class binding is used to display / hide the warning.
-             v-if will simply display it or not, and will not activate the animation
-             for displaying or hiding
-        -->
-        <div :class="{ 'warning-active': activeWarning }" class="warning-wrapper">
-            <fa-icon :icon="['fa-solid', 'xmark']" class="fa-icon dismiss-icon" @click="dismissWarning" />
-            <div v-for="(item, index) in activeWarnings" :key="index" class="warning-item">
-                <!-- removed because of missing pro-light-svg-icon dependency
-                     <fa-icon class='fa-icon warning-icon' :icon="['fal','exclamation-circle']"/> -->
-                {{activeWarnings[index]}}
+        <div class="warning-container" :class="{ 'warning-active': activeWarning }">
+            <div v-for="(item, index) in activeWarnings" :key="index">
+                <v-alert
+                    border="start"
+                    type="error"
+                    title="Error"
+                    color="red"
+                    closable>
+                    {{activeWarnings[index]}}
+                </v-alert>
             </div>
         </div>
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
@@ -24,7 +23,7 @@
                     <v-tab value="sign-up"> SIGN UP </v-tab>
                 </v-tabs>
             </template>
-            <!-- The forms within use class binding to show / hide depending on which one is active. -->
+
             <template #entry-main>
                 <v-card class="d-flex flex-column mx-auto" max-width="275" height="400">
                     <div class="flex-grow-1">
@@ -99,7 +98,7 @@
                     </v-card-actions>
                 </v-card>
             </template>
-            <!--<template v-slot:entry-footer>
+        <!--<template v-slot:entry-footer>
                 <a class='link link-disabled'>Forgot Password?</a>
             </template>-->
         </BaseEntry>
@@ -265,7 +264,7 @@ export default {
                     .catch(error => {
                         if (!error.response) {
                         // we didn't get a response from the server
-                            this.addWarning('Error: No response from the server')
+                            this.addWarning('No response from the server')
                         } else {
                         // we got a response back from the server
                             const {status} = error.response
@@ -273,11 +272,11 @@ export default {
                             const message = error.response.data.message || error.message
                             this.$gtag.exception({description: message})
                             if (status === 401) {
-                                this.addWarning(`Login Error: ${message}`)
+                                this.addWarning(`${message}`)
                             } else if (status === 409) {
-                                this.addWarning(`Registration Error: ${message}`)
+                                this.addWarning(`${message}`)
                             } else {
-                                this.addWarning(`Error: ${message}`)
+                                this.addWarning(`${message}`)
                             }
                         }
                     })
@@ -295,13 +294,6 @@ export default {
             this.activeWarning = false
         },
 
-        // Used to activate which section the user is under Sign In or Sign Up
-        // Called from the above options sections within the HTMl, passes in the
-        // name value of the section that should have the active class.
-        activateOption(sectionName) {
-            this.dismissWarning()
-            this.activeOption = sectionName
-        },
         showGuestLogin() {
         // swap between guest login and regular login
             this.activeGuestLogin = !this.activeGuestLogin
@@ -335,7 +327,6 @@ export default {
   font-size:24px
 }
 
-
 .input-field-text {
   height: 36px;
   margin-bottom: 24px;
@@ -352,51 +343,12 @@ export default {
   cursor: pointer;
 }
 
-.warning-wrapper {
+.warning-container {
   position: absolute;
+  top: 0;
   left: 0;
-  top: -256px;
-  z-index: 99;
-  height: auto;
-  max-height: 256px;
   width: 100%;
-  background-color: #ff3100;
-  transition: top 0.3s ease;
-  padding: 10px;
-  box-sizing: border-box;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: white;
-
-  .warning-item {
-    width: 100%;
-    margin: 4px 0px;
-  }
-
-  .warning-icon {
-    font-size: 16px;
-    //vertical-align: middle;
-    margin-right: 6px;
-  }
-
-  .dismiss-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 4px 8px;
-    padding: 4px;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
-.warning-active {
-  top: 0px;
+  z-index: 100;
 }
 
 .link {
