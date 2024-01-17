@@ -16,96 +16,88 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template #option-items>
-                <div
-                    :class="{ 'option-item-active': 'login' === activeOption }"
-                    class="option-item"
-                    @click="activateOption('login')">
-                    SIGN IN
-                </div>
-                <div
-                    :class="{ 'option-item-active': 'register' === activeOption }"
-                    class="option-item"
-                    @click="activateOption('register')">
-                    SIGN UP
-                </div>
+                <v-tabs
+                    v-model="tab"
+                    align-tabs="center"
+                    color="green-accent-4">
+                    <v-tab value="sign-in"> SIGN IN </v-tab>
+                    <v-tab value="sign-up"> SIGN UP </v-tab>
+                </v-tabs>
             </template>
             <!-- The forms within use class binding to show / hide depending on which one is active. -->
             <template #entry-main>
-                <v-sheet height="400">
-                    <section
-                        :class="{ 'entry-form-active': activeOption === 'login' }"
-                        class="entry-form entry-form-login">
-                        <v-form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
-                            <v-text-field
-                                v-model="user.username"
-                                type="text"
-                                clearable
-                                hide-details="auto"
-                                class="input-field-text"
-                                label="Username"
-                                placeholder="Username" />
-                            <v-text-field
-                                v-model="user.password"
-                                type="password"
-                                clearable
-                                hide-details="auto"
-                                class="input-field-text"
-                                label="Password"
-                                placeholder="Password" />
-                            <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
-                        </v-form>
-                        <p v-else>
-                            If you don't want to create an account, you can log in as a Guest. Guest accounts are
-                            temporary and will be deleted on a regular basis.
+                <v-card class="d-flex flex-column mx-auto" max-width="275" height="400">
+                    <div class="flex-grow-1">
+                        <v-window v-model="tab">
+                            <v-window-item value="sign-in">
+                                <div>
+                                    <v-form
+                                        v-if="!activeGuestLogin"
+                                        id="login-form"
+                                        ref="login"
+                                        @submit.prevent="loginUser">
+                                        <v-text-field
+                                            v-model="username"
+                                            :rules="usernameRules"
+                                            label="Username"
+                                            required />
+                                        <v-text-field
+                                            v-model="password"
+                                            :rules="passwordRules"
+                                            label="Password"
+                                            type="password"
+                                            required />
+                                    </v-form>
+                                    <p v-else class="text-justify">
+                                        If you don't want to create an account, you can log in as a Guest.
+                                        Guest accounts are temporary and will be deleted on a regular
+                                        basis.
+                                    </p>
+                                </div>
+                            </v-window-item>
 
-                            <a id="guest-login" class="link" @click="showGuestLogin">{{guestLoginLinkText}}</a>
-                        </p>
-                    </section>
-                    <section
-                        :class="{ 'entry-form-active': activeOption === 'register' }"
-                        class="entry-form entry-form-register">
-                        <v-form id="register-form" @submit.prevent="registerUser">
-                            <v-text-field
-                                v-model="register.username"
-                                clearable
-                                hide-details="auto"
-                                type="text"
-                                class="input-field-text"
-                                label="Username"
-                                placeholder="Choose Username" />
-                            <v-text-field
-                                v-model="register.password"
-                                type="password"
-                                clearable
-                                hide-details="auto"
-                                class="input-field-text"
-                                label="Password"
-                                placeholder="Enter Password" />
-                            <v-text-field
-                                v-model="register.confirmPassword"
-                                type="password"
-                                clearable
-                                hide-details="auto"
-                                class="input-field-text"
-                                label="Confirm Password"
-                                placeholder="Confirm Password" />
-                        </v-form>
-                    </section>
-                </v-sheet>
-            </template>
-            <!-- Uses class binding to show / hide the approriate section to the user -->
-            <template #entry-button>
-                <div
-                    :class="{ 'btn-wrapper-active': activeOption === 'login' }"
-                    class="btn-wrapper btn-wrapper-login">
-                    <v-btn-menu v-if="activeGuestLogin" @click="guestLogin">SIGN IN AS GUEST</v-btn-menu>
-                    <v-btn-menu v-else form="login-form" type="submit">SIGN IN</v-btn-menu>
-                </div>
-                <div
-                    :class="{ 'btn-wrapper-active': activeOption === 'register' }"
-                    class="btn-wrapper btn-wrapper-register">
-                    <v-btn-menu form="register-form" type="submit">SIGN UP</v-btn-menu>
-                </div>
+                            <v-window-item value="sign-up">
+                                <div>
+                                    <v-form
+                                        id="register-form"
+                                        ref="register"
+                                        @submit.prevent="registerUser">
+                                        <v-text-field
+                                            v-model="username"
+                                            :rules="usernameRules"
+                                            label="Username"
+                                            required />
+                                        <v-text-field
+                                            v-model="password"
+                                            :rules="passwordRules"
+                                            label="Password"
+                                            type="password"
+                                            required />
+                                        <v-text-field
+                                            v-model="confirmPassword"
+                                            :rules="[...passwordRules, passwordMatchRule]"
+                                            label="Confirm Password"
+                                            type="password"
+                                            required />
+                                    </v-form>
+                                </div>
+                            </v-window-item>
+                        </v-window>
+                    </div>
+
+                    <v-card-actions class="justify-center text-center">
+                        <div v-if="tab === 'sign-in'" class="d-flex flex-column activeOption ==='login'">
+                            <a id="guest-login" class="link mb-2 " @click="showGuestLogin">{{guestLoginLinkText}}</a>
+                            <v-btn-menu v-if="!activeGuestLogin" type="submit" form="login-form">SIGN IN</v-btn-menu>
+                            <v-btn-menu
+                                v-else
+                                type="submit"
+                                form="register-form"
+                                @click="guestLogin">SIGN IN AS GUEST</v-btn-menu>
+                        </div>
+                        <v-btn-menu v-if="tab === 'sign-up'" class="activeOption === 'register'" type="submit" form="register-form">SIGN UP</v-btn-menu>
+                    </v-card-actions>
+                </v-card>
             </template>
             <!--<template v-slot:entry-footer>
                 <a class='link link-disabled'>Forgot Password?</a>
@@ -135,28 +127,42 @@ export default {
     data() {
     // Initialize all the values that will be used for v-model
         return {
-            activeOption: 'login', // Which 'option' should be active
+            activeOption: 'login', // Used to activate the active class on the options
             activeGuestLogin: false, // true: guest login, false: regular login with user/pass form
             activeWarning: false, // Used to show or hide the warning panel
             // The current active warnings. This should really be a 'set' so that
             // it only contains unique warnings. Currently will display duplicates.
             activeWarnings: [],
-
-            user: {
-                username: '',
-                password: '',
-            },
-
-            register: {
-                username: '',
-                password: '',
-                confirmPassword: '',
-            },
+            // Below are being used for vuetify form validation
+            tab: 'login',
+            valid: false,
+            username: '',
+            password: '',
+            confirmPassword: '',
+            usernameRules: [
+                v => !!v || 'Username is required',
+                v => (v && v.length >= 4) || 'Username must be at least 4 characters',
+                v => /^[A-Za-z0-9_.-]*$/.test(v)
+                    || 'Username can only contain letters, numbers, underscores, dashes, and dots',
+            ],
+            passwordRules: [
+                v => !!v || 'Password is required',
+                v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+                v => /[0-9]/.test(v) || 'Password must contain at least one number',
+                v => /^[\w.\-!@#$%^&*()+=<>?{}[\]~`|\\/:;'",]*$/.test(v)
+                    || 'Password can contain letters, numbers, and special characters',
+            ],
+            confirmPasswordRules: [
+                v => !!v || 'Confirm Password is required',
+            ],
         }
     },
     computed: {
         guestLoginLinkText() {
             return this.activeGuestLogin ? 'Return to SIGN IN.' : 'Sign in as a Guest.'
+        },
+        passwordMatchRule() {
+            return v => v === this.password || 'Passwords do not match'
         },
     },
     mounted() {
@@ -171,47 +177,32 @@ export default {
     // Warnings cannot be active before attempting login.
         async registerUser() {
             this.dismissWarning() // clear existing warnings before starting
-            // check criteria
-            const usernameIsValid = await this.verifyUsername()
-            const passwordIsValid = await this.verifyPassword()
-            const passwordsMatch = await this.verifyPasswordMatch()
-            if (!usernameIsValid) {
-                this.addWarning(
-                    'Invalid Username: can only contain letters, ' +
-            'numbers, underscores (_), dashes (-), dots (.), ' +
-            'and must be at least 4 characters long.'
-                )
-            }
-            if (!passwordIsValid) {
-                this.addWarning('Invalid Password: must be at least 8 characters long.')
-            }
-            if (!passwordsMatch) {
-                this.addWarning('Confirmation password does not match.')
-            }
             // if no warnings were present pass in the username object to the register route
             if (!this.activeWarning) {
-                const {username, password} = this.register
-                const params = {username, password}
-                await this.entryHandler(params, '/register') // Attempt the route
+                const {valid} = await this.$refs.register.validate()
+                if (valid) {
+                    const params = {
+                        username: this.username,
+                        password: this.password,
+                        confirmPassword: this.confirmPassword,
+                    }
+                    this.entryHandler(params, '/register')
+                }
             }
         },
-
         // Login the user if the criteria is met.
         async loginUser() {
             this.dismissWarning()
-            const loginCorrect = await this.verifyLogin()
-
-            if (!loginCorrect) {
-                this.addWarning('Invalid username or password')
-            }
-
-            if (loginCorrect) {
-                const params = this.user
-                await this.entryHandler(params, '/login') // Attempt the route
+            const {valid} = await this.$refs.login.validate()
+            console.log(valid)
+            if (valid) {
+                this.dismissWarning()
+                const params = {username: this.username, password: this.password}
+                this.entryHandler(params, '/login')
             }
         },
         toLiveDashboard() {
-            // duplicated in Menu.vue
+        // duplicated in Menu.vue
             this.currentMode = 'live' // set 'live' mode
             this.parameters = {min_step_num: 0} // create min_step_num parameter
             this.setLiveConfig({duration: {amount: 0}}, this.simLocation) // set duration in wizard store
@@ -244,18 +235,18 @@ export default {
                                 if (!this.activeGuestLogin) {
                                     this.$gtag.event('user login', {
                                         event_category: 'signin',
-                                        event_label: this.user.username,
+                                        event_label: this.username,
                                     })
                                 } else {
                                     this.$gtag.event('guest login', {
                                         event_category: 'signin',
-                                        event_label: this.register.username,
+                                        event_label: this.username,
                                     })
                                 }
                             } else {
                                 this.$gtag.event('new user signup', {
                                     event_category: 'signup',
-                                    event_label: this.register.username,
+                                    event_label: this.username,
                                 })
                             }
                             /*
@@ -273,10 +264,10 @@ export default {
                     })
                     .catch(error => {
                         if (!error.response) {
-                            // we didn't get a response from the server
+                        // we didn't get a response from the server
                             this.addWarning('Error: No response from the server')
                         } else {
-                            // we got a response back from the server
+                        // we got a response back from the server
                             const {status} = error.response
                             // get the error msg from the server if available, or the generic one
                             const message = error.response.data.message || error.message
@@ -291,31 +282,6 @@ export default {
                         }
                     })
         },
-
-        // Make sure that the password and username are at least not empty before proceeding.
-        verifyLogin() {
-            const {username, password} = this.user
-            return username.length > 0 && password.length > 0
-        },
-
-        verifyUsername() {
-            const {username} = this.register
-            const userRegex = /^[a-zA-Z0-9_.-]{4,}$/
-            return userRegex.test(username)
-        },
-        verifyPassword() {
-            const {password} = this.register
-            const passRegex = /.{8,}/
-            return passRegex.test(password)
-        },
-
-        // Verifies that both the password field and confirm field match and neither is empty
-        // Returns the solved boolean value
-        verifyPasswordMatch() {
-            const {password, confirmPassword} = this.register
-            return password === confirmPassword
-        },
-
         // add a warning and set the state to true
         addWarning(warningsMsg) {
             this.activeWarnings.push(warningsMsg)
@@ -337,24 +303,38 @@ export default {
             this.activeOption = sectionName
         },
         showGuestLogin() {
-            // swap between guest login and regular login
+        // swap between guest login and regular login
             this.activeGuestLogin = !this.activeGuestLogin
         },
         guestLogin() {
-            // create a random user/pass and use them to login as guest
+        // create a random user/pass and use them to login as guest
             const date = Date.now().toString(36)
             const rand_str = Math.random().toString(36).substring(2, 15)
             const rand_userid = `guest-${date}-${rand_str}`
             const rand_password = Math.random().toString(36).substring(2, 15)
-            this.register.username = rand_userid
-            this.register.password = rand_password
-            this.register.confirmPassword = rand_password
+            this.username = rand_userid
+            this.password = rand_password
+            this.confirmPassword = rand_password
+
+            // in order to sign up as guest the vuetify props need to properly
+            // propagate and only happens on tab change and nextrick is used to
+            // give the DOM time to update properly. This is a workaround and there
+            // is chance that we can reqrite the guest functionality at a later date.
+            this.tab='sign-up'
+            this.$nextTick(() => {
+                this.registerUser()
+            })
         },
     },
 }
 </script>
 
 <style lang="scss" scoped>
+
+.v-tab {
+  font-size:24px
+}
+
 
 .input-field-text {
   height: 36px;
@@ -368,65 +348,8 @@ export default {
   font-weight: 600;
 }
 
-.entry-form {
-  width: 100%;
-  position: absolute;
-  transition: left 0.5s ease;
-
-  &-login {
-    left: -100%;
-  }
-
-  &-register {
-    left: 100%;
-  }
-
-  &-active {
-    left: 0;
-  }
-}
-.entry-form-login {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-}
-.entry-form form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.entry-form p {
-  width: 256px;
-  text-align: justify;
-  margin: 0;
-  padding: 0;
-}
 #guest-login {
   cursor: pointer;
-}
-
-.btn-wrapper {
-  width: 100%;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: left 0.5s ease;
-
-  &-login {
-    left: -100%;
-  }
-
-  &-register {
-    left: 100%;
-  }
-
-  &-active {
-    left: 0;
-  }
 }
 
 .warning-wrapper {

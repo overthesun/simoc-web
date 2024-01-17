@@ -3,17 +3,18 @@
 <template>
     <v-card class="d-flex flex-column justify-center align-center h-100 w-100">
         <header class="d-flex justify-center align-center mb-8">
-            <img src="../../assets/simoc-logo.svg" class="w-auto mr-2" height="48">
+            <img src="../../assets/simoc-logo.svg" class="simoc-logo">
             <span class="simoc-logo-title">SIMOC</span>
-            <img src="../../assets/natgeo-trans.png" class="w-auto ml-12" height="48">
+            <img src="../../assets/natgeo-trans.png" class="natgeo-logo">
         </header>
         <div class="d-flex justify-center align-cente mb-9">
             <slot name="option-items" />
         </div>
-        <main class="d-flex justify-start flex-column align-center mb-4 w-100 h-100 overflow-hidden overflow-y-auto" background-color="transparent">
+        <main class="d-flex justify-start flex-column align-center mb-4 w-100 h-100 overflow-hidden overflow-y-auto"
+              background-color="transparent">
             <slot name="entry-main" />
         </main>
-        <div class="d-flex justify-center align-center w-100 mb-8">
+        <div class="d-flex justify-center align-center w-100 mb-4">
             <slot name="entry-button" />
         </div>
         <footer class="d-flex justify-space-evenly align-center w-100" min-height="24" height="24">
@@ -93,10 +94,23 @@ export default {
   top: 0px;
 }
 
-.simoc-logo-title {
-  font-family: "Nasalization", "Open Sans", sans-serif;
-  font-weight: 400;
-  font-size: 22px;
+.simoc-logo{
+    width: auto;
+    height: 48px;
+    margin-right:8px;
+}
+
+.natgeo-logo{
+    width: auto;
+    height: 60px;
+    /* must be at least a full logo away from the rest */
+    margin-left: 48px;
+}
+
+ .simoc-logo-title{
+    font-family: "Nasalization", "Open Sans", sans-serif;
+    font-weight: 400;
+    font-size: 22px;
 }
 
 .btn-disabled {
@@ -121,34 +135,6 @@ export default {
 
 <style lang="scss">
 .v-card {background-color: transparent; box-shadow: none;}
-
-.option-item {
-  box-sizing: border-box;
-  margin: 0px 16px;
-  font-weight: 600;
-  font-size: 24px;
-  position: relative;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:after {
-    box-sizing: border-box;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    content: "";
-    width: 0;
-    border-bottom: 2px solid lightgreen;
-    transition: width 0.2s ease;
-  }
-
-  &-active:after {
-    width: 100%;
-    left: 0;
-  }
-}
 
 .link {
   text-decoration: underline;
