@@ -7,9 +7,11 @@
             </option>
         </select>
         <div>
-            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber" :plotted-storage="storage"
+            <LevelsGraph :id="'canvas-storage-levels-' + canvasNumber"
+                         :plotted-storage="storage" :plotted-items="plottedItems"
                          :storages-mapping="storagesMapping" :fullscreen="fullscreen"
-                         :nsteps="fullscreen?getTotalMissionHours:24" />
+                         :nsteps="fullscreen?getTotalMissionHours:24"
+                         @plotted-items-changed="updatePlottedItems" />
         </div>
     </div>
 </template>
@@ -32,7 +34,8 @@ export default {
         // these are passed by dashboard/Main.vue and
         // determine the panel index and the selected graph
         panelIndex: {type: Number, required: true},
-        panelSection: {type: String, default: null},
+        panelSection: {type: String, default: undefined},
+        plottedItems: {type: String, default: undefined},
         fullscreen: {type: Boolean, default: false},
     },
     emits: ['panel-section-changed'],
@@ -58,10 +61,13 @@ export default {
         },
     },
     watch: {
-        storage() {
+        storage(newVal, oldVal) {
             // tell dashboard/Main.vue that we changed panel section,
             // so that it can update the list of activePanels
-            this.$emit('panel-section-changed', this.panelIndex, this.storage)
+            if (oldVal === undefined) {
+                return  // don't emit when loading the panel for the first time
+            }
+            this.$emit('panel-section-changed', this.panelIndex, this.storage, undefined)
         },
         getActivePanels() {
             // update section when the user clicks on the reset panels button of the dashboard menu
@@ -83,6 +89,10 @@ export default {
     },
     methods: {
         stringFormatter: StringFormatter,
+
+        updatePlottedItems(plottedItems) {
+            this.$emit('panel-section-changed', this.panelIndex, this.storage, plottedItems)
+        },
     },
 }
 </script>
