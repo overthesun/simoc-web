@@ -2,12 +2,7 @@
     <div class="d-flex flex-column justify-center align-center h-100 w-100">
         <div class="warning-container" :class="{ 'warning-active': activeWarning }">
             <div v-for="(item, index) in activeWarnings" :key="index">
-                <v-alert
-                    border="start"
-                    type="error"
-                    title="Error"
-                    color="red"
-                    closable>
+                <v-alert border="start" type="error" title="Error" color="red" closable>
                     {{activeWarnings[index]}}
                 </v-alert>
             </div>
@@ -15,10 +10,7 @@
         <!--Uses the BaseEntry component as its and fills in the slots to populate the sections -->
         <BaseEntry>
             <template #option-items>
-                <v-tabs
-                    v-model="tab"
-                    align-tabs="center"
-                    color="green-accent-4">
+                <v-tabs v-model="tab" align-tabs="center" color="green-accent-4">
                     <v-tab value="sign-in"> SIGN IN </v-tab>
                     <v-tab value="sign-up"> SIGN UP </v-tab>
                 </v-tabs>
@@ -35,17 +27,10 @@
                                         id="login-form"
                                         ref="login"
                                         @submit.prevent="loginUser">
-                                        <v-text-field
-                                            v-model="username"
-                                            :rules="usernameRules"
-                                            label="Username"
-                                            required />
-                                        <v-text-field
-                                            v-model="password"
-                                            :rules="passwordRules"
-                                            label="Password"
-                                            type="password"
-                                            required />
+                                        <v-text-field v-model="username" :rules="usernameRules" label="Username"
+                                                      required />
+                                        <v-text-field v-model="password" :rules="passwordRules" label="Password"
+                                                      type="password" required />
                                     </v-form>
                                     <p v-else class="text-justify">
                                         If you don't want to create an account, you can log in as a Guest.
@@ -57,27 +42,16 @@
 
                             <v-window-item value="sign-up">
                                 <div>
-                                    <v-form
-                                        id="register-form"
-                                        ref="register"
-                                        @submit.prevent="registerUser">
-                                        <v-text-field
-                                            v-model="username"
-                                            :rules="usernameRules"
-                                            label="Username"
-                                            required />
-                                        <v-text-field
-                                            v-model="password"
-                                            :rules="passwordRules"
-                                            label="Password"
-                                            type="password"
-                                            required />
-                                        <v-text-field
-                                            v-model="confirmPassword"
-                                            :rules="[...passwordRules, passwordMatchRule]"
-                                            label="Confirm Password"
-                                            type="password"
-                                            required />
+                                    <v-form id="register-form" ref="register" @submit.prevent="registerUser">
+                                        <v-text-field v-model="username" :rules="usernameRules" label="Username"
+                                                      required />
+                                        <v-text-field v-model="password" :rules="passwordRules" label="Password"
+                                                      type="password" required />
+                                        <v-text-field v-model="confirmPassword"
+                                                      :rules="[...passwordRules, passwordMatchRule]"
+                                                      label="Confirm Password"
+                                                      type="password"
+                                                      required />
                                     </v-form>
                                 </div>
                             </v-window-item>
@@ -88,11 +62,7 @@
                         <div v-if="tab === 'sign-in'" class="d-flex flex-column activeOption ==='login'">
                             <a id="guest-login" class="link mb-2 " @click="showGuestLogin">{{guestLoginLinkText}}</a>
                             <v-btn-menu v-if="!activeGuestLogin" type="submit" form="login-form">SIGN IN</v-btn-menu>
-                            <v-btn-menu
-                                v-else
-                                type="submit"
-                                form="register-form"
-                                @click="guestLogin">SIGN IN AS GUEST</v-btn-menu>
+                            <v-btn-menu v-else type="submit" form="register-form" @click="guestLogin">SIGN IN AS GUEST</v-btn-menu>
                         </div>
                         <v-btn-menu v-if="tab === 'sign-up'" class="activeOption === 'register'" type="submit" form="register-form">SIGN UP</v-btn-menu>
                     </v-card-actions>

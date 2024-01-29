@@ -14,7 +14,7 @@
               background-color="transparent">
             <slot name="entry-main" />
         </main>
-        <div class="d-flex justify-center align-center w-100 mb-4">
+        <div class="d-flex justify-center align-center w-100 mb-2">
             <slot name="entry-button" />
         </div>
         <footer class="d-flex justify-space-evenly align-center w-100" min-height="24" height="24">
