@@ -8,10 +8,10 @@
                 <div class="option-item option-item-active"> MAIN MENU </div>
             </template>
             <template #entry-main>
-                <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
-                <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
-                <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
+                <v-btn-menu form="login-form" class="btn-mars" @click="toConfiguration('mars')">MARS</v-btn-menu>
+                <v-btn-menu form="login-form" class="btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</v-btn-menu>
+                <v-btn-menu form="login-form" @click="uploadSimData">LOAD SIMULATION DATA</v-btn-menu>
+                <v-btn-menu @click="showSurvey">LEAVE FEEDBACK</v-btn-menu>
                 <!-- <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button> -->
                 <button :class="{'hidden': !showLiveMode}" form="login-form" class="btn-normal"

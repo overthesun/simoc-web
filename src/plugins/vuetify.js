@@ -1,3 +1,4 @@
+import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 import {VBtn} from 'vuetify/components/VBtn'
 

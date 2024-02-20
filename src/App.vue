@@ -29,10 +29,8 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
       src: url('@/assets/fonts/nasalization-rg-webfont.woff') format('woff');
   }
 
-  body{
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
+  html {
+    overflow-y: auto
   }
 
  .bg {
@@ -75,6 +73,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
   .v-btn.v-btn--menu {
     font-family: sans-serif !important;
     cursor: pointer;
+    margin-bottom: 12px;
 }
 
    @media all and (orientation: portrait){
