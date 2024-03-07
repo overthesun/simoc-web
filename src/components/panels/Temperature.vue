@@ -49,7 +49,7 @@ export default {
             // default on 'all' and 'co2_ppm'
             // (e.g. when using "Change panel")
             location: this.panelSection ?? 'all',
-            currency: 'temp',
+            currency: 'temperature',
             currencySensorInfo: {},
         }
     },
