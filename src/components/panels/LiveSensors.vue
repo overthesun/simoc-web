@@ -65,29 +65,47 @@ export default {
         }
     },
     watch: {
+        selected_hostname() {
+            this.updateSection()
+        },
+        selected_sensorname() {
+            this.updateSection()
+        },
         selected_currency() {
-            // tell dashboard/Main.vue that we changed panel section,
-            // so that it can update the list of activePanels
-            this.$emit('panel-section-changed', this.panelIndex, this.selected_currency)
+            this.updateSection()
         },
         activePanels() {
-            // update section when the user clicks on the reset panels button of the dashboard menu
-            this.selected_currency = this.activePanels[this.panelIndex].split(':')[1]
+            this.setFromActivePanels()
         },
         sensorInfo() {
             this.refreshSensorInfo()
         },
     },
     mounted() {
+        this.setFromActivePanels()
         this.refreshSensorInfo()
     },
     methods: {
+        updateSection() {
+            // tell dashboard/Main.vue that we changed panel section,
+            // so that it can update the list of activePanels
+            this.$emit('panel-section-changed', this.panelIndex,
+                       `${this.selected_hostname}/${this.selected_sensorname}/` +
+                       `${this.selected_currency}`)
+        },
+        setFromActivePanels() {
+            console.log(this.activePanels[this.panelIndex])
+            // update section when the user clicks on the reset panels button of the dashboard menu
+            const selections = this.activePanels[this.panelIndex].split(':')[1]
+            const [hostname, sensor, currency] = selections ? selections.split('/') : ['', '', '']
+            this.selected_hostname = hostname
+            this.selected_sensorname = sensor
+            this.selected_currency = currency
+        },
         refreshSensorInfo() {
             this.currencySensorInfo = {}
-            console.log(this.sensorInfo)
             Object.entries(this.sensorInfo).forEach(([k, v]) => {
                 const [host, sensor] = k.split('.')
-                console.log(host, sensor)
                 if (!this.hostSensorInfo.includes(host)) {
                     this.hostSensorInfo.push(host)
                 }
@@ -95,7 +113,6 @@ export default {
                     this.sensorSensorInfo.push(sensor)
                 }
                 Object.entries(v.reading_info).forEach(([k, v]) => {
-                    console.log(k, v)
                     if (!(k in this.currencySensorInfo)) {
                         this.currencySensorInfo[k] = v
                     }
@@ -110,7 +127,8 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            if (sensor_id === undefined || ! this.selected_currency.length) {
+            if (sensor_id === undefined || ! this.selected_currency.length ||
+                !Object.keys(this.sensorInfo).length) {
                 return {}
             }
             return this.sensorInfo[sensor_id].reading_info
