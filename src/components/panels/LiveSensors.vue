@@ -106,9 +106,7 @@ export default {
         },
         refreshSensorInfo() {
             this.currencySensorInfo = {}
-            console.log('si', this.sensorInfo)
             Object.entries(this.sensorInfo).forEach(([sensor_id, info]) => {
-                  console.log('kv1', sensor_id , info)
                 const [host, sensor] = sensor_id.split('.')
                 if (!this.hostSensorInfo.includes(host)) {
                     this.hostSensorInfo.push(host)
@@ -117,7 +115,6 @@ export default {
                     this.sensorSensorInfo.push(sensor)
                 }
                 Object.entries(info.reading_info).forEach(([name, rinfo]) => {
-                  console.log('kv2', name , rinfo)
                     if (!(name in this.currencySensorInfo)) {
                         this.currencySensorInfo[name] = rinfo
                     }
