@@ -96,7 +96,6 @@ export default {
                        `${this.selected_currency}`)
         },
         setFromActivePanels() {
-            console.log(this.activePanels[this.panelIndex])
             // update section when the user clicks on the reset panels button of the dashboard menu
             const selections = this.activePanels[this.panelIndex].split(':')[1]
             const [hostname, sensor, currency] = selections ? selections.split('/') : ['', '', '']
@@ -129,8 +128,7 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            if (sensor_id === undefined || !this.selected_currency.length ||
-                !Object.keys(this.sensorInfo).length) {
+            if (sensor_id === undefined || !Object.keys(this.sensorInfo).length) {
                 return {}
             }
             return this.sensorInfo[sensor_id].reading_info

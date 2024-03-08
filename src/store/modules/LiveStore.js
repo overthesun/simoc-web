@@ -41,7 +41,7 @@ export const useLiveStore = defineStore('LiveStore', {
          */
         setSensorInfo(value) {
             this.sensorInfo = {...this.sensorInfo, ...value}
-            console.log(`Set sensor info to ${this.sensorInfo}`)
+            console.log('Set sensor info to', this.sensorInfo)
         },
         /** Sets the bundleNum 'n' (called 'stepNum' in sim-mode) adjusted using the
          *  initial bundle num so that it increments from 0.
