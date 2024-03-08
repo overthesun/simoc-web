@@ -128,7 +128,6 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            console.log(sensor_id)
             if (!Object.keys(this.sensorInfo).includes(sensor_id)) {
                 return {}
             }
