@@ -192,12 +192,13 @@ export default {
                 data.datasets.forEach(set => set.data.shift())
                 data.labels.shift()
                 if (step > 0) {
-                    if (!this.hostname.length || !this.sensorname.length || !this.plottedValue.length) {
+                    if (!this.hostname.length || !this.sensorname.length ||
+                        !this.plottedValue.length) {
                         return
                     }
-                    let r = this.getReadings(step)
+                    const r = this.getReadings(step)
                     const sensor_id = `${this.hostname}.${this.sensorname}`
-                    let value = r[sensor_id][this.plottedValue]
+                    const value = r[sensor_id][this.plottedValue]
                     data.datasets[0].data.push(value)
                     data.labels.push(this.stepnum2timestamp(step))
                 } else {

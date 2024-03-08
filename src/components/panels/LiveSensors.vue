@@ -7,11 +7,13 @@
             </select>
             <select v-model="selected_sensorname" required>
                 <option disabled selected value="">Select sensor</option>
-                <option v-for="(sensor_name) in sensorSensorInfo" :key="sensor_name" :value="sensor_name">{{sensor_name}}</option>
+                <option v-for="(sensor_name) in sensorSensorInfo" :key="sensor_name"
+                        :value="sensor_name">{{sensor_name}}</option>
             </select>
             <select v-model="selected_currency" required>
                 <option disabled selected value="">Select reading</option>
-                <option v-for="(info, curr) in getValidInfo()" :key="curr" :value="curr">{{info.label}}</option>
+                <option v-for="(info, curr) in getValidInfo()" :key="curr"
+                        :value="curr">{{info.label}}</option>
             </select>
         </div>
         <div>
@@ -104,17 +106,20 @@ export default {
         },
         refreshSensorInfo() {
             this.currencySensorInfo = {}
-            Object.entries(this.sensorInfo).forEach(([k, v]) => {
-                const [host, sensor] = k.split('.')
+            console.log('si', this.sensorInfo)
+            Object.entries(this.sensorInfo).forEach(([sensor_id, info]) => {
+                  console.log('kv1', sensor_id , info)
+                const [host, sensor] = sensor_id.split('.')
                 if (!this.hostSensorInfo.includes(host)) {
                     this.hostSensorInfo.push(host)
                 }
                 if (!this.sensorSensorInfo.includes(sensor)) {
                     this.sensorSensorInfo.push(sensor)
                 }
-                Object.entries(v.reading_info).forEach(([k, v]) => {
-                    if (!(k in this.currencySensorInfo)) {
-                        this.currencySensorInfo[k] = v
+                Object.entries(info.reading_info).forEach(([name, rinfo]) => {
+                  console.log('kv2', name , rinfo)
+                    if (!(name in this.currencySensorInfo)) {
+                        this.currencySensorInfo[name] = rinfo
                     }
                 })
             })
@@ -127,22 +132,20 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            if (sensor_id === undefined || ! this.selected_currency.length ||
+            if (sensor_id === undefined || !this.selected_currency.length ||
                 !Object.keys(this.sensorInfo).length) {
                 return {}
             }
             return this.sensorInfo[sensor_id].reading_info
-
         },
         getUnit() {
             const info = this.getValidInfo()
             if (this.selected_currency in info) {
                 const curr_info = info[this.selected_currency]
-                return ' ' + curr_info.unit
+                return ` ${curr_info.unit}`
             } else {
                 return ''
             }
-
         },
     },
 }
