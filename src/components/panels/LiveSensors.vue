@@ -96,7 +96,6 @@ export default {
                        `${this.selected_currency}`)
         },
         setFromActivePanels() {
-            console.log(this.activePanels[this.panelIndex])
             // update section when the user clicks on the reset panels button of the dashboard menu
             const selections = this.activePanels[this.panelIndex].split(':')[1]
             const [hostname, sensor, currency] = selections ? selections.split('/') : ['', '', '']
