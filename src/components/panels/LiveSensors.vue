@@ -129,8 +129,7 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            if (sensor_id === undefined || !this.selected_currency.length ||
-                !Object.keys(this.sensorInfo).length) {
+            if (sensor_id === undefined || !Object.keys(this.sensorInfo).length) {
                 return {}
             }
             return this.sensorInfo[sensor_id].reading_info
