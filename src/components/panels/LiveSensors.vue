@@ -16,7 +16,7 @@
                         :value="curr">{{info.label}}</option>
             </select>
         </div>
-        <div>
+        <div class="chart-area">
             <LiveReadings :id="'canvas-pc-' + canvasNumber" :plotted-value="selected_currency"
                           :currency="currency" :color="'#0066ff'" :unit="getUnit()"
                           :hostname="selected_hostname" :sensorname="selected_sensorname"
@@ -158,7 +158,7 @@ export default {
 .panel-graph select {
   width: 33%;
 }
-.panel-graph select + div {
+.chart-area {
   /* see https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 */
   min-width: 0;
   min-height: 0;
