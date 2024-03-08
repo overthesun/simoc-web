@@ -128,7 +128,7 @@ export default {
         },
         getValidInfo() {
             const sensor_id = this.getSensorId()
-            if (sensor_id === undefined || !Object.keys(this.sensorInfo).length) {
+            if (!Object.keys(this.sensorInfo).includes(sensor_id)) {
                 return {}
             }
             return this.sensorInfo[sensor_id].reading_info
