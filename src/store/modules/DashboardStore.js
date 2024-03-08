@@ -296,7 +296,7 @@ export const useDashboardStore = defineStore('DashboardStore', {
                 ],
                 // Sensors is duplicated so there's more room to see the values of all sensors
                 'live': [
-                    'Sensors', 'AtmosphericCO2', 'LiveSensors:samrpi1/SCD-30/temperature',
+                    'Sensors', 'AtmosphericCO2', 'LiveSensors',
                     'Sensors', 'Temperature', 'RelativeHumidity',
                 ],
             }[layout]
