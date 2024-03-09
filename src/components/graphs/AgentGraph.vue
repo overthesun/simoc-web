@@ -27,9 +27,11 @@ export default {
         id: {type: String, required: true},
         agent: {type: String, required: true},
         category: {type: String, required: true},
+        plottedItems: {type: String, default: undefined},
         fullscreen: {type: Boolean, default: false},
         nsteps: {type: Number, required: true},
     },
+    emits: ['plotted-items-changed'],
     setup() {
         const dashboard = useDashboardStore()
         const {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
@@ -85,6 +87,10 @@ export default {
             this.initChart()
         },
         category() {
+            this.initChart()
+        },
+        // re-init the chart when we plot something else
+        plottedItems() {
             this.initChart()
         },
         // re-init the chart when we change the number of steps displayed
@@ -151,8 +157,16 @@ export default {
 
             return consolidated
         },
+        formatLabel(label, unit) {
+            return label + (unit && !this.unit ? ` (${unit})` : '')
+        },
         // TODO: this code is very similar to LevelsGraph.vue
         initChart() {
+            if (this.plottedItems !== undefined && this.plottedItems.length) {
+                this.plotted_items = this.plottedItems.split('|')
+            } else {
+                this.plotted_items = undefined  // no list of items to plot -- plot'em all
+            }
             if (this.chart) {
                 // when switching chart we have to destroy
                 // the old one before reusing the same canvas
@@ -187,11 +201,13 @@ export default {
                 datasets = Object.values(datasetsData).map(({unit, label}, i) => ({
                     lineTension: 0,
                     data: Array(this.nsteps),
-                    label: label + ((unit && !this.unit) ? ` (${unit})` : ''),
+                    label: this.formatLabel(label, unit),
                     // TODO: Get field-specific color from currencyDict or fieldDict
                     borderColor: this.colors[i],
                     fill: false,
                     pointStyle: 'line',
+                    hidden: (this.plotted_items !== undefined &&
+                             !this.plotted_items.includes(this.formatLabel(label, unit))),
                 }))
             }
 
@@ -234,6 +250,17 @@ export default {
                             position: 'bottom',
                             // https://stackoverflow.com/a/50450646
                             labels: {usePointStyle: true},
+                            onClick: (event, legendItem, legend) => {
+                                legend.chart.setDatasetVisibility(
+                                    legendItem.datasetIndex,
+                                    !legend.chart.isDatasetVisible(legendItem.datasetIndex)
+                                )
+                                legend.chart.update()
+                                const plotted_items = legend.legendItems
+                                        .filter(item => !item.hidden)
+                                        .map(item => item.text).join('|')
+                                this.$emit('plotted-items-changed', plotted_items)
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values

@@ -8,7 +8,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 
 <template>
     <div :class="{'dashboard-onepanel': isFullscreen}" class="dashboard-view-wrapper">
-        <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
+        <BasePanel v-for="([panelName, panelSection, plottedItems], index) in activePanels.map(p => p.split(':'))"
                    :key="index" :class="fullscreenStatus[index]">
             <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
             <template #panel-menu>
@@ -45,7 +45,8 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
             </template>
             <template #panel-content>
                 <component :is="panelName" :canvas-number="index" :panel-index="index"
-                           :panel-section="panelSection" :fullscreen="isFullscreenPanel(index)"
+                           :panel-section="panelSection" :plotted-items="plottedItems"
+                           :fullscreen="isFullscreenPanel(index)"
                            @panel-section-changed="updatePanelSection" />
             </template>
         </BasePanel>
@@ -162,10 +163,10 @@ export default {
             this.getActivePanels = this.activePanels
             this.closePanelMenu()
         },
-        updatePanelSection(index, section) {
+        updatePanelSection(index, section, plottedItems) {
             // update the section of the panel at index
             const panelName = this.activePanels[index].split(':')[0]
-            this.activePanels[index] = [panelName, section].join(':')
+            this.activePanels[index] = [panelName, section, plottedItems].join(':')
             this.getActivePanels = this.activePanels
         },
         removePanel(index) {
