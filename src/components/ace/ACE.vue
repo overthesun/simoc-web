@@ -398,6 +398,26 @@ export default {
 			// Switch to the new agent
 			this.selectedAgentName=newAgentName;
 		},
+		createNewCurrency(){
+			// Generate a unique currency name
+			// Count currencies
+			let count = 0;
+			this.selectedCurrencyCategory = this.currencyCategorySelected;
+			for (let item in this.currencyDesc[this.selectedCurrencyCategory]) {
+					count++;	
+			}
+	
+			let currencyNumber = count + 1;
+			let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber;
+			// Create the empty object
+			this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName]={};
+			// Set empty parameters
+			this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName].label="";
+			// Switch to newly generated currency
+			
+			this.generateCurrencyList();
+			this.selectedCurrency=newCurrencyName;
+		},
 		duplicateAgent(){
 			let agentNumber = Object.keys(this.agentDesc).length + 1;
 			let newAgentName=this.selectedAgentName + '_' + agentNumber;
@@ -406,7 +426,7 @@ export default {
 			this.agentDesc[newAgentName]=copiedObject;
 			// Switch to the copied agent
 			this.selectedAgentName=newAgentName;
-			// Make sure to duplicate correspndong plant currency
+			// Make sure to duplicate correspoding plant currency
 			if (this.categorySelected=='plants') {
 				alert("PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!")
 			}			
@@ -526,7 +546,9 @@ export default {
 </script>
 
 <template>
+	<div class="navMenu">
 	<button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button  v-else @click="switchMode()">Currency Editor</button>
+	</div>
 	<div v-if="typeof(currencyDesc[currencyCategorySelected])=='object' && currentMode=='currency'">
 	<h2>Currency Editor</h2>
  	<label> Currency Category 
@@ -534,6 +556,9 @@ export default {
 		<option v-for="category in currencyTypes" :key="category" :value="category" > {{ category }} </option>
 	</select>
 	</label>
+	<button @click="createNewCurrency()">Create New Blank Currency</button>
+	<br>
+	<br>
 	<div class="gridBox">
 	<div class="scrollie agentBox">
 	<div id="buttonList"> 
@@ -580,9 +605,8 @@ export default {
 	<select id="categorySelector" v-model="categorySelected">
 		<option v-for="category in agentClasses" :key="category" :value="category"> {{ category }} </option>
 	</select>
-	<br/>
 	<button @click="createNewAgent()">Create New Blank Agent</button>
-	<br/>	<br/>	<br/>
+	<br/>	<br/>	
 	<div class="gridBox" id="gridbox">
 	<div id="agentSelector" class="scrollie agentBox"> 
 	<h2> Agents ({{ categorySelected }}): </h2>
@@ -921,6 +945,11 @@ export default {
 </template>
 
 <style scoped>
+
+.navMenu{
+	display: flex;
+	justify-content: center;
+}
 
 .gridBox{
             display: grid;
