@@ -68,7 +68,6 @@ export default {
         } catch (error) {
             console.log(error)
         }
-        
         // Get currencies from simoc-abm
         try {
             this.currencyDesc = await this.getCurrencyDesc()
@@ -78,8 +77,6 @@ export default {
         } catch (error) {
             console.log(error)
         }
-
-        
     },
     methods: {
         getLocalStorageAgents() {
@@ -94,7 +91,6 @@ export default {
             } else {
                 console.log(" * No agents loaded from local storage *")
             }
-            
         },
         getLocalStorageCurrencies(){ 
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
@@ -146,7 +142,6 @@ export default {
             for(let i=0;i<currancies.length;++i){
                 this.currencyList.push(currancies[i])
             }
-
         },
         async getAgentDesc() {
             try {
@@ -177,7 +172,6 @@ export default {
         },
         selectItem(item) {
             this.selectedAgentName = item;
-
         },
         selectCurrency(currency){
             this.selectedCurrency = currency
@@ -241,11 +235,9 @@ export default {
                          }
                          if(newPropVal=='true') newPropVal = true
                          if(newPropVal=='false') newPropVal = false
-
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
         renameAgent(newName){
-            
             // Make Sure Agent Doesn't Already Exist    
             for (name in this.agentDesc) {
                 if (name == newName) {
@@ -253,17 +245,15 @@ export default {
                     return
                 }
             }
-            
             // Rename Object
             const thisAgent = this.agentDesc[this.selectedAgentName]
             this.agentDesc[newName] = thisAgent
             delete this.agentDesc[this.selectedAgentName]
             this.selectedAgentName = newName
-            
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected=='plants') {
                 alert("PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, (i.e. rice has rice as outflow, and has rice as a biomass connection)!")
-            }           
+            }
             // Export the plant currency
         },
         renameCurrency(newName){
@@ -275,7 +265,6 @@ export default {
                     return
                 }
             }
-            
             // Rename Object
             const thisCurrency = this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]
             this.currencyDesc[this.currencyCategorySelected][newName] = thisCurrency
@@ -343,7 +332,6 @@ export default {
             } else { // Make sure not to add unit if it is not specified
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ "value" : newPropVal }
             }
-        
         },
         addFlowArrayItem(direction, type, currency, name){
             // Add the array if it doesn't exist
@@ -376,7 +364,6 @@ export default {
         addGrowth(currency, kind, pattern){
                         if (!(typeof(this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) 
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
-
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]={}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
         },
@@ -406,7 +393,6 @@ export default {
             for (const item in this.currencyDesc[this.selectedCurrencyCategory]) {
                     count++
             }
-    
             const currencyNumber = count + 1
             let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
             // Create the empty object
@@ -414,7 +400,6 @@ export default {
             // Set empty parameters
             this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName].label=""
             // Switch to newly generated currency
-            
             this.generateCurrencyList()
             this.selectedCurrency=newCurrencyName
         },
@@ -429,19 +414,18 @@ export default {
             // Make sure to duplicate correspoding plant currency
             if (this.categorySelected=='plants') {
                 alert("PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!")
-            }           
+            }
         },
         duplicateCurrency(){
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
             const newCurrencyName=this.selectedCurrency + '_' + currencyNumber
             // Deep Copy the original object
             let copiedObject = JSON.parse(JSON.stringify(this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]))
-
             this.currencyDesc[this.currencyCategorySelected][newCurrencyName]=copiedObject
             // Switch to the copied agent
             this.selectedCurrency=newCurrencyName
             this.generateCurrencyList()
-        },      
+        },
         exportJSON(){
             // Package this agent singly
             let agentName = this.selectedAgentName
@@ -455,14 +439,10 @@ export default {
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             }
             localStorage.setItem('customAgents',JSON.stringify(currentCustomAgents))
-            
                 // If plant, export currency for it, too
-
             if (this.categorySelected=='plants') {
                 alert("PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!")
             }
-        
-
         },
         exportJSONCurrency(){
             let currencyName = this.selectedCurrency
@@ -484,13 +464,12 @@ export default {
             */
                 let category = this.currencyCategorySelected
                 this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
-                
                 // Assign category for export
                 if(category=='custom') {
                     category =  this.currencyDesc['custom'][currencyName]['category']
                 } else {
                     this.customCurrencies[currencyName]['category'] = category //this.currencyCategorySelected
-                }           
+                }
                 currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName] 
             localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies))
         },
@@ -541,9 +520,7 @@ export default {
         },
     }
 }
-
 </script>
-
 <template>
     <div class="navMenu">
     <button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button  v-else @click="switchMode()">Currency Editor</button>
@@ -593,11 +570,9 @@ export default {
         <br>
         <hr>
         {{ currencyDesc[selectedCurrencyCategory][selectedCurrency] }}
-
     </div> <!-- CurrencyBox -->
     </div> <!-- gridBox -->
     </div> <!-- vif currency object exists -->
-
     <div v-if="currentMode=='agent'">
     <h2> Agent Editor.  Known Issues: Consistency. Shared Change Memory. Select needs Title Attributes, ul has invalid elements  </h2>
     <label for="categorySelector">Choose Agent Class:  </label>
@@ -614,8 +589,6 @@ export default {
     </ul>
     </div>
     <div v-if="typeof(agentDesc)=='object'" class="agentData scrollie" id="agentPresenter"> 
-    
-
     <h2> {{ selectedAgentName }}  <input name="newAgentName" v-model="newAgentName" type="text"/>  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
     <ul> 
         <li>Agent Class:    <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
@@ -628,7 +601,6 @@ export default {
         <li>Description: <br/>  <textarea name="descriptionField" v-model="agentDesc[selectedAgentName].description" rows="4" cols="100"> </textarea>
         </li>
     </ul>
-
     <h3>Capacity</h3>
                 <ul>
                 <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
@@ -647,7 +619,6 @@ export default {
                 <input name="newCapVal" type="number" v-model="newCapacityValue"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
                 </li>
             </ul>
-
     <h3>Flows</h3>
         <h4>In Currencies</h4>
         <ul>
@@ -863,12 +834,10 @@ export default {
                 <li> Connnections: <input name="connectionsThresholdsField" type="text" v-model="agentDesc[selectedAgentName].thresholds[currency].connections">
                 </li>
             </ul>
-
             </li>
             <li> <!-- NEW FLOW -->
             <label>New Currency:
             <select name="newThresholdCurrency" v-model="newThresholdCurrency" selected="o2">
-                                        
                                         <option v-for="item in currencyList" :value="item"> {{item}} </option>
             </select>
             </label>
@@ -888,7 +857,6 @@ export default {
                 </li>
             </ul> 
          <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
-            
         </li>
         </ul>
     <h3>Properties</h3>
@@ -910,8 +878,6 @@ export default {
         </ul>
     </li>
     </ul>
-
-
     <h2> Agent Details </h2>
     <hr/>
     <ul>
@@ -940,22 +906,17 @@ export default {
     </div>
     </div> <!-- gridBox -->
     </div> <!-- agentMode div -->
-
 </template>
-
 <style scoped>
-
 .navMenu{
     display: flex;
     justify-content: center;
 }
-
 .gridBox{
             display: grid;
             grid-template-columns: 1fr 5fr; /* Three columns each 100px wide */
             grid-gap: 10px; /* Gap between grid items */
 }
-
 .scrollie {
     overflow-y: scroll !important; 
 
@@ -966,17 +927,14 @@ export default {
     height: 400px;
     width: 100%;
 }
-
 .agentBox {
     padding: 3px;
     border: solid grey 2px;
 }
-
 .agentData {
     padding: 5px;
     border: solid red 5px;
     color: black;
     background-color: grey;
-    
 }
 </style>
