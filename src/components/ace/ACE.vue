@@ -6,52 +6,52 @@ export default {
     },
     data() {
         return {
-            currentMode: "agent",
-            agentDesc: "",
-            currencyDesc: "",
+            currentMode: 'agent',
+            agentDesc: '',
+            currencyDesc: '',
             currencyList: [],
-            selectedCurrency: "o2",
-            selectedCurrencyCategory: "atmosphere",
-            currencyCategorySelected: "atmosphere",
-            newCurrencyName: "",
-            categorySelected: "plants",
-            selectedAgentName: "rice",
-            selectedCapacity: "",
-            customClassName: "",
+            selectedCurrency: 'o2',
+            selectedCurrencyCategory: 'atmosphere',
+            currencyCategorySelected: 'atmosphere',
+            newCurrencyName: '',
+            categorySelected: 'plants',
+            selectedAgentName: 'rice',
+            selectedCapacity: '',
+            customClassName: '',
             capacityTypes: {},
             inTypes: {},
             outTypes: {},
             thresholdTypes: {},
             kindTypes: {},
-            newCapacityType: "",
-            newCapacityValue: "",
-            newInType: "",
-            newInValue: "",
-            newOutType: "",
-            newOutValue: "",
-            newThresholdCurrency: "o2",
-            newThresholdPath: "",
-            newThresholdLimit: "",
-            newThresholdValue: "",
-            newThresholdConnections: "",
+            newCapacityType: '',
+            newCapacityValue: '',
+            newInType: '',
+            newInValue: '',
+            newOutType: '',
+            newOutValue: '',
+            newThresholdCurrency: 'o2',
+            newThresholdPath: '',
+            newThresholdLimit: '',
+            newThresholdValue: '',
+            newThresholdConnections: '',
             propertyNames: {},
-            newPropertyName: "",
-            newPropVal: "",
-            newPropUnit: "",
-            newWeightedIn: "",
-            newWeightedOut: "",
-            newConnectionIn: "",
-            newConnectionOut: "",
-            newRequires: "",
-            newCriterionName: "",
-            newCriterionValue: "",
-            newCriterionLimit: "",
-            newGrowthKind: "",
-            newGrowthPattern: "",
-            newDepriveValue: "",
-            newDepriveUnit: "",
-            changedPropVal: "",
-            newAgentName: "",
+            newPropertyName: '',
+            newPropVal: '',
+            newPropUnit: '',
+            newWeightedIn: '',
+            newWeightedOut: '',
+            newConnectionIn: '',
+            newConnectionOut: '',
+            newRequires: '',
+            newCriterionName: '',
+            newCriterionValue: '',
+            newCriterionLimit: '',
+            newGrowthKind: '',
+            newGrowthPattern: '',
+            newDepriveValue: '',
+            newDepriveUnit: '',
+            changedPropVal: '',
+            newAgentName: '',
             customAgents: {},
             customCurrencies: {},
         }
@@ -87,7 +87,7 @@ export default {
             localStorageAgents = JSON.parse(localStorageAgents);
             if(typeof(localStorageAgents)=='object' && (localStorageAgents!=null) )  {
                 console.log("Agents found in local storage:")
-                for (let agent in (localStorageAgents)) {
+                for (const agent in (localStorageAgents)) {
                     console.log(agent);
                     this.agentDesc[agent] = localStorageAgents[agent];
                 }
@@ -112,7 +112,7 @@ export default {
                     this.currencyDesc['custom']={};
                 }
                 
-                for (let currency in localStorageCurrencies) {
+                for (const currency in localStorageCurrencies) {
                         console.log(currency);
                         this.currencyDesc["custom"][currency] = localStorageCurrencies[currency];
                 }
@@ -125,7 +125,7 @@ export default {
                 // Retrieve agent desc  from the backend
                 console.log(`* Loading Currency Desc from backend *`)
                 const response = await axios.get('/get_currency_desc')
-                let currencyDesc = response.data.currency_desc
+                const currencyDesc = response.data.currency_desc
                 console.log(currencyDesc);
                 return currencyDesc  // get the actual data out of the response object
             } catch (error) {
@@ -135,10 +135,10 @@ export default {
             }           
         },
         generateCurrencyList(){
-            let currancies = [];
+            const currancies = [];
             this.currencyList = [];
-            for(let type in (this.currencyDesc)){
-                for(let subkey in (this.currencyDesc[type]) ){
+            for(const type in (this.currencyDesc)){
+                for(const subkey in (this.currencyDesc[type]) ){
                     currancies.push(subkey);
                 }
             }
@@ -153,7 +153,7 @@ export default {
                 // Retrieve agent desc  from the backend
                 console.log(`* Loading Agent Desc from backend *`)
                 const response = await axios.get('/get_agent_desc')
-                let agentDesc = response.data.agent_desc
+                const agentDesc = response.data.agent_desc
                 return agentDesc  // get the actual data out of the response object
             } catch (error) {
                 console.log('* Loading agent desc failed! *')
@@ -167,7 +167,7 @@ export default {
         removeSurplusAgentData(){
             /* Probably we should actually duplicate the agentDesc to create one just for the display of data that is trimmed down,
                Since copied/modified agents will want to still contain necessary fields that don't need to be shown */
-            for(let key in this.agentDesc) {
+            for(const key in this.agentDesc) {
                 /* amount = 1 is for all, so it doesn't need to be there*/
                 // delete this.agentDesc[key].amount;
             }
@@ -223,7 +223,7 @@ export default {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria; 
         },
         removeFlowArrayItem(direction, type, currency, name) {
-            let index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name);
+            const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name);
             // Delete the connection by its array index number 
             if(index !== -1)
             this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1);
@@ -249,7 +249,7 @@ export default {
             // Make Sure Agent Doesn't Already Exist    
             for (name in this.agentDesc) {
                 if (name == newName) {
-                    alert(name + " already exists, try another name!");
+                    alert(newName + " already exists, try another name!");
                     return;
                 }
             }

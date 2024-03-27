@@ -20,7 +20,6 @@
 
 <script setup>
 import ModalWindow from '@/components/menu/ModalWindow.vue'
-import ACE from '@/components/ace/ACE.vue'
 </script>
 
 
