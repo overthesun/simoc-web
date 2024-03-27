@@ -82,35 +82,35 @@ export default {
         getLocalStorageAgents() {
             let localStorageAgents = localStorage.getItem('customAgents')
             localStorageAgents = JSON.parse(localStorageAgents)
-            if(typeof(localStorageAgents)=='object' && (localStorageAgents!=null) ) {
-                console.log("Agents found in local storage:")
+            if (typeof(localStorageAgents)=='object' && (localStorageAgents!=null) ) {
+                console.log('Agents found in local storage:')
                 for (const agent in (localStorageAgents)) {
                     console.log(agent)
                     this.agentDesc[agent] = localStorageAgents[agent]
                 }
             } else {
-                console.log(" * No agents loaded from local storage *")
+                console.log(' * No agents loaded from local storage *')
             }
         },
-        getLocalStorageCurrencies(){ 
+        getLocalStorageCurrencies(){
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
-            localStorageCurrencies = JSON.parse(localStorageCurrencies);
+            localStorageCurrencies = JSON.parse(localStorageCurrencies)
             
-            if(typeof(localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof(localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
                 //for(let category in localStorageCurrencies)
                 //console.log("Currencies found in local storage:")
                 //for (let currency in category) {
                 //  console.log(currency);
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency];
                 //}
-            if(typeof(this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof(this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
                 } else {
                     this.currencyDesc['custom']={}
                 }
                 
                 for (const currency in localStorageCurrencies) {
                         console.log(currency);
-                        this.currencyDesc["custom"][currency] = localStorageCurrencies[currency];
+                        this.currencyDesc['custom'][currency] = localStorageCurrencies[currency];
                 }
             } else {
                     console.log(" * No agents loaded from local storage *")
@@ -157,7 +157,7 @@ export default {
             }
         },
         setAgentClass(){
-            this.agentDesc[this.selectedAgentName].agent_class= "plants"
+            this.agentDesc[this.selectedAgentName].agent_class= 'plants'
         },
         removeSurplusAgentData(){
             /* Probably we should actually duplicate the agentDesc to create one just for the display of data that is trimmed down,
@@ -168,7 +168,7 @@ export default {
             }
         },
         submitAgent() {
-            this.agentDesc[this.categorySelected][this.selectedAgentName] = { "data" : 0 }
+            this.agentDesc[this.categorySelected][this.selectedAgentName] = { 'data' : 0 }
         },
         selectItem(item) {
             this.selectedAgentName = item;
@@ -219,10 +219,10 @@ export default {
         removeFlowArrayItem(direction, type, currency, name) {
             const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
             // Delete the connection by its array index number 
-            if(index !== -1)
+            if (index !== -1)
             this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1)
             // Remove the flow array array if it is empty
-            if( (this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0 ) {
+            if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0 ) {
                 delete this.agentDesc[this.selectedAgentName].flows[direction][currency][type]
             }
         },
@@ -233,15 +233,15 @@ export default {
                          if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
                                  newPropVal = +newPropVal
                          }
-                         if(newPropVal=='true') newPropVal = true
-                         if(newPropVal=='false') newPropVal = false
+                         if (newPropVal=='true') newPropVal = true
+                         if (newPropVal=='false') newPropVal = false
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
         renameAgent(newName){
             // Make Sure Agent Doesn't Already Exist    
             for (name in this.agentDesc) {
                 if (name == newName) {
-                    alert(newName + " already exists, try another name!")
+                    alert(newName + ' already exists, try another name!')
                     return
                 }
             }
@@ -252,7 +252,7 @@ export default {
             this.selectedAgentName = newName
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected=='plants') {
-                alert("PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, (i.e. rice has rice as outflow, and has rice as a biomass connection)!")
+                alert('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, (i.e. rice has rice as outflow, and has rice as a biomass connection)!')
             }
             // Export the plant currency
         },
@@ -261,7 +261,7 @@ export default {
             // Make Sure Currency Doesn't Already Exist 
             for (const currency in this.currencyDesc[this.currencyCategorySelected]) {
                 if (currency == newName) {
-                    alert(newName + " already exists, try another name!")
+                    alert(newName + ' already exists, try another name!')
                     return
                 }
             }
@@ -324,13 +324,13 @@ export default {
             if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
             }
-            if(newPropVal=='true') newPropVal = true
-            if(newPropVal=='false') newPropVal = false
+            if (newPropVal=='true') newPropVal = true
+            if (newPropVal=='false') newPropVal = false
         
-            if (newPropUnit != "") {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ "value" : newPropVal, "unit" : newPropUnit }
+            if (newPropUnit != '') {
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal, 'unit' : newPropUnit }
             } else { // Make sure not to add unit if it is not specified
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ "value" : newPropVal }
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal }
             }
         },
         addFlowArrayItem(direction, type, currency, name){
@@ -374,7 +374,7 @@ export default {
         },
         createNewAgent(){
             const agentNumber = Object.keys(this.agentDesc).length + 1
-            const newAgentName="agent_" + agentNumber
+            const newAgentName='agent_' + agentNumber
             this.agentDesc[newAgentName]={}
             this.agentDesc[newAgentName].amount=1
             this.agentDesc[newAgentName].flows={}
@@ -413,7 +413,7 @@ export default {
             this.selectedAgentName=newAgentName
             // Make sure to duplicate correspoding plant currency
             if (this.categorySelected=='plants') {
-                alert("PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!")
+                alert('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!')
             }
         },
         duplicateCurrency(){
@@ -432,7 +432,7 @@ export default {
             this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
-            if(typeof(currentCustomAgents)=='object' && (currentCustomAgents!=null) )  {
+            if (typeof(currentCustomAgents)=='object' && (currentCustomAgents!=null)){
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             } else {
                 currentCustomAgents = {} 
@@ -441,7 +441,7 @@ export default {
             localStorage.setItem('customAgents',JSON.stringify(currentCustomAgents))
                 // If plant, export currency for it, too
             if (this.categorySelected=='plants') {
-                alert("PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!")
+                alert('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!')
             }
         },
         exportJSONCurrency(){
@@ -449,7 +449,7 @@ export default {
             let currentCustomCurrencies = localStorage.getItem('customCurrencies')
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
             // Check if the custom currency object exists
-            if(typeof(currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null) ) {
+            if (typeof(currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null) ) {
             } else { // Create the currency object
                 currentCustomCurrencies = {}
             }
@@ -465,7 +465,7 @@ export default {
                 let category = this.currencyCategorySelected
                 this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
                 // Assign category for export
-                if(category=='custom') {
+                if (category=='custom') {
                     category =  this.currencyDesc['custom'][currencyName]['category']
                 } else {
                     this.customCurrencies[currencyName]['category'] = category //this.currencyCategorySelected
@@ -495,24 +495,24 @@ export default {
         currencyTypes() {
             let listOfTypes = [];
            /* Determine list of agent_class */
-            for(let key in this.currencyDesc) {
+            for (let key in this.currencyDesc) {
                 let currencyType = key
-                if(!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
+                if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
             }
             return listOfTypes
         },
         agentClasses() {
             let listOfClasses = []
            /* Determine list of agent_class */
-            for(let key in this.agentDesc) {
+            for (let key in this.agentDesc) {
                 let className = this.agentDesc[key]['agent_class']
-                if(!listOfClasses.includes(className)) listOfClasses.push(className)
+                if (!listOfClasses.includes(className)) listOfClasses.push(className)
             }
             return listOfClasses
         },
         agentsInClass() {
             let listOfAgents = []
-            for(let item in  this.agentDesc){
+            for (let item in  this.agentDesc){
                 let itemsClass = this.agentDesc[item]['agent_class']
                 if (itemsClass==this.categorySelected) listOfAgents.push(item)
             }
@@ -529,7 +529,7 @@ export default {
     <h2>Currency Editor</h2>
     <label> Currency Category 
     <select id="currencyCategorySelector" v-model="currencyCategorySelected">
-        <option v-for="category in currencyTypes" :key="category" :value="category" > {{ category }} </option>
+        <option v-for="category in currencyTypes" :key="category" :value="category"> {{ category }} </option>
     </select>
     </label>
     <button @click="createNewCurrency()">Create New Blank Currency</button>
@@ -580,7 +580,7 @@ export default {
         <option v-for="category in agentClasses" :key="category" :value="category"> {{ category }} </option>
     </select>
     <button @click="createNewAgent()">Create New Blank Agent</button>
-    <br/>   <br/>   
+    <br>   <br>
     <div class="gridBox" id="gridbox">
     <div id="agentSelector" class="scrollie agentBox"> 
     <h2> Agents ({{ categorySelected }}): </h2>
@@ -598,7 +598,7 @@ export default {
         <input name="customClass" type="text" v-model="customClassName"> </label>       
         <button @click="setCustomClass">Set Custom Class</button>
         </li>
-        <li>Description: <br/>  <textarea name="descriptionField" v-model="agentDesc[selectedAgentName].description" rows="4" cols="100"> </textarea>
+        <li>Description: <br>  <textarea name="descriptionField" v-model="agentDesc[selectedAgentName].description" rows="4" cols="100"> </textarea>
         </li>
     </ul>
     <h3>Capacity</h3>
@@ -643,7 +643,7 @@ export default {
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('in', 'connections', currency, connection)" v-for="(connection, index) in agentDesc[selectedAgentName].flows.in[currency].connections">{{ connection }}</button>
-                            <br/>
+                            <br>
                         </span>
                         <input name="connectionNewName" v-model="newConnectionIn" type="text"/> <button @click="addFlowArrayItem('in', 'connections', currency, newConnectionIn)">Add new Connection</button>
                     </li>
@@ -651,7 +651,7 @@ export default {
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('in', 'weighted', currency, weighted)" v-for="(weighted, index) in agentDesc[selectedAgentName].flows.in[currency].weighted">{{ weighted }}</button>
-                            <br/>                           
+                            <br>                           
                         </span>
                         <input name="newWeighted" v-model="newWeightedIn" type="text"/> <button @click="addFlowArrayItem('in', 'weighted', currency, newWeightedIn)">Add new Weighted</button>
                     </li>                   
@@ -702,7 +702,7 @@ export default {
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('out', 'connections', currency, connection)" v-for="(connection, index) in agentDesc[selectedAgentName].flows.out[currency].connections">{{ connection }}</button>
-                            <br/>           
+                            <br>
                         </span>
                         <input name="addNewConnectName" v-model="newConnectionOut" type="text"/> <button @click="addFlowArrayItem('out', 'connections', currency, newConnectionOut)">Add new Connection</button>
                     </li>
@@ -710,7 +710,7 @@ export default {
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('out', 'weighted', currency, weighted)" v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted">{{ weighted }}</button>
-                            <br/>                       
+                            <br>
                         </span>
                         <input name="addNewWeightedNameOut" v-model="newWeightedOut" type="text"/> <button @click="addFlowArrayItem('out', 'weighted', currency, newWeightedOut)">Add new Weighted</button>
                     </li>                   
@@ -718,7 +718,7 @@ export default {
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)=='object'">
                             (Click to remove)
                             <button  @click="removeFlowArrayItem('out', 'requires', currency, requires)" v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires">{{ requires }}</button>
-                            <br/>
+                            <br>
                         </span>
                         <label> (Currency) 
                         <select name="requiresCurrencySelector" v-model="newRequires">
