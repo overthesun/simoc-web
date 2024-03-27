@@ -82,7 +82,7 @@ export default {
         getLocalStorageAgents() {
             let localStorageAgents = localStorage.getItem('customAgents')
             localStorageAgents = JSON.parse(localStorageAgents)
-            if (typeof(localStorageAgents)=='object' && (localStorageAgents!=null) ) {
+            if (typeof (localStorageAgents)=='object' && (localStorageAgents!=null)) {
                 console.log('Agents found in local storage:')
                 for (const agent in (localStorageAgents)) {
                     console.log(agent)
@@ -96,14 +96,15 @@ export default {
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
             
-            if (typeof(localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
                 //for(let category in localStorageCurrencies)
                 //console.log("Currencies found in local storage:")
                 //for (let currency in category) {
                 //  console.log(currency);
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency];
                 //}
-            if (typeof(this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
+                // Object exists
                 } else {
                     this.currencyDesc['custom']={}
                 }
@@ -302,7 +303,7 @@ export default {
         },
         addNewCapacity(key, value) {
             // Add the capacity object if it doesn't exist
-            if (!(typeof(this.agentDesc[this.selectedAgentName].capacity)=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].capacity)=='object')) 
                 this.agentDesc[this.selectedAgentName].capacity = {}
             this.agentDesc[this.selectedAgentName].capacity[key]=value
         },
@@ -312,7 +313,7 @@ export default {
         },
         addNewThreshold(currency, path, limit, value, connections) {
             // Add the threshold object if it doesn't exist
-            if (!(typeof(this.agentDesc[this.selectedAgentName].thresholds)=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].thresholds)=='object')) 
                 this.agentDesc[this.selectedAgentName].thresholds = {}
             this.agentDesc[this.selectedAgentName].thresholds[currency]={}
             this.agentDesc[this.selectedAgentName].thresholds[currency].path=path
@@ -335,16 +336,16 @@ export default {
         },
         addFlowArrayItem(direction, type, currency, name){
             // Add the array if it doesn't exist
-            if (!(typeof(this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) 
                 this.agentDesc[this.selectedAgentName].flows[direction][currency][type] = []
             // Add the item to the array
             (this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).push(name)
         },
         addNewCriterion(currency, name, value, limit) {
             // Add Criteria if it doesn't exist
-            if (!(typeof(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object'))
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object'))
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].criteria = {}
-                         if (!(typeof(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object'))
+                         if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object'))
                                   this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name] = {}
             // Add the criterion
             this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].value=value
@@ -362,7 +363,7 @@ export default {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
         addGrowth(currency, kind, pattern){
-                        if (!(typeof(this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) 
+                        if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) 
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]={}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
@@ -432,7 +433,7 @@ export default {
             this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
-            if (typeof(currentCustomAgents)=='object' && (currentCustomAgents!=null)){
+            if (typeof (currentCustomAgents)=='object' && (currentCustomAgents!=null)){
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             } else {
                 currentCustomAgents = {} 
@@ -449,7 +450,7 @@ export default {
             let currentCustomCurrencies = localStorage.getItem('customCurrencies')
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
             // Check if the custom currency object exists
-            if (typeof(currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null) ) {
+            if (typeof (currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null) ) {
             } else { // Create the currency object
                 currentCustomCurrencies = {}
             }
@@ -457,7 +458,7 @@ export default {
             /* 
             // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
             // So instead of creating custom currency category, just file them under "custom"
-            if(typeof(currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null) ) {
+            if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null) ) {
             } else {
                 currentCustomCurrencies[this.currencyCategorySelected] = {};
             }
