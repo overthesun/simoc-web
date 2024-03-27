@@ -6,6 +6,7 @@ export default {
 	},
 	data() {
 		return {
+			currentMode: "agent",
 			agentDesc: "",
 			currencyDesc: "",
 			currencyList: [],
@@ -473,9 +474,16 @@ export default {
 				currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName] 
 			localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies));
 		},
-		returnToMenu(){
+		returnToMenu(){ // Function to return to main menu
 			this.$router.push('menu');
-		}
+		},
+		switchMode(){// Function to swap between agent mode and currency mode
+			if (this.currentMode=='agent'){
+				this.currentMode='currency';
+			} else {
+				this.currentMode='agent';
+			}
+		},
 	},
 	watch: {
 		selectedAgentName() {
@@ -518,7 +526,8 @@ export default {
 </script>
 
 <template>
-	<div v-if="typeof(currencyDesc[currencyCategorySelected])=='object'">
+	<button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button  v-else @click="switchMode()">Currency Editor</button>
+	<div v-if="typeof(currencyDesc[currencyCategorySelected])=='object' && currentMode=='currency'">
 	<h2>Currency Editor</h2>
  	<label> Currency Category 
 	<select id="currencyCategorySelector" v-model="currencyCategorySelected">
@@ -534,7 +543,7 @@ export default {
 	</ul>
 	</div> <!-- Button List -->
 	</div> <!-- scrollie -->
-	<div>
+	<div class="agentData">
 	Currency: {{ selectedCurrency }} 
 	<input name="newCurrencyName" v-model="newCurrencyName" type="text"/>  <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
 		<br>
@@ -565,14 +574,14 @@ export default {
 	</div> <!-- gridBox -->
 	</div> <!-- vif currency object exists -->
 
-	<h2> Known Issues: Consistency. Shared Change Memory. Select needs Title Attributes, ul has invalid elements  </h2>
+	<div v-if="currentMode=='agent'">
+	<h2> Agent Editor.  Known Issues: Consistency. Shared Change Memory. Select needs Title Attributes, ul has invalid elements  </h2>
 	<label for="categorySelector">Choose Agent Class:  </label>
 	<select id="categorySelector" v-model="categorySelected">
 		<option v-for="category in agentClasses" :key="category" :value="category"> {{ category }} </option>
 	</select>
 	<br/>
 	<button @click="createNewAgent()">Create New Blank Agent</button>
-	<button @click="returnToMenu()">Return to Menu</button>
 	<br/>	<br/>	<br/>
 	<div class="gridBox" id="gridbox">
 	<div id="agentSelector" class="scrollie agentBox"> 
@@ -907,6 +916,7 @@ export default {
 	</ul>
 	</div>
 	</div> <!-- gridBox -->
+	</div> <!-- agentMode div -->
 
 </template>
 
