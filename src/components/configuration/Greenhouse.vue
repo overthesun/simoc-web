@@ -236,12 +236,10 @@ export default {
 
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
-                    response.data.forEach(item => {
-                        const {name} = item
-                        this.plantValue.push(name)
-                        // console.log(this.formatPlantName(name))
-                        this.formatPlantName(name)
-                    })
+                    response.data.forEach(item => { 
+						const {name} = item
+						this.listPlant(name)
+						} )
                 }
             }).catch(error => {
                 const {status} = error.response
@@ -249,7 +247,19 @@ export default {
                     console.log('Plant retrieval error')
                 }
             })
+			
+			// Get plants from local data
+			let customAgents = localStorage.getItem('customAgents')
+			if ( customAgents == null) return
+			customAgents = JSON.parse(customAgents);
+			for( let name in customAgents ) if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name) 
+			
         },
+		listPlant(name) {
+			// Add the plant to the menu list
+			this.plantValue.push(name)
+			this.formatPlantName(name)
+		},
         updateAndValidate() {
             // validate and update greenhouse type
             const {greenhouse} = this.configuration
