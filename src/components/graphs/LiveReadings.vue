@@ -127,12 +127,12 @@ export default {
                     labels: Array(this.nsteps).fill(''),
                     // TODO: Create total number of datasets equal to total number of CO2 sensors
                     datasets: [{
-                        lineTension: 0,
                         data: Array(this.nsteps),
                         label: `${this.hostname}.${this.sensorname}`,
                         borderColor: colors[0],
-                        fill: false,
-                        pointStyle: 'line',
+                        borderWidth: 2,
+                        cubicInterpolationMode: 'monotone',
+                        pointStyle: false,
                     }],
                 },
                 options: {
@@ -159,14 +159,18 @@ export default {
                         legend: {
                             display: true,
                             position: 'bottom',
-                            // https://stackoverflow.com/a/50450646
-                            labels: {usePointStyle: true},
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values
                             intersect: false,
                             usePointStyle: true,
+                            pointStyle: 'line',
                             callbacks: {
+                                labelPointStyle: () => ({pointStyle: 'line'}),
                                 title: context => `Step: ${context[0].label}`,
                             },
                         },

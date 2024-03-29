@@ -116,12 +116,12 @@ export default {
                     ? this.currencySensorInfo[sensor_id].sensor_name
                     : sensor_id
                 return {
-                    lineTension: 0,
                     data: Array(this.nsteps),
                     label: name,
                     borderColor: colors[i],
-                    fill: false,
-                    pointStyle: 'line',
+                    borderWidth: 2,
+                    cubicInterpolationMode: 'monotone',
+                    pointStyle: false,
                 }
             })
             this.chart = new Chart(canvas, {
@@ -156,14 +156,17 @@ export default {
                         legend: {
                             display: true,
                             position: 'bottom',
-                            // https://stackoverflow.com/a/50450646
-                            labels: {usePointStyle: true},
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values
                             intersect: false,
                             usePointStyle: true,
                             callbacks: {
+                                labelPointStyle: () => ({pointStyle: 'line'}),
                                 title: context => `Step: ${context[0].label}`,
                             },
                         },
