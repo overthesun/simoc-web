@@ -168,7 +168,6 @@ export default {
                             mode: 'index', // show both values
                             intersect: false,
                             usePointStyle: true,
-                            pointStyle: 'line',
                             callbacks: {
                                 labelPointStyle: () => ({pointStyle: 'line'}),
                                 title: context => `Step: ${context[0].label}`,
