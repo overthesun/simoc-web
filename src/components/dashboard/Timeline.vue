@@ -1,7 +1,7 @@
 <!-- Timeline component -->
 
 <template>
-    <!-- Timeline visualization for live mode -->
+    <!-- Timeline visualization for live/sim mode (aka scrubber) -->
     <div class="timeline-wrapper">
         <span class="timeline-item">
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
