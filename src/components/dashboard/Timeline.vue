@@ -2,32 +2,11 @@
 
 <template>
     <!-- Timeline visualization for live mode -->
-    <div v-if="isLive" class="timeline-wrapper">
+    <div class="timeline-wrapper">
         <span class="timeline-item">
             <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
-                   :style="{'background-image': 'linear-gradient(to right, #fc0303 0%, \
-                            #fc0303 ' + currentPercentage + '%, \
-                            #d0d0d0 ' + currentPercentage +'%, \
-                            #d0d0d0 ' + bufferPercentage + '%, \
-                            #444343 ' + bufferPercentage + '%, \
-                            #444343 100%)'}"
-                   class="live-timeline" type="range"
-                   @input="pauseBuffer" @change="updateBuffer">
-        </span>
-    </div>
-    <!-- Timeline visualization for step mode -->
-    <!-- TODO: remove duplication -->
-    <div v-else class="timeline-wrapper">
-        <span class="timeline-item">
-            <input v-model.number="currentStep" :min="1" :max="getTotalMissionHours"
-                   :style="{'background-image': 'linear-gradient(to right, #67e300 0%, \
-                            #67e300 ' + currentPercentage + '%, \
-                            #d0d0d0 ' + currentPercentage + '%, \
-                            #d0d0d0 ' + bufferPercentage + '%, \
-                            #444343 ' + bufferPercentage + '%, \
-                            #444343 100%)'}"
-                   class="timeline" type="range"
-                   @input="pauseBuffer" @change="updateBuffer">
+                   :style="calcScrubberBackground()" :class="isLive?'live-timeline':'timeline'"
+                   type="range" @input="pauseBuffer" @change="updateBuffer">
         </span>
     </div>
 </template>
@@ -119,9 +98,23 @@ export default {
             // Before we receive steps from the server, the currentStep (and first step) is 0.
             // Once we receive the first step, the first step becomes 1, and step 0 is removed.
             // Because of this we need to subtract 1 from all the values.
-            const totalMissionHours = this.getTotalMissionHours - 1
+            const totalMissionHours = Math.max(this.getTotalMissionHours - 1, 1)
             this.currentPercentage = ((this.currentStepBuffer - 1) / totalMissionHours) * 100
             this.bufferPercentage = ((this.maxStepBuffer - 1) / totalMissionHours) * 100
+        },
+
+        calcScrubberBackground() {
+            // The scrubber uses 3 background colors and a linear-gradient to represent
+            // seen, available/downloaded, and not yet downloaded steps.
+            const c1 = this.isLive?'#fc0303':'#67e300'  // 1st color: seen steps (live mode is red)
+            const c2 = '#d0d0d0'  // 2nd color: available/downloaded steps
+            const c3 = '#444343'  // 3rd color: not yet downloaded steps (only for sim mode)
+            const cp = this.currentPercentage  // percentage of seen steps
+            const bp = this.bufferPercentage  // percentage of available/downloaded steps
+            return {'background-image': `linear-gradient(to right,
+                                                         ${c1} 0%, ${c1} ${cp}%,
+                                                         ${c2} ${cp}%, ${c2} ${bp}%,
+                                                         ${c3} ${bp}%, ${c3} 100%)`}
         },
     },
 }
