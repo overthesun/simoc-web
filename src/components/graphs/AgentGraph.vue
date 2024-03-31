@@ -185,13 +185,13 @@ export default {
                 const allUnits = new Set(Object.values(datasetsData).map(d => d.unit))
                 this.unit = allUnits.size === 1 ? allUnits.values().next().value : ''
                 datasets = Object.values(datasetsData).map(({unit, label}, i) => ({
-                    lineTension: 0,
                     data: Array(this.nsteps),
                     label: label + ((unit && !this.unit) ? ` (${unit})` : ''),
                     // TODO: Get field-specific color from currencyDict or fieldDict
                     borderColor: this.colors[i],
-                    fill: false,
-                    pointStyle: 'line',
+                    borderWidth: 2,
+                    cubicInterpolationMode: 'monotone',
+                    pointStyle: false,
                 }))
             }
 
@@ -232,14 +232,17 @@ export default {
                         legend: {
                             display: true,
                             position: 'bottom',
-                            // https://stackoverflow.com/a/50450646
-                            labels: {usePointStyle: true},
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values
                             intersect: false,
                             usePointStyle: true,
                             callbacks: {
+                                labelPointStyle: () => ({pointStyle: 'line'}),
                                 title: context => `Step: ${context[0].label}`,
                             },
                         },

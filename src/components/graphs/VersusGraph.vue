@@ -84,20 +84,20 @@ export default {
                     labels: Array(this.nsteps).fill(''),
                     datasets: [
                         {
-                            lineTension: 0,
                             data: Array(this.nsteps),
                             label: 'Produced',
                             borderColor: '#0000ff',
-                            fill: false,
-                            pointStyle: 'line',
+                            borderWidth: 2,
+                            cubicInterpolationMode: 'monotone',
+                            pointStyle: false,
                         },
                         {
-                            lineTension: 0,
                             data: Array(this.nsteps),
                             label: 'Consumed',
                             borderColor: '#cd0000',
-                            fill: false,
-                            pointStyle: 'line',
+                            borderWidth: 2,
+                            cubicInterpolationMode: 'monotone',
+                            pointStyle: false,
                         },
                     ],
                 },
@@ -132,13 +132,17 @@ export default {
                             display: true,
                             position: 'bottom',
                             // https://stackoverflow.com/a/50450646
-                            labels: {usePointStyle: true},
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'line',
+                            },
                         },
                         tooltip: {
                             mode: 'index', // show both values
                             intersect: false,
                             usePointStyle: true,
                             callbacks: {
+                                labelPointStyle: () => ({pointStyle: 'line'}),
                                 title: context => `Step: ${context[0].label}`,
                             },
                         },
