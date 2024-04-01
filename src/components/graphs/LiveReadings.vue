@@ -47,6 +47,8 @@ export default {
         currency: {type: String, required: true},
         color: {type: String, required: true},
         unit: {type: String, required: true},
+        hostname: {type: String, default: ''},
+        sensorname: {type: String, default: ''},
         currencySensorInfo: {type: Object, required: true},
         fullscreen: {type: Boolean, default: false},
         nsteps: {type: Number, required: true},
@@ -73,6 +75,14 @@ export default {
         },
         // re-init the chart when we plot something else
         plottedValue() {
+            this.updateActiveSensors()
+            this.initChart()
+        },
+        hostname() {
+            this.updateActiveSensors()
+            this.initChart()
+        },
+        sensorname() {
             this.updateActiveSensors()
             this.initChart()
         },
@@ -109,28 +119,21 @@ export default {
             }
             const canvas = document.getElementById(this.id)
             // TODO: Create list of shades of this.color
-            const allSensors = Object.keys(this.currencySensorInfo)
             const colors = getColorRange(this.color, this.activeSensors.length)
-            const datasets = this.activeSensors.map((sensor_id, i) => {
-                const name = allSensors.includes(sensor_id)
-                    ? this.currencySensorInfo[sensor_id].sensor_name
-                    : sensor_id
-                return {
-                    data: Array(this.nsteps),
-                    label: name,
-                    borderColor: colors[i],
-                    borderWidth: 2,
-                    cubicInterpolationMode: 'monotone',
-                    pointStyle: false,
-                }
-            })
             this.chart = new Chart(canvas, {
                 type: 'line',
                 data: {
                     // fill with '' so that at the beginning the labels don't show undefined
                     labels: Array(this.nsteps).fill(''),
                     // TODO: Create total number of datasets equal to total number of CO2 sensors
-                    datasets: datasets,
+                    datasets: [{
+                        data: Array(this.nsteps),
+                        label: `${this.hostname}.${this.sensorname}`,
+                        borderColor: colors[0],
+                        borderWidth: 2,
+                        cubicInterpolationMode: 'monotone',
+                        pointStyle: false,
+                    }],
                 },
                 options: {
                     responsive: true,
@@ -192,18 +195,14 @@ export default {
                 data.datasets.forEach(set => set.data.shift())
                 data.labels.shift()
                 if (step > 0) {
-                    this.activeSensors.forEach((sensor_id, i) => {
-                        const r = this.getReadings(step)
-                        let value
-                        if (sensor_id === 'Average') {
-                            const values = Object.keys(r).map(key => r[key][this.currency])
-                            value = values.reduce((a, b) => a + b, 0) / values.length
-                        } else if (Object.keys(r).includes(sensor_id)) {
-                            value = r[sensor_id][this.currency]
-                        }
-                        data.datasets[i].data.push(value)
-                    })
-                    // add the new values
+                    if (!this.hostname.length || !this.sensorname.length ||
+                        !this.plottedValue.length) {
+                        return
+                    }
+                    const r = this.getReadings(step)
+                    const sensor_id = `${this.hostname}.${this.sensorname}`
+                    const value = r[sensor_id][this.plottedValue]
+                    data.datasets[0].data.push(value)
                     data.labels.push(this.stepnum2timestamp(step))
                 } else {
                     // for steps <= 0 use undefined as values and '' as labels

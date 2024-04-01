@@ -370,7 +370,7 @@ export default {
             // for some background on this method.
             // Stop the get_steps timer and tell the server
             // to stop calculating steps.
-            if (!this.loadFromSimData) {
+            if (!this.loadFromSimData && this.currentMode !== 'live') {
                 // tell the server to kill the game, unless we loaded simdata
                 const params = {game_id: this.parameters.game_id}
                 try {
