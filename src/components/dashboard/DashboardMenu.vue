@@ -118,10 +118,12 @@ export default {
                 message: 'Stop the current simulation and log out?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
-                    try {
-                        axios.get('/logout')
-                    } catch (error) {
-                        console.log(error)
+                    if (this.currentMode !== 'live') {  // live mode has no login/logout
+                        try {
+                            axios.get('/logout')
+                        } catch (error) {
+                            console.log(error)
+                        }
                     }
                     // the user already confirmed, don't ask twice
                     this.leaveWithoutConfirmation = true

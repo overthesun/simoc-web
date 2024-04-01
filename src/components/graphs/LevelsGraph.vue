@@ -116,12 +116,13 @@ export default {
                     // create N datasets with different labels/colors
                     datasets: this.setsinfo[this.storage_type].labels_colors.map(
                         ([label, color]) => ({
-                            lineTension: 0,
                             data: Array(this.nsteps),
                             label: label,
                             backgroundColor: color,
+                            borderWidth: 2,
+                            cubicInterpolationMode: 'monotone',
+                            pointStyle: false,
                             fill: true,
-                            pointStyle: 'line',
                             hidden: (this.plotted_items !== undefined &&
                                      !this.plotted_items.includes(label)),
                         })
