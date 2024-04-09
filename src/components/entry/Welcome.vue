@@ -9,8 +9,33 @@ to the entry screens to prevent this from popping up on repeat vistors.
 
 <template>
     <div class="entry-wrapper">
+        <!-- Live Mode, enabled by default in this branch -->
+        <BaseEntry v-if="true">
+            <template #entry-main>
+                <div class="welcome-wrapper">
+                    <p class="welcome-title">WELCOME TO SIMOC Live</p>
+
+                    <p>SIMOC Live is a web interface that can be used to visualize real-time
+                    and historical sensor data collected by the sensor array.</p>
+
+                    <p>If you experience a bug while using SIMOC Live, please submit a report to
+                    <a class="link" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
+                    bugs@simoc.space</a> with a complete description, including what you were
+                    doing prior to the issue.</p>
+
+                    <p>To learn more about SIMOC and SIMOC Live, enjoy tutorials,
+                    and download classroom curricula visit:
+                    <a class="link" target="_blank" href="https://simoc.space/">simoc.space</a></p>
+
+                </div>
+            </template>
+
+            <template #entry-button>
+                <v-btn-menu @click="toLiveDashboard">PROCEED</v-btn-menu>
+            </template>
+        </BaseEntry>
         <!-- Normal Mode -->
-        <BaseEntry v-if="!kioskMode">
+        <BaseEntry v-else-if="!kioskMode">
             <template #entry-main>
                 <div class="welcome-wrapper">
                     <p class="welcome-title">WELCOME TO SIMOC</p>
@@ -87,11 +112,19 @@ export default {
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {kioskMode} = storeToRefs(dashboard)
+        const {currentMode, parameters, simLocation, kioskMode} = storeToRefs(dashboard)
+        const {setLiveConfig} = wizard
         const {activeConfigType} = storeToRefs(wizard)
-        return {kioskMode, activeConfigType}
+        return {currentMode, parameters, simLocation, kioskMode, activeConfigType, setLiveConfig}
     },
     methods: {
+        toLiveDashboard() {
+            // duplicated in Menu.vue and Login.vue
+            this.currentMode = 'live'  // set 'live' mode
+            this.parameters = {min_step_num: 0}  // create min_step_num parameters
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
+            this.$router.push('dashboard')
+        },
         toLogin() {
             this.$router.push('entry')
         },
