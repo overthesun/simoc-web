@@ -186,7 +186,9 @@ export default {
             delete this.agentDesc[this.selectedAgentName].capacity[key]
             // Remove the capacities object if there are no capacities in it.
             if ((Object.keys(this.agentDesc[this.selectedAgentName].capacity).length) == 0)
+            {
                 delete this.agentDesc[this.selectedAgentName].capacity
+            }
         },
         removeInFlow(currency) {
             delete this.agentDesc[this.selectedAgentName].flows.in[currency]
@@ -197,8 +199,9 @@ export default {
         removeThreshold(currency) {
             delete this.agentDesc[this.selectedAgentName].thresholds[currency]
             // Remove thresholds object if there are no currencies listed
-            if (Object.keys(this.agentDesc[this.selectedAgentName].thresholds).length == 0)
+            if (Object.keys(this.agentDesc[this.selectedAgentName].thresholds).length == 0){
                 delete this.agentDesc[this.selectedAgentName].thresholds
+            }
         },
         removeProperty(property) {
             delete this.agentDesc[this.selectedAgentName].properties[property]
@@ -207,21 +210,24 @@ export default {
             // Delete the specific kind of growth
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].growth).length == 0)
+            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].growth).length == 0){
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
+            }
         },
         removeCriterion(currency, kind){
             // Delete the specific kind of criterion
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria).length == 0)
+            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria).length == 0){
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
+            }
         },
         removeFlowArrayItem(direction, type, currency, name) {
             const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
             // Delete the connection by its array index number 
-            if (index !== -1)
+            if (index !== -1) {
             this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1)
+            }
             // Remove the flow array array if it is empty
             if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0 ) {
                 delete this.agentDesc[this.selectedAgentName].flows[direction][currency][type]
@@ -234,8 +240,8 @@ export default {
                          if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
                                  newPropVal = +newPropVal
                          }
-                         if (newPropVal=='true') newPropVal = true
-                         if (newPropVal=='false') newPropVal = false
+                         if (newPropVal=='true') { newPropVal = true }
+                         if (newPropVal=='false') { newPropVal = false }
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
         renameAgent(newName){
@@ -284,7 +290,7 @@ export default {
         changeOutType(key, value, newName) {
             this.agentDesc[this.selectedAgentName].flows.out[newName]=value
             delete this.agentDesc[this.selectedAgentName].flows.out[key]
-        },  
+        },
         changeThresholdType(key, value, newName) {
             this.agentDesc[this.selectedAgentName].thresholds[newName]=value
             delete this.agentDesc[this.selectedAgentName].thresholds[key]
@@ -303,8 +309,9 @@ export default {
         },
         addNewCapacity(key, value) {
             // Add the capacity object if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].capacity)=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].capacity)=='object')) {
                 this.agentDesc[this.selectedAgentName].capacity = {}
+            }
             this.agentDesc[this.selectedAgentName].capacity[key]=value
         },
         addNewFlow(direction, currency) {
@@ -313,8 +320,9 @@ export default {
         },
         addNewThreshold(currency, path, limit, value, connections) {
             // Add the threshold object if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].thresholds)=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].thresholds)=='object')) {
                 this.agentDesc[this.selectedAgentName].thresholds = {}
+            }
             this.agentDesc[this.selectedAgentName].thresholds[currency]={}
             this.agentDesc[this.selectedAgentName].thresholds[currency].path=path
             this.agentDesc[this.selectedAgentName].thresholds[currency].limit=limit
@@ -325,8 +333,8 @@ export default {
             if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
             }
-            if (newPropVal=='true') newPropVal = true
-            if (newPropVal=='false') newPropVal = false
+            if (newPropVal=='true') { newPropVal = true }
+            if (newPropVal=='false') { newPropVal = false }
         
             if (newPropUnit != '') {
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal, 'unit' : newPropUnit }
@@ -336,17 +344,21 @@ export default {
         },
         addFlowArrayItem(direction, type, currency, name){
             // Add the array if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) 
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) {
                 this.agentDesc[this.selectedAgentName].flows[direction][currency][type] = []
+            }
             // Add the item to the array
             (this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).push(name)
         },
         addNewCriterion(currency, name, value, limit) {
             // Add Criteria if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object'))
-                                 this.agentDesc[this.selectedAgentName].flows.out[currency].criteria = {}
-                         if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object'))
-                                  this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name] = {}
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object')) {
+                this.agentDesc[this.selectedAgentName].flows.out[currency].criteria = {}
+            }
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object'))
+            {
+                this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name] = {}
+            }
             // Add the criterion
             this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].value=value
             this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].limit=limit
@@ -363,8 +375,9 @@ export default {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
         addGrowth(currency, kind, pattern){
-                        if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) 
+                        if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
+                        }
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]={}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
         },
@@ -515,7 +528,7 @@ export default {
             let listOfAgents = []
             for (let item in  this.agentDesc){
                 let itemsClass = this.agentDesc[item]['agent_class']
-                if (itemsClass==this.categorySelected) listOfAgents.push(item)
+                if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
             }
             return listOfAgents
         },
