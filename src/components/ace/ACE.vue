@@ -92,21 +92,21 @@ export default {
                 console.log(' * No agents loaded from local storage *')
             }
         },
-        getLocalStorageCurrencies(){
+        getLocalStorageCurrencies() {
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
             
-            if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) ) {
                 // for(let category in localStorageCurrencies)
                 // console.log("Currencies found in local storage:")
                 // for (let currency in category) {
                 //  console.log(currency)
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
-            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
+            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) ) {
                 // Object exists
                 } else {
-                    this.currencyDesc['custom']={}
+                    this.currencyDesc['custom'] = {}
                 }
                 
                 for (const currency in localStorageCurrencies) {
@@ -131,16 +131,16 @@ export default {
                 return null
             }           
         },
-        generateCurrencyList(){
+        generateCurrencyList() {
             const currancies = []
             this.currencyList = []
-            for(const type in (this.currencyDesc)){
-                for(const subkey in (this.currencyDesc[type]) ){
+            for(const type in (this.currencyDesc)) {
+                for(const subkey in (this.currencyDesc[type]) ) {
                     currancies.push(subkey)
                 }
             }
 
-            for(let i=0;i<currancies.length;++i){
+            for(let i=0;i<currancies.length;++i) {
                 this.currencyList.push(currancies[i])
             }
         },
@@ -157,10 +157,10 @@ export default {
                 return null
             }
         },
-        setAgentClass(){
+        setAgentClass() {
             this.agentDesc[this.selectedAgentName].agent_class= 'plants'
         },
-        removeSurplusAgentData(){
+        removeSurplusAgentData() {
             /* Probably we should actually duplicate the agentDesc to create one just for the display of data that is trimmed down,
                Since copied/modified agents will want to still contain necessary fields that don't need to be shown */
             for(const key in this.agentDesc) {
@@ -174,7 +174,7 @@ export default {
         selectItem(item) {
             this.selectedAgentName = item
         },
-        selectCurrency(currency){
+        selectCurrency(currency) {
             this.selectedCurrency = currency
             this.selectedCurrencyCategory = this.currencyCategorySelected
         },
@@ -206,7 +206,7 @@ export default {
         removeProperty(property) {
             delete this.agentDesc[this.selectedAgentName].properties[property]
         },
-        removeGrowth(currency, kind){
+        removeGrowth(currency, kind) {
             // Delete the specific kind of growth
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
@@ -214,7 +214,7 @@ export default {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
             }
         },
-        removeCriterion(currency, kind){
+        removeCriterion(currency, kind) {
             // Delete the specific kind of criterion
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
@@ -233,18 +233,18 @@ export default {
                 delete this.agentDesc[this.selectedAgentName].flows[direction][currency][type]
             }
         },
-        removeDeprive(currency){
+        removeDeprive(currency) {
             delete this.agentDesc[this.selectedAgentName].flows.in[currency].deprive
         },
-        changePropertyValue(property, newPropVal){
-                         if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
+        changePropertyValue(property, newPropVal) {
+                         if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
                                  newPropVal = +newPropVal
                          }
                          if (newPropVal=='true') { newPropVal = true }
                          if (newPropVal=='false') { newPropVal = false }
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
-        renameAgent(newName){
+        renameAgent(newName) {
             // Make Sure Agent Doesn't Already Exist    
             for (name in this.agentDesc) {
                 if (name == newName) {
@@ -263,8 +263,7 @@ export default {
             }
             // Export the plant currency
         },
-        renameCurrency(newName){
-            
+        renameCurrency(newName) {
             // Make Sure Currency Doesn't Already Exist 
             for (const currency in this.currencyDesc[this.currencyCategorySelected]) {
                 if (currency == newName) {
@@ -299,11 +298,11 @@ export default {
             this.agentDesc[this.selectedAgentName].properties[newName]=value
             delete this.agentDesc[this.selectedAgentName].properties[key]
         },      
-        changeGrowthType(kind, value, newName, key){
+        changeGrowthType(kind, value, newName, key) {
             this.agentDesc[this.selectedAgentName].flows.out[key].growth[newName]=value
             delete this.agentDesc[this.selectedAgentName].flows.out[key].growth[kind]
         },
-        changeCriterionType(kind, value, newName, key){
+        changeCriterionType(kind, value, newName, key) {
             this.agentDesc[this.selectedAgentName].flows.out[key].criteria[newName]=value
             delete this.agentDesc[this.selectedAgentName].flows.out[key].criteria[kind]
         },
@@ -378,28 +377,28 @@ export default {
                         if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
                         }
-            this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]={}
+            this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind] = {}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
         },
         addDeprive(currency, value, unit) {
-                        this.agentDesc[this.selectedAgentName].flows.in[currency].deprive={}
+                        this.agentDesc[this.selectedAgentName].flows.in[currency].deprive = {}
             this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.value=value
                         this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.unit=unit
         },
         createNewAgent(){
             const agentNumber = Object.keys(this.agentDesc).length + 1
             const newAgentName='agent_' + agentNumber
-            this.agentDesc[newAgentName]={}
-            this.agentDesc[newAgentName].amount=1
-            this.agentDesc[newAgentName].flows={}
-            this.agentDesc[newAgentName].flows.in={}
-            this.agentDesc[newAgentName].flows.out={}
-            this.agentDesc[newAgentName].properties={}
+            this.agentDesc[newAgentName] = {}
+            this.agentDesc[newAgentName].amount = 1
+            this.agentDesc[newAgentName].flows = {}
+            this.agentDesc[newAgentName].flows.in = {}
+            this.agentDesc[newAgentName].flows.out = {}
+            this.agentDesc[newAgentName].properties = {}
             this.agentDesc[newAgentName].agent_class=this.categorySelected
             // Switch to the new agent
             this.selectedAgentName=newAgentName
         },
-        createNewCurrency(){
+        createNewCurrency() {
             // Generate a unique currency name
             // Count currencies
             let count = 0
@@ -410,14 +409,14 @@ export default {
             const currencyNumber = count + 1
             let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
             // Create the empty object
-            this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName]={}
+            this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName] = {}
             // Set empty parameters
             this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName].label=""
             // Switch to newly generated currency
             this.generateCurrencyList()
             this.selectedCurrency=newCurrencyName
         },
-        duplicateAgent(){
+        duplicateAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
             const newAgentName=this.selectedAgentName + '_' + agentNumber
             // Deep Copy the original object
@@ -430,7 +429,7 @@ export default {
                 alert('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!')
             }
         },
-        duplicateCurrency(){
+        duplicateCurrency() {
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
             const newCurrencyName=this.selectedCurrency + '_' + currencyNumber
             // Deep Copy the original object
@@ -440,7 +439,7 @@ export default {
             this.selectedCurrency=newCurrencyName
             this.generateCurrencyList()
         },
-        exportJSON(){
+        exportJSON() {
             // Package this agent singly
             let agentName = this.selectedAgentName
             this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
@@ -458,7 +457,7 @@ export default {
                 alert('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!')
             }
         },
-        exportJSONCurrency(){
+        exportJSONCurrency() {
             let currencyName = this.selectedCurrency
             let currentCustomCurrencies = localStorage.getItem('customCurrencies')
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
@@ -487,11 +486,11 @@ export default {
                 currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName] 
             localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies))
         },
-        returnToMenu(){ // Function to return to main menu
+        returnToMenu() { // Function to return to main menu
             this.$router.push('menu')
         },
-        switchMode(){// Function to swap between agent mode and currency mode
-            if (this.currentMode=='agent'){
+        switchMode() {// Function to swap between agent mode and currency mode
+            if (this.currentMode=='agent') {
                 this.currentMode='currency'
             } else {
                 this.currentMode='agent'
@@ -526,7 +525,7 @@ export default {
         },
         agentsInClass() {
             let listOfAgents = []
-            for (let item in  this.agentDesc){
+            for (let item in  this.agentDesc) {
                 let itemsClass = this.agentDesc[item]['agent_class']
                 if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
             }
