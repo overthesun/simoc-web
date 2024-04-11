@@ -299,24 +299,24 @@ export default {
                 configParams = {step_num: this.getTotalMissionHours,
                                 game_config: this.getFormattedConfiguration}
                 // Inject custom agents
-                if(!preset_in_use) {
+                if (!preset_in_use) {
                     let customAgents = localStorage.getItem('customAgents')
                     let customCurrencies = localStorage.getItem('customCurrencies')
-                    if ( (customAgents != null)  && (Object.keys(customAgents).length>0) ) {
-                    customAgents = JSON.parse(customAgents)
+                    if ((customAgents != null) && (Object.keys(customAgents).length>0)) {
+                        customAgents = JSON.parse(customAgents)
                         // Add custom agents to config
-                        for( let name in customAgents ) {
+                        for (let name in customAgents) {
                             configParams.game_config[name]=customAgents[name]
                         }
                     }
-                    if ( (customCurrencies != null)  && (Object.keys(customCurrencies).length>0) ) {
-                    customCurrencies = JSON.parse(customCurrencies)
+                    if ((customCurrencies != null) && (Object.keys(customCurrencies).length>0)) {
+                        customCurrencies = JSON.parse(customCurrencies)
                         configParams.game_config['currencies'] = {}
                         // Add custom currencies to config
-                        for( let name in customCurrencies ) {
+                        for (let name in customCurrencies) {
                             configParams.game_config['currencies'][name]=customCurrencies[name]
                         }
-                    }           
+                    }
                     console.log(configParams)
                 }
             } catch (err_msg) {

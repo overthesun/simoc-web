@@ -252,8 +252,7 @@ export default {
             let customAgents = localStorage.getItem('customAgents')
             if ( customAgents == null) return
             customAgents = JSON.parse(customAgents)
-            for( let name in customAgents ) if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name) 
-            
+            for (let name in customAgents) if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name)
         },
         listPlant(name) {
             // Add the plant to the menu list
