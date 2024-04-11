@@ -828,14 +828,14 @@ export default {
                 <h3>Thresholds</h3>
                 <h4> Currencies </h4>
                 <ul>
-                    <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds"> 
+                    <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds">
                         {{currency}}
                         (
                         <label>Change to:
                             <select v-model="thresholdTypes[currency]" name="changeThresholdCurrency">
                                 <option v-for="item in currencyList" :value="item"> {{item}} </option>
                             </select>
-                        </label> 
+                        </label>
                         <button @click="changeThresholdType(currency, value, thresholdTypes[currency])">Change</button>)
                         <button @click="removeThreshold(currency)">Remove Currency</button>
                         <ul>
@@ -856,33 +856,33 @@ export default {
                     </li>
                     <li> <!-- NEW FLOW -->
                         <label>New Currency:
-                        <select v-model="newThresholdCurrency" name="newThresholdCurrency" selected="o2">
-                            <option v-for="item in currencyList" :value="item"> {{item}} </option>
-                        </select>
+                            <select v-model="newThresholdCurrency" name="newThresholdCurrency" selected="o2">
+                                <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                            </select>
                         </label>
                         <ul>
                             <li> Path:  <input v-model="newThresholdPath" name="newThresholdPathField" type="text">
                             </li>
                             <li> Limit:
-                             <select v-model="newThresholdLimit" name="thresholdLimitFieldNew">
-                                  <option value="&lt;"> &lt; </option>
-                                  <option value="&equals;"> =   </option>
-                                  <option value="&gt;"> &gt; </option>
-                              </select>
+                                <select v-model="newThresholdLimit" name="thresholdLimitFieldNew">
+                                    <option value="&lt;"> &lt; </option>
+                                    <option value="&equals;"> =   </option>
+                                    <option value="&gt;"> &gt; </option>
+                                </select>
                             </li>
                             <li> Value: <input v-model="newThresholdValue" type="number" name="newThresholdsValueField">
                             </li>
                             <li> Connnections: <input v-model="newThresholdConnections" type="text" name="newThresholdConnectionsField">
                             </li>
                         </ul>
-                    <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
+                        <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
                     </li> <!-- NEW FLOW -->
                 </ul>
                 <h3>Properties</h3>
                 <ul>
                     <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
                         {{property}} (Change to:
-                        <input v-model="propertyNames[property]" name="propertyName" type="text"> 
+                        <input v-model="propertyNames[property]" name="propertyName" type="text">
                         <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
                         <button @click="removeProperty(property)">Remove</button>
                         <ul> <!-- Property Attributes -->
@@ -895,7 +895,7 @@ export default {
                         </ul>
                     </li>
                     <li>
-                        New Property: 
+                        New Property:
                         <input v-model="newPropertyName" name="newPropertyName" type="text">
                         <ul> <!-- Property Attributes -->
                             <li>value: <input v-model="newPropVal" name="propValField" type="text"> </li>
