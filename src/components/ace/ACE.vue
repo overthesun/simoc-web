@@ -57,7 +57,7 @@ export default {
         }
     },
     async created() {
-        // this.setAgentClass();
+        // this.setAgentClass()
         this.removeSurplusAgentData()
 
         // Get agents from simoc-abm
@@ -100,8 +100,8 @@ export default {
                 // for(let category in localStorageCurrencies)
                 // console.log("Currencies found in local storage:")
                 // for (let currency in category) {
-                //  console.log(currency);
-                //  this.currencyDesc[category][currency] = localStorageCurrencies[currency];
+                //  console.log(currency)
+                //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
             if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
                 // Object exists
@@ -110,8 +110,8 @@ export default {
                 }
                 
                 for (const currency in localStorageCurrencies) {
-                        console.log(currency);
-                        this.currencyDesc['custom'][currency] = localStorageCurrencies[currency];
+                        console.log(currency)
+                        this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
                 }
             } else {
                     console.log(" * No agents loaded from local storage *")
@@ -165,14 +165,14 @@ export default {
                Since copied/modified agents will want to still contain necessary fields that don't need to be shown */
             for(const key in this.agentDesc) {
                 /* amount = 1 is for all, so it doesn't need to be there*/
-                // delete this.agentDesc[key].amount;
+                // delete this.agentDesc[key].amount
             }
         },
         submitAgent() {
             this.agentDesc[this.categorySelected][this.selectedAgentName] = { 'data' : 0 }
         },
         selectItem(item) {
-            this.selectedAgentName = item;
+            this.selectedAgentName = item
         },
         selectCurrency(currency){
             this.selectedCurrency = currency
@@ -402,7 +402,7 @@ export default {
         createNewCurrency(){
             // Generate a unique currency name
             // Count currencies
-            let count = 0;
+            let count = 0
             this.selectedCurrencyCategory = this.currencyCategorySelected
             for (const item in this.currencyDesc[this.selectedCurrencyCategory]) {
                     count++
@@ -473,7 +473,7 @@ export default {
             // So instead of creating custom currency category, just file them under "custom"
             if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null) ) {
             } else {
-                currentCustomCurrencies[this.currencyCategorySelected] = {};
+                currentCustomCurrencies[this.currencyCategorySelected] = {}
             }
             */
                 let category = this.currencyCategorySelected
@@ -507,7 +507,7 @@ export default {
     },
     computed: {
         currencyTypes() {
-            let listOfTypes = [];
+            let listOfTypes = []
            /* Determine list of agent_class */
             for (let key in this.currencyDesc) {
                 let currencyType = key
