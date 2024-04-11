@@ -95,14 +95,14 @@ export default {
         getLocalStorageCurrencies() {
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
-            if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) ) {
+            if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null)) {
                 // for(let category in localStorageCurrencies)
                 // console.log("Currencies found in local storage:")
                 // for (let currency in category) {
                 //  console.log(currency)
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
-            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) ) {
+            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null)) {
                 // Object exists
                 } else {
                     this.currencyDesc['custom'] = {}
@@ -133,7 +133,7 @@ export default {
             const currancies = []
             this.currencyList = []
             for(const type in (this.currencyDesc)) {
-                for(const subkey in (this.currencyDesc[type]) ) {
+                for(const subkey in (this.currencyDesc[type])) {
                     currancies.push(subkey)
                 }
             }
@@ -227,7 +227,7 @@ export default {
             this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1)
             }
             // Remove the flow array array if it is empty
-            if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0 ) {
+            if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].flows[direction][currency][type]
             }
         },
@@ -459,7 +459,7 @@ export default {
             let currentCustomCurrencies = localStorage.getItem('customCurrencies')
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
             // Check if the custom currency object exists
-            if (typeof (currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null) ) {
+            if (typeof (currentCustomCurrencies)=='object' && (currentCustomCurrencies!=null)) {
             } else { // Create the currency object
                 currentCustomCurrencies = {}
             }
@@ -467,7 +467,7 @@ export default {
             /*
             // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
             // So instead of creating custom currency category, just file them under "custom"
-            if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null) ) {
+            if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null)) {
             } else {
                 currentCustomCurrencies[this.currencyCategorySelected] = {}
             }
@@ -616,7 +616,7 @@ export default {
                 <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
                 {{key}}
                 (Change to:
-                <input v-model="capacityTypes[key]" name="capType" type="text" > <button @click="changeType(key, value, capacityTypes[key] )">Change</button>)
+                <input v-model="capacityTypes[key]" name="capType" type="text" > <button @click="changeType(key, value, capacityTypes[key])">Change</button>)
                  :::::
                 Quantity:
                 <input v-model="agentDesc[selectedAgentName].capacity[key]" name="capVal" type="number"> <button @click="removeCapacity(key)" >Remove Capacity</button>
@@ -638,7 +638,7 @@ export default {
                                         <option v-for="item in currencyList" :value="item" > {{item}} </option>
             </select>
             </label>
-            <button @click="changeInType(currency, value, inTypes[currency] )">Change</button>)
+            <button @click="changeInType(currency, value, inTypes[currency])">Change</button>)
             <button @click="removeInFlow(currency)" >Remove</button>
                 <ul>
                     <li> Value: <input v-model="agentDesc[selectedAgentName].flows.in[currency].value" name="flowValueFieldIn" type="number" >
@@ -697,7 +697,7 @@ export default {
                     <option v-for="item in currencyList" :value="item" > {{item}} </option>
                 </select>
                 </label>
-                <button @click="changeOutType(currency, value, outTypes[currency] )">Change</button>)
+                <button @click="changeOutType(currency, value, outTypes[currency])">Change</button>)
                 <button @click="removeOutFlow(currency)" >Remove</button>
                 <ul>
                     <li> Value: <input v-model="agentDesc[selectedAgentName].flows.out[currency].value" name="flowValueOut" type="number" >
@@ -742,7 +742,7 @@ export default {
                                 <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
                                 {{kind}}  
                                 (Change to:
-                                <input v-model="kindTypes[kind]" name="kindTypeName" type="text" > <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency )">Change</button>)
+                                <input v-model="kindTypes[kind]" name="kindTypeName" type="text" > <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency)">Change</button>)
                                 <button @click="removeGrowth(currency, kind)">Remove Growth</button>
                                  ::::: 
                                     <ul>
@@ -767,7 +767,7 @@ export default {
                                 (<label>Change to:
                                 <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
                                 </label>
-                                <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency )">Change</button>)
+                                <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency)">Change</button>)
                                 <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
                                  ::::: 
                                     <ul>
@@ -827,7 +827,7 @@ export default {
             <select v-model="thresholdTypes[currency]" name="changeThresholdCurrency">
                                         <option v-for="item in currencyList" :value="item" > {{item}} </option>
             </select>
-            </label> <button @click="changeThresholdType(currency, value, thresholdTypes[currency] )">Change</button>)
+            </label> <button @click="changeThresholdType(currency, value, thresholdTypes[currency])">Change</button>)
             <button @click="removeThreshold(currency)" >Remove Currency</button>
             <ul>
                 <li> Path:  <input v-model="agentDesc[selectedAgentName].thresholds[currency].path" name="thesholdPathField" type="text">
@@ -873,7 +873,7 @@ export default {
     <ul>
     <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
         {{property}} (Change to:
-        <input v-model="propertyNames[property]" name="propertyName" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property] )">Change</button>)
+        <input v-model="propertyNames[property]" name="propertyName" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
         <button @click="removeProperty(property)" >Remove</button>
         <ul> <!-- Property Attributes -->
             <li>value: {{attributes.value}} <input v-model="changedPropVal" name="propVal" type="text"> <button @click="changePropertyValue(property, changedPropVal)" >Change Value</button></li>
