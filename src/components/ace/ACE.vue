@@ -828,30 +828,33 @@ export default {
                 <h3>Thresholds</h3>
                 <h4> Currencies </h4>
                 <ul>
-                    <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds">  {{currency}}
-                        (<label>Change to:
-                        <select v-model="thresholdTypes[currency]" name="changeThresholdCurrency">
-                            <option v-for="item in currencyList" :value="item"> {{item}} </option>
-                        </select>
-                        </label> <button @click="changeThresholdType(currency, value, thresholdTypes[currency])">Change</button>)
+                    <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds"> 
+                        {{currency}}
+                        (
+                        <label>Change to:
+                            <select v-model="thresholdTypes[currency]" name="changeThresholdCurrency">
+                                <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                            </select>
+                        </label> 
+                        <button @click="changeThresholdType(currency, value, thresholdTypes[currency])">Change</button>)
                         <button @click="removeThreshold(currency)">Remove Currency</button>
                         <ul>
                             <li> Path:  <input v-model="agentDesc[selectedAgentName].thresholds[currency].path" name="thesholdPathField" type="text">
                             </li>
                             <li> Limit:
-                              <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
-                                   <option value="&lt;"> &lt; </option>
-                                   <option value="&equals;"> =   </option>
-                                   <option value="&gt;"> &gt; </option>
-                               </select>
+                                <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
+                                    <option value="&lt;"> &lt; </option>
+                                    <option value="&equals;"> =   </option>
+                                    <option value="&gt;"> &gt; </option>
+                                </select>
                             </li>
                             <li> Value: <input v-model="agentDesc[selectedAgentName].thresholds[currency].value" name="thesholdValueField" type="number">
                             </li>
                             <li> Connnections: <input v-model="agentDesc[selectedAgentName].thresholds[currency].connections" name="connectionsThresholdsField" type="text">
                             </li>
                         </ul>
-                        </li>
-                        <li> <!-- NEW FLOW -->
+                    </li>
+                    <li> <!-- NEW FLOW -->
                         <label>New Currency:
                         <select v-model="newThresholdCurrency" name="newThresholdCurrency" selected="o2">
                             <option v-for="item in currencyList" :value="item"> {{item}} </option>
@@ -872,17 +875,22 @@ export default {
                             <li> Connnections: <input v-model="newThresholdConnections" type="text" name="newThresholdConnectionsField">
                             </li>
                         </ul>
-                     <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
-                    </li>
+                    <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
+                    </li> <!-- NEW FLOW -->
                 </ul>
                 <h3>Properties</h3>
                 <ul>
                     <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
                         {{property}} (Change to:
-                        <input v-model="propertyNames[property]" name="propertyName" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
+                        <input v-model="propertyNames[property]" name="propertyName" type="text"> 
+                        <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
                         <button @click="removeProperty(property)">Remove</button>
                         <ul> <!-- Property Attributes -->
-                            <li>value: {{attributes.value}} <input v-model="changedPropVal" name="propVal" type="text"> <button @click="changePropertyValue(property, changedPropVal)">Change Value</button></li>
+                            <li>
+                                value: {{attributes.value}}
+                                <input v-model="changedPropVal" name="propVal" type="text">
+                                <button @click="changePropertyValue(property, changedPropVal)">Change Value</button>
+                            </li>
                             <li>unit: <input v-model="agentDesc[selectedAgentName].properties[property].unit" name="propUnit" type="text" col=15> </li>
                         </ul>
                     </li>
