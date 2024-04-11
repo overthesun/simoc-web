@@ -95,7 +95,6 @@ export default {
         getLocalStorageCurrencies() {
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
-            
             if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) ) {
                 // for(let category in localStorageCurrencies)
                 // console.log("Currencies found in local storage:")
@@ -108,7 +107,6 @@ export default {
                 } else {
                     this.currencyDesc['custom'] = {}
                 }
-                
                 for (const currency in localStorageCurrencies) {
                         console.log(currency)
                         this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
@@ -129,7 +127,7 @@ export default {
                 console.log('* Loading agent desc failed! *')
                 console.error(error)
                 return null
-            }           
+            }
         },
         generateCurrencyList() {
             const currancies = []
@@ -224,7 +222,7 @@ export default {
         },
         removeFlowArrayItem(direction, type, currency, name) {
             const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
-            // Delete the connection by its array index number 
+            // Delete the connection by its array index number
             if (index !== -1) {
             this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1)
             }
@@ -245,7 +243,7 @@ export default {
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
         renameAgent(newName) {
-            // Make Sure Agent Doesn't Already Exist    
+            // Make Sure Agent Doesn't Already Exist
             for (name in this.agentDesc) {
                 if (name == newName) {
                     alert(newName + ' already exists, try another name!')
@@ -264,7 +262,7 @@ export default {
             // Export the plant currency
         },
         renameCurrency(newName) {
-            // Make Sure Currency Doesn't Already Exist 
+            // Make Sure Currency Doesn't Already Exist
             for (const currency in this.currencyDesc[this.currencyCategorySelected]) {
                 if (currency == newName) {
                     alert(newName + ' already exists, try another name!')
@@ -293,11 +291,11 @@ export default {
         changeThresholdType(key, value, newName) {
             this.agentDesc[this.selectedAgentName].thresholds[newName]=value
             delete this.agentDesc[this.selectedAgentName].thresholds[key]
-        },          
+        },
         changePropertyName(key, value, newName) {
             this.agentDesc[this.selectedAgentName].properties[newName]=value
             delete this.agentDesc[this.selectedAgentName].properties[key]
-        },      
+        },
         changeGrowthType(kind, value, newName, key) {
             this.agentDesc[this.selectedAgentName].flows.out[key].growth[newName]=value
             delete this.agentDesc[this.selectedAgentName].flows.out[key].growth[kind]
@@ -334,7 +332,6 @@ export default {
             }
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
-        
             if (newPropUnit != '') {
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal, 'unit' : newPropUnit }
             } else { // Make sure not to add unit if it is not specified
@@ -448,7 +445,7 @@ export default {
             if (typeof (currentCustomAgents)=='object' && (currentCustomAgents!=null)){
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             } else {
-                currentCustomAgents = {} 
+                currentCustomAgents = {}
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             }
             localStorage.setItem('customAgents',JSON.stringify(currentCustomAgents))
@@ -467,7 +464,7 @@ export default {
                 currentCustomCurrencies = {}
             }
                 // Create the currency category
-            /* 
+            /*
             // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
             // So instead of creating custom currency category, just file them under "custom"
             if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null) ) {
@@ -483,7 +480,7 @@ export default {
                 } else {
                     this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
                 }
-                currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName] 
+                currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
             localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies))
         },
         returnToMenu() { // Function to return to main menu
@@ -540,7 +537,7 @@ export default {
     </div>
     <div v-if="typeof(currencyDesc[currencyCategorySelected])=='object' && currentMode=='currency'">
     <h2>Currency Editor</h2>
-    <label> Currency Category 
+    <label> Currency Category
     <select id="currencyCategorySelector" v-model="currencyCategorySelected">
         <option v-for="category in currencyTypes" :key="category" :value="category"> {{category}} </option>
     </select>
@@ -550,7 +547,7 @@ export default {
     <br>
     <div class="gridBox">
     <div class="scrollie agentBox">
-    <div id="buttonList"> 
+    <div id="buttonList">
     <ul>
         <li v-for="currency in Object.keys(currencyDesc[currencyCategorySelected])">
         <button @click="selectCurrency(currency)">{{currency}}</button> </li>
@@ -558,8 +555,8 @@ export default {
     </div> <!-- Button List -->
     </div> <!-- scrollie -->
     <div class="agentData">
-    Currency: {{selectedCurrency}} 
-    <input v-model="newCurrencyName" type="text" name="newCurrencyName" />  <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
+    Currency: {{selectedCurrency}}
+    <input v-model="newCurrencyName" type="text" name="newCurrencyName" /> <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
         <br>
         Label : <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].label" name="currencyLabel" type="text">
         <br>
@@ -570,7 +567,7 @@ export default {
         Unit: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit" name="currencyUnit" type="text">
         <br>
         Short: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short" name="currencyShort" type="text">
-        <br>    
+        <br>
         <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
         Nutrition- <button @click="deleteNutrition()">Delete Nutrition</button> {{currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition}}
             <br> &nbsp &nbsp &nbsp &nbsp kcal: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal" name="nutkcal" type="number">
@@ -595,7 +592,7 @@ export default {
     <button @click="createNewAgent()">Create New Blank Agent</button>
     <br>   <br>
     <div class="gridBox" id="gridbox">
-    <div id="agentSelector" class="scrollie agentBox"> 
+    <div id="agentSelector" class="scrollie agentBox">
     <h2> Agents ({{categorySelected}}): </h2>
         <ul>
         <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
@@ -603,12 +600,12 @@ export default {
     </div>
     <div v-if="typeof(agentDesc)=='object'" class="agentData scrollie" id="agentPresenter"> 
     <h2> {{selectedAgentName}}  <input v-model="newAgentName" name="newAgentName" type="text" />  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
-    <ul> 
+    <ul>
         <li>Agent Class:    <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
                             <option v-for="category in agentClasses" :key="category" :value="category"> {{category}} </option>
                             </select>
-        <label>  Change to custom class:                    
-        <input v-model="customClassName" name="customClass" type="text" > </label>       
+        <label>  Change to custom class:
+        <input v-model="customClassName" name="customClass" type="text" > </label>
         <button @click="setCustomClass">Set Custom Class</button>
         </li>
         <li>Description: <br>  <textarea v-model="agentDesc[selectedAgentName].description" name="descriptionField" rows="4" cols="100"> </textarea>
@@ -620,14 +617,14 @@ export default {
                 {{key}}
                 (Change to:
                 <input v-model="capacityTypes[key]" name="capType" type="text" > <button @click="changeType(key, value, capacityTypes[key] )">Change</button>)
-                 ::::: 
+                 :::::
                 Quantity:
                 <input v-model="agentDesc[selectedAgentName].capacity[key]" name="capVal" type="number"> <button @click="removeCapacity(key)" >Remove Capacity</button>
                 </li>
                 <li>
                 New Capacity:
                 <input v-model="newCapacityType" name="newCapType" type="text"> 
-                 ::::: 
+                 :::::
                 Quantity:
                 <input v-model="newCapacityValue" name="newCapVal" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
                 </li>
@@ -635,7 +632,7 @@ export default {
     <h3>Flows</h3>
         <h4>In Currencies</h4>
         <ul>
-            <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.in">{{currency}} 
+            <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.in">{{currency}}
             <label>(Change to:
             <select v-model="inTypes[currency]" name="changeInFlowCurrency">
                                         <option v-for="item in currencyList" :value="item" > {{item}} </option>
@@ -660,14 +657,14 @@ export default {
                         </span>
                         <input v-model="newConnectionIn" name="connectionNewName" type="text" /> <button @click="addFlowArrayItem('in', 'connections', currency, newConnectionIn)">Add new Connection</button>
                     </li>
-                    <li> weighted: 
+                    <li> weighted:
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('in', 'weighted', currency, weighted)" v-for="(weighted, index) in agentDesc[selectedAgentName].flows.in[currency].weighted">{{weighted}}</button>
-                            <br>                           
+                            <br>
                         </span>
                         <input v-model="newWeightedIn" name="newWeighted" type="text" /> <button @click="addFlowArrayItem('in', 'weighted', currency, newWeightedIn)">Add new Weighted</button>
-                    </li>                   
+                    </li>
                     <li> deprive:
                         <ul v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].deprive)=='object'">
                             <button @click="removeDeprive(currency)">Remove Deprive</button>
@@ -689,18 +686,18 @@ export default {
                 </select>
                 </label>
                 <button @click="addNewFlow('in', newInType)">Add In Flow Currency</button>
-            </li>           
+            </li>
         </ul>
         <h4>Out Currencies</h4>
             <ul>
                 <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.out"> {{currency}} 
                 (Change to:
-                <label> 
+                <label>
                 <select v-model="outTypes[currency]" name="changeOutCurrencySelector">
-                                        <option v-for="item in currencyList" :value="item" > {{item}} </option>
+                    <option v-for="item in currencyList" :value="item" > {{item}} </option>
                 </select>
                 </label>
-                 <button @click="changeOutType(currency, value, outTypes[currency] )">Change</button>)
+                <button @click="changeOutType(currency, value, outTypes[currency] )">Change</button>)
                 <button @click="removeOutFlow(currency)" >Remove</button>
                 <ul>
                     <li> Value: <input v-model="agentDesc[selectedAgentName].flows.out[currency].value" name="flowValueOut" type="number" >
@@ -711,7 +708,7 @@ export default {
                             <li>Time: <input v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.time" name="flowTimeOut" type="text" /></li>
                         </ul>
                     </li>
-                    <li> connections: 
+                    <li> connections:
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)=='object'">
                             (Click to remove)
                             <button @click="removeFlowArrayItem('out', 'connections', currency, connection)" v-for="(connection, index) in agentDesc[selectedAgentName].flows.out[currency].connections">{{connection}}</button>
@@ -726,7 +723,7 @@ export default {
                             <br>
                         </span>
                         <input v-model="newWeightedOut" name="addNewWeightedNameOut" type="text" /> <button @click="addFlowArrayItem('out', 'weighted', currency, newWeightedOut)">Add new Weighted</button>
-                    </li>                   
+                    </li>
                     <li> requires :
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)=='object'">
                             (Click to remove)
@@ -895,15 +892,14 @@ export default {
     <hr />
     <ul>
         <li v-for="(value, key) in agentDesc[selectedAgentName]"> <b>{{key}}</b> :
-        
         <i v-if="typeof(value)!='object'">{{value}}</i>
         <ul v-else>
             <li v-for="(subvalue, subkey) in agentDesc[selectedAgentName][key]">
-                <b>{{subkey}}</b> : 
+                <b>{{subkey}}</b> :
                 <i v-if="typeof(subvalue)!='object'">{{subvalue}}</i>
                 <ul v-else>
                     <li v-for="(subsubvalue, subsubkey) in agentDesc[selectedAgentName][key][subkey]">
-                        <b>{{subsubkey}}</b> : 
+                        <b>{{subsubkey}}</b> :
                         <i v-if="typeof(subsubvalue)!='object'">{{subsubvalue}}</i>
                         <ul v-else>
                             <li  v-for="(subsubsubvalue, subsubsubkey) in agentDesc[selectedAgentName][key][subkey][subsubkey]">
@@ -931,12 +927,10 @@ export default {
             grid-gap: 10px; /* Gap between grid items */
 }
 .scrollie {
-    overflow-y: scroll !important; 
-
+    overflow-y: scroll !important;
     /* FireFox */
     scrollbar-width: auto; 
     scrollbar-color: grey black;
-    
     height: 400px;
     width: 100%;
 }
