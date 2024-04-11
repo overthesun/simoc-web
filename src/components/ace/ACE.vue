@@ -894,7 +894,7 @@ export default {
                                 <input v-model="changedPropVal" name="propVal" type="text">
                                 <button @click="changePropertyValue(property, changedPropVal)">Change Value</button>
                             </li>
-                            <li>unit: <input v-model="agentDesc[selectedAgentName].properties[property].unit" name="propUnit" type="text" col=15> </li>
+                            <li>unit: <input v-model="agentDesc[selectedAgentName].properties[property].unit" name="propUnit" type="text" col="15"> </li>
                         </ul>
                     </li>
                     <li>
