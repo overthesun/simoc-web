@@ -269,8 +269,10 @@ export default {
             delete this.agentDesc[this.selectedAgentName].flows.in[currency].deprive
         },
         changePropertyValue(property, newPropVal) {
-            if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
-                newPropVal = +newPropVal
+            /* This is to ensure the data sent to the back is not a string in the JSON */
+            /* When it is supposed to be a number e.g. { a: 1 } vs { a: '1' } */
+            if (!Number.isNaN(Number(newPropVal))) { /* Works with !isNaN(newPropVal), but doesn't pass lint*/
+                newPropVal = +newPropVal /* Check this again to verify with this workaround for lint */
             }
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
