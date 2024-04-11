@@ -250,7 +250,7 @@ export default {
             if (customAgents == null) return
             customAgents = JSON.parse(customAgents)
             for (const name in customAgents) {
-                if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name)
+                if (customAgents[name].agent_class == 'plants') this.listPlant(name)
             }
         },
         listPlant(name) {

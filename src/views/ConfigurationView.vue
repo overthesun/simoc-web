@@ -311,10 +311,10 @@ export default {
                     }
                     if ((customCurrencies != null) && (Object.keys(customCurrencies).length>0)) {
                         customCurrencies = JSON.parse(customCurrencies)
-                        configParams.game_config['currencies'] = {}
+                        configParams.game_config.currencies = {}
                         // Add custom currencies to config
                         for (const name in customCurrencies) {
-                            configParams.game_config['currencies'][name]=customCurrencies[name]
+                            configParams.game_config.currencies[name]=customCurrencies[name]
                         }
                     }
                     console.log(configParams)

@@ -70,7 +70,7 @@ export default {
             const listOfClasses = []
             /* Determine list of agent_class */
             for (const key in this.agentDesc) {
-                const className = this.agentDesc[key]['agent_class']
+                const className = this.agentDesc[key].agent_class
                 if (!listOfClasses.includes(className)) listOfClasses.push(className)
             }
             return listOfClasses
@@ -78,7 +78,7 @@ export default {
         agentsInClass() {
             const listOfAgents = []
             for (const item in this.agentDesc) {
-                const itemsClass = this.agentDesc[item]['agent_class']
+                const itemsClass = this.agentDesc[item].agent_class
                 if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
             }
             return listOfAgents
@@ -137,14 +137,14 @@ export default {
                 //  console.log(currency)
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
-                if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null)) {
+                if (typeof (this.currencyDesc.custom)=='object' && (localStorageCurrencies!=null)) {
                     // Object exists
                 } else {
-                    this.currencyDesc['custom'] = {}
+                    this.currencyDesc.custom = {}
                 }
                 for (const currency in localStorageCurrencies) {
                     console.log(currency)
-                    this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
+                    this.currencyDesc.custom[currency] = localStorageCurrencies[currency]
                 }
             } else {
                 console.log(' * No agents loaded from local storage *')
@@ -509,9 +509,9 @@ export default {
             this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
             // Assign category for export
             if (category=='custom') {
-                category = this.currencyDesc['custom'][currencyName]['category']
+                category = this.currencyDesc.custom[currencyName].category
             } else {
-                this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
+                this.customCurrencies[currencyName].category = category // this.currencyCategorySelected
             }
             currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
             localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
