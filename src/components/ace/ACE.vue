@@ -652,7 +652,7 @@ export default {
                     <li> connections :
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)=='object'">
                             (Click to remove)
-                            <button @click="removeFlowArrayItem('in', 'connections', currency, connection)" v-for="(connection, index) in agentDesc[selectedAgentName].flows.in[currency].connections">{{connection}}</button>
+                            <button v-for="(connection, index) in agentDesc[selectedAgentName].flows.in[currency].connections" @click="removeFlowArrayItem('in', 'connections', currency, connection)">{{connection}}</button>
                             <br>
                         </span>
                         <input v-model="newConnectionIn" name="connectionNewName" type="text" /> <button @click="addFlowArrayItem('in', 'connections', currency, newConnectionIn)">Add new Connection</button>
@@ -660,7 +660,7 @@ export default {
                     <li> weighted:
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)=='object'">
                             (Click to remove)
-                            <button @click="removeFlowArrayItem('in', 'weighted', currency, weighted)" v-for="(weighted, index) in agentDesc[selectedAgentName].flows.in[currency].weighted">{{weighted}}</button>
+                            <button v-for="(weighted, index) in agentDesc[selectedAgentName].flows.in[currency].weighted" @click="removeFlowArrayItem('in', 'weighted', currency, weighted)">{{weighted}}</button>
                             <br>
                         </span>
                         <input v-model="newWeightedIn" name="newWeighted" type="text" /> <button @click="addFlowArrayItem('in', 'weighted', currency, newWeightedIn)">Add new Weighted</button>
@@ -711,7 +711,7 @@ export default {
                     <li> connections:
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)=='object'">
                             (Click to remove)
-                            <button @click="removeFlowArrayItem('out', 'connections', currency, connection)" v-for="(connection, index) in agentDesc[selectedAgentName].flows.out[currency].connections">{{connection}}</button>
+                            <button v-for="(connection, index) in agentDesc[selectedAgentName].flows.out[currency].connections" @click="removeFlowArrayItem('out', 'connections', currency, connection)">{{connection}}</button>
                             <br>
                         </span>
                         <input v-model="newConnectionOut" name="addNewConnectName" type="text" /> <button @click="addFlowArrayItem('out', 'connections', currency, newConnectionOut)">Add new Connection</button>
@@ -719,7 +719,7 @@ export default {
                     <li> weighted:
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)=='object'">
                             (Click to remove)
-                            <button @click="removeFlowArrayItem('out', 'weighted', currency, weighted)" v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted">{{weighted}}</button>
+                            <button v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted" @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">{{weighted}}</button>
                             <br>
                         </span>
                         <input v-model="newWeightedOut" name="addNewWeightedNameOut" type="text" /> <button @click="addFlowArrayItem('out', 'weighted', currency, newWeightedOut)">Add new Weighted</button>
@@ -727,7 +727,7 @@ export default {
                     <li> requires :
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)=='object'">
                             (Click to remove)
-                            <button @click="removeFlowArrayItem('out', 'requires', currency, requires)" v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires">{{requires}}</button>
+                            <button v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires" @click="removeFlowArrayItem('out', 'requires', currency, requires)">{{requires}}</button>
                             <br>
                         </span>
                         <label> (Currency) 
