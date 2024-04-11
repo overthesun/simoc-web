@@ -132,13 +132,13 @@ export default {
         generateCurrencyList() {
             const currancies = []
             this.currencyList = []
-            for(const type in (this.currencyDesc)) {
-                for(const subkey in (this.currencyDesc[type])) {
+            for (const type in (this.currencyDesc)) {
+                for (const subkey in (this.currencyDesc[type])) {
                     currancies.push(subkey)
                 }
             }
 
-            for(let i=0;i<currancies.length;++i) {
+            for (let i=0; i<currancies.length; ++i) {
                 this.currencyList.push(currancies[i])
             }
         },
@@ -161,13 +161,13 @@ export default {
         removeSurplusAgentData() {
             /* Probably we should actually duplicate the agentDesc to create one just for the display of data that is trimmed down,
                Since copied/modified agents will want to still contain necessary fields that don't need to be shown */
-            for(const key in this.agentDesc) {
+            for (const key in this.agentDesc) {
                 /* amount = 1 is for all, so it doesn't need to be there*/
                 // delete this.agentDesc[key].amount
             }
         },
         submitAgent() {
-            this.agentDesc[this.categorySelected][this.selectedAgentName] = { 'data' : 0 }
+            this.agentDesc[this.categorySelected][this.selectedAgentName] = {'data': 0}
         },
         selectItem(item) {
             this.selectedAgentName = item
@@ -223,7 +223,7 @@ export default {
             const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
             // Delete the connection by its array index number
             if (index !== -1) {
-            this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index,1)
+            this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index, 1)
             }
             // Remove the flow array array if it is empty
             if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0) {
@@ -332,12 +332,12 @@ export default {
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
             if (newPropUnit != '') {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = { 'value' : newPropVal, 'unit' : newPropUnit }
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = {'value': newPropVal, 'unit': newPropUnit}
             } else { // Make sure not to add unit if it is not specified
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = { 'value' : newPropVal }
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = {'value': newPropVal}
             }
         },
-        addFlowArrayItem(direction, type, currency, name){
+        addFlowArrayItem(direction, type, currency, name) {
             // Add the array if it doesn't exist
             if (!(typeof (this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) {
                 this.agentDesc[this.selectedAgentName].flows[direction][currency][type] = []
@@ -446,7 +446,7 @@ export default {
                 currentCustomAgents = {}
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             }
-            localStorage.setItem('customAgents',JSON.stringify(currentCustomAgents))
+            localStorage.setItem('customAgents', JSON.stringify(currentCustomAgents))
                 // If plant, export currency for it, too
             if (this.categorySelected=='plants') {
                 alert('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!')
@@ -479,12 +479,12 @@ export default {
                     this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
                 }
                 currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
-            localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies))
+            localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
         },
         returnToMenu() { // Function to return to main menu
             this.$router.push('menu')
         },
-        switchMode() {// Function to swap between agent mode and currency mode
+        switchMode() { // Function to swap between agent mode and currency mode
             if (this.currentMode=='agent') {
                 this.currentMode='currency'
             } else {
