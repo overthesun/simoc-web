@@ -56,6 +56,41 @@ export default {
             customCurrencies: {},
         }
     },
+    computed: {
+        currencyTypes() {
+            const listOfTypes = []
+            /* Determine list of type */
+            for (const key in this.currencyDesc) {
+                const currencyType = key
+                if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
+            }
+            return listOfTypes
+        },
+        agentClasses() {
+            const listOfClasses = []
+            /* Determine list of agent_class */
+            for (const key in this.agentDesc) {
+                const className = this.agentDesc[key]['agent_class']
+                if (!listOfClasses.includes(className)) listOfClasses.push(className)
+            }
+            return listOfClasses
+        },
+        agentsInClass() {
+            const listOfAgents = []
+            for (const item in this.agentDesc) {
+                const itemsClass = this.agentDesc[item]['agent_class']
+                if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
+            }
+            return listOfAgents
+        },
+    },
+    watch: {
+        selectedAgentName() {
+        },
+        currencyDesc() {
+            this.generateCurrencyList()
+        },
+    },
     async created() {
         // this.setAgentClass()
         this.removeSurplusAgentData()
@@ -490,41 +525,6 @@ export default {
             } else {
                 this.currentMode='agent'
             }
-        },
-    },
-    watch: {
-        selectedAgentName() {
-        },
-        currencyDesc() {
-            this.generateCurrencyList()
-        },
-    },
-    computed: {
-        currencyTypes() {
-            const listOfTypes = []
-            /* Determine list of type */
-            for (const key in this.currencyDesc) {
-                const currencyType = key
-                if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
-            }
-            return listOfTypes
-        },
-        agentClasses() {
-            const listOfClasses = []
-            /* Determine list of agent_class */
-            for (const key in this.agentDesc) {
-                const className = this.agentDesc[key]['agent_class']
-                if (!listOfClasses.includes(className)) listOfClasses.push(className)
-            }
-            return listOfClasses
-        },
-        agentsInClass() {
-            const listOfAgents = []
-            for (const item in this.agentDesc) {
-                const itemsClass = this.agentDesc[item]['agent_class']
-                if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
-            }
-            return listOfAgents
         },
     },
 }
