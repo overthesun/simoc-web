@@ -1,7 +1,0 @@
-export {default as DashboardMenu} from './DashboardMenu.vue'
-export {default as Timeline} from './Timeline.vue'
-export {default as LiveButton} from './LiveButton.vue'
-export {default as PlayButton} from './PlayButton.vue'
-export {default as StepControls} from './StepControls.vue'
-export {default as SpeedControls} from './SpeedControls.vue'
-export {default as Dashboard} from './Main.vue'
