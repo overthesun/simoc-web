@@ -104,13 +104,13 @@ export default {
                 // }
                 if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null)) {
                     // Object exists
-                    } else {
-                        this.currencyDesc['custom'] = {}
-                    }
-                    for (const currency in localStorageCurrencies) {
-                        console.log(currency)
-                        this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
-                    }
+                } else {
+                    this.currencyDesc['custom'] = {}
+                }
+                for (const currency in localStorageCurrencies) {
+                    console.log(currency)
+                    this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
+                }
             } else {
                 console.log(' * No agents loaded from local storage *')
             }
@@ -223,7 +223,7 @@ export default {
             const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
             // Delete the connection by its array index number
             if (index !== -1) {
-            this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index, 1)
+                this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index, 1)
             }
             // Remove the flow array array if it is empty
             if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0) {
@@ -235,7 +235,7 @@ export default {
         },
         changePropertyValue(property, newPropVal) {
             if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
-                    newPropVal = +newPropVal
+                newPropVal = +newPropVal
             }
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
@@ -370,15 +370,15 @@ export default {
         },
         addGrowth(currency, kind, pattern) {
             if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
-                     this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
+                this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
             }
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind] = {}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
         },
         addDeprive(currency, value, unit) {
-                        this.agentDesc[this.selectedAgentName].flows.in[currency].deprive = {}
+            this.agentDesc[this.selectedAgentName].flows.in[currency].deprive = {}
             this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.value=value
-                        this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.unit=unit
+            this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.unit=unit
         },
         createNewAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
@@ -447,7 +447,7 @@ export default {
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             }
             localStorage.setItem('customAgents', JSON.stringify(currentCustomAgents))
-                // If plant, export currency for it, too
+            // If plant, export currency for it, too
             if (this.categorySelected=='plants') {
                 alert('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!')
             }
@@ -461,7 +461,7 @@ export default {
             } else { // Create the currency object
                 currentCustomCurrencies = {}
             }
-                // Create the currency category
+            // Create the currency category
             /*
             // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
             // So instead of creating custom currency category, just file them under "custom"
@@ -502,7 +502,7 @@ export default {
     computed: {
         currencyTypes() {
             let listOfTypes = []
-           /* Determine list of agent_class */
+            /* Determine list of type */
             for (let key in this.currencyDesc) {
                 let currencyType = key
                 if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
@@ -511,7 +511,7 @@ export default {
         },
         agentClasses() {
             let listOfClasses = []
-           /* Determine list of agent_class */
+            /* Determine list of agent_class */
             for (let key in this.agentDesc) {
                 let className = this.agentDesc[key]['agent_class']
                 if (!listOfClasses.includes(className)) listOfClasses.push(className)
@@ -531,55 +531,55 @@ export default {
 </script>
 <template>
     <div class="navMenu">
-    <button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button v-else @click="switchMode()">Currency Editor</button>
+        <button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button v-else @click="switchMode()">Currency Editor</button>
     </div>
     <div v-if="typeof(currencyDesc[currencyCategorySelected])=='object' && currentMode=='currency'">
-    <h2>Currency Editor</h2>
-    <label> Currency Category
-    <select id="currencyCategorySelector" v-model="currencyCategorySelected">
-        <option v-for="category in currencyTypes" :key="category" :value="category"> {{category}} </option>
-    </select>
-    </label>
-    <button @click="createNewCurrency()">Create New Blank Currency</button>
-    <br>
-    <br>
-    <div class="gridBox">
-    <div class="scrollie agentBox">
-    <div id="buttonList">
-    <ul>
-        <li v-for="currency in Object.keys(currencyDesc[currencyCategorySelected])">
-        <button @click="selectCurrency(currency)">{{currency}}</button> </li>
-    </ul>
-    </div> <!-- Button List -->
-    </div> <!-- scrollie -->
-    <div class="agentData">
-    Currency: {{selectedCurrency}}
-    <input v-model="newCurrencyName" type="text" name="newCurrencyName"> <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
+        <h2>Currency Editor</h2>
+        <label> Currency Category
+        <select id="currencyCategorySelector" v-model="currencyCategorySelected">
+            <option v-for="category in currencyTypes" :key="category" :value="category"> {{category}} </option>
+        </select>
+        </label>
+        <button @click="createNewCurrency()">Create New Blank Currency</button>
         <br>
-        Label : <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].label" name="currencyLabel" type="text">
         <br>
-        Description: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].description" name="currencyDescription" type="text">
-        <br>
-        Source: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].source" name="currencySource" type="text">
-        <br>
-        Unit: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit" name="currencyUnit" type="text">
-        <br>
-        Short: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short" name="currencyShort" type="text">
-        <br>
-        <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
-        Nutrition- <button @click="deleteNutrition()">Delete Nutrition</button> {{currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition}}
-            <br> &nbsp; &nbsp; &nbsp; &nbsp; kcal: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal" name="nutkcal" type="number">
-            <br> &nbsp; &nbsp; &nbsp; &nbsp; water: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water" name="nutwater" type="number">
-            <br> &nbsp; &nbsp; &nbsp; &nbsp; protein: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein" name="nutprotein" type="number">
-            <br> &nbsp; &nbsp; &nbsp; &nbsp; carbohydrates: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate" name="nutcarb" type="number">
-            <br> &nbsp; &nbsp; &nbsp; &nbsp; fat: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat" name="nutfat" type="number">
-        </span>
-        <button v-else @click="addNutrition()">Add Nutrition </button>
-        <br>
-        <hr>
-        {{currencyDesc[selectedCurrencyCategory][selectedCurrency]}}
-    </div> <!-- CurrencyBox -->
-    </div> <!-- gridBox -->
+        <div class="gridBox">
+            <div class="scrollie agentBox">
+                <div id="buttonList">
+                    <ul>
+                        <li v-for="currency in Object.keys(currencyDesc[currencyCategorySelected])">
+                        <button @click="selectCurrency(currency)">{{currency}}</button> </li>
+                    </ul>
+                </div> <!-- Button List -->
+            </div> <!-- scrollie -->
+            <div class="agentData">
+                Currency: {{selectedCurrency}}
+                <input v-model="newCurrencyName" type="text" name="newCurrencyName"> <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
+                <br>
+                Label : <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].label" name="currencyLabel" type="text">
+                <br>
+                Description: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].description" name="currencyDescription" type="text">
+                <br>
+                Source: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].source" name="currencySource" type="text">
+                <br>
+                Unit: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit" name="currencyUnit" type="text">
+                <br>
+                Short: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short" name="currencyShort" type="text">
+                <br>
+                <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
+                    Nutrition- <button @click="deleteNutrition()">Delete Nutrition</button> {{currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition}}
+                    <br> &nbsp; &nbsp; &nbsp; &nbsp; kcal: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal" name="nutkcal" type="number">
+                    <br> &nbsp; &nbsp; &nbsp; &nbsp; water: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water" name="nutwater" type="number">
+                    <br> &nbsp; &nbsp; &nbsp; &nbsp; protein: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein" name="nutprotein" type="number">
+                    <br> &nbsp; &nbsp; &nbsp; &nbsp; carbohydrates: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate" name="nutcarb" type="number">
+                    <br> &nbsp; &nbsp; &nbsp; &nbsp; fat: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat" name="nutfat" type="number">
+                </span>
+            <button v-else @click="addNutrition()">Add Nutrition </button>
+            <br>
+            <hr>
+            {{currencyDesc[selectedCurrencyCategory][selectedCurrency]}}
+            </div> <!-- CurrencyBox -->
+        </div> <!-- gridBox -->
     </div> <!-- vif currency object exists -->
     <div v-if="currentMode=='agent'">
     <h2> Agent Editor.  Known Issues: Consistency. Shared Change Memory. Select needs Title Attributes, ul has invalid elements  </h2>
@@ -590,12 +590,12 @@ export default {
     <button @click="createNewAgent()">Create New Blank Agent</button>
     <br>   <br>
     <div id="gridbox" class="gridBox">
-    <div id="agentSelector" class="scrollie agentBox">
-    <h2> Agents ({{categorySelected}}): </h2>
-        <ul>
-        <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
-    </ul>
-    </div>
+        <div id="agentSelector" class="scrollie agentBox">
+            <h2> Agents ({{categorySelected}}): </h2>
+                <ul>
+                <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
+            </ul>
+        </div> <!-- Agent Selector -->
     <div v-if="typeof(agentDesc)=='object'" id="agentPresenter" class="agentData scrollie">
     <h2> {{selectedAgentName}}  <input v-model="newAgentName" name="newAgentName" type="text">  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
     <ul>
@@ -776,31 +776,30 @@ export default {
                                                 </select>
                                         </li>
                                         <li> Value:
-                                                                                            <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].value" name="criteriaValueField">
-                                                                                                <option :value="true">True</option>
-                                                                                                <option :value="false">False</option>
-                                                                                            </select>
-                                                                                 </li>
-
+                                            <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].value" name="criteriaValueField">
+                                                <option :value="true">True</option>
+                                                <option :value="false">False</option>
+                                            </select>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
                             <ul>
                                 <li> <input v-model="newCriterionName" name="newCriterionNameField" type="text"><button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
-                                                                         <ul>
-                                                                                 <li> Limit: <select v-model="newCriterionLimit" name="criterionLimitFieldNew">
-                                                                                                <option value="&lt;"> &lt; </option>
-                                                                                                <option value="&equals;"> =   </option>
-                                                                                                <option value="&gt;"> &gt; </option>
-                                                                                            </select>
-                                                                                </li>
-                                                                                 <li> Value:
-                                                                                        <select v-model="newCriterionValue" name="criterionValueFieldNew">
-                                                                                                <option :value="true">True</option>
-                                                                                                <option :value="false">False</option>
-                                                                                        </select>
-                                                                                 </li>
-                                                                     </ul>
+                                     <ul>
+                                         <li> Limit: <select v-model="newCriterionLimit" name="criterionLimitFieldNew">
+                                                        <option value="&lt;"> &lt; </option>
+                                                        <option value="&equals;"> =   </option>
+                                                        <option value="&gt;"> &gt; </option>
+                                                    </select>
+                                        </li>
+                                         <li> Value:
+                                                <select v-model="newCriterionValue" name="criterionValueFieldNew">
+                                                        <option :value="true">True</option>
+                                                        <option :value="false">False</option>
+                                                </select>
+                                         </li>
+                             </ul>
                                 </li>
                             </ul>
                     </li>
@@ -810,7 +809,7 @@ export default {
                 <label>New Out Flow:
                                 (Change to:
                 <select v-model="newOutType" name="outFlowCurrencySelector">
-                                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                    <option v-for="item in currencyList" :value="item"> {{item}} </option>
                 </select>
              </label>
                 <button @click="addNewFlow('out',newOutType)">Add Out Flow Currency</button>
@@ -822,7 +821,7 @@ export default {
             <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds">  {{currency}}
             (<label>Change to:
             <select v-model="thresholdTypes[currency]" name="changeThresholdCurrency">
-                                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                <option v-for="item in currencyList" :value="item"> {{item}} </option>
             </select>
             </label> <button @click="changeThresholdType(currency, value, thresholdTypes[currency])">Change</button>)
             <button @click="removeThreshold(currency)">Remove Currency</button>
@@ -830,11 +829,11 @@ export default {
                 <li> Path:  <input v-model="agentDesc[selectedAgentName].thresholds[currency].path" name="thesholdPathField" type="text">
                 </li>
                 <li> Limit:
-                                              <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
-                                                   <option value="&lt;"> &lt; </option>
-                                                   <option value="&equals;"> =   </option>
-                                                   <option value="&gt;"> &gt; </option>
-                                               </select>
+                  <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
+                       <option value="&lt;"> &lt; </option>
+                       <option value="&equals;"> =   </option>
+                       <option value="&gt;"> &gt; </option>
+                   </select>
                 </li>
                 <li> Value: <input v-model="agentDesc[selectedAgentName].thresholds[currency].value" name="thesholdValueField" type="number">
                 </li>
@@ -845,19 +844,19 @@ export default {
             <li> <!-- NEW FLOW -->
             <label>New Currency:
             <select v-model="newThresholdCurrency" name="newThresholdCurrency" selected="o2">
-                                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                <option v-for="item in currencyList" :value="item"> {{item}} </option>
             </select>
             </label>
             <ul>
                 <li> Path:  <input v-model="newThresholdPath" name="newThresholdPathField" type="text">
                 </li>
                 <li> Limit:
-                                             <select v-model="newThresholdLimit" name="thresholdLimitFieldNew">
-                                                  <option value="&lt;"> &lt; </option>
-                                                  <option value="&equals;"> =   </option>
-                                                  <option value="&gt;"> &gt; </option>
-                                              </select>
-                               </li>
+                 <select v-model="newThresholdLimit" name="thresholdLimitFieldNew">
+                      <option value="&lt;"> &lt; </option>
+                      <option value="&equals;"> =   </option>
+                      <option value="&gt;"> &gt; </option>
+                  </select>
+                </li>
                 <li> Value: <input v-model="newThresholdValue" type="number" name="newThresholdsValueField">
                 </li>
                 <li> Connnections: <input v-model="newThresholdConnections" type="text" name="newThresholdConnectionsField">
