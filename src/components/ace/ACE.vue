@@ -183,8 +183,7 @@ export default {
         removeCapacity(key) {
             delete this.agentDesc[this.selectedAgentName].capacity[key]
             // Remove the capacities object if there are no capacities in it.
-            if ((Object.keys(this.agentDesc[this.selectedAgentName].capacity).length) == 0)
-            {
+            if ((Object.keys(this.agentDesc[this.selectedAgentName].capacity).length) == 0) {
                 delete this.agentDesc[this.selectedAgentName].capacity
             }
         },
@@ -197,7 +196,7 @@ export default {
         removeThreshold(currency) {
             delete this.agentDesc[this.selectedAgentName].thresholds[currency]
             // Remove thresholds object if there are no currencies listed
-            if (Object.keys(this.agentDesc[this.selectedAgentName].thresholds).length == 0){
+            if (Object.keys(this.agentDesc[this.selectedAgentName].thresholds).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].thresholds
             }
         },
@@ -208,7 +207,7 @@ export default {
             // Delete the specific kind of growth
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].growth).length == 0){
+            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].growth).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
             }
         },
@@ -216,7 +215,7 @@ export default {
             // Delete the specific kind of criterion
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria).length == 0){
+            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
             }
         },
@@ -327,15 +326,15 @@ export default {
             this.agentDesc[this.selectedAgentName].thresholds[currency].connections=connections
         },
         addNewProperty(newPropertyName, newPropVal, newPropUnit) {
-            if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
+            if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
             }
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
             if (newPropUnit != '') {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal, 'unit' : newPropUnit }
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = { 'value' : newPropVal, 'unit' : newPropUnit }
             } else { // Make sure not to add unit if it is not specified
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName]={ 'value' : newPropVal }
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = { 'value' : newPropVal }
             }
         },
         addFlowArrayItem(direction, type, currency, name){
@@ -351,15 +350,14 @@ export default {
             if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object')) {
                 this.agentDesc[this.selectedAgentName].flows.out[currency].criteria = {}
             }
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object'))
-            {
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object')) {
                 this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name] = {}
             }
             // Add the criterion
             this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].value=value
             this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].limit=limit
         },
-        addNutrition(){
+        addNutrition() {
             this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition = {}
             this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.kcal = 0
             this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.water = 0
@@ -367,10 +365,10 @@ export default {
             this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.carbohydrate = 0
             this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.fat = 0
         },
-        deleteNutrition(){
+        deleteNutrition() {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
-        addGrowth(currency, kind, pattern){
+        addGrowth(currency, kind, pattern) {
                         if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
                                  this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
                         }
@@ -382,7 +380,7 @@ export default {
             this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.value=value
                         this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.unit=unit
         },
-        createNewAgent(){
+        createNewAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
             const newAgentName='agent_' + agentNumber
             this.agentDesc[newAgentName] = {}
@@ -442,7 +440,7 @@ export default {
             this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
-            if (typeof (currentCustomAgents)=='object' && (currentCustomAgents!=null)){
+            if (typeof (currentCustomAgents)=='object' && (currentCustomAgents!=null)) {
                 currentCustomAgents[agentName] = this.customAgents[agentName]
             } else {
                 currentCustomAgents = {}
