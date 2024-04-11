@@ -604,9 +604,11 @@ export default {
                         <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
                             <option v-for="category in agentClasses" :key="category" :value="category"> {{category}} </option>
                         </select>
-                    <label>  Change to custom class:
-                    <input v-model="customClassName" name="customClass" type="text"> </label>
-                    <button @click="setCustomClass">Set Custom Class</button>
+                        <label>  
+                            Change to custom class:
+                            <input v-model="customClassName" name="customClass" type="text"> 
+                        </label>
+                        <button @click="setCustomClass">Set Custom Class</button>
                     </li>
                     <li>Description: <br>  <textarea v-model="agentDesc[selectedAgentName].description" name="descriptionField" rows="4" cols="100" />
                     </li>
@@ -624,7 +626,7 @@ export default {
                     <li>
                         New Capacity:
                         <input v-model="newCapacityType" name="newCapType" type="text">
-                         :::::
+                        :::::
                         Quantity:
                         <input v-model="newCapacityValue" name="newCapVal" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
                     </li>
@@ -693,9 +695,9 @@ export default {
                     <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.out"> {{currency}}
                         (Change to:
                         <label>
-                        <select v-model="outTypes[currency]" name="changeOutCurrencySelector">
-                            <option v-for="item in currencyList" :value="item"> {{item}} </option>
-                        </select>
+                            <select v-model="outTypes[currency]" name="changeOutCurrencySelector">
+                                <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                            </select>
                         </label>
                         <button @click="changeOutType(currency, value, outTypes[currency])">Change</button>)
                         <button @click="removeOutFlow(currency)">Remove</button>
@@ -731,45 +733,47 @@ export default {
                                     <br>
                                 </span>
                                 <label> (Currency)
-                                <select v-model="newRequires" name="requiresCurrencySelector">
-                                    <option v-for="item in currencyList" :value="item"> {{item}} </option>
-                                </select>
+                                    <select v-model="newRequires" name="requiresCurrencySelector">
+                                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                                    </select>
                                 </label>
                                 <button @click="addFlowArrayItem('out', 'requires', currency, newRequires)">Add new Requires</button>
                             </li>
                             <li> growth:
-                                    <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].growth)=='object'">
-                                        <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
-                                            {{kind}}
-                                            (Change to:
-                                            <input v-model="kindTypes[kind]" name="kindTypeName" type="text"> <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency)">Change</button>)
-                                            <button @click="removeGrowth(currency, kind)">Remove Growth</button>
-                                             :::::
-                                            <ul>
-                                                <li> Type: <input v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type" name="growthTypeField" type="text">
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                    <label>New Growth Kind:
+                                <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].growth)=='object'">
+                                    <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
+                                        {{kind}}
+                                        (Change to:
+                                        <input v-model="kindTypes[kind]" name="kindTypeName" type="text"> <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency)">Change</button>)
+                                        <button @click="removeGrowth(currency, kind)">Remove Growth</button>
+                                        :::::
+                                        <ul>
+                                            <li> Type: <input v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type" name="growthTypeField" type="text">
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <label>
+                                    New Growth Kind:
                                     <input v-model="newGrowthKind" name="newGrowthKind" type="text">
-                                    </label>
-                                    <ul>
-                                        <li> Type: <input v-model="newGrowthPattern" name="newGrowthPatternTypeField" type="text">
-                                        </li>
-                                    </ul>
-                                    <button @click="addGrowth(currency, newGrowthKind, newGrowthPattern)">Add Growth</button>
+                                </label>
+                                <ul>
+                                    <li> Type: <input v-model="newGrowthPattern" name="newGrowthPatternTypeField" type="text">
+                                    </li>
+                                </ul>
+                                <button @click="addGrowth(currency, newGrowthKind, newGrowthPattern)">Add Growth</button>
                             </li>
                             <li> criteria:
                                 <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].criteria)=='object'">
                                     <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].criteria">
                                     {{kind}}
-                                    (<label>Change to:
-                                    <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
+                                    (
+                                    <label>Change to:
+                                        <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
                                     </label>
                                     <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency)">Change</button>)
                                     <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
-                                     :::::
+                                    :::::
                                         <ul>
                                             <li> Limit: 
                                                 <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit" name="criteriaLimitField">
@@ -788,7 +792,9 @@ export default {
                                     </li>
                                 </ul>
                                 <ul>
-                                    <li> <input v-model="newCriterionName" name="newCriterionNameField" type="text"><button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
+                                    <li> 
+                                        <input v-model="newCriterionName" name="newCriterionNameField" type="text">
+                                        <button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
                                         <ul>
                                              <li> Limit: 
                                                 <select v-model="newCriterionLimit" name="criterionLimitFieldNew">
