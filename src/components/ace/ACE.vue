@@ -97,12 +97,12 @@ export default {
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
             
             if (typeof (localStorageCurrencies)=='object' && (localStorageCurrencies!=null) )  {
-                //for(let category in localStorageCurrencies)
-                //console.log("Currencies found in local storage:")
-                //for (let currency in category) {
+                // for(let category in localStorageCurrencies)
+                // console.log("Currencies found in local storage:")
+                // for (let currency in category) {
                 //  console.log(currency);
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency];
-                //}
+                // }
             if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null) )  {
                 // Object exists
                 } else {
@@ -482,7 +482,7 @@ export default {
                 if (category=='custom') {
                     category =  this.currencyDesc['custom'][currencyName]['category']
                 } else {
-                    this.customCurrencies[currencyName]['category'] = category //this.currencyCategorySelected
+                    this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
                 }
                 currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName] 
             localStorage.setItem('customCurrencies',JSON.stringify(currentCustomCurrencies))
