@@ -526,7 +526,7 @@ export default {
             }
             return listOfAgents
         },
-    }
+    },
 }
 </script>
 <template>
@@ -568,11 +568,11 @@ export default {
         <br>
         <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
         Nutrition- <button @click="deleteNutrition()">Delete Nutrition</button> {{currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition}}
-            <br> &nbsp &nbsp &nbsp &nbsp kcal: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal" name="nutkcal" type="number">
-            <br> &nbsp &nbsp &nbsp &nbsp water: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water" name="nutwater" type="number">
-            <br> &nbsp &nbsp &nbsp &nbsp protein: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein" name="nutprotein" type="number">
-            <br> &nbsp &nbsp &nbsp &nbsp carbohydrates: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate" name="nutcarb" type="number">
-            <br> &nbsp &nbsp &nbsp &nbsp fat: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat" name="nutfat" type="number">
+            <br> &nbsp; &nbsp; &nbsp; &nbsp; kcal: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal" name="nutkcal" type="number">
+            <br> &nbsp; &nbsp; &nbsp; &nbsp; water: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water" name="nutwater" type="number">
+            <br> &nbsp; &nbsp; &nbsp; &nbsp; protein: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein" name="nutprotein" type="number">
+            <br> &nbsp; &nbsp; &nbsp; &nbsp; carbohydrates: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate" name="nutcarb" type="number">
+            <br> &nbsp; &nbsp; &nbsp; &nbsp; fat: <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat" name="nutfat" type="number">
         </span>
         <button v-else @click="addNutrition()">Add Nutrition </button>
         <br>

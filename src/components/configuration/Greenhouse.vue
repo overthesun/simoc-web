@@ -231,9 +231,7 @@ export default {
         // of similar route calls. Simply to reduce the callback hell look.
         retrievePlantSpecies() {
             axios.defaults.withCredentials = true
-
             const params = {agent_class: 'plants'}
-
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => { 
@@ -247,7 +245,6 @@ export default {
                     console.log('Plant retrieval error')
                 }
             })
-            
             // Get plants from local data
             let customAgents = localStorage.getItem('customAgents')
             if ( customAgents == null) return
