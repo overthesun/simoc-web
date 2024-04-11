@@ -325,7 +325,7 @@ export default {
             this.agentDesc[this.selectedAgentName].thresholds[currency].limit=limit
             this.agentDesc[this.selectedAgentName].thresholds[currency].value=value
             this.agentDesc[this.selectedAgentName].thresholds[currency].connections=connections
-        },      
+        },
         addNewProperty(newPropertyName, newPropVal, newPropUnit) {
             if (!isNaN(newPropVal)){ /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
@@ -598,7 +598,7 @@ export default {
         <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
     </ul>
     </div>
-    <div v-if="typeof(agentDesc)=='object'" class="agentData scrollie" id="agentPresenter"> 
+    <div v-if="typeof(agentDesc)=='object'" class="agentData scrollie" id="agentPresenter">
     <h2> {{selectedAgentName}}  <input v-model="newAgentName" name="newAgentName" type="text">  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
     <ul>
         <li>Agent Class:    <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
@@ -623,7 +623,7 @@ export default {
                 </li>
                 <li>
                 New Capacity:
-                <input v-model="newCapacityType" name="newCapType" type="text"> 
+                <input v-model="newCapacityType" name="newCapType" type="text">
                  :::::
                 Quantity:
                 <input v-model="newCapacityValue" name="newCapVal" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
@@ -690,7 +690,7 @@ export default {
         </ul>
         <h4>Out Currencies</h4>
             <ul>
-                <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.out"> {{currency}} 
+                <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.out"> {{currency}}
                 (Change to:
                 <label>
                 <select v-model="outTypes[currency]" name="changeOutCurrencySelector">
@@ -730,7 +730,7 @@ export default {
                             <button v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires" @click="removeFlowArrayItem('out', 'requires', currency, requires)">{{requires}}</button>
                             <br>
                         </span>
-                        <label> (Currency) 
+                        <label> (Currency)
                         <select v-model="newRequires" name="requiresCurrencySelector">
                                                 <option v-for="item in currencyList" :value="item"> {{item}} </option>
                         </select>
@@ -740,11 +740,11 @@ export default {
                     <li> growth:
                             <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].growth)=='object'">
                                 <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
-                                {{kind}}  
+                                {{kind}}
                                 (Change to:
                                 <input v-model="kindTypes[kind]" name="kindTypeName" type="text"> <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency)">Change</button>)
                                 <button @click="removeGrowth(currency, kind)">Remove Growth</button>
-                                 ::::: 
+                                 :::::
                                     <ul>
                                         <li> Type: <input v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type" name="growthTypeField" type="text">
                                         </li>
@@ -759,17 +759,17 @@ export default {
                                 </li>
                             </ul>
                             <button @click="addGrowth(currency, newGrowthKind, newGrowthPattern)">Add Growth</button>
-                    </li> 
-                    <li> criteria: 
+                    </li>
+                    <li> criteria:
                             <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].criteria)=='object'">
                                 <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].criteria">
-                                {{kind}}  
+                                {{kind}}
                                 (<label>Change to:
                                 <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
                                 </label>
                                 <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency)">Change</button>)
                                 <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
-                                 ::::: 
+                                 :::::
                                     <ul>
                                         <li> Limit: <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit" name="criteriaLimitField">
                                                 <option value="&lt;"> &lt; </option>
@@ -777,7 +777,7 @@ export default {
                                                 <option value="&gt;"> &gt; </option>
                                                 </select>
                                         </li>
-                                        <li> Value: 
+                                        <li> Value:
                                                                                             <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].value" name="criteriaValueField">
                                                                                                 <option :value="true">True</option>
                                                                                                 <option :value="false">False</option>
@@ -796,8 +796,7 @@ export default {
                                                                                                 <option value="&gt;"> &gt; </option>
                                                                                             </select>
                                                                                 </li>
-                                                                                
-                                                                                 <li> Value: 
+                                                                                 <li> Value:
                                                                                         <select v-model="newCriterionValue" name="criterionValueFieldNew">
                                                                                                 <option :value="true">True</option>
                                                                                                 <option :value="false">False</option>
@@ -859,13 +858,13 @@ export default {
                                                   <option value="&lt;"> &lt; </option>
                                                   <option value="&equals;"> =   </option>
                                                   <option value="&gt;"> &gt; </option>
-                                              </select>         
+                                              </select>
                                </li>
                 <li> Value: <input v-model="newThresholdValue" type="number" name="newThresholdsValueField">
                 </li>
                 <li> Connnections: <input v-model="newThresholdConnections" type="text" name="newThresholdConnectionsField">
                 </li>
-            </ul> 
+            </ul>
          <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
         </li>
         </ul>
