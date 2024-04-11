@@ -112,7 +112,7 @@ export default {
                         this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
                     }
             } else {
-                console.log(" * No agents loaded from local storage *")
+                console.log(' * No agents loaded from local storage *')
             }
         },
         async getCurrencyDesc() {
@@ -406,7 +406,7 @@ export default {
             // Create the empty object
             this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName] = {}
             // Set empty parameters
-            this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName].label=""
+            this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName].label=''
             // Switch to newly generated currency
             this.generateCurrencyList()
             this.selectedCurrency=newCurrencyName
@@ -589,14 +589,14 @@ export default {
     </select>
     <button @click="createNewAgent()">Create New Blank Agent</button>
     <br>   <br>
-    <div class="gridBox" id="gridbox">
+    <div id="gridbox" class="gridBox">
     <div id="agentSelector" class="scrollie agentBox">
     <h2> Agents ({{categorySelected}}): </h2>
         <ul>
         <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
     </ul>
     </div>
-    <div v-if="typeof(agentDesc)=='object'" class="agentData scrollie" id="agentPresenter">
+    <div v-if="typeof(agentDesc)=='object'" id="agentPresenter" class="agentData scrollie">
     <h2> {{selectedAgentName}}  <input v-model="newAgentName" name="newAgentName" type="text">  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
     <ul>
         <li>Agent Class:    <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
