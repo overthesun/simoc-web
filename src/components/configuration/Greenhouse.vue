@@ -181,7 +181,7 @@ export default {
             //const indexType = plantSpecies[index].type
 
             let selectedValues = plantSpecies.splice(index,1)
-            return false;
+            return false
         },
 
         // This method should have returned a list of all plant values
@@ -237,9 +237,9 @@ export default {
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => { 
-						const {name} = item
-						this.listPlant(name)
-						} )
+                        const {name} = item
+                        this.listPlant(name)
+                        } )
                 }
             }).catch(error => {
                 const {status} = error.response
@@ -247,19 +247,19 @@ export default {
                     console.log('Plant retrieval error')
                 }
             })
-			
-			// Get plants from local data
-			let customAgents = localStorage.getItem('customAgents')
-			if ( customAgents == null) return
-			customAgents = JSON.parse(customAgents);
-			for( let name in customAgents ) if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name) 
-			
+            
+            // Get plants from local data
+            let customAgents = localStorage.getItem('customAgents')
+            if ( customAgents == null) return
+            customAgents = JSON.parse(customAgents)
+            for( let name in customAgents ) if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name) 
+            
         },
-		listPlant(name) {
-			// Add the plant to the menu list
-			this.plantValue.push(name)
-			this.formatPlantName(name)
-		},
+        listPlant(name) {
+            // Add the plant to the menu list
+            this.plantValue.push(name)
+            this.formatPlantName(name)
+        },
         updateAndValidate() {
             // validate and update greenhouse type
             const {greenhouse} = this.configuration

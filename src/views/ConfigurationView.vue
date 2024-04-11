@@ -257,9 +257,9 @@ export default {
             // load cached simdata if the user selects a preset
             const presets = this.getPresets(this.simLocation)
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
-            let preset_in_use = false;
+            let preset_in_use = false
             if (preset_name in presets) {
-                preset_in_use = true;
+                preset_in_use = true
                 let data
                 try {
                     if (this.simLocation === 'b2') {
@@ -303,18 +303,18 @@ export default {
                     let customAgents = localStorage.getItem('customAgents')
                     let customCurrencies = localStorage.getItem('customCurrencies')
                     if ( (customAgents != null)  && (Object.keys(customAgents).length>0) ) {
-                    customAgents = JSON.parse(customAgents);
+                    customAgents = JSON.parse(customAgents)
                         // Add custom agents to config
                         for( let name in customAgents ) {
-                            configParams.game_config[name]=customAgents[name]; 
+                            configParams.game_config[name]=customAgents[name]
                         }
                     }
                     if ( (customCurrencies != null)  && (Object.keys(customCurrencies).length>0) ) {
-                    customCurrencies = JSON.parse(customCurrencies);
+                    customCurrencies = JSON.parse(customCurrencies)
                         configParams.game_config['currencies'] = {}
                         // Add custom currencies to config
                         for( let name in customCurrencies ) {
-                            configParams.game_config['currencies'][name]=customCurrencies[name]; 
+                            configParams.game_config['currencies'][name]=customCurrencies[name]
                         }
                     }           
                     console.log(configParams)
