@@ -399,7 +399,7 @@ export default {
             let count = 0
             this.selectedCurrencyCategory = this.currencyCategorySelected
             for (const item in this.currencyDesc[this.selectedCurrencyCategory]) {
-                count++
+                count+=1
             }
             const currencyNumber = count + 1
             let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
@@ -604,9 +604,9 @@ export default {
                         <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
                             <option v-for="category in agentClasses" :key="category" :value="category"> {{category}} </option>
                         </select>
-                        <label>  
+                        <label>
                             Change to custom class:
-                            <input v-model="customClassName" name="customClass" type="text"> 
+                            <input v-model="customClassName" name="customClass" type="text">
                         </label>
                         <button @click="setCustomClass">Set Custom Class</button>
                     </li>
