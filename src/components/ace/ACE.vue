@@ -548,7 +548,7 @@ export default {
                 <div id="buttonList">
                     <ul>
                         <li v-for="currency in Object.keys(currencyDesc[currencyCategorySelected])">
-                            <button @click="selectCurrency(currency)">{{currency}}</button> 
+                            <button @click="selectCurrency(currency)">{{currency}}</button>
                         </li>
                     </ul>
                 </div> <!-- Button List -->
@@ -582,7 +582,7 @@ export default {
             </div> <!-- CurrencyBox -->
         </div> <!-- gridBox -->
     </div> <!-- vif currency object exists -->
-        <div v-if="currentMode=='agent'">
+    <div v-if="currentMode=='agent'">
         <h2> Agent Editor.  Known Issues: Consistency. Shared Change Memory. Select needs Title Attributes, ul has invalid elements  </h2>
         <label for="categorySelector">Choose Agent Class:  </label>
         <select id="categorySelector" v-model="categorySelected">
@@ -593,16 +593,17 @@ export default {
         <div id="gridbox" class="gridBox">
             <div id="agentSelector" class="scrollie agentBox">
                 <h2> Agents ({{categorySelected}}): </h2>
-                    <ul>
+                <ul>
                     <li v-for="item in agentsInClass"> <button @click="selectItem(item)">{{item}}</button> </li>
                 </ul>
             </div> <!-- Agent Selector -->
             <div v-if="typeof(agentDesc)=='object'" id="agentPresenter" class="agentData scrollie">
                 <h2> {{selectedAgentName}}  <input v-model="newAgentName" name="newAgentName" type="text">  <button @click="renameAgent(newAgentName)">Rename Agent</button> <button @click="duplicateAgent()">Duplicate Agent</button> <button @click="exportJSON()">Export Agent</button></h2>
                 <ul>
-                    <li>Agent Class:    <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
-                                        <option v-for="category in agentClasses" :key="category" :value="category"> {{category}} </option>
-                                        </select>
+                    <li>Agent Class:    
+                        <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
+                            <option v-for="category in agentClasses" :key="category" :value="category"> {{category}} </option>
+                        </select>
                     <label>  Change to custom class:
                     <input v-model="customClassName" name="customClass" type="text"> </label>
                     <button @click="setCustomClass">Set Custom Class</button>
@@ -611,30 +612,30 @@ export default {
                     </li>
                 </ul>
                 <h3>Capacity</h3>
-                            <ul>
-                            <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
-                            {{key}}
-                            (Change to:
-                            <input v-model="capacityTypes[key]" name="capType" type="text"> <button @click="changeType(key, value, capacityTypes[key])">Change</button>)
-                             :::::
-                            Quantity:
-                            <input v-model="agentDesc[selectedAgentName].capacity[key]" name="capVal" type="number"> <button @click="removeCapacity(key)">Remove Capacity</button>
-                            </li>
-                            <li>
-                            New Capacity:
-                            <input v-model="newCapacityType" name="newCapType" type="text">
-                             :::::
-                            Quantity:
-                            <input v-model="newCapacityValue" name="newCapVal" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
-                            </li>
-                        </ul>
+                <ul>
+                    <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
+                        {{key}}
+                        (Change to:
+                        <input v-model="capacityTypes[key]" name="capType" type="text"> <button @click="changeType(key, value, capacityTypes[key])">Change</button>)
+                        :::::
+                        Quantity:
+                        <input v-model="agentDesc[selectedAgentName].capacity[key]" name="capVal" type="number"> <button @click="removeCapacity(key)">Remove Capacity</button>
+                    </li>
+                    <li>
+                        New Capacity:
+                        <input v-model="newCapacityType" name="newCapType" type="text">
+                         :::::
+                        Quantity:
+                        <input v-model="newCapacityValue" name="newCapVal" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
+                    </li>
+                </ul>
                 <h3>Flows</h3>
                 <h4>In Currencies</h4>
                 <ul>
                     <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.in">{{currency}}
                         <label>(Change to:
                             <select v-model="inTypes[currency]" name="changeInFlowCurrency">
-                                                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                                <option v-for="item in currencyList" :value="item"> {{item}} </option>
                             </select>
                         </label>
                         <button @click="changeInType(currency, value, inTypes[currency])">Change</button>)
