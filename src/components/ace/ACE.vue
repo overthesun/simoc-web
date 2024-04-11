@@ -766,16 +766,16 @@ export default {
                             <li> criteria:
                                 <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].criteria)=='object'">
                                     <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].criteria">
-                                    {{kind}}
-                                    (
-                                    <label>Change to:
-                                        <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
-                                    </label>
-                                    <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency)">Change</button>)
-                                    <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
-                                    :::::
+                                        {{kind}}
+                                        (
+                                        <label>Change to:
+                                            <input v-model="kindTypes[kind]" name="kindTypeCriteria" type="text">
+                                        </label>
+                                        <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency)">Change</button>)
+                                        <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
+                                        :::::
                                         <ul>
-                                            <li> Limit: 
+                                            <li> Limit:
                                                 <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit" name="criteriaLimitField">
                                                     <option value="&lt;"> &lt; </option>
                                                     <option value="&equals;"> =   </option>
@@ -792,11 +792,11 @@ export default {
                                     </li>
                                 </ul>
                                 <ul>
-                                    <li> 
+                                    <li>
                                         <input v-model="newCriterionName" name="newCriterionNameField" type="text">
                                         <button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
                                         <ul>
-                                             <li> Limit: 
+                                            <li> Limit:
                                                 <select v-model="newCriterionLimit" name="criterionLimitFieldNew">
                                                     <option value="&lt;"> &lt; </option>
                                                     <option value="&equals;"> =   </option>
@@ -815,18 +815,18 @@ export default {
                             </li> <!-- Criteria -->
                         </ul> <!-- Out currency -->
                     </li>
-                <li> <!-- NEW FLOW -->
-                <label>New Out Flow:
-                    (Change to:
-                    <select v-model="newOutType" name="outFlowCurrencySelector">
-                        <option v-for="item in currencyList" :value="item"> {{item}} </option>
-                    </select>
-                </label>
-                <button @click="addNewFlow('out',newOutType)">Add Out Flow Currency</button>
-            </li>
-            </ul> <!-- Out Currency ul -->
-            <h3>Thresholds</h3>
-            <h4> Currencies </h4>
+                    <li> <!-- NEW FLOW -->
+                        <label>
+                            New Out Flow: (Change to:
+                            <select v-model="newOutType" name="outFlowCurrencySelector">
+                                <option v-for="item in currencyList" :value="item"> {{item}} </option>
+                            </select>
+                        </label>
+                        <button @click="addNewFlow('out',newOutType)">Add Out Flow Currency</button>
+                    </li>
+                </ul> <!-- Out Currency ul -->
+                <h3>Thresholds</h3>
+                <h4> Currencies </h4>
                 <ul>
                     <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds">  {{currency}}
                         (<label>Change to:
@@ -877,22 +877,24 @@ export default {
                 </ul>
                 <h3>Properties</h3>
                 <ul>
-                <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
-                    {{property}} (Change to:
-                    <input v-model="propertyNames[property]" name="propertyName" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
-                    <button @click="removeProperty(property)">Remove</button>
-                    <ul> <!-- Property Attributes -->
-                        <li>value: {{attributes.value}} <input v-model="changedPropVal" name="propVal" type="text"> <button @click="changePropertyValue(property, changedPropVal)">Change Value</button></li>
-                        <li>unit: <input v-model="agentDesc[selectedAgentName].properties[property].unit" name="propUnit" type="text" col=15> </li>
-                    </ul>
-                </li>
-                <li>New Property: <input v-model="newPropertyName" name="newPropertyName" type="text">
+                    <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
+                        {{property}} (Change to:
+                        <input v-model="propertyNames[property]" name="propertyName" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property])">Change</button>)
+                        <button @click="removeProperty(property)">Remove</button>
                         <ul> <!-- Property Attributes -->
-                        <li>value: <input v-model="newPropVal" name="propValField" type="text"> </li>
-                        <li>unit: <input v-model="newPropUnit" name="propUnitField" type="text"> </li>
-                        <button @click="addNewProperty(newPropertyName, newPropVal, newPropUnit)"> Add New Property </button>
-                    </ul>
-                </li>
+                            <li>value: {{attributes.value}} <input v-model="changedPropVal" name="propVal" type="text"> <button @click="changePropertyValue(property, changedPropVal)">Change Value</button></li>
+                            <li>unit: <input v-model="agentDesc[selectedAgentName].properties[property].unit" name="propUnit" type="text" col=15> </li>
+                        </ul>
+                    </li>
+                    <li>
+                        New Property: 
+                        <input v-model="newPropertyName" name="newPropertyName" type="text">
+                        <ul> <!-- Property Attributes -->
+                            <li>value: <input v-model="newPropVal" name="propValField" type="text"> </li>
+                            <li>unit: <input v-model="newPropUnit" name="propUnitField" type="text"> </li>
+                            <button @click="addNewProperty(newPropertyName, newPropVal, newPropUnit)"> Add New Property </button>
+                        </ul>
+                    </li>
                 </ul>
                 <h2> Agent Details </h2>
                 <hr>
@@ -909,7 +911,7 @@ export default {
                                         <i v-if="typeof(subsubvalue)!='object'">{{subsubvalue}}</i>
                                         <ul v-else>
                                             <li v-for="(subsubsubvalue, subsubsubkey) in agentDesc[selectedAgentName][key][subkey][subsubkey]">
-                                                    <b>{{subsubsubkey}}</b> :  {{subsubsubvalue}}
+                                                <b>{{subsubsubkey}}</b> :  {{subsubsubvalue}}
                                             </li>
                                         </ul>
                                     </li>
