@@ -249,7 +249,7 @@ export default {
             let customAgents = localStorage.getItem('customAgents')
             if (customAgents == null) return
             customAgents = JSON.parse(customAgents)
-            for (let name in customAgents) {
+            for (const name in customAgents) {
                 if (customAgents[name]['agent_class'] == 'plants') this.listPlant(name)
             }
         },

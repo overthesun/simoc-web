@@ -305,7 +305,7 @@ export default {
                     if ((customAgents != null) && (Object.keys(customAgents).length>0)) {
                         customAgents = JSON.parse(customAgents)
                         // Add custom agents to config
-                        for (let name in customAgents) {
+                        for (const name in customAgents) {
                             configParams.game_config[name]=customAgents[name]
                         }
                     }
@@ -313,7 +313,7 @@ export default {
                         customCurrencies = JSON.parse(customCurrencies)
                         configParams.game_config['currencies'] = {}
                         // Add custom currencies to config
-                        for (let name in customCurrencies) {
+                        for (const name in customCurrencies) {
                             configParams.game_config['currencies'][name]=customCurrencies[name]
                         }
                     }

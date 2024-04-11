@@ -402,7 +402,7 @@ export default {
                 count+=1
             }
             const currencyNumber = count + 1
-            let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
+            const newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
             // Create the empty object
             this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName] = {}
             // Set empty parameters
@@ -415,7 +415,7 @@ export default {
             const agentNumber = Object.keys(this.agentDesc).length + 1
             const newAgentName=this.selectedAgentName + '_' + agentNumber
             // Deep Copy the original object
-            let copiedObject = JSON.parse(JSON.stringify(this.agentDesc[this.selectedAgentName]))
+            const copiedObject = JSON.parse(JSON.stringify(this.agentDesc[this.selectedAgentName]))
             this.agentDesc[newAgentName]=copiedObject
             // Switch to the copied agent
             this.selectedAgentName=newAgentName
@@ -428,7 +428,7 @@ export default {
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
             const newCurrencyName=this.selectedCurrency + '_' + currencyNumber
             // Deep Copy the original object
-            let copiedObject = JSON.parse(JSON.stringify(this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]))
+            const copiedObject = JSON.parse(JSON.stringify(this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]))
             this.currencyDesc[this.currencyCategorySelected][newCurrencyName]=copiedObject
             // Switch to the copied agent
             this.selectedCurrency=newCurrencyName
@@ -436,7 +436,7 @@ export default {
         },
         exportJSON() {
             // Package this agent singly
-            let agentName = this.selectedAgentName
+            const agentName = this.selectedAgentName
             this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
@@ -453,7 +453,7 @@ export default {
             }
         },
         exportJSONCurrency() {
-            let currencyName = this.selectedCurrency
+            const currencyName = this.selectedCurrency
             let currentCustomCurrencies = localStorage.getItem('customCurrencies')
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
             // Check if the custom currency object exists
@@ -501,27 +501,27 @@ export default {
     },
     computed: {
         currencyTypes() {
-            let listOfTypes = []
+            const listOfTypes = []
             /* Determine list of type */
-            for (let key in this.currencyDesc) {
-                let currencyType = key
+            for (const key in this.currencyDesc) {
+                const currencyType = key
                 if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
             }
             return listOfTypes
         },
         agentClasses() {
-            let listOfClasses = []
+            const listOfClasses = []
             /* Determine list of agent_class */
-            for (let key in this.agentDesc) {
-                let className = this.agentDesc[key]['agent_class']
+            for (const key in this.agentDesc) {
+                const className = this.agentDesc[key]['agent_class']
                 if (!listOfClasses.includes(className)) listOfClasses.push(className)
             }
             return listOfClasses
         },
         agentsInClass() {
-            let listOfAgents = []
-            for (let item in this.agentDesc) {
-                let itemsClass = this.agentDesc[item]['agent_class']
+            const listOfAgents = []
+            for (const item in this.agentDesc) {
+                const itemsClass = this.agentDesc[item]['agent_class']
                 if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
             }
             return listOfAgents
