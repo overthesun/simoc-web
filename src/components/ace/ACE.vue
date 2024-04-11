@@ -280,7 +280,8 @@ export default {
             // Make Sure Agent Doesn't Already Exist
             for (name in this.agentDesc) {
                 if (name == newName) {
-                    alert(newName + ' already exists, try another name!')
+                    const alertString = `${newName} already exists, try another name!`
+                    alert(alertString)
                     return
                 }
             }
@@ -299,7 +300,8 @@ export default {
             // Make Sure Currency Doesn't Already Exist
             for (const currency in this.currencyDesc[this.currencyCategorySelected]) {
                 if (currency == newName) {
-                    alert(newName + ' already exists, try another name!')
+                    const alertString = `${newName} already exists, try another name!`
+                    alert(alertString)
                     return
                 }
             }
@@ -417,7 +419,7 @@ export default {
         },
         createNewAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
-            const newAgentName='agent_' + agentNumber
+            const newAgentName=`agent_${agentNumber}`
             this.agentDesc[newAgentName] = {}
             this.agentDesc[newAgentName].amount = 1
             this.agentDesc[newAgentName].flows = {}
@@ -437,7 +439,8 @@ export default {
                 count+=1
             }
             const currencyNumber = count + 1
-            const newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
+            const currency_number_string = `_currency_${currencyNumber}`
+            const newCurrencyName=`${this.selectedCurrencyCategory}${currency_number_string}`
             // Create the empty object
             this.currencyDesc[this.selectedCurrencyCategory][newCurrencyName] = {}
             // Set empty parameters
@@ -448,7 +451,7 @@ export default {
         },
         duplicateAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
-            const newAgentName=this.selectedAgentName + '_' + agentNumber
+            const newAgentName=`${this.selectedAgentName}_${agentNumber}`
             // Deep Copy the original object
             const copiedObject = JSON.parse(JSON.stringify(this.agentDesc[this.selectedAgentName]))
             this.agentDesc[newAgentName]=copiedObject
@@ -461,7 +464,7 @@ export default {
         },
         duplicateCurrency() {
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
-            const newCurrencyName=this.selectedCurrency + '_' + currencyNumber
+            const newCurrencyName=`${this.selectedCurrency}_${currencyNumber}`
             // Deep Copy the original object
             const copiedObject = JSON.parse(JSON.stringify(this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]))
             this.currencyDesc[this.currencyCategorySelected][newCurrencyName]=copiedObject
