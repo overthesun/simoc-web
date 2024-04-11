@@ -102,17 +102,17 @@ export default {
                 //  console.log(currency)
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
-            if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null)) {
-                // Object exists
-                } else {
-                    this.currencyDesc['custom'] = {}
-                }
-                for (const currency in localStorageCurrencies) {
+                if (typeof (this.currencyDesc['custom'])=='object' && (localStorageCurrencies!=null)) {
+                    // Object exists
+                    } else {
+                        this.currencyDesc['custom'] = {}
+                    }
+                    for (const currency in localStorageCurrencies) {
                         console.log(currency)
                         this.currencyDesc['custom'][currency] = localStorageCurrencies[currency]
-                }
+                    }
             } else {
-                    console.log(" * No agents loaded from local storage *")
+                console.log(" * No agents loaded from local storage *")
             }
         },
         async getCurrencyDesc() {
@@ -234,11 +234,11 @@ export default {
             delete this.agentDesc[this.selectedAgentName].flows.in[currency].deprive
         },
         changePropertyValue(property, newPropVal) {
-                         if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
-                                 newPropVal = +newPropVal
-                         }
-                         if (newPropVal=='true') { newPropVal = true }
-                         if (newPropVal=='false') { newPropVal = false }
+            if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
+                    newPropVal = +newPropVal
+            }
+            if (newPropVal=='true') { newPropVal = true }
+            if (newPropVal=='false') { newPropVal = false }
             this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
         },
         renameAgent(newName) {
@@ -369,9 +369,9 @@ export default {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
         addGrowth(currency, kind, pattern) {
-                        if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
-                                 this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
-                        }
+            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
+                     this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
+            }
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind] = {}
             this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
         },
@@ -399,7 +399,7 @@ export default {
             let count = 0
             this.selectedCurrencyCategory = this.currencyCategorySelected
             for (const item in this.currencyDesc[this.selectedCurrencyCategory]) {
-                    count++
+                count++
             }
             const currencyNumber = count + 1
             let newCurrencyName=this.selectedCurrencyCategory +'_currency_' + currencyNumber
@@ -470,15 +470,15 @@ export default {
                 currentCustomCurrencies[this.currencyCategorySelected] = {}
             }
             */
-                let category = this.currencyCategorySelected
-                this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
-                // Assign category for export
-                if (category=='custom') {
-                    category = this.currencyDesc['custom'][currencyName]['category']
-                } else {
-                    this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
-                }
-                currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
+            let category = this.currencyCategorySelected
+            this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
+            // Assign category for export
+            if (category=='custom') {
+                category = this.currencyDesc['custom'][currencyName]['category']
+            } else {
+                this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
+            }
+            currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
             localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
         },
         returnToMenu() { // Function to return to main menu
