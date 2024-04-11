@@ -561,23 +561,23 @@ export default {
     Currency: {{ selectedCurrency }} 
     <input name="newCurrencyName" v-model="newCurrencyName" type="text" />  <button @click="renameCurrency(newCurrencyName)">Rename Currency</button> <button @click="duplicateCurrency()">Duplicate Currency</button> <button @click="exportJSONCurrency()">Export Currency</button>
         <br>
-        Label : <input name="currencyLabel" type="text" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].label">
+        Label : <input name="currencyLabel" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].label"  type="text">
         <br>
-        Description: <input name="currencyDescription" type="text" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].description">
+        Description: <input name="currencyDescription"  v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].description" type="text">
         <br>
-        Source: <input name="currencySource" type="text" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].source"> 
+        Source: <input name="currencySource"  v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].source" type="text">
         <br>
-        Unit: <input name="currencyUnit" type="text" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit">
+        Unit: <input name="currencyUnit" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit" type="text">
         <br>
-        Short: <input name="currencyShort" type="text" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short">
+        Short: <input name="currencyShort" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short" type="text">
         <br>    
         <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
         Nutrition- <button @click="deleteNutrition()">Delete Nutrition</button> {{ currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition }}
-            <br> &nbsp &nbsp &nbsp &nbsp kcal: <input name="nutkcal" type="number" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal">
-            <br> &nbsp &nbsp &nbsp &nbsp water: <input name="nutwater" type="number" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water">
-            <br> &nbsp &nbsp &nbsp &nbsp protein: <input name="nutprotein" type="number" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein">
-            <br> &nbsp &nbsp &nbsp &nbsp carbohydrates: <input name="nutcarb" type="number" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate">
-            <br> &nbsp &nbsp &nbsp &nbsp fat: <input name="nutfat" type="number" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat">
+            <br> &nbsp &nbsp &nbsp &nbsp kcal: <input name="nutkcal" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.kcal"  type="number">
+            <br> &nbsp &nbsp &nbsp &nbsp water: <input name="nutwater" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.water"  type="number">
+            <br> &nbsp &nbsp &nbsp &nbsp protein: <input name="nutprotein" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.protein" type="number">
+            <br> &nbsp &nbsp &nbsp &nbsp carbohydrates: <input name="nutcarb" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.carbohydrate" type="number">
+            <br> &nbsp &nbsp &nbsp &nbsp fat: <input name="nutfat" v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition.fat" type="number">
         </span>
         <button v-else @click="addNutrition()">Add Nutrition </button>
         <br>
@@ -608,7 +608,7 @@ export default {
                             <option v-for="category in agentClasses" :key="category" :value="category"> {{ category }} </option>
                             </select>
         <label>  Change to custom class:                    
-        <input name="customClass" type="text" v-model="customClassName"> </label>       
+        <input name="customClass" v-model="customClassName" type="text" > </label>       
         <button @click="setCustomClass">Set Custom Class</button>
         </li>
         <li>Description: <br>  <textarea name="descriptionField" v-model="agentDesc[selectedAgentName].description" rows="4" cols="100"> </textarea>
@@ -619,17 +619,17 @@ export default {
                 <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
                 {{ key }}
                 (Change to:
-                <input name="capType" type="text" v-model="capacityTypes[key]"> <button @click="changeType(key, value, capacityTypes[key] )">Change</button>)
+                <input name="capType" v-model="capacityTypes[key]" type="text" > <button @click="changeType(key, value, capacityTypes[key] )">Change</button>)
                  ::::: 
                 Quantity:
-                <input name="capVal" type="number" v-model="agentDesc[selectedAgentName].capacity[key]"> <button @click="removeCapacity(key)" >Remove Capacity</button>
+                <input name="capVal" v-model="agentDesc[selectedAgentName].capacity[key]" type="number"> <button @click="removeCapacity(key)" >Remove Capacity</button>
                 </li>
                 <li>
                 New Capacity:
-                <input name="newCapType" type="text" v-model="newCapacityType"> 
+                <input name="newCapType" v-model="newCapacityType" type="text"> 
                  ::::: 
                 Quantity:
-                <input name="newCapVal" type="number" v-model="newCapacityValue"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
+                <input name="newCapVal" v-model="newCapacityValue" type="number"> <button @click="addNewCapacity(newCapacityType, newCapacityValue)">Add Capacity</button>
                 </li>
             </ul>
     <h3>Flows</h3>
@@ -644,12 +644,12 @@ export default {
             <button @click="changeInType(currency, value, inTypes[currency] )">Change</button>)
             <button @click="removeInFlow(currency)" >Remove</button>
                 <ul>
-                    <li> Value: <input name="flowValueFieldIn" type="number" v-model="agentDesc[selectedAgentName].flows.in[currency].value" >
+                    <li> Value: <input name="flowValueFieldIn" v-model="agentDesc[selectedAgentName].flows.in[currency].value" type="number" >
                     </li>
                     <li> flow_rate:
                         <ul>
-                            <li>Unit: <input name="flowInUnit" type="text" v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.unit" /></li>
-                            <li>Time: <input name="flowInTime" type="text" v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.time" /></li>
+                            <li>Unit: <input name="flowInUnit" v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.unit" type="text" /></li>
+                            <li>Time: <input name="flowInTime" v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.time" type="text" /></li>
                         </ul>
                     </li>
                     <li> connections :
@@ -671,13 +671,13 @@ export default {
                     <li> deprive:
                         <ul v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].deprive)=='object'">
                             <button @click="removeDeprive(currency)">Remove Deprive</button>
-                            <li>Value:  <input name="depriveValue" type="number" v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.value" /></li>
-                            <li>Unit: <input name="depriveUnit" type="text" v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.unit" /></li>
+                            <li>Value:  <input name="depriveValue" v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.value"  type="number"/></li>
+                            <li>Unit: <input name="depriveUnit" v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.unit" type="text" /></li>
                         </ul>
                         <ul v-else>
                         <button @click="addDeprive(currency, newDepriveValue, newDepriveUnit)">Add Deprive</button>
-                                                         <li>Value:  <input name="newDepriveName" type="number" v-model="newDepriveValue" /></li>
-                                                         <li>Unit: <input name="newDepriveUnit" type="text" v-model="newDepriveUnit" /></li>
+                                                         <li>Value:  <input name="newDepriveName" v-model="newDepriveValue" type="number"/></li>
+                                                         <li>Unit: <input name="newDepriveUnit" v-model="newDepriveUnit" type="text"/></li>
                         </ul>
                     </li>
                 </ul>
@@ -703,12 +703,12 @@ export default {
                  <button @click="changeOutType(currency, value, outTypes[currency] )">Change</button>)
                 <button @click="removeOutFlow(currency)" >Remove</button>
                 <ul>
-                    <li> Value: <input name="flowValueOut" type="number" v-model="agentDesc[selectedAgentName].flows.out[currency].value" >
+                    <li> Value: <input name="flowValueOut" v-model="agentDesc[selectedAgentName].flows.out[currency].value" type="number" >
                     </li>
                     <li> flow_rate:
                         <ul>
-                            <li>Unit: <input name="flowUnitOut" type="text" v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.unit" /></li>
-                            <li>Time: <input name="flowTimeOut" type="text" v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.time" /></li>
+                            <li>Unit: <input name="flowUnitOut" v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.unit" type="text" /></li>
+                            <li>Time: <input name="flowTimeOut" v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.time" type="text" /></li>
                         </ul>
                     </li>
                     <li> connections: 
@@ -745,11 +745,11 @@ export default {
                                 <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
                                 {{ kind }}  
                                 (Change to:
-                                <input name="kindTypeName" type="text" v-model="kindTypes[kind]"> <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency )">Change</button>)
+                                <input name="kindTypeName" v-model="kindTypes[kind]" type="text" > <button @click="changeGrowthType(kind, pattern, kindTypes[kind], currency )">Change</button>)
                                 <button @click="removeGrowth(currency, kind)">Remove Growth</button>
                                  ::::: 
                                     <ul>
-                                        <li> Type: <input name="growthTypeField" type="text" v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type">
+                                        <li> Type: <input name="growthTypeField" v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type" type="text">
                                         </li>
                                     </ul>
                                 </li>
@@ -758,7 +758,7 @@ export default {
                             <input type="text" name="newGrowthKind" v-model="newGrowthKind" />
                             </label>
                             <ul>
-                                <li> Type: <input type="text" name="newGrowthPatternTypeField" v-model="newGrowthPattern" />
+                                <li> Type: <input name="newGrowthPatternTypeField" v-model="newGrowthPattern" type="text" />
                                 </li>
                             </ul>
                             <button @click="addGrowth(currency, newGrowthKind, newGrowthPattern)" >Add Growth</button>
@@ -768,7 +768,7 @@ export default {
                                 <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].criteria">
                                 {{ kind }}  
                                 (<label>Change to:
-                                <input name="kindTypeCriteria" type="text" v-model="kindTypes[kind]">
+                                <input name="kindTypeCriteria" v-model="kindTypes[kind]" type="text">
                                 </label>
                                 <button @click="changeCriterionType(kind, pattern, kindTypes[kind], currency )">Change</button>)
                                 <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
@@ -791,7 +791,7 @@ export default {
                                 </li>
                             </ul>
                             <ul>
-                                <li> <input name="newCriterionNameField" type="text" v-model="newCriterionName"><button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
+                                <li> <input name="newCriterionNameField" v-model="newCriterionName" type="text"><button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">Add new Criterion</button>
                                                                          <ul>
                                                                                  <li> Limit: <select name="criterionLimitFieldNew" v-model="newCriterionLimit">
                                                                                                 <option value="&lt;" > &lt; </option>
@@ -833,7 +833,7 @@ export default {
             </label> <button @click="changeThresholdType(currency, value, thresholdTypes[currency] )">Change</button>)
             <button @click="removeThreshold(currency)" >Remove Currency</button>
             <ul>
-                <li> Path:  <input name="thesholdPathField" type="text" v-model="agentDesc[selectedAgentName].thresholds[currency].path">
+                <li> Path:  <input name="thesholdPathField" v-model="agentDesc[selectedAgentName].thresholds[currency].path"  type="text">
                 </li>
                 <li> Limit:
                                               <select name="thresholdLimitField" v-model="agentDesc[selectedAgentName].thresholds[currency].limit">
@@ -842,9 +842,9 @@ export default {
                                                    <option value="&gt;" > &gt; </option>
                                                </select>
                 </li>
-                <li> Value: <input name="thesholdValueField" type="number" v-model="agentDesc[selectedAgentName].thresholds[currency].value">
+                <li> Value: <input name="thesholdValueField" v-model="agentDesc[selectedAgentName].thresholds[currency].value"  type="number">
                 </li>
-                <li> Connnections: <input name="connectionsThresholdsField" type="text" v-model="agentDesc[selectedAgentName].thresholds[currency].connections">
+                <li> Connnections: <input name="connectionsThresholdsField" v-model="agentDesc[selectedAgentName].thresholds[currency].connections"  type="text" >
                 </li>
             </ul>
             </li>
@@ -855,7 +855,7 @@ export default {
             </select>
             </label>
             <ul>
-                <li> Path:  <input name="newThresholdPathField" type="text" v-model="newThresholdPath" >
+                <li> Path:  <input name="newThresholdPathField" v-model="newThresholdPath" type="text">
                 </li>
                 <li> Limit:
                                              <select name="thresholdLimitFieldNew" v-model="newThresholdLimit">
@@ -864,9 +864,9 @@ export default {
                                                   <option value="&gt;" > &gt; </option>
                                               </select>         
                                </li>
-                <li> Value: <input type="number" name="newThresholdsValueField" v-model="newThresholdValue" >
+                <li> Value: <input name="newThresholdsValueField" v-model="newThresholdValue" type="number" >
                 </li>
-                <li> Connnections: <input type="text" name="newThresholdConnectionsField" v-model="newThresholdConnections">
+                <li> Connnections: <input name="newThresholdConnectionsField" v-model="newThresholdConnections" type="text">
                 </li>
             </ul> 
          <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">Add Threshold Currency</button>
@@ -876,17 +876,17 @@ export default {
     <ul>
     <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
         {{ property }} (Change to:
-        <input name="propertyName" type="text" v-model="propertyNames[property]"> <button @click="changePropertyName(property, attributes, propertyNames[property] )">Change</button>)
+        <input name="propertyName" v-model="propertyNames[property]" type="text"> <button @click="changePropertyName(property, attributes, propertyNames[property] )">Change</button>)
         <button @click="removeProperty(property)" >Remove</button>
         <ul> <!-- Property Attributes -->
-            <li>value: {{ attributes.value }} <input name="propVal" type="text" v-model="changedPropVal"> <button @click="changePropertyValue(property, changedPropVal)" >Change Value</button></li>
-            <li>unit: <input name="propUnit" type="text" col=15 v-model="agentDesc[selectedAgentName].properties[property].unit"> </li>
+            <li>value: {{ attributes.value }} <input name="propVal" v-model="changedPropVal" type="text"> <button @click="changePropertyValue(property, changedPropVal)" >Change Value</button></li>
+            <li>unit: <input name="propUnit"  col=15 v-model="agentDesc[selectedAgentName].properties[property].unit" type="text"> </li>
         </ul>
     </li>
-    <li>New Property: <input name="newPropertyName" type="text" v-model="newPropertyName">
+    <li>New Property: <input name="newPropertyName" v-model="newPropertyName" type="text" >
             <ul> <!-- Property Attributes -->
-            <li>value: <input name="propValField" type="text" v-model="newPropVal"> </li>
-            <li>unit: <input name="propValField" type="text" v-model="newPropUnit"> </li>
+            <li>value: <input name="propValField" v-model="newPropVal"  type="text"> </li>
+            <li>unit: <input name="propValField" v-model="newPropUnit" type="text"> </li>
             <button @click="addNewProperty(newPropertyName, newPropVal, newPropUnit)"> Add New Property </button>
         </ul>
     </li>
