@@ -476,7 +476,7 @@ export default {
                 this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
                 // Assign category for export
                 if (category=='custom') {
-                    category =  this.currencyDesc['custom'][currencyName]['category']
+                    category = this.currencyDesc['custom'][currencyName]['category']
                 } else {
                     this.customCurrencies[currencyName]['category'] = category // this.currencyCategorySelected
                 }
@@ -522,7 +522,7 @@ export default {
         },
         agentsInClass() {
             let listOfAgents = []
-            for (let item in  this.agentDesc) {
+            for (let item in this.agentDesc) {
                 let itemsClass = this.agentDesc[item]['agent_class']
                 if (itemsClass==this.categorySelected) { listOfAgents.push(item) }
             }
@@ -533,7 +533,7 @@ export default {
 </script>
 <template>
     <div class="navMenu">
-    <button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button  v-else @click="switchMode()">Currency Editor</button>
+    <button @click="returnToMenu()">Return to Menu</button><button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button><button v-else @click="switchMode()">Currency Editor</button>
     </div>
     <div v-if="typeof(currencyDesc[currencyCategorySelected])=='object' && currentMode=='currency'">
     <h2>Currency Editor</h2>
@@ -727,7 +727,7 @@ export default {
                     <li> requires :
                         <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)=='object'">
                             (Click to remove)
-                            <button  @click="removeFlowArrayItem('out', 'requires', currency, requires)" v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires">{{requires}}</button>
+                            <button @click="removeFlowArrayItem('out', 'requires', currency, requires)" v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires">{{requires}}</button>
                             <br>
                         </span>
                         <label> (Currency) 
@@ -771,7 +771,7 @@ export default {
                                 <button @click="removeCriterion(currency, kind)">Remove Criterion</button>
                                  ::::: 
                                     <ul>
-                                        <li> Limit: <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit"  name="criteriaLimitField">
+                                        <li> Limit: <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit" name="criteriaLimitField">
                                                 <option value="&lt;" > &lt; </option>
                                                 <option value="&equals;" > =   </option>
                                                 <option value="&gt;" > &gt; </option>
@@ -833,7 +833,7 @@ export default {
                 <li> Path:  <input v-model="agentDesc[selectedAgentName].thresholds[currency].path" name="thesholdPathField" type="text">
                 </li>
                 <li> Limit:
-                                              <select  v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
+                                              <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit" name="thresholdLimitField">
                                                    <option value="&lt;" > &lt; </option>
                                                    <option value="&equals;" > =   </option>
                                                    <option value="&gt;" > &gt; </option>
@@ -882,7 +882,7 @@ export default {
     </li>
     <li>New Property: <input v-model="newPropertyName" name="newPropertyName" type="text" >
             <ul> <!-- Property Attributes -->
-            <li>value: <input v-model="newPropVal"  name="propValField" type="text"> </li>
+            <li>value: <input v-model="newPropVal" name="propValField" type="text"> </li>
             <li>unit: <input v-model="newPropUnit" name="propUnitField" type="text"> </li>
             <button @click="addNewProperty(newPropertyName, newPropVal, newPropUnit)"> Add New Property </button>
         </ul>
@@ -902,7 +902,7 @@ export default {
                         <b>{{subsubkey}}</b> :
                         <i v-if="typeof(subsubvalue)!='object'">{{subsubvalue}}</i>
                         <ul v-else>
-                            <li  v-for="(subsubsubvalue, subsubsubkey) in agentDesc[selectedAgentName][key][subkey][subsubkey]">
+                            <li v-for="(subsubsubvalue, subsubsubkey) in agentDesc[selectedAgentName][key][subkey][subsubkey]">
                                     <b>{{subsubsubkey}}</b> :  {{subsubsubvalue}}
                             </li>
                         </ul>
@@ -929,7 +929,7 @@ export default {
 .scrollie {
     overflow-y: scroll !important;
     /* FireFox */
-    scrollbar-width: auto; 
+    scrollbar-width: auto;
     scrollbar-color: grey black;
     height: 400px;
     width: 100%;
