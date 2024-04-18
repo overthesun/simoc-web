@@ -279,7 +279,7 @@ export default {
         },
         renameAgent(newName) {
             // Make Sure Agent Doesn't Already Exist
-            for (name in this.agentDesc) {
+            for (const name in this.agentDesc) {
                 if (name == newName) {
                     const alertString = `${newName} already exists, try another name!`
                     console.log(alertString) // This really needs to be a notification like an alert
@@ -295,9 +295,9 @@ export default {
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, \
-                            (i.e. rice has rice as outflow, \
-                            and has rice as a biomass connection)!')
+                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED,' )
+                console.log('(i.e. rice has rice as outflow, ')
+                console.log('and has rice as a biomass connection)!')
             }
             // Export the plant currency
         },
@@ -313,7 +313,7 @@ export default {
             }
             // Rename Object
             const thisCurrency = (
-                this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency] )
+                this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency])
             this.currencyDesc[this.currencyCategorySelected][newName] = thisCurrency
             delete this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]
             this.selectedCurrency = newName
@@ -475,9 +475,9 @@ export default {
             // Make sure to duplicate correspoding plant currency
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, \
-                    AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, \
-                    and has rice as a biomass connection)!')
+                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED')
+                console.log('AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice)')
+                console.log('as outflow, and has rice as a biomass connection)!')
             }
         },
         duplicateCurrency() {
@@ -508,8 +508,8 @@ export default {
             // If plant, export currency for it, too
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT \
-                    CURRENCIES EXPORTED TOO!')
+                console.log('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT')
+                console.log('CURRENCIES EXPORTED TOO!')
             }
         },
         exportJSONCurrency() {
