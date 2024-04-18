@@ -452,11 +452,9 @@ export default {
         createNewCurrency() {
             // Generate a unique currency name
             // Count currencies
-            let count = 0
             this.selectedCurrencyCategory = this.currencyCategorySelected
-            for (const item in this.currencyDesc[this.selectedCurrencyCategory]) {
-                count+=1
-            }
+            const currencyList = Object.keys(this.currencyDesc[this.selectedCurrencyCategory])
+            const count = currencyList.length + 1
             const currencyNumber = count + 1
             const currency_number_string = `_currency_${currencyNumber}`
             const newCurrencyName=`${this.selectedCurrencyCategory}${currency_number_string}`
@@ -485,6 +483,7 @@ export default {
             }
         },
         duplicateCurrency() {
+            // ERROR: Duplicating currency more than once does not update #, currencDesc.length not chging
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
             const newCurrencyName=`${this.selectedCurrency}_${currencyNumber}`
             // Deep Copy the original object
@@ -524,7 +523,7 @@ export default {
             if (typeof (currentCustomCurrencies)==='object' && (currentCustomCurrencies!==null)) {
                 console.log('* Custom currencies object already exist! Appending *')
             } else { // Create the currency object
-                console.log('* No custom currencies found, creating from scratch *')
+                console.log('* No custom currencies object found, creating from scratch *')
                 currentCustomCurrencies = {}
             }
             // Create the currency category
