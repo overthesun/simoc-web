@@ -375,7 +375,7 @@ export default {
             }
             if (newPropVal==='true') { newPropVal = true }
             if (newPropVal==='false') { newPropVal = false }
-            if (newPropUnit != '') {
+            if (newPropUnit !== '') {
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
                     {'value': newPropVal, 'unit': newPropUnit}
                 )
