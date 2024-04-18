@@ -181,7 +181,7 @@ export default {
             //const indexType = plantSpecies[index].type
 
             let selectedValues = plantSpecies.splice(index,1)
-            return false;
+            return false
         },
 
         // This method should have returned a list of all plant values
@@ -231,16 +231,12 @@ export default {
         // of similar route calls. Simply to reduce the callback hell look.
         retrievePlantSpecies() {
             axios.defaults.withCredentials = true
-
             const params = {agent_class: 'plants'}
-
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => {
                         const {name} = item
-                        this.plantValue.push(name)
-                        // console.log(this.formatPlantName(name))
-                        this.formatPlantName(name)
+                        this.listPlant(name)
                     })
                 }
             }).catch(error => {
@@ -249,6 +245,18 @@ export default {
                     console.log('Plant retrieval error')
                 }
             })
+            // Get plants from local data
+            let customAgents = localStorage.getItem('customAgents')
+            if (customAgents == null) return
+            customAgents = JSON.parse(customAgents)
+            for (const name in customAgents) {
+                if (customAgents[name].agent_class == 'plants') this.listPlant(name)
+            }
+        },
+        listPlant(name) {
+            // Add the plant to the menu list
+            this.plantValue.push(name)
+            this.formatPlantName(name)
         },
         updateAndValidate() {
             // validate and update greenhouse type
