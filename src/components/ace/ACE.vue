@@ -640,7 +640,7 @@ export default {
             Shared Change Memory. Select needs Title Attributes, ul has invalid elements </h2>
         <label for="categorySelector">Choose Agent Class:  </label>
         <select id="categorySelector" v-model="categorySelected">
-            <option v-for="category in agentClasses" :key="category" :value="category"> 
+            <option v-for="category in agentClasses" :key="category" :value="category">
                 {{category}}
             </option>
         </select>
@@ -732,7 +732,7 @@ export default {
                                 <span
                                     v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)=='object'">
                                     (Click to remove)
-                                    <button 
+                                    <button
                                         v-for="(connection, index) in agentDesc[selectedAgentName].flows.in[currency].connections"
                                         @click="removeFlowArrayItem('in', 'connections', currency, connection)">
                                         {{connection}}
@@ -775,7 +775,7 @@ export default {
                                     <button @click="addDeprive(currency, newDepriveValue, newDepriveUnit)">
                                         Add Deprive
                                     </button>
-                                    <li>Value:  
+                                    <li>Value:
                                         <input v-model="newDepriveValue" name="newDepriveName" type="number">
                                     </li>
                                     <li>Unit:
@@ -806,7 +806,7 @@ export default {
                         <button @click="changeOutType(currency, value, outTypes[currency])">Change</button>)
                         <button @click="removeOutFlow(currency)">Remove</button>
                         <ul> <!-- Out currency -->
-                            <li> Value: 
+                            <li> Value:
                                 <input v-model="agentDesc[selectedAgentName].flows.out[currency].value"
                                        name="flowValueOut" type="number">
                             </li>
@@ -841,8 +841,8 @@ export default {
                                 <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)=='object'">
                                     (Click to remove)
                                     <button v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted"
-                                        @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">
-                                        {{weighted}}
+                                            @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">
+                                            {{weighted}}
                                     </button>
                                     <br>
                                 </span>
@@ -882,9 +882,9 @@ export default {
                                         :::::
                                         <ul>
                                             <li> Type:
-                                            <input
-                                                v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type"
-                                                name="growthTypeField" type="text">
+                                                <input
+                                                    v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type"
+                                                    name="growthTypeField" type="text">
                                             </li>
                                         </ul>
                                     </li>
@@ -895,7 +895,7 @@ export default {
                                 </label>
                                 <ul>
                                     <li> Type:
-                                    <input v-model="newGrowthPattern" name="newGrowthPatternTypeField" type="text">
+                                        <input v-model="newGrowthPattern" name="newGrowthPatternTypeField" type="text">
                                     </li>
                                 </ul>
                                 <button @click="addGrowth(currency, newGrowthKind, newGrowthPattern)">
