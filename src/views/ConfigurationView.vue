@@ -315,7 +315,7 @@ export default {
                         customCurrencies = JSON.parse(customCurrencies)
                         configParams.game_config.currencies = {}
                         // Add custom currencies to config
-                        let currencyNames = Object.keys(customCurrencies)
+                        const currencyNames = Object.keys(customCurrencies)
                         for (let index=0; index<currencyNames.length; ++index) {
                             const name = (currencyNames[index])
                             configParams.game_config.currencies[name]=customCurrencies[name]
