@@ -92,9 +92,6 @@ export default {
         },
     },
     async created() {
-        // this.setAgentClass()
-        this.removeSurplusAgentData()
-
         // Get agents from simoc-abm
         try {
             this.agentDesc = await this.getAgentDesc()
@@ -137,7 +134,10 @@ export default {
                 //  console.log(currency)
                 //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
-                if (typeof (this.currencyDesc.custom)=='object' && (localStorageCurrencies!=null)) {
+                if (
+                    typeof (this.currencyDesc.custom)=='object' 
+                    && (localStorageCurrencies!=null)
+                ) {
                     // Object exists
                 } else {
                     this.currencyDesc.custom = {}
@@ -190,17 +190,6 @@ export default {
                 return null
             }
         },
-        setAgentClass() {
-            this.agentDesc[this.selectedAgentName].agent_class= 'plants'
-        },
-        removeSurplusAgentData() {
-            /* Probably we should actually duplicate the agentDesc to create one just for the display of data that is trimmed down,
-               Since copied/modified agents will want to still contain necessary fields that don't need to be shown */
-            for (const key in this.agentDesc) {
-                /* amount = 1 is for all, so it doesn't need to be there*/
-                // delete this.agentDesc[key].amount
-            }
-        },
         submitAgent() {
             this.agentDesc[this.categorySelected][this.selectedAgentName] = {'data': 0}
         },
@@ -242,7 +231,8 @@ export default {
             // Delete the specific kind of growth
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].growth).length == 0) {
+            const growth = this.agentDesc[this.selectedAgentName].flows.out[currency].growth
+            if (Object.keys(growth).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
             }
         },
@@ -250,19 +240,25 @@ export default {
             // Delete the specific kind of criterion
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
-            if (Object.keys(this.agentDesc[this.selectedAgentName].flows.out[currency].criteria).length == 0) {
+            const criteria = this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
+            if (Object.keys(criteria).length == 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
             }
         },
         removeFlowArrayItem(direction, type, currency, name) {
-            const index = this.agentDesc[this.selectedAgentName].flows[direction][currency][type].indexOf(name)
+            const agent = this.agentDesc[this.selectedAgentName]
+            const index = ( 
+                agent.flows[direction][currency][type].indexOf(name)
+            )
             // Delete the connection by its array index number
             if (index !== -1) {
-                this.agentDesc[this.selectedAgentName].flows[direction][currency][type].splice(index, 1)
+                const currencyArray = agent.flows[direction][currency][type]
+                currencyArray.splice(index, 1)
             }
             // Remove the flow array array if it is empty
-            if ((this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).length == 0) {
-                delete this.agentDesc[this.selectedAgentName].flows[direction][currency][type]
+            const flowarray = agent.flows[direction][currency][type]
+            if ((flowarray).length == 0) {
+                delete agent.flows[direction][currency][type]
             }
         },
         removeDeprive(currency) {
@@ -299,7 +295,9 @@ export default {
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, (i.e. rice has rice as outflow, and has rice as a biomass connection)!')
+                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED, \
+                            (i.e. rice has rice as outflow, \
+                            and has rice as a biomass connection)!')
             }
             // Export the plant currency
         },
@@ -314,7 +312,8 @@ export default {
                 }
             }
             // Rename Object
-            const thisCurrency = this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]
+            const thisCurrency = (
+                this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency] )
             this.currencyDesc[this.currencyCategorySelected][newName] = thisCurrency
             delete this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]
             this.selectedCurrency = newName
@@ -377,48 +376,56 @@ export default {
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
             if (newPropUnit != '') {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = {'value': newPropVal, 'unit': newPropUnit}
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = ( 
+                    {'value': newPropVal, 'unit': newPropUnit}
+                )
             } else { // Make sure not to add unit if it is not specified
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = {'value': newPropVal}
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
+                    {'value': newPropVal} 
+                )
             }
         },
         addFlowArrayItem(direction, type, currency, name) {
+            const agent = this.agentDesc[this.selectedAgentName]
             // Add the array if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows[direction][currency][type])=='object')) {
-                this.agentDesc[this.selectedAgentName].flows[direction][currency][type] = []
+            if (!(typeof (agent.flows[direction][currency][type])=='object')) {
+                agent.flows[direction][currency][type] = []
             }
             // Add the item to the array
-            (this.agentDesc[this.selectedAgentName].flows[direction][currency][type]).push(name)
+            (agent.flows[direction][currency][type]).push(name)
         },
         addNewCriterion(currency, name, value, limit) {
+            const agent = this.agentDesc[this.selectedAgentName]
             // Add Criteria if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria)=='object')) {
-                this.agentDesc[this.selectedAgentName].flows.out[currency].criteria = {}
+            if (!(typeof (agent.flows.out[currency].criteria)=='object')) {
+                agent.flows.out[currency].criteria = {}
             }
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name])=='object')) {
-                this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name] = {}
+            if (!(typeof (agent.flows.out[currency].criteria[name])=='object')) {
+                agent.flows.out[currency].criteria[name] = {}
             }
             // Add the criterion
-            this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].value=value
-            this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[name].limit=limit
+           agent.flows.out[currency].criteria[name].value=value
+           agent.flows.out[currency].criteria[name].limit=limit
         },
         addNutrition() {
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition = {}
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.kcal = 0
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.water = 0
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.protein = 0
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.carbohydrate = 0
-            this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition.fat = 0
+            const currency = this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency]
+            currency.nutrition = {}
+            currency.nutrition.kcal = 0
+            currency.nutrition.water = 0
+            currency.nutrition.protein = 0
+            currency.nutrition.carbohydrate = 0
+            currency.nutrition.fat = 0
         },
         deleteNutrition() {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
         addGrowth(currency, kind, pattern) {
-            if (!(typeof (this.agentDesc[this.selectedAgentName].flows.out[currency].growth)=='object')) {
-                this.agentDesc[this.selectedAgentName].flows.out[currency].growth = {}
+            const agent = this.agentDesc[this.selectedAgentName]
+            if (!(typeof (agent.flows.out[currency].growth)=='object')) {
+                agent.flows.out[currency].growth = {}
             }
-            this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind] = {}
-            this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind].type=pattern
+            agent.flows.out[currency].growth[kind] = {}
+            agent.flows.out[currency].growth[kind].type=pattern
         },
         addDeprive(currency, value, unit) {
             this.agentDesc[this.selectedAgentName].flows.in[currency].deprive = {}
@@ -468,14 +475,18 @@ export default {
             // Make sure to duplicate correspoding plant currency
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, and has rice as a biomass connection)!')
+                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED, \
+                    AND NEW PLANT CURRENCIES ARE MADE TO MATCH (i.e. rice has rice as outflow, \
+                    and has rice as a biomass connection)!')
             }
         },
         duplicateCurrency() {
             const currencyNumber = Object.keys(this.currencyDesc).length + 1
             const newCurrencyName=`${this.selectedCurrency}_${currencyNumber}`
             // Deep Copy the original object
-            const copiedObject = JSON.parse(JSON.stringify(this.currencyDesc[this.currencyCategorySelected][this.selectedCurrency]))
+            const currencyCatSelected = this.currencyDesc[this.currencyCategorySelected]
+            const originalObject = currencyCatSelected[this.selectedCurrency]
+            const copiedObject = JSON.parse(JSON.stringify(originalObject))
             this.currencyDesc[this.currencyCategorySelected][newCurrencyName]=copiedObject
             // Switch to the copied agent
             this.selectedCurrency=newCurrencyName
@@ -497,7 +508,8 @@ export default {
             // If plant, export currency for it, too
             if (this.categorySelected=='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT CURRENCIES EXPORTED TOO!')
+                console.log('PLANT EXPORTED. MAKE SURE FLOW CURRENCIES ARE UPDATED, AND NEW PLANT \
+                    CURRENCIES EXPORTED TOO!')
             }
         },
         exportJSONCurrency() {
@@ -513,7 +525,8 @@ export default {
             /*
             // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
             // So instead of creating custom currency category, just file them under "custom"
-            if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' && (currentCustomCurrencies!=null)) {
+            if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' &&
+                (currentCustomCurrencies!=null)) {
             } else {
                 currentCustomCurrencies[this.currencyCategorySelected] = {}
             }
