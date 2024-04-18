@@ -376,12 +376,12 @@ export default {
             if (newPropVal=='true') { newPropVal = true }
             if (newPropVal=='false') { newPropVal = false }
             if (newPropUnit != '') {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = ( 
+                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
                     {'value': newPropVal, 'unit': newPropUnit}
                 )
             } else { // Make sure not to add unit if it is not specified
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
-                    {'value': newPropVal} 
+                    {'value': newPropVal}
                 )
             }
         },
@@ -604,12 +604,12 @@ export default {
                 <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].unit"
                        name="currencyUnit" type="text">
                 <br>
-                Short: 
+                Short:
                 <input v-model="currencyDesc[selectedCurrencyCategory][selectedCurrency].short"
                        name="currencyShort" type="text">
                 <br>
                 <span v-if="typeof(currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition)=='object'">
-                    Nutrition- 
+                    Nutrition-
                     <button @click="deleteNutrition()">Delete Nutrition</button>
                     {{currencyDesc[selectedCurrencyCategory][selectedCurrency].nutrition}}
                     <br> &nbsp; &nbsp; &nbsp; &nbsp; kcal:
@@ -636,8 +636,8 @@ export default {
         </div> <!-- gridBox -->
     </div> <!-- vif currency object exists -->
     <div v-if="currentMode=='agent'">
-        <h2> Agent Editor.  Known Issues: Consistency. 
-        Shared Change Memory. Select needs Title Attributes, ul has invalid elements </h2>
+        <h2> Agent Editor.  Known Issues: Consistency.
+            Shared Change Memory. Select needs Title Attributes, ul has invalid elements </h2>
         <label for="categorySelector">Choose Agent Class:  </label>
         <select id="categorySelector" v-model="categorySelected">
             <option v-for="category in agentClasses" :key="category" :value="category"> 
@@ -650,7 +650,7 @@ export default {
             <div id="agentSelector" class="scrollie agentBox">
                 <h2> Agents ({{categorySelected}}): </h2>
                 <ul>
-                    <li v-for="item in agentsInClass"> 
+                    <li v-for="item in agentsInClass">
                         <button @click="selectItem(item)">{{item}}</button>
                     </li>
                 </ul>
@@ -674,9 +674,9 @@ export default {
                         </label>
                         <button @click="setCustomClass">Set Custom Class</button>
                     </li>
-                    <li>Description: <br> 
-                        <textarea v-model="agentDesc[selectedAgentName].description" 
-                            name="descriptionField" rows="4" cols="100" />
+                    <li>Description: <br>
+                        <textarea v-model="agentDesc[selectedAgentName].description"
+                                  name="descriptionField" rows="4" cols="100" />
                     </li>
                 </ul>
                 <h3>Capacity</h3>
@@ -712,24 +712,24 @@ export default {
                         <button @click="changeInType(currency, value, inTypes[currency])">Change</button>)
                         <button @click="removeInFlow(currency)">Remove</button>
                         <ul>
-                            <li> Value: 
+                            <li> Value:
                                 <input v-model="agentDesc[selectedAgentName].flows.in[currency].value"
                                        name="flowValueFieldIn" type="number">
                             </li>
                             <li> flow_rate:
                                 <ul>
-                                    <li>Unit: 
+                                    <li>Unit:
                                         <input v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.unit"
                                                name="flowInUnit" type="text">
                                     </li>
-                                    <li>Time: 
+                                    <li>Time:
                                         <input v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.time"
                                                name="flowInTime" type="text">
                                     </li>
                                 </ul>
                             </li>
                             <li> connections :
-                                <span 
+                                <span
                                     v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)=='object'">
                                     (Click to remove)
                                     <button 
@@ -1023,7 +1023,7 @@ export default {
                             </li>
                             <li> Connnections:
                                 <input v-model="newThresholdConnections" type="text"
-                                    name="newThresholdConnectionsField">
+                                       name="newThresholdConnectionsField">
                             </li>
                         </ul>
                         <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">
@@ -1048,7 +1048,7 @@ export default {
                             </li>
                             <li>unit:
                                 <input v-model="agentDesc[selectedAgentName].properties[property].unit"
-                                    name="propUnit" type="text" col="15">
+                                       name="propUnit" type="text" col="15">
                             </li>
                         </ul>
                     </li>
