@@ -522,7 +522,9 @@ export default {
             currentCustomCurrencies = JSON.parse(currentCustomCurrencies)
             // Check if the custom currency object exists
             if (typeof (currentCustomCurrencies)==='object' && (currentCustomCurrencies!==null)) {
+                console.log('* Custom currencies object already exist! Appending *')
             } else { // Create the currency object
+                console.log('* No custom currencies found, creating from scratch *')
                 currentCustomCurrencies = {}
             }
             // Create the currency category
