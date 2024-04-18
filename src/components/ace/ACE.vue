@@ -60,8 +60,9 @@ export default {
         currencyTypes() {
             const listOfTypes = []
             /* Determine list of type */
-            for (const key in this.currencyDesc) {
-                const currencyType = key
+            const keys = Object.keys(this.currencyDesc)
+            for (let index=0; index<keys.length; ++index) {
+                const currencyType = keys[index]
                 if (!listOfTypes.includes(currencyType)) listOfTypes.push(currencyType)
             }
             return listOfTypes
@@ -69,8 +70,10 @@ export default {
         agentClasses() {
             const listOfClasses = []
             /* Determine list of agent_class */
-            for (const key in this.agentDesc) {
-                const className = this.agentDesc[key].agent_class
+            const agentNames = Object.keys(this.agentDesc)
+            for (let index=0; index<agentNames.length; ++index) {
+            //for (const key in this.agentDesc) {
+                const className = this.agentDesc[agentNames[index]].agent_class
                 if (!listOfClasses.includes(className)) listOfClasses.push(className)
             }
             return listOfClasses
