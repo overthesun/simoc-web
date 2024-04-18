@@ -250,7 +250,7 @@ export default {
             if (customAgents == null) return
             customAgents = JSON.parse(customAgents)
             const agentNames = Object.keys(customAgents)
-            for (let index=0;index<agentNames.length;++index) {
+            for (let index=0; index<agentNames.length; ++index) {
                 const name = (agentNames[index])
                 if (customAgents[name].agent_class === 'plants') this.listPlant(name)
             }
