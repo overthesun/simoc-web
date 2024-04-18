@@ -72,7 +72,6 @@ export default {
             /* Determine list of agent_class */
             const agentNames = Object.keys(this.agentDesc)
             for (let index=0; index<agentNames.length; ++index) {
-            //for (const key in this.agentDesc) {
                 const className = this.agentDesc[agentNames[index]].agent_class
                 if (!listOfClasses.includes(className)) listOfClasses.push(className)
             }
@@ -80,9 +79,11 @@ export default {
         },
         agentsInClass() {
             const listOfAgents = []
-            for (const item in this.agentDesc) {
-                const itemsClass = this.agentDesc[item].agent_class
-                if (itemsClass===this.categorySelected) { listOfAgents.push(item) }
+            const agents = Object.keys(this.agentDesc)
+            for (let index=0; index<agents.length; ++index) {
+                const agent = agents[index]
+                const agentClass = this.agentDesc[agent].agent_class
+                if (agentClass===this.categorySelected) { listOfAgents.push(agent) }
             }
             return listOfAgents
         },
