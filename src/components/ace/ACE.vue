@@ -842,7 +842,7 @@ export default {
                                     (Click to remove)
                                     <button v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted"
                                             @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">
-                                            {{weighted}}
+                                        {{weighted}}
                                     </button>
                                     <br>
                                 </span>
@@ -855,7 +855,7 @@ export default {
                                 <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)=='object'">
                                     (Click to remove)
                                     <button v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires"
-                                        @click="removeFlowArrayItem('out', 'requires', currency, requires)">
+                                            @click="removeFlowArrayItem('out', 'requires', currency, requires)">
                                         {{requires}}
                                     </button>
                                     <br>
