@@ -118,11 +118,12 @@ export default {
         getLocalStorageAgents() {
             let localStorageAgents = localStorage.getItem('customAgents')
             localStorageAgents = JSON.parse(localStorageAgents)
+            const localAgentNames = Object.keys(localStorageAgents)
             if (typeof (localStorageAgents)==='object' && (localStorageAgents!==null)) {
                 console.log('Agents found in local storage:')
-                for (const agent in (localStorageAgents)) {
-                    console.log(agent)
-                    this.agentDesc[agent] = localStorageAgents[agent]
+                for (let index=0; index<localAgentNames.length; ++index) {
+                    const localAgentName = localAgentNames[index]
+                    this.agentDesc[localAgentName] = localStorageAgents[localAgentName]
                 }
             } else {
                 console.log(' * No agents loaded from local storage *')
@@ -147,7 +148,6 @@ export default {
                     this.currencyDesc.custom = {}
                 }
                 for (const currency in localStorageCurrencies) {
-                    console.log(currency)
                     this.currencyDesc.custom[currency] = localStorageCurrencies[currency]
                 }
             } else {
