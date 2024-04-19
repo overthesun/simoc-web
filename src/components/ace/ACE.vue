@@ -553,13 +553,13 @@ export default {
                 currentCustomCurrencies[this.currencyCategorySelected] = {}
             }
             */
-            let category = this.currencyCategorySelected
-            this.customCurrencies[currencyName] = this.currencyDesc[category][currencyName]
+            let exportCategory = this.currencyCategorySelected
+            this.customCurrencies[currencyName] = this.currencyDesc[exportCategory][currencyName]
             // Assign category for export
-            if (category==='custom') {
-                category = this.currencyDesc.custom[currencyName].category
+            if (exportCategory==='custom') {
+                exportCategory = this.currencyDesc.custom[currencyName].category
             } else {
-                this.customCurrencies[currencyName].category = category // this.currencyCategorySelected
+                this.customCurrencies[currencyName].category = exportCategory
             }
             currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
             localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
