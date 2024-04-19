@@ -245,8 +245,8 @@ export default {
             // Delete the specific kind of growth
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
-            const growth = this.agentDesc[this.selectedAgentName].flows.out[currency].growth
-            if (Object.keys(growth).length === 0) {
+            const flowGrowth = this.agentDesc[this.selectedAgentName].flows.out[currency].growth
+            if (Object.keys(flowGrowth).length === 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
             }
         },
@@ -254,8 +254,8 @@ export default {
             // Delete the specific kind of criterion
             delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
-            const criteria = this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
-            if (Object.keys(criteria).length === 0) {
+            const thisCriteria = this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
+            if (Object.keys(thisCriteria).length === 0) {
                 delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
             }
         },
