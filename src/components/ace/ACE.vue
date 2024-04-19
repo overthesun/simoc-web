@@ -149,9 +149,9 @@ export default {
                 }
                 const localCurrencyNames = Object.keys(localStorageCurrencies)
                 console.log(' * Currencies loaded from local storage:')
-                for (let nameIndex=0; nameIndex<localCurrencyNames.length;nameIndex+=1) {
+                for (let nameIndex=0; nameIndex<localCurrencyNames.length; nameIndex+=1) {
                     const currencyName = localCurrencyNames[nameIndex]
-                    console.log(currencyName);
+                    console.log(currencyName)
                     this.currencyDesc.custom[currencyName] = localStorageCurrencies[currencyName]
                 }
             } else {
@@ -205,7 +205,7 @@ export default {
             }
         },
         submitAgent() {
-            this.agentDesc[this.categorySelected][this.selectedAgentName] = {'data': 0}
+            this.agentDesc[this.categorySelected][this.selectedAgentName] = {data: 0}
         },
         selectItem(item) {
             this.selectedAgentName = item
@@ -395,11 +395,11 @@ export default {
             if (newPropVal==='false') { newPropVal = false }
             if (newPropUnit !== '') {
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
-                    {'value': newPropVal, 'unit': newPropUnit}
+                    {value: newPropVal, unit: newPropUnit}
                 )
             } else { // Make sure not to add unit if it is not specified
                 this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
-                    {'value': newPropVal}
+                    {value: newPropVal}
                 )
             }
         },
