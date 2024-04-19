@@ -147,11 +147,15 @@ export default {
                 } else {
                     this.currencyDesc.custom = {}
                 }
-                for (const currency in localStorageCurrencies) {
-                    this.currencyDesc.custom[currency] = localStorageCurrencies[currency]
+                const localCurrencyNames = Object.keys(localStorageCurrencies)
+                console.log(' * Currencies loaded from local storage:')
+                for (let nameIndex=0; nameIndex<localCurrencyNames.length;nameIndex+=1) {
+                    const currencyName = localCurrencyNames[nameIndex]
+                    console.log(currencyName);
+                    this.currencyDesc.custom[currencyName] = localStorageCurrencies[currencyName]
                 }
             } else {
-                console.log(' * No agents loaded from local storage *')
+                console.log(' * No currencies loaded from local storage *')
             }
         },
         async getCurrencyDesc() {
