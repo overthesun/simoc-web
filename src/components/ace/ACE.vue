@@ -171,12 +171,18 @@ export default {
         generateCurrencyList() {
             const currancies = []
             this.currencyList = []
-            for (const type in (this.currencyDesc)) {
-                for (const subkey in (this.currencyDesc[type])) {
-                    currancies.push(subkey)
+            const currencyCats = Object.keys(this.currencyDesc)
+            for (let currencyCatIndex = 0; 
+                currencyCatIndex<currencyCats.length; currencyCatIndex+=1){
+                const currentCurrencyCatName = currencyCats[currencyCatIndex]
+                const curranciesNamesOfType = Object.keys(this.currencyDesc[currentCurrencyCatName])
+                for (let currencyIndex = 0;
+                    currencyIndex<curranciesNamesOfType.length; currencyIndex+=1) {
+                    const currencyName = curranciesNamesOfType[currencyIndex]
+                    const currencyForList=this.currencyDesc[currentCurrencyCatName][currencyName]
+                    currancies.push(currencyForList)
                 }
             }
-
             for (let i=0; i<currancies.length; ++i) {
                 this.currencyList.push(currancies[i])
             }
