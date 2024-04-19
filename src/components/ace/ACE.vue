@@ -528,8 +528,11 @@ export default {
             }
             // Create the currency category
             /*
-            // In simoc abm, it expects custom currencies to have a "category" param instead of being filed by category
-            // So instead of creating custom currency category, just file them under "custom"
+            // In simoc abm, it expects custom currencies to have a "category" property instead of 
+            // being filed by category within the currency object. So instead of putting it in the 
+            // category, we can just file them under "custom" category and use the parameter
+            // This commented code would be useful to create a custom category hierarchy within
+            // the object if we wanted to change back:
             if(typeof (currentCustomCurrencies[this.currencyCategorySelected])=='object' &&
                 (currentCustomCurrencies!=null)) {
             } else {
