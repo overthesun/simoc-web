@@ -172,8 +172,8 @@ export default {
             const currancies = []
             this.currencyList = []
             const currencyCats = Object.keys(this.currencyDesc)
-            for (let currencyCatIndex = 0; 
-                currencyCatIndex<currencyCats.length; currencyCatIndex+=1){
+            for (let currencyCatIndex = 0;
+                currencyCatIndex<currencyCats.length; currencyCatIndex+=1) {
                 const currentCurrencyCatName = currencyCats[currencyCatIndex]
                 const curranciesNamesOfType = Object.keys(this.currencyDesc[currentCurrencyCatName])
                 for (let currencyIndex = 0;
@@ -289,7 +289,7 @@ export default {
         },
         renameAgent(newName) {
             // Make Sure Agent Doesn't Already Exist
-            let agentNames = Object.keys(this.agentDesc)
+            const agentNames = Object.keys(this.agentDesc)
             for (let nameIndex=0; nameIndex<agentNames.length; nameIndex+=1) {
                 const name = agentNames[nameIndex]
                     if (name === newName) {
@@ -315,7 +315,7 @@ export default {
         },
         renameCurrency(newName) {
             // Make Sure Currency Doesn't Already Exist
-            let currencyNames = Object.keys(this.currencyDesc[this.currencyCategorySelected])
+            const currencyNames = Object.keys(this.currencyDesc[this.currencyCategorySelected])
             for (let nameIndex=0; nameIndex<currencyNames.length; nameIndex+=1) {
                 const name = currencyNames[nameIndex]
                 if (name === newName) {
