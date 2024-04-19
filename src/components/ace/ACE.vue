@@ -297,12 +297,12 @@ export default {
             const agentNames = Object.keys(this.agentDesc)
             for (let nameIndex=0; nameIndex<agentNames.length; nameIndex+=1) {
                 const name = agentNames[nameIndex]
-                    if (name === newName) {
-                        const alertString = `${newName} already exists, try another name!`
-                        console.log(alertString) // This really needs to be a notification like an alert
-                        // alert(alertString) // Alert does not pass lint
-                        return
-                    }
+                if (name === newName) {
+                    const alertString = `${newName} already exists, try another name!`
+                    console.log(alertString) // This really needs to be a notification like an alert
+                    // alert(alertString) // Alert does not pass lint
+                    return
+                }
             }
             // Rename Object
             const thisAgent = this.agentDesc[this.selectedAgentName]
