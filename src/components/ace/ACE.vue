@@ -278,7 +278,8 @@ export default {
         removeDeprive(currency) {
             delete this.agentDesc[this.selectedAgentName].flows.in[currency].deprive
         },
-        changePropertyValue(property, newPropVal) {
+        changePropertyValue(property, newPVal) {
+            let newPropVal = newPVal
             /* See if it is a number, if it is, store it as one, otherwise as a string */
             if (!Number.isNaN(Number(newPropVal))) {
             /* This is to ensure the data sent to the back is not a string in the JSON */
@@ -387,7 +388,8 @@ export default {
             this.agentDesc[this.selectedAgentName].thresholds[currency].value=value
             this.agentDesc[this.selectedAgentName].thresholds[currency].connections=connections
         },
-        addNewProperty(newPropertyName, newPropVal, newPropUnit) {
+        addNewProperty(newPropertyName, newPVal, newPropUnit) {
+            let newPropVal = newPVal
             if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
             }
