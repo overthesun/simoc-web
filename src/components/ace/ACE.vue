@@ -390,7 +390,7 @@ export default {
         },
         addNewProperty(newPropertyName, newPVal, newPropUnit) {
             let newPropVal = newPVal
-            if (!isNaN(newPropVal)) { /* If it is a number, make sure it is a number and not a string */
+            if (!Number.isNaN(Number(newPropVal))) { /* If it is a number, make sure it is a number and not a string */
                 newPropVal = +newPropVal
             }
             if (newPropVal==='true') { newPropVal = true }
