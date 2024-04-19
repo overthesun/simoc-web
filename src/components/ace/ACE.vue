@@ -298,10 +298,10 @@ export default {
             for (let nameIndex=0; nameIndex<agentNames.length; nameIndex+=1) {
                 const name = agentNames[nameIndex]
                     if (name === newName) {
-                    const alertString = `${newName} already exists, try another name!`
-                    console.log(alertString) // This really needs to be a notification like an alert
-                    // alert(alertString) // Alert does not pass lint
-                    return
+                        const alertString = `${newName} already exists, try another name!`
+                        console.log(alertString) // This really needs to be a notification like an alert
+                        // alert(alertString) // Alert does not pass lint
+                        return
                     }
             }
             // Rename Object
@@ -312,7 +312,7 @@ export default {
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected==='plants') {
                 // This really needs to be a notification like an alert, but alert does not pass lint
-                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED,' )
+                console.log('PLANT. MAKE SURE PLANT FLOW CURRENCIES ARE UPDATED/CREATED,')
                 console.log('(i.e. rice has rice as outflow, ')
                 console.log('and has rice as a biomass connection)!')
             }
@@ -544,8 +544,8 @@ export default {
             }
             // Create the currency category
             /*
-            // In simoc abm, it expects custom currencies to have a "category" property instead of 
-            // being filed by category within the currency object. So instead of putting it in the 
+            // In simoc abm, it expects custom currencies to have a "category" property instead of
+            // being filed by category within the currency object. So instead of putting it in the
             // category, we can just file them under "custom" category and use the parameter
             // This commented code would be useful to create a custom category hierarchy within
             // the object if we wanted to change back:
