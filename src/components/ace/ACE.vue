@@ -289,13 +289,15 @@ export default {
         },
         renameAgent(newName) {
             // Make Sure Agent Doesn't Already Exist
-            for (const name in this.agentDesc) {
-                if (name === newName) {
+            let agentNames = Object.keys(this.agentDesc)
+            for (let nameIndex=0; nameIndex<agentNames.length; nameIndex+=1) {
+                const name = agentNames[nameIndex]
+                    if (name === newName) {
                     const alertString = `${newName} already exists, try another name!`
                     console.log(alertString) // This really needs to be a notification like an alert
                     // alert(alertString) // Alert does not pass lint
                     return
-                }
+                    }
             }
             // Rename Object
             const thisAgent = this.agentDesc[this.selectedAgentName]
@@ -313,8 +315,10 @@ export default {
         },
         renameCurrency(newName) {
             // Make Sure Currency Doesn't Already Exist
-            for (const currency in this.currencyDesc[this.currencyCategorySelected]) {
-                if (currency === newName) {
+            let currencyNames = Object.keys(this.currencyDesc[this.currencyCategorySelected])
+            for (let nameIndex=0; nameIndex<currencyNames.length; nameIndex+=1) {
+                const name = currencyNames[nameIndex]
+                if (name === newName) {
                     const alertString = `${newName} already exists, try another name!`
                     // This really needs to be a notification like an alert, but alert does not pass lint
                     console.log(alertString)
