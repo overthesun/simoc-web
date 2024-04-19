@@ -183,8 +183,8 @@ export default {
                 for (let currencyIndex = 0;
                     currencyIndex<curranciesNamesOfType.length; currencyIndex+=1) {
                     const currencyName = curranciesNamesOfType[currencyIndex]
-                    const currencyForList=this.currencyDesc[currentCurrencyCatName][currencyName]
-                    currancies.push(currencyForList)
+                    // const currencyForList=this.currencyDesc[currentCurrencyCatName][currencyName]
+                    currancies.push(currencyName)
                 }
             }
             for (let i=0; i<currancies.length; ++i) {
