@@ -46,7 +46,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.69.7",
     "vite-plugin-eslint": "^1.8.0",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.2"
   },
   "postcss": {
     "plugins": {
