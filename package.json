@@ -14,7 +14,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
-    "@json-editor/json-editor": "^2.14.1",
+    "@json-editor/json-editor": "^2.15.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
