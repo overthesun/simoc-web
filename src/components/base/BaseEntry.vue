@@ -16,7 +16,7 @@
         <div class="entry-button-wrapper">
             <slot name="entry-button" />
         </div>
-        <footer class="footer">
+        <footer v-if="!kioskMode" class="footer">
             <a class="link" title="Go to the simoc.space homepage" target="_blank"
                href="https://simoc.space/">
                 SIMOC
@@ -38,7 +38,15 @@
 </template>
 
 <script>
+import {storeToRefs} from 'pinia'
+import {useDashboardStore} from '../../store/modules/DashboardStore'
+
 export default {
+    setup() {
+        const dashboard = useDashboardStore()
+        const {kioskMode} = storeToRefs(dashboard)
+        return {kioskMode}
+    },
     data() {
         return {
             env: import.meta.env,
