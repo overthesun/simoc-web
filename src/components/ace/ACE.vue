@@ -57,6 +57,9 @@ export default {
         }
     },
     computed: {
+        selectedAgent(){
+            return this.agentDesc[this.selectedAgentName];
+        },
         currencyTypes() {
             const listOfTypes = []
             /* Determine list of type */
@@ -215,52 +218,52 @@ export default {
             this.selectedCurrencyCategory = this.currencyCategorySelected
         },
         setCustomClass() {
-            this.agentDesc[this.selectedAgentName].agent_class=this.customClassName
+            this.selectedAgent.agent_class=this.customClassName
             this.categorySelected = this.customClassName
         },
         removeCapacity(key) {
-            delete this.agentDesc[this.selectedAgentName].capacity[key]
+            delete this.selectedAgent.capacity[key]
             // Remove the capacities object if there are no capacities in it.
-            if ((Object.keys(this.agentDesc[this.selectedAgentName].capacity).length) === 0) {
-                delete this.agentDesc[this.selectedAgentName].capacity
+            if ((Object.keys(this.selectedAgent.capacity).length) === 0) {
+                delete this.selectedAgent.capacity
             }
         },
         removeInFlow(currency) {
-            delete this.agentDesc[this.selectedAgentName].flows.in[currency]
+            delete this.selectedAgent.flows.in[currency]
         },
         removeOutFlow(currency) {
-            delete this.agentDesc[this.selectedAgentName].flows.out[currency]
+            delete this.selectedAgent.flows.out[currency]
         },
         removeThreshold(currency) {
-            delete this.agentDesc[this.selectedAgentName].thresholds[currency]
+            delete this.selectedAgent.thresholds[currency]
             // Remove thresholds object if there are no currencies listed
-            if (Object.keys(this.agentDesc[this.selectedAgentName].thresholds).length === 0) {
-                delete this.agentDesc[this.selectedAgentName].thresholds
+            if (Object.keys(this.selectedAgent.thresholds).length === 0) {
+                delete this.selectedAgent.thresholds
             }
         },
         removeProperty(property) {
-            delete this.agentDesc[this.selectedAgentName].properties[property]
+            delete this.selectedAgent.properties[property]
         },
         removeGrowth(currency, kind) {
             // Delete the specific kind of growth
-            delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth[kind]
+            delete this.selectedAgent.flows.out[currency].growth[kind]
             // Remove the growth object if there are no growths in it.
-            const flowGrowth = this.agentDesc[this.selectedAgentName].flows.out[currency].growth
+            const flowGrowth = this.selectedAgent.flows.out[currency].growth
             if (Object.keys(flowGrowth).length === 0) {
-                delete this.agentDesc[this.selectedAgentName].flows.out[currency].growth
+                delete this.selectedAgent.flows.out[currency].growth
             }
         },
         removeCriterion(currency, kind) {
             // Delete the specific kind of criterion
-            delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria[kind]
+            delete this.selectedAgent.flows.out[currency].criteria[kind]
             // Remove the criteria object if there are no growths in it.
-            const thisCriteria = this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
+            const thisCriteria = this.selectedAgent.flows.out[currency].criteria
             if (Object.keys(thisCriteria).length === 0) {
-                delete this.agentDesc[this.selectedAgentName].flows.out[currency].criteria
+                delete this.selectedAgent.flows.out[currency].criteria
             }
         },
         removeFlowArrayItem(direction, type, currency, name) {
-            const agent = this.agentDesc[this.selectedAgentName]
+            const agent = this.selectedAgent
             const index = (
                 agent.flows[direction][currency][type].indexOf(name)
             )
@@ -276,7 +279,7 @@ export default {
             }
         },
         removeDeprive(currency) {
-            delete this.agentDesc[this.selectedAgentName].flows.in[currency].deprive
+            delete this.selectedAgent.flows.in[currency].deprive
         },
         changePropertyValue(property, newPVal) {
             let newPropVal = newPVal
@@ -290,7 +293,7 @@ export default {
             }
             if (newPropVal==='true') { newPropVal = true }
             if (newPropVal==='false') { newPropVal = false }
-            this.agentDesc[this.selectedAgentName].properties[property].value=newPropVal
+            this.selectedAgent.properties[property].value=newPropVal
         },
         renameAgent(newName) {
             // Make Sure Agent Doesn't Already Exist
@@ -305,9 +308,9 @@ export default {
                 }
             }
             // Rename Object
-            const thisAgent = this.agentDesc[this.selectedAgentName]
+            const thisAgent = this.selectedAgent
             this.agentDesc[newName] = thisAgent
-            delete this.agentDesc[this.selectedAgentName]
+            delete this.selectedAgent
             this.selectedAgentName = newName
             // Make sure that if it is a plant, the corresponding currency is renamed also
             if (this.categorySelected==='plants') {
@@ -339,54 +342,54 @@ export default {
             this.generateCurrencyList()
         },
         changeType(key, value, newName) {
-            this.agentDesc[this.selectedAgentName].capacity[newName]=value
-            delete this.agentDesc[this.selectedAgentName].capacity[key]
+            this.selectedAgent.capacity[newName]=value
+            delete this.selectedAgent.capacity[key]
         },
         changeInType(key, value, newName) {
-            this.agentDesc[this.selectedAgentName].flows.in[newName]=value
-            delete this.agentDesc[this.selectedAgentName].flows.in[key]
+            this.selectedAgent.flows.in[newName]=value
+            delete this.selectedAgent.flows.in[key]
         },
         changeOutType(key, value, newName) {
-            this.agentDesc[this.selectedAgentName].flows.out[newName]=value
-            delete this.agentDesc[this.selectedAgentName].flows.out[key]
+            this.selectedAgent.flows.out[newName]=value
+            delete this.selectedAgent.flows.out[key]
         },
         changeThresholdType(key, value, newName) {
-            this.agentDesc[this.selectedAgentName].thresholds[newName]=value
-            delete this.agentDesc[this.selectedAgentName].thresholds[key]
+            this.selectedAgent.thresholds[newName]=value
+            delete this.selectedAgent.thresholds[key]
         },
         changePropertyName(key, value, newName) {
-            this.agentDesc[this.selectedAgentName].properties[newName]=value
-            delete this.agentDesc[this.selectedAgentName].properties[key]
+            this.selectedAgent.properties[newName]=value
+            delete this.selectedAgent.properties[key]
         },
         changeGrowthType(kind, value, newName, key) {
-            this.agentDesc[this.selectedAgentName].flows.out[key].growth[newName]=value
-            delete this.agentDesc[this.selectedAgentName].flows.out[key].growth[kind]
+            this.selectedAgent.flows.out[key].growth[newName]=value
+            delete this.selectedAgent.flows.out[key].growth[kind]
         },
         changeCriterionType(kind, value, newName, key) {
-            this.agentDesc[this.selectedAgentName].flows.out[key].criteria[newName]=value
-            delete this.agentDesc[this.selectedAgentName].flows.out[key].criteria[kind]
+            this.selectedAgent.flows.out[key].criteria[newName]=value
+            delete this.selectedAgent.flows.out[key].criteria[kind]
         },
         addNewCapacity(key, value) {
             // Add the capacity object if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].capacity)==='object')) {
-                this.agentDesc[this.selectedAgentName].capacity = {}
+            if (!(typeof (this.selectedAgent.capacity)==='object')) {
+                this.selectedAgent.capacity = {}
             }
-            this.agentDesc[this.selectedAgentName].capacity[key]=value
+            this.selectedAgent.capacity[key]=value
         },
         addNewFlow(direction, currency) {
-            this.agentDesc[this.selectedAgentName].flows[direction][currency]={}
-            this.agentDesc[this.selectedAgentName].flows[direction][currency].flow_rate = {}
+            this.selectedAgent.flows[direction][currency]={}
+            this.selectedAgent.flows[direction][currency].flow_rate = {}
         },
         addNewThreshold(currency, path, limit, value, connections) {
             // Add the threshold object if it doesn't exist
-            if (!(typeof (this.agentDesc[this.selectedAgentName].thresholds)==='object')) {
-                this.agentDesc[this.selectedAgentName].thresholds = {}
+            if (!(typeof (this.selectedAgent.thresholds)==='object')) {
+                this.selectedAgent.thresholds = {}
             }
-            this.agentDesc[this.selectedAgentName].thresholds[currency]={}
-            this.agentDesc[this.selectedAgentName].thresholds[currency].path=path
-            this.agentDesc[this.selectedAgentName].thresholds[currency].limit=limit
-            this.agentDesc[this.selectedAgentName].thresholds[currency].value=value
-            this.agentDesc[this.selectedAgentName].thresholds[currency].connections=connections
+            this.selectedAgent.thresholds[currency]={}
+            this.selectedAgent.thresholds[currency].path=path
+            this.selectedAgent.thresholds[currency].limit=limit
+            this.selectedAgent.thresholds[currency].value=value
+            this.selectedAgent.thresholds[currency].connections=connections
         },
         addNewProperty(newPropertyName, newPVal, newPropUnit) {
             let newPropVal = newPVal
@@ -396,17 +399,17 @@ export default {
             if (newPropVal==='true') { newPropVal = true }
             if (newPropVal==='false') { newPropVal = false }
             if (newPropUnit !== '') {
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
+                this.selectedAgent.properties[newPropertyName] = (
                     {value: newPropVal, unit: newPropUnit}
                 )
             } else { // Make sure not to add unit if it is not specified
-                this.agentDesc[this.selectedAgentName].properties[newPropertyName] = (
+                this.selectedAgent.properties[newPropertyName] = (
                     {value: newPropVal}
                 )
             }
         },
         addFlowArrayItem(direction, type, currency, name) {
-            const agent = this.agentDesc[this.selectedAgentName]
+            const agent = this.selectedAgent
             // Add the array if it doesn't exist
             if (!(typeof (agent.flows[direction][currency][type])==='object')) {
                 agent.flows[direction][currency][type] = []
@@ -415,7 +418,7 @@ export default {
             (agent.flows[direction][currency][type]).push(name)
         },
         addNewCriterion(currency, name, value, limit) {
-            const agent = this.agentDesc[this.selectedAgentName]
+            const agent = this.selectedAgent
             // Add Criteria if it doesn't exist
             if (!(typeof (agent.flows.out[currency].criteria)==='object')) {
                 agent.flows.out[currency].criteria = {}
@@ -440,7 +443,7 @@ export default {
             delete this.currencyDesc[this.selectedCurrencyCategory][this.selectedCurrency].nutrition
         },
         addGrowth(currency, kind, pattern) {
-            const agent = this.agentDesc[this.selectedAgentName]
+            const agent = this.selectedAgent
             if (!(typeof (agent.flows.out[currency].growth)==='object')) {
                 agent.flows.out[currency].growth = {}
             }
@@ -448,9 +451,9 @@ export default {
             agent.flows.out[currency].growth[kind].type=pattern
         },
         addDeprive(currency, value, unit) {
-            this.agentDesc[this.selectedAgentName].flows.in[currency].deprive = {}
-            this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.value=value
-            this.agentDesc[this.selectedAgentName].flows.in[currency].deprive.unit=unit
+            this.selectedAgent.flows.in[currency].deprive = {}
+            this.selectedAgent.flows.in[currency].deprive.value=value
+            this.selectedAgent.flows.in[currency].deprive.unit=unit
         },
         createNewAgent() {
             const agentNumber = Object.keys(this.agentDesc).length + 1
@@ -486,7 +489,7 @@ export default {
             const agentNumber = Object.keys(this.agentDesc).length + 1
             const newAgentName=`${this.selectedAgentName}_${agentNumber}`
             // Deep Copy the original object
-            const copiedObject = JSON.parse(JSON.stringify(this.agentDesc[this.selectedAgentName]))
+            const copiedObject = JSON.parse(JSON.stringify(this.selectedAgent))
             this.agentDesc[newAgentName]=copiedObject
             // Switch to the copied agent
             this.selectedAgentName=newAgentName
@@ -514,7 +517,7 @@ export default {
         exportJSON() {
             // Package this agent singly
             const agentName = this.selectedAgentName
-            this.customAgents[agentName] = this.agentDesc[this.selectedAgentName]
+            this.customAgents[agentName] = this.selectedAgent
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
             if (typeof (currentCustomAgents)==='object' && (currentCustomAgents!==null)) {
@@ -575,6 +578,9 @@ export default {
             } else {
                 this.currentMode='agent'
             }
+        },
+        getCriteriaValueModel(currency, kind) { // Function to limit line length in Vue
+            return this.selectedAgent.flows.out[currency].criteria[kind].value
         },
     },
 }
@@ -687,7 +693,7 @@ export default {
                 </h2>
                 <ul>
                     <li>Agent Class:
-                        <select id="categoryChanger" v-model="agentDesc[selectedAgentName].agent_class">
+                        <select id="categoryChanger" v-model="selectedAgent.agent_class">
                             <option v-for="category in agentClasses" :key="category" :value="category">
                                 {{category}}
                             </option>
@@ -699,20 +705,20 @@ export default {
                         <button @click="setCustomClass">Set Custom Class</button>
                     </li>
                     <li>Description: <br>
-                        <textarea v-model="agentDesc[selectedAgentName].description"
+                        <textarea v-model="selectedAgent.description"
                                   name="descriptionField" rows="4" cols="100" />
                     </li>
                 </ul>
                 <h3>Capacity</h3>
                 <ul>
-                    <li v-for="(value, key) in agentDesc[selectedAgentName].capacity">
+                    <li v-for="(value, key) in selectedAgent.capacity">
                         {{key}}
                         (Change to:
                         <input v-model="capacityTypes[key]" name="capType" type="text">
                         <button @click="changeType(key, value, capacityTypes[key])">Change</button>)
                         :::::
                         Quantity:
-                        <input v-model="agentDesc[selectedAgentName].capacity[key]" name="capVal" type="number">
+                        <input v-model="selectedAgent.capacity[key]" name="capVal" type="number">
                         <button @click="removeCapacity(key)">Remove Capacity</button>
                     </li>
                     <li>
@@ -727,7 +733,7 @@ export default {
                 <h3>Flows</h3>
                 <h4>In Currencies</h4>
                 <ul> <!-- In currency ul -->
-                    <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.in">{{currency}}
+                    <li v-for="(value, currency) in selectedAgent.flows.in">{{currency}}
                         <label>(Change to:
                             <select v-model="inTypes[currency]" name="changeInFlowCurrency">
                                 <option v-for="item in currencyList" :value="item"> {{item}} </option>
@@ -737,29 +743,29 @@ export default {
                         <button @click="removeInFlow(currency)">Remove</button>
                         <ul>
                             <li> Value:
-                                <input v-model="agentDesc[selectedAgentName].flows.in[currency].value"
+                                <input v-model="selectedAgent.flows.in[currency].value"
                                        name="flowValueFieldIn" type="number">
                             </li>
                             <li> flow_rate:
                                 <ul>
                                     <li>Unit:
-                                        <input v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.unit"
+                                        <input v-model="selectedAgent.flows.in[currency].flow_rate.unit"
                                                name="flowInUnit" type="text">
                                     </li>
                                     <li>Time:
-                                        <input v-model="agentDesc[selectedAgentName].flows.in[currency].flow_rate.time"
+                                        <input v-model="selectedAgent.flows.in[currency].flow_rate.time"
                                                name="flowInTime" type="text">
                                     </li>
                                 </ul>
                             </li>
                             <li> connections :
                                 <span
-                                    v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)
+                                    v-if="typeof(selectedAgent.flows.in[currency].connections)
                                         ==='object'">
                                     (Click to remove)
                                     <button
                                         v-for="(connection, index) in
-                                            agentDesc[selectedAgentName].flows.in[currency].connections"
+                                            selectedAgent.flows.in[currency].connections"
                                         @click="removeFlowArrayItem('in', 'connections', currency, connection)">
                                         {{connection}}
                                     </button>
@@ -771,12 +777,12 @@ export default {
                                 </button>
                             </li>
                             <li> weighted:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)
+                                <span v-if="typeof(selectedAgent.flows.in[currency].weighted)
                                     ==='object'">
                                     (Click to remove)
                                     <button
                                         v-for="(weighted, index)
-                                            in agentDesc[selectedAgentName].flows.in[currency].weighted"
+                                            in selectedAgent.flows.in[currency].weighted"
                                         @click="removeFlowArrayItem('in', 'weighted', currency, weighted)">
                                         {{weighted}}
                                     </button>
@@ -788,14 +794,14 @@ export default {
                                 </button>
                             </li>
                             <li> deprive:
-                                <ul v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].deprive)==='object'">
+                                <ul v-if="typeof(selectedAgent.flows.in[currency].deprive)==='object'">
                                     <button @click="removeDeprive(currency)">Remove Deprive</button>
                                     <li>Value:
-                                        <input v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.value"
+                                        <input v-model="selectedAgent.flows.in[currency].deprive.value"
                                                name="depriveValue" type="number">
                                     </li>
                                     <li>Unit:
-                                        <input v-model="agentDesc[selectedAgentName].flows.in[currency].deprive.unit"
+                                        <input v-model="selectedAgent.flows.in[currency].deprive.unit"
                                                name="depriveUnit" type="text">
                                     </li>
                                 </ul>
@@ -824,7 +830,7 @@ export default {
                 </ul> <!-- In currency ul -->
                 <h4>Out Currencies</h4>
                 <ul> <!-- Out Currency ul -->
-                    <li v-for="(value, currency) in agentDesc[selectedAgentName].flows.out"> {{currency}}
+                    <li v-for="(value, currency) in selectedAgent.flows.out"> {{currency}}
                         (Change to:
                         <label>
                             <select v-model="outTypes[currency]" name="changeOutCurrencySelector">
@@ -835,28 +841,28 @@ export default {
                         <button @click="removeOutFlow(currency)">Remove</button>
                         <ul> <!-- Out currency -->
                             <li> Value:
-                                <input v-model="agentDesc[selectedAgentName].flows.out[currency].value"
+                                <input v-model="selectedAgent.flows.out[currency].value"
                                        name="flowValueOut" type="number">
                             </li>
                             <li> flow_rate:
                                 <ul>
                                     <li>Unit:
-                                        <input v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.unit"
+                                        <input v-model="selectedAgent.flows.out[currency].flow_rate.unit"
                                                name="flowUnitOut" type="text">
                                     </li>
                                     <li>Time:
-                                        <input v-model="agentDesc[selectedAgentName].flows.out[currency].flow_rate.time"
+                                        <input v-model="selectedAgent.flows.out[currency].flow_rate.time"
                                                name="flowTimeOut" type="text">
                                     </li>
                                 </ul>
                             </li>
                             <li> connections:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)
+                                <span v-if="typeof(selectedAgent.flows.out[currency].connections)
                                     ==='object'">
                                     (Click to remove)
                                     <button
                                         v-for="(connection, index)
-                                            in agentDesc[selectedAgentName].flows.out[currency].connections"
+                                            in selectedAgent.flows.out[currency].connections"
                                         @click="removeFlowArrayItem('out', 'connections', currency, connection)">
                                         {{connection}}
                                     </button>
@@ -868,11 +874,11 @@ export default {
                                 </button>
                             </li>
                             <li> weighted:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)
+                                <span v-if="typeof(selectedAgent.flows.out[currency].weighted)
                                     ==='object'">
                                     (Click to remove)
                                     <button v-for="(weighted, index) in
-                                                agentDesc[selectedAgentName].flows.out[currency].weighted"
+                                                selectedAgent.flows.out[currency].weighted"
                                             @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">
                                         {{weighted}}
                                     </button>
@@ -884,11 +890,11 @@ export default {
                                 </button>
                             </li>
                             <li> requires :
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)
+                                <span v-if="typeof(selectedAgent.flows.out[currency].requires)
                                     ==='object'">
                                     (Click to remove)
                                     <button v-for="(requires, index)
-                                                in agentDesc[selectedAgentName].flows.out[currency].requires"
+                                                in selectedAgent.flows.out[currency].requires"
                                             @click="removeFlowArrayItem('out',
                                                                         'requires',
                                                                         currency, requires)">
@@ -906,9 +912,9 @@ export default {
                                 </button>
                             </li>
                             <li> growth:
-                                <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].growth)==='object'">
+                                <ul v-if="typeof(selectedAgent.flows.out[currency].growth)==='object'">
                                     <li v-for="(pattern, kind)
-                                        in agentDesc[selectedAgentName].flows.out[currency].growth">
+                                        in selectedAgent.flows.out[currency].growth">
                                         {{kind}}
                                         (Change to:
                                         <input v-model="kindTypes[kind]" name="kindTypeName" type="text">
@@ -920,7 +926,7 @@ export default {
                                         <ul>
                                             <li> Type:
                                                 <input
-                                                    v-model="agentDesc[selectedAgentName].flows.out[currency].growth[kind].type"
+                                                    v-model="selectedAgent.flows.out[currency].growth[kind].type"
                                                     name="growthTypeField" type="text">
                                             </li>
                                         </ul>
@@ -940,9 +946,9 @@ export default {
                                 </button>
                             </li>
                             <li> criteria:
-                                <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].criteria)==='object'">
+                                <ul v-if="typeof(selectedAgent.flows.out[currency].criteria)==='object'">
                                     <li v-for="(pattern, kind)
-                                        in agentDesc[selectedAgentName].flows.out[currency].criteria">
+                                        in selectedAgent.flows.out[currency].criteria">
                                         {{kind}}
                                         (
                                         <label>Change to:
@@ -955,7 +961,7 @@ export default {
                                         :::::
                                         <ul>
                                             <li> Limit:
-                                                <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].limit"
+                                                <select v-model="selectedAgent.flows.out[currency].criteria[kind].limit"
                                                         name="criteriaLimitField">
                                                     <option value="&lt;"> &lt; </option>
                                                     <option value="&equals;"> = </option>
@@ -963,7 +969,7 @@ export default {
                                                 </select>
                                             </li>
                                             <li> Value:
-                                                <select v-model="agentDesc[selectedAgentName].flows.out[currency].criteria[kind].value"
+                                                <select v-model="selectedAgent.flows.out[currency].criteria[kind].value"
                                                         name="criteriaValueField">
                                                     <option :value="true">True</option>
                                                     <option :value="false">False</option>
@@ -1012,7 +1018,7 @@ export default {
                 <h3>Thresholds</h3>
                 <h4> Currencies </h4>
                 <ul>
-                    <li v-for="(value, currency) in agentDesc[selectedAgentName].thresholds">
+                    <li v-for="(value, currency) in selectedAgent.thresholds">
                         {{currency}}
                         (
                         <label>Change to:
@@ -1024,11 +1030,11 @@ export default {
                         <button @click="removeThreshold(currency)">Remove Currency</button>
                         <ul>
                             <li> Path:
-                                <input v-model="agentDesc[selectedAgentName].thresholds[currency].path"
+                                <input v-model="selectedAgent.thresholds[currency].path"
                                        name="thesholdPathField" type="text">
                             </li>
                             <li> Limit:
-                                <select v-model="agentDesc[selectedAgentName].thresholds[currency].limit"
+                                <select v-model="selectedAgent.thresholds[currency].limit"
                                         name="thresholdLimitField">
                                     <option value="&lt;"> &lt; </option>
                                     <option value="&equals;"> = </option>
@@ -1036,11 +1042,11 @@ export default {
                                 </select>
                             </li>
                             <li> Value:
-                                <input v-model="agentDesc[selectedAgentName].thresholds[currency].value"
+                                <input v-model="selectedAgent.thresholds[currency].value"
                                        name="thesholdValueField" type="number">
                             </li>
                             <li> Connnections:
-                                <input v-model="agentDesc[selectedAgentName].thresholds[currency].connections"
+                                <input v-model="selectedAgent.thresholds[currency].connections"
                                        name="connectionsThresholdsField" type="text">
                             </li>
                         </ul>
@@ -1077,7 +1083,7 @@ export default {
                 </ul>
                 <h3>Properties</h3>
                 <ul>
-                    <li v-for="(attributes, property) in agentDesc[selectedAgentName].properties">
+                    <li v-for="(attributes, property) in selectedAgent.properties">
                         {{property}} (Change to:
                         <input v-model="propertyNames[property]" name="propertyName" type="text">
                         <button @click="changePropertyName(property, attributes, propertyNames[property])">
@@ -1091,7 +1097,7 @@ export default {
                                 <button @click="changePropertyValue(property, changedPropVal)">Change Value</button>
                             </li>
                             <li>unit:
-                                <input v-model="agentDesc[selectedAgentName].properties[property].unit"
+                                <input v-model="selectedAgent.properties[property].unit"
                                        name="propUnit" type="text" col="15">
                             </li>
                         </ul>
@@ -1111,19 +1117,19 @@ export default {
                 <h2> Agent Details </h2>
                 <hr>
                 <ul>
-                    <li v-for="(value, key) in agentDesc[selectedAgentName]"> <b>{{key}}</b> :
+                    <li v-for="(value, key) in selectedAgent"> <b>{{key}}</b> :
                         <i v-if="typeof(value)!='object'">{{value}}</i>
                         <ul v-else>
-                            <li v-for="(subvalue, subkey) in agentDesc[selectedAgentName][key]">
+                            <li v-for="(subvalue, subkey) in selectedAgent[key]">
                                 <b>{{subkey}}</b> :
                                 <i v-if="typeof(subvalue)!='object'">{{subvalue}}</i>
                                 <ul v-else>
-                                    <li v-for="(subsubvalue, subsubkey) in agentDesc[selectedAgentName][key][subkey]">
+                                    <li v-for="(subsubvalue, subsubkey) in selectedAgent[key][subkey]">
                                         <b>{{subsubkey}}</b> :
                                         <i v-if="typeof(subsubvalue)!='object'">{{subsubvalue}}</i>
                                         <ul v-else>
                                             <li v-for="(subsubsubvalue, subsubsubkey)
-                                                in agentDesc[selectedAgentName][key][subkey][subsubkey]">
+                                                in selectedAgent[key][subkey][subsubkey]">
                                                 <b>{{subsubsubkey}}</b> :  {{subsubsubvalue}}
                                             </li>
                                         </ul>
