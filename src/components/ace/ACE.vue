@@ -57,8 +57,8 @@ export default {
         }
     },
     computed: {
-        selectedAgent(){
-            return this.agentDesc[this.selectedAgentName];
+        selectedAgent() {
+            return this.agentDesc[this.selectedAgentName]
         },
         currencyTypes() {
             const listOfTypes = []
