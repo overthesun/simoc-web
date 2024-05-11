@@ -136,11 +136,12 @@ export default {
             let localStorageCurrencies = localStorage.getItem('customCurrencies')
             localStorageCurrencies = JSON.parse(localStorageCurrencies)
             if (typeof (localStorageCurrencies)==='object' && (localStorageCurrencies!==null)) {
+                /* Uncomment to print to the console the list of local storage currencies: */
                 // for(let category in localStorageCurrencies)
                 // console.log("Currencies found in local storage:")
                 // for (let currency in category) {
-                //  console.log(currency)
-                //  this.currencyDesc[category][currency] = localStorageCurrencies[currency]
+                //    console.log(currency)
+                //    this.currencyDesc[category][currency] = localStorageCurrencies[currency]
                 // }
                 if (
                     typeof (this.currencyDesc.custom)==='object'
@@ -166,9 +167,9 @@ export default {
                 // Retrieve agent desc  from the backend
                 console.log(`* Loading Currency Desc from backend *`)
                 const response = await axios.get('/get_currency_desc')
-                const currencyDesc = response.data.currency_desc
+                const currencyDesc = response.data.currency_desc // get the actual data out of the response object
                 console.log(currencyDesc)
-                return currencyDesc  // get the actual data out of the response object
+                return currencyDesc
             } catch (error) {
                 console.log('* Loading agent desc failed! *')
                 console.error(error)
@@ -186,7 +187,7 @@ export default {
                 for (let currencyIndex = 0;
                     currencyIndex<curranciesNamesOfType.length; currencyIndex+=1) {
                     const currencyName = curranciesNamesOfType[currencyIndex]
-                    // const currencyForList=this.currencyDesc[currentCurrencyCatName][currencyName]
+                    // The actual currency is at this.currencyDesc[currentCurrencyCatName][currencyName]
                     currancies.push(currencyName)
                 }
             }
@@ -291,6 +292,7 @@ export default {
             /* Check this again to verify with this workaround for lint */
                 newPropVal = +newPropVal
             }
+            // Convert true/false string to boolean
             if (newPropVal==='true') { newPropVal = true }
             if (newPropVal==='false') { newPropVal = false }
             this.selectedAgent.properties[property].value=newPropVal
@@ -1172,8 +1174,8 @@ export default {
 }
 .gridBox{
             display: grid;
-            grid-template-columns: 1fr 5fr; /* Three columns each 100px wide */
-            grid-gap: 10px; /* Gap between grid items */
+            grid-template-columns: 1fr 5fr;
+            grid-gap: 10px;
 }
 .scrollie {
     overflow-y: scroll !important;
