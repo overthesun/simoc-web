@@ -754,10 +754,12 @@ export default {
                             </li>
                             <li> connections :
                                 <span
-                                    v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)==='object'">
+                                    v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].connections)
+                                        ==='object'">
                                     (Click to remove)
                                     <button
-                                        v-for="(connection, index) in agentDesc[selectedAgentName].flows.in[currency].connections"
+                                        v-for="(connection, index) in
+                                            agentDesc[selectedAgentName].flows.in[currency].connections"
                                         @click="removeFlowArrayItem('in', 'connections', currency, connection)">
                                         {{connection}}
                                     </button>
@@ -769,10 +771,12 @@ export default {
                                 </button>
                             </li>
                             <li> weighted:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)==='object'">
+                                <span v-if="typeof(agentDesc[selectedAgentName].flows.in[currency].weighted)
+                                    ==='object'">
                                     (Click to remove)
                                     <button
-                                        v-for="(weighted, index) in agentDesc[selectedAgentName].flows.in[currency].weighted"
+                                        v-for="(weighted, index)
+                                            in agentDesc[selectedAgentName].flows.in[currency].weighted"
                                         @click="removeFlowArrayItem('in', 'weighted', currency, weighted)">
                                         {{weighted}}
                                     </button>
@@ -847,10 +851,12 @@ export default {
                                 </ul>
                             </li>
                             <li> connections:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)==='object'">
+                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].connections)
+                                    ==='object'">
                                     (Click to remove)
                                     <button
-                                        v-for="(connection, index) in agentDesc[selectedAgentName].flows.out[currency].connections"
+                                        v-for="(connection, index)
+                                            in agentDesc[selectedAgentName].flows.out[currency].connections"
                                         @click="removeFlowArrayItem('out', 'connections', currency, connection)">
                                         {{connection}}
                                     </button>
@@ -862,9 +868,11 @@ export default {
                                 </button>
                             </li>
                             <li> weighted:
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)==='object'">
+                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].weighted)
+                                    ==='object'">
                                     (Click to remove)
-                                    <button v-for="(weighted, index) in agentDesc[selectedAgentName].flows.out[currency].weighted"
+                                    <button v-for="(weighted, index) in
+                                                agentDesc[selectedAgentName].flows.out[currency].weighted"
                                             @click="removeFlowArrayItem('out', 'weighted', currency, weighted)">
                                         {{weighted}}
                                     </button>
@@ -876,10 +884,14 @@ export default {
                                 </button>
                             </li>
                             <li> requires :
-                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)==='object'">
+                                <span v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].requires)
+                                    ==='object'">
                                     (Click to remove)
-                                    <button v-for="(requires, index) in agentDesc[selectedAgentName].flows.out[currency].requires"
-                                            @click="removeFlowArrayItem('out', 'requires', currency, requires)">
+                                    <button v-for="(requires, index)
+                                                in agentDesc[selectedAgentName].flows.out[currency].requires"
+                                            @click="removeFlowArrayItem('out',
+                                                                        'requires',
+                                                                        currency, requires)">
                                         {{requires}}
                                     </button>
                                     <br>
@@ -895,7 +907,8 @@ export default {
                             </li>
                             <li> growth:
                                 <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].growth)==='object'">
-                                    <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].growth">
+                                    <li v-for="(pattern, kind)
+                                        in agentDesc[selectedAgentName].flows.out[currency].growth">
                                         {{kind}}
                                         (Change to:
                                         <input v-model="kindTypes[kind]" name="kindTypeName" type="text">
@@ -928,7 +941,8 @@ export default {
                             </li>
                             <li> criteria:
                                 <ul v-if="typeof(agentDesc[selectedAgentName].flows.out[currency].criteria)==='object'">
-                                    <li v-for="(pattern, kind) in agentDesc[selectedAgentName].flows.out[currency].criteria">
+                                    <li v-for="(pattern, kind)
+                                        in agentDesc[selectedAgentName].flows.out[currency].criteria">
                                         {{kind}}
                                         (
                                         <label>Change to:
@@ -961,7 +975,8 @@ export default {
                                 <ul>
                                     <li>
                                         <input v-model="newCriterionName" name="newCriterionNameField" type="text">
-                                        <button @click="addNewCriterion(currency, newCriterionName, newCriterionValue, newCriterionLimit)">
+                                        <button @click="addNewCriterion(currency, newCriterionName, newCriterionValue,
+                                                                        newCriterionLimit)">
                                             Add new Criterion
                                         </button>
                                         <ul>
@@ -1053,7 +1068,9 @@ export default {
                                        name="newThresholdConnectionsField">
                             </li>
                         </ul>
-                        <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath, newThresholdLimit, newThresholdValue, newThresholdConnections)">
+                        <button @click="addNewThreshold(newThresholdCurrency, newThresholdPath,
+                                                        newThresholdLimit, newThresholdValue,
+                                                        newThresholdConnections)">
                             Add Threshold Currency
                         </button>
                     </li> <!-- NEW FLOW -->
@@ -1105,7 +1122,8 @@ export default {
                                         <b>{{subsubkey}}</b> :
                                         <i v-if="typeof(subsubvalue)!='object'">{{subsubvalue}}</i>
                                         <ul v-else>
-                                            <li v-for="(subsubsubvalue, subsubsubkey) in agentDesc[selectedAgentName][key][subkey][subsubkey]">
+                                            <li v-for="(subsubsubvalue, subsubsubkey)
+                                                in agentDesc[selectedAgentName][key][subkey][subsubkey]">
                                                 <b>{{subsubsubkey}}</b> :  {{subsubsubvalue}}
                                             </li>
                                         </ul>
