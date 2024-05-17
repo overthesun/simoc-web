@@ -17,7 +17,7 @@
     "@json-editor/json-editor": "^2.15.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "axios": "^1.6.8",
-    "chart.js": "^4.4.2",
+    "chart.js": "^4.4.3",
     "chartjs-plugin-annotation": "^3.0.1",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
