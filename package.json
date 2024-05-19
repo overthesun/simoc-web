@@ -23,7 +23,7 @@
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
-    "postcss-nesting": "^12.1.2",
+    "postcss-nesting": "^12.1.4",
     "socket.io-client": "^4.7.2",
     "three": "^0.164.1",
     "vite": "^3.2.10",
