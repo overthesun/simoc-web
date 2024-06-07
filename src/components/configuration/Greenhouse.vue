@@ -83,8 +83,8 @@ export default {
             // Initialize the localized variables used for v-model
             greenhouse: undefined,
             plantSpecies: undefined,
-            plantValue: [],
-            plantFormatted: [],
+            plantValue: [], // This list corresponds to the values for the list of config plants
+            plantFormatted: [], // The formatted list of plants to display in the user drop down
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
             plant_selects: {},  // map index -> <select> for the plant type dropdown
             plant_inputs: {},  // map index -> <input> for the plant amount
