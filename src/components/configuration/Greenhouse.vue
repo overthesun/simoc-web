@@ -1,3 +1,6 @@
+/* This component establishes the user interface for configuring the greenhouse, including
+the list of plants, when the user is in the 'Simulation Configuration' area prior to pressing
+'Launch Simulation' button */
 <template>
     <div>
         <label v-if="simLocation === 'mars'" class="input-wrapper">
@@ -81,8 +84,8 @@ export default {
     data() {
         return {
             // Initialize the localized variables used for v-model
-            greenhouse: undefined,
-            plantSpecies: undefined,
+            greenhouse: undefined, // Used in the v-model for selection of greenhouse.type
+            plantSpecies: undefined, // Used in the v-model to specify sent plant data, including amount
             plantValue: [], // This list corresponds to the values for the list of config plants
             plantFormatted: [], // The formatted list of plants to display in the user drop down
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse

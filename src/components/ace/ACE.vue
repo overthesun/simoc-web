@@ -1,3 +1,7 @@
+/* This vue file creates a user interface allowing the creation of custom agents. It loads
+existing agents from the back end and makes it possible to duplicate or edit these agents. The
+custom agents are then stored in local storage in the browser, where they will be sent to the back
+when the user hits the 'Launch Simulation' button. */
 <script>
 import axios from 'axios'
 
