@@ -673,8 +673,14 @@ export default {
         </div> <!-- gridBox -->
     </div> <!-- vif currency object exists -->
     <div v-if="currentMode==='agent'">
-        <h2> Agent Editor.  Known Issues: Consistency.
-            Shared Change Memory. Select needs Title Attributes, ul has invalid elements </h2>
+        <h2> Agent Editor </h2>
+        <p> 
+        Supports custom plant agents. 
+        Make sure to add the corresponding 'out' flow currencies and biomass connection.
+        </p>
+        <p>
+        For other agent types, the agent editor is experimental or not fully implemented.
+        </p>
         <label for="categorySelector">Choose Agent Class:  </label>
         <select id="categorySelector" v-model="categorySelected">
             <option v-for="category in agentClasses" :key="category" :value="category">
