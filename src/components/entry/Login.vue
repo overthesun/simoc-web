@@ -25,8 +25,10 @@
             <template #entry-main>
                 <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
                     <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
-                        <input v-model="user.username" type="text" class="input-field-text" placeholder="Username">
-                        <input v-model="user.password" type="password" class="input-field-text" placeholder="Password">
+                        <input id="userName" v-model="user.username" type="text"
+                               class="input-field-text" autocomplete="on" placeholder="Username">
+                        <input id="password" v-model="user.password" type="password"
+                               class="input-field-text" placeholder="Password">
                     </form>
                     <p v-else>If you don't want to create an account, you can log in as a Guest.
                         Guest accounts are temporary and will be deleted on a regular basis.</p>
@@ -35,12 +37,12 @@
                 <section :class="{'entry-form-active': activeOption==='register'}"
                          class="entry-form entry-form-register">
                     <form id="register-form" @submit.prevent="registerUser">
-                        <input v-model="register.username" type="text" class="input-field-text"
-                               placeholder="Choose Username">
-                        <input v-model="register.password" type="password" class="input-field-text"
-                               placeholder="Enter Password">
-                        <input v-model="register.confirmPassword" type="password" class="input-field-text"
-                               placeholder="Confirm Password">
+                        <input id="newUserName" v-model="register.username" type="text"
+                               class="input-field-text" placeholder="Choose Username">
+                        <input id="newPassword" v-model="register.password" type="password"
+                               class="input-field-text" placeholder="Enter Password">
+                        <input id="confirmPassword" v-model="register.confirmPassword" type="password"
+                               class="input-field-text" placeholder="Confirm Password">
                     </form>
                 </section>
             </template>
