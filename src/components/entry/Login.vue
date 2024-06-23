@@ -25,7 +25,7 @@
             <template #entry-main>
                 <section :class="{'entry-form-active': activeOption==='login'}" class="entry-form entry-form-login">
                     <form v-if="!activeGuestLogin" id="login-form" @submit.prevent="loginUser">
-                        <input id="userName" v-model="user.username" type="text"
+                        <input id="username" v-model="user.username" type="text"
                                class="input-field-text" autocomplete="on" placeholder="Username">
                         <input id="password" v-model="user.password" type="password"
                                class="input-field-text" placeholder="Password">
@@ -37,11 +37,11 @@
                 <section :class="{'entry-form-active': activeOption==='register'}"
                          class="entry-form entry-form-register">
                     <form id="register-form" @submit.prevent="registerUser">
-                        <input id="newUserName" v-model="register.username" type="text"
+                        <input id="new-username" v-model="register.username" type="text"
                                class="input-field-text" placeholder="Choose Username">
-                        <input id="newPassword" v-model="register.password" type="password"
+                        <input id="new-password" v-model="register.password" type="password"
                                class="input-field-text" placeholder="Enter Password">
-                        <input id="confirmPassword" v-model="register.confirmPassword" type="password"
+                        <input id="confirm-password" v-model="register.confirmPassword" type="password"
                                class="input-field-text" placeholder="Confirm Password">
                     </form>
                 </section>
