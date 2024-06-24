@@ -526,12 +526,13 @@ export default {
             this.customAgents[agentName] = this.selectedAgent
             let currentCustomAgents=localStorage.getItem('customAgents')
             currentCustomAgents=JSON.parse(currentCustomAgents)
-            if (typeof (currentCustomAgents)==='object' && (currentCustomAgents!==null)) {
-                currentCustomAgents[agentName] = this.customAgents[agentName]
-            } else {
+            // If there isn't a custom agent object, create it.
+            if (!(typeof (currentCustomAgents)==='object' && (currentCustomAgents!==null))) {
                 currentCustomAgents = {}
-                currentCustomAgents[agentName] = this.customAgents[agentName]
             }
+            // Add this agent to the custom agents object.
+            currentCustomAgents[agentName] = this.customAgents[agentName]
+            // Save to the local browser storage
             localStorage.setItem('customAgents', JSON.stringify(currentCustomAgents))
             // If plant, export currency for it, too
             if (this.categorySelected==='plants') {
