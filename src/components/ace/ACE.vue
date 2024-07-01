@@ -784,7 +784,7 @@ export default {
                             <input v-model="selectedAgent.capacity[key]" name="capVal" type="number">
                             <button @click="removeCapacity(key)">Remove Capacity</button>
                         </li>
-                        <li>
+                        <li class="newItem">
                             New Capacity:
                             <input v-model="newCapacityType" name="newCapType" type="text">
                             :::::
@@ -886,7 +886,7 @@ export default {
                                             </ul>
                                             <ul v-else>
                                                 <button @click="addDeprive(currency, newDepriveValue, newDepriveUnit)">
-                                                    Turn Deprive On [Currently Disabled]
+                                                    Enable Deprive [Currently Disabled]
                                                 </button>
                                                 <li>Value:
                                                     <input v-model="newDepriveValue"
@@ -900,7 +900,7 @@ export default {
                                     </ul>
                                 </details>
                             </li>
-                            <li> <!-- NEW FLOW -->
+                            <li class="newItem"> <!-- NEW FLOW -->
                                 <label>New In Flow:
                                     <select v-model="newInType" name="newInFlowCurrencySelector">
                                         <option v-for="item in currencyList"
@@ -1122,9 +1122,9 @@ export default {
                                     </ul> <!-- Out currency -->
                                 </details>
                             </li>
-                            <li> <!-- NEW FLOW -->
+                            <li class="newItem"> <!-- NEW FLOW -->
                                 <label>
-                                    New Out Flow: (Change to:
+                                    New Out Flow:
                                     <select v-model="newOutType" name="outFlowCurrencySelector">
                                         <option v-for="item in currencyList" :key="item" :value="item">
                                             {{item}}
@@ -1173,7 +1173,7 @@ export default {
                                 </li>
                             </ul>
                         </li>
-                        <li> <!-- NEW FLOW -->
+                        <li class="newItem"> <!-- NEW FLOW -->
                             <label>New Currency:
                                 <select v-model="newThresholdCurrency" name="newThresholdCurrency" selected="o2">
                                     <option v-for="item in currencyList" :key="item" :value="item">
@@ -1227,7 +1227,7 @@ export default {
                                 </li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="newItem">
                             New Property:
                             <input v-model="newPropertyName" name="newPropertyName" type="text">
                             <ul> <!-- Property Attributes -->
@@ -1313,5 +1313,9 @@ details ul {
     border: solid red 5px;
     color: black;
     background-color: grey;
+}
+.newItem {
+    background-color: rgba(250,100,100,0.1);
+    border: 2px dotted black;
 }
 </style>
