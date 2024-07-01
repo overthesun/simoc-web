@@ -884,7 +884,7 @@ export default {
                                                            name="depriveUnit" type="text">
                                                 </li>
                                             </ul>
-                                            <ul v-else>
+                                            <ul v-else class="newItem">
                                                 <button @click="addDeprive(currency, newDepriveValue, newDepriveUnit)">
                                                     Enable Deprive [Currently Disabled]
                                                 </button>
