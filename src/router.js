@@ -36,13 +36,11 @@ export default createRouter({
             name: 'menuconfig',
             component: () => import('@/components/entry/MenuConfig.vue'),
         },
-        /*
         {
             path: '/ace',
-            name: 'ace',
-            conponent: () => import('@/views/AceView.vue'),
+            name: 'ACE',
+            component: () => import('@/components/ace/ACE.vue'),
         },
-        */
         {
             path: '/configuration',
             name: 'configuration',
