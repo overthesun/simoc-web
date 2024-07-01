@@ -350,7 +350,7 @@ export default {
             this.selectedCurrency = newName
             this.generateCurrencyList()
         },
-        changeType(key, value, newName) {
+        changeCapacityType(key, value, newName) {
             if (!(newName==='' || newName===undefined)) { // Make sure it is not the empty string
                 this.selectedAgent.capacity[newName]=value
                 delete this.selectedAgent.capacity[key]
@@ -399,9 +399,26 @@ export default {
             }
         },
         changeCriterionType(kind, value, newName, key) {
+            // const flow = true
+            // const dirrection = 'out'
+            // const parameter = 'criteria'
+            // this.changeType(kind, value, newName, key, parameter, flow, dirrection)
             if (!(newName==='' || newName===undefined)) { // Make sure it is not the empty string
                 this.agentOutFlow[key].criteria[newName]=value
                 delete this.agentOutFlow[key].criteria[kind]
+            } else {
+                console.log('Cannot change to type without label')
+            }
+        },
+        changeType(kind, value, newName, key, parameter, flow, dirrection) {
+            if (!(newName==='' || newName===undefined)) { // Make sure it is not the empty string
+                if (!flow) {
+                    this.selectedAgent[parameter][newName]=value
+                    delete this.selectedAgent[parameter][key]
+                } else {
+                    this.selectedAgent.flows[dirrection][parameter][newName]=value
+                    delete this.selectedAgent.flows[dirrection][parameter][kind]
+                }
             } else {
                 console.log('Cannot change to type without label')
             }
@@ -761,7 +778,7 @@ export default {
                             {{key}}
                             (Change to:
                             <input v-model="capacityTypes[key]" name="capType" type="text">
-                            <button @click="changeType(key, value, capacityTypes[key])">Change</button>)
+                            <button @click="changeCapacityType(key, value, capacityTypes[key])">Change</button>)
                             :::::
                             Quantity:
                             <input v-model="selectedAgent.capacity[key]" name="capVal" type="number">
@@ -916,7 +933,6 @@ export default {
                                         </select>
                                     </label>
                                     <button @click="changeOutType(currency, value, outTypes[currency])">Change</button>
-
                                     <ul> <!-- Out currency -->
                                         <li> Value:
                                             <input v-model="agentOutFlow[currency].value"
