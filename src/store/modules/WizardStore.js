@@ -98,7 +98,7 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         mars_presets: {
             one_human: {
-                name: '1 Human',
+                name: '1 Human + ECLSS',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 10, units: 'day'},
@@ -112,7 +112,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: '', amount: ''}],
             },
             one_human_radish: {
-                name: '1 Human + Radish',
+                name: '1 Human + ECLSS + Radish',
                 simdata_file: 'simoc-simdata-1-human-radish-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 30, units: 'day'},
@@ -126,7 +126,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: 'radish', amount: 40}],
             },
             four_humans: {
-                name: '4 Humans',
+                name: '4 Humans + ECLSS',
                 simdata_file: 'simoc-simdata-4-human-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 10, units: 'day'},
@@ -140,7 +140,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: '', amount: ''}],
             },
             four_humans_garden: {
-                name: '4 Humans + Garden',
+                name: '4 Humans + ECLSS + Garden',
                 simdata_file: 'simoc-simdata-4-human-garden-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 100, units: 'day'},
@@ -161,7 +161,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
             },
             sam_one_human_garden: {
-                name: 'SAM: 1 Human + Garden',
+                name: 'SAM: 1 Human + ECLSS + Garden',
                 simdata_file: 'simoc-simdata-sam-1-human-garden-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 100, units: 'day'},
