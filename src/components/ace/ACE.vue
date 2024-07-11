@@ -1278,7 +1278,7 @@ summary {
 
 details {
     background-color: rgba(150,150,150,0.2);
-    border: 2px dotted black;
+    border: 2px dotted grey;
     padding: 10px;
 }
 
@@ -1310,12 +1310,12 @@ details ul {
 }
 .agentData {
     padding: 5px;
-    border: solid red 5px;
-    color: black;
-    background-color: grey;
+    border: solid grey 5px;
+    color: white;
+    background-color: rgba(250,100,100,0.1);
 }
 .newItem {
-    background-color: rgba(250,100,100,0.1);
-    border: 2px dotted black;
+    background-color: rgba(250,100,100,0.3);
+    border: 2px dotted white;
 }
 </style>
