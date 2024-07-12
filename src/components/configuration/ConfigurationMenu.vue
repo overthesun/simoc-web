@@ -1,3 +1,9 @@
+<!--
+ConfigurationMenu.vue relates to the pop up menu modal accessible by pressing the hamburger
+(3 horizontal line) button that appears in the upper right corner of the screen on the top bar
+when in Simulation Configuration, which is reached after choosing 'Mars' or
+'Biosphere 2' from the "Main Menu" modal menu
+-->
 <template>
     <BaseMenu>
         <template #menu-title>
