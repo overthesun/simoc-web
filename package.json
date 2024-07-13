@@ -31,7 +31,7 @@
     "vue": "^3.4.31",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.4.0",
-    "vuetify": "^3.6.11"
+    "vuetify": "^3.6.12"
   },
   "devDependencies": {
     "@pinia/testing": "^0.1.3",
