@@ -16,6 +16,9 @@
                         <option :selected="formIndex === 2" value="2">Greenhouse</option>
                         <option :selected="formIndex === 3" value="3">Energy</option>
                         <option :selected="formIndex === 4" value="4">Finalize</option>
+                        <!-- If custom agents should appear in list, uncomment and probably put before finalize
+                        <option :selected="formIndex === 5" value="5">CustomAgents</option>
+                        -->
                     </select>
                 </template>
                 <template #main-wizard-input>
@@ -33,6 +36,7 @@
                             <ECLSS ref="eclss" />
                             <Greenhouse ref="greenhouse" />
                             <Energy v-if="simLocation === 'mars'" ref="energy" />
+                            <CustomAgents ref="customAgents" />
                             <!--
                             This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
                             <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
@@ -78,7 +82,7 @@ import {useWizardStore} from '../store/modules/WizardStore'
 import {useModalStore} from '../store/modules/ModalStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
-        Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+        Greenhouse, Energy, Reference, Graphs, Layout, CustomAgents} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
 import b2Url from '@/assets/b2-bg.jpg'
 import marsUrl from '@/assets/mars-bg.jpg'
@@ -96,6 +100,7 @@ export default {
         Reference,
         Graphs,
         Layout,
+        CustomAgents,
     },
     mixins: [idleMixin],
     setup() {
