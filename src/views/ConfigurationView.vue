@@ -82,7 +82,8 @@ import {useWizardStore} from '../store/modules/WizardStore'
 import {useModalStore} from '../store/modules/ModalStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
-        Greenhouse, Energy, Reference, Graphs, Layout, CustomAgents} from '../components/configuration'
+        Greenhouse, Energy, Reference, Graphs, Layout,
+        CustomAgents} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
 import b2Url from '@/assets/b2-bg.jpg'
 import marsUrl from '@/assets/mars-bg.jpg'
