@@ -22,7 +22,7 @@
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
-    "pinia": "^2.2.0",
+    "pinia": "^2.2.1",
     "postcss-nesting": "^13.0.0",
     "socket.io-client": "^4.7.5",
     "three": "^0.167.1",
