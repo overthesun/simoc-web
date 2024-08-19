@@ -674,9 +674,10 @@ export default {
         <button v-if="currentMode!='agent'" @click="switchMode('agent')">Agent Editor</button>
         <button v-if="currentMode!='currency'" @click="switchMode('currency')">Currency Editor</button>
     </div>
+    <h2 v-if="currentMode==='exports'">Export manager for custom agents and currencies</h2>
     <div v-if="currentMode==='exports'" class="gridBoxEven">
         <div class="scrollie agentBox">
-            <h2>Custom Exported Agents</h2>
+            <h3>Custom Exported Agents</h3>
             <p>Click to delete</p>
             <ul>
                 <li v-for="agent in localAgentNames"
@@ -686,7 +687,7 @@ export default {
             </ul>
         </div>
         <div class="scrollie agentBox">
-            <h2>Custom Exported Currencies</h2>
+            <h3>Custom Exported Currencies</h3>
             <p>Click to delete</p>
             <ul>
                 <li v-for="currency in localCurrencyNames"
