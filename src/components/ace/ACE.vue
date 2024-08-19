@@ -58,6 +58,9 @@ export default {
             newAgentName: '',
             customAgents: {},
             customCurrencies: {},
+            exportedListVisible: false,
+            localAgentNames: [],
+            localCurrencyNames: [],
         }
     },
     computed: {
@@ -128,11 +131,11 @@ export default {
         getLocalStorageAgents() {
             let localStorageAgents = localStorage.getItem('customAgents')
             localStorageAgents = JSON.parse(localStorageAgents)
-            const localAgentNames = Object.keys(localStorageAgents)
+            this.localAgentNames = Object.keys(localStorageAgents)
             if (typeof (localStorageAgents)==='object' && (localStorageAgents!==null)) {
                 console.log('Agents found in local storage:')
-                for (let index=0; index<localAgentNames.length; ++index) {
-                    const localAgentName = localAgentNames[index]
+                for (let index=0; index<this.localAgentNames.length; ++index) {
+                    const localAgentName = this.localAgentNames[index]
                     this.agentDesc[localAgentName] = localStorageAgents[localAgentName]
                 }
             } else {
@@ -158,10 +161,10 @@ export default {
                 } else {
                     this.currencyDesc.custom = {}
                 }
-                const localCurrencyNames = Object.keys(localStorageCurrencies)
+                this.localCurrencyNames = Object.keys(localStorageCurrencies)
                 console.log(' * Currencies loaded from local storage:')
-                for (let nameIndex=0; nameIndex<localCurrencyNames.length; nameIndex+=1) {
-                    const currencyName = localCurrencyNames[nameIndex]
+                for (let nameIndex=0; nameIndex<this.localCurrencyNames.length; nameIndex+=1) {
+                    const currencyName = this.localCurrencyNames[nameIndex]
                     console.log(currencyName)
                     this.currencyDesc.custom[currencyName] = localStorageCurrencies[currencyName]
                 }
@@ -624,15 +627,39 @@ export default {
             currentCustomCurrencies[currencyName]=this.customCurrencies[currencyName]
             localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
         },
+        deleteExportAgent(agent) {
+            let currentCustomAgents=localStorage.getItem('customAgents')
+            currentCustomAgents=JSON.parse(currentCustomAgents)
+            // If there isn't a custom agent object, create it.
+            if (!(typeof (currentCustomAgents)==='object' && (currentCustomAgents!==null))) {
+                currentCustomAgents = {}
+            }
+            // Remove this agent from custom agents object.
+            delete currentCustomAgents[agent]
+            // Save to the local browser storage
+            localStorage.setItem('customAgents', JSON.stringify(currentCustomAgents))
+            // Remove from custom agent names
+            this.localAgentNames = this.localAgentNames.filter(item => item !== agent)
+        },
+        deleteExportCurrency(currency) {
+            let currentCustomCurrencies=localStorage.getItem('customCurrencies')
+            currentCustomCurrencies=JSON.parse(currentCustomCurrencies)
+            // If there isn't a custom agent object, create it.
+            if (!(typeof (currentCustomCurrencies)==='object'&&(currentCustomCurrencies!==null))) {
+                currentCustomCurrencies = {}
+            }
+            // Remove this agent from custom agents object.
+            delete currentCustomCurrencies[currency]
+            // Save to the local browser storage
+            localStorage.setItem('customCurrencies', JSON.stringify(currentCustomCurrencies))
+            // Remove from custom agent names
+            this.localCurrencyNames = this.localCurrencyNames.filter(item => item !== currency)
+        },
         returnToMenu() { // Function to return to main menu
             this.$router.push('menu')
         },
-        switchMode() { // Function to swap between agent mode and currency mode
-            if (this.currentMode==='agent') {
-                this.currentMode='currency'
-            } else {
-                this.currentMode='agent'
-            }
+        switchMode(mode) { // Function to swap between agent mode, currency mode, export data mode
+            this.currentMode=mode
         },
         getCriteriaValueModel(currency, kind) { // Function to limit line length in Vue
             return this.agentOutFlow[currency].criteria[kind].value
@@ -643,8 +670,31 @@ export default {
 <template>
     <div class="navMenu">
         <button @click="returnToMenu()">Return to Menu</button>
-        <button v-if="currentMode!='agent'" @click="switchMode()">Agent Editor</button>
-        <button v-else @click="switchMode()">Currency Editor</button>
+        <button v-if="currentMode!='exports'" @click="switchMode('exports')">Manage Exports</button>
+        <button v-if="currentMode!='agent'" @click="switchMode('agent')">Agent Editor</button>
+        <button v-if="currentMode!='currency'" @click="switchMode('currency')">Currency Editor</button>
+    </div>
+    <div v-if="currentMode==='exports'" class="gridBoxEven">
+        <div class="scrollie agentBox">
+            <h2>Custom Exported Agents</h2>
+            <p>Click to delete</p>
+            <ul>
+                <li v-for="agent in localAgentNames"
+                    :key="agent">
+                    <button @click="deleteExportAgent(agent)">{{agent}}</button>
+                </li>
+            </ul>
+        </div>
+        <div class="scrollie agentBox">
+            <h2>Custom Exported Currencies</h2>
+            <p>Click to delete</p>
+            <ul>
+                <li v-for="currency in localCurrencyNames"
+                    :key="currency">
+                    <button @click="deleteExportCurrency(currency)">{{currency}}</button>
+                </li>
+            </ul>
+        </div>
     </div>
     <div v-if="typeof(currencyDesc[currencyCategorySelected])==='object' && currentMode==='currency'">
         <h2>Currency Editor</h2>
@@ -1275,25 +1325,26 @@ export default {
 summary {
     font-weight: bold;
 }
-
 details {
     background-color: rgba(150,150,150,0.2);
     border: 2px dotted grey;
     padding: 10px;
 }
-
 details ul {
     list-style-type: none;
 }
-
 .navMenu {
     display: flex;
     justify-content: center;
 }
-
 .gridBox {
             display: grid;
             grid-template-columns: 1fr 5fr;
+            grid-gap: 10px;
+}
+.gridBoxEven {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             grid-gap: 10px;
 }
 .scrollie {
