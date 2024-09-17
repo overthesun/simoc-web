@@ -11,6 +11,7 @@
                 <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
                 <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+                <button form="login-form" class="btn-normal" @click="toAce">AGENT EDITOR</button>
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <!-- <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button> -->
@@ -93,6 +94,9 @@ export default {
          *  this Menu, but in live mode that menu is bypassed and they must be manually set here
          *  before the Dashboard components can be rendered.
          */
+        toAce() {
+            this.$router.push('ace')
+        },
         toLiveDashboard() {
             // duplicated in Login.vue
             this.currentMode = 'live'  // set 'live' mode
