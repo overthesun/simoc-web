@@ -18,7 +18,7 @@
     "@vitejs/plugin-vue": "^3.2.0",
     "axios": "^1.7.7",
     "chart.js": "^4.4.5",
-    "chartjs-plugin-annotation": "^3.0.1",
+    "chartjs-plugin-annotation": "^3.1.0",
     "idle-js": "^1.2.0",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
