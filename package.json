@@ -42,7 +42,7 @@
     "eslint-plugin-vitest": "^0.3.22",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "eslint-plugin-vue": "^9.29.0",
-    "happy-dom": "^15.7.4",
+    "happy-dom": "^15.10.2",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.80.4",
     "vite-plugin-eslint": "^1.8.0",
