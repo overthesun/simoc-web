@@ -41,7 +41,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-vitest": "^0.3.22",
     "eslint-plugin-vitest-globals": "^1.5.0",
-    "eslint-plugin-vue": "^9.29.0",
+    "eslint-plugin-vue": "^9.30.0",
     "happy-dom": "^15.11.0",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.80.4",
