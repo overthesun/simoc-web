@@ -37,6 +37,11 @@ export default defineConfig({
         assetsDir: 'static',
     },
     css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern',
+            }
+        },
         postcss: {
             plugins: [
                 postcssNesting,
