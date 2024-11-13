@@ -38,9 +38,10 @@ export default defineConfig({
     },
     css: {
         preprocessorOptions: {
+            // this section can probably be removed on Vite 6
             scss: {
                 api: 'modern',
-            }
+            },
         },
         postcss: {
             plugins: [
