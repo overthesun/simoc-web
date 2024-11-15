@@ -50,13 +50,14 @@ export default {
             // Prompt user to take the feedback survey *only* the first time (per session)
             if (!this.surveyWasPrompted && !this.kioskMode &&
                 import.meta.env.MODE !== 'development') {
-                // Remove the listener so user can add spaces in survey fields
-                window.removeEventListener('keydown', this.keyListener)
-                this.showSurvey({prompt: true, onUnload: () => {
-                    // Re-add listener in case user decides to stay
-                    window.addEventListener('keydown', this.keyListener)
-                    confirmExit()
-                }})
+                this.confirm({
+                    message: 'Thanks for using SIMOC!\nWould you like to leave us feedback?',
+                    confirmCallback: () => {
+                        window.open('https://simoc.space/about/contact/', '_blank')
+                        next()
+                    },
+                    cancelCallback: () => next(),
+                })
             } else {
                 confirmExit()
             }
@@ -82,7 +83,7 @@ export default {
         } = dashboard
         const {setLiveConfig} = wizard
         const {setHabitatInfo, setSensorInfo, parseData} = liveStore
-        const {confirm, showSurvey, stopCountdownTimer} = modal
+        const {confirm, stopCountdownTimer} = modal
         return {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
@@ -91,7 +92,7 @@ export default {
             stopTimer, setCurrentStepBuffer, setStopped, getTotalMissionHours,
             setLiveConfig, bundleNum, initBundleNum,
             setHabitatInfo, setSensorInfo, parseData, surveyWasPrompted, countdownEnded,
-            confirm, showSurvey, stopCountdownTimer,
+            confirm, stopCountdownTimer,
         }
     },
 

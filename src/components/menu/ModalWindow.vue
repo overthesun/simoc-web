@@ -76,7 +76,9 @@ export default {
     },
     methods: {
         async handleClick(callback) {
-            callback()
+            if (callback !== undefined) {
+                callback()
+            }
             this.cleanup()
         },
 

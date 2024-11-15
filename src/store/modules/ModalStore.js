@@ -123,12 +123,12 @@ export const useModalStore = defineStore('ModalStore', {
         },
         // Show text with ok / cancel buttons, execute a callback function if user clicks 'ok'
         confirm(payload) {
-            const {message, confirmCallback} = payload
+            const {message, confirmCallback, cancelCallback} = payload
             this.setModalParams({
                 type: 'confirm',
                 message: message,
                 buttons: [
-                    {text: 'Cancel', type: 'warning'},
+                    {text: 'Cancel', type: 'warning', callback: cancelCallback},
                     {text: 'Ok', callback: confirmCallback},
                 ],
             })
