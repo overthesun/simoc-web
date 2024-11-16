@@ -7,7 +7,7 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 -->
 
 <template>
-    <div :class="{'dashboard-onepanel': isFullscreen}" class="dashboard-view-wrapper">
+    <div :class="layoutClass" class="dashboard-view-wrapper">
         <BasePanel v-for="([panelName, panelSection], index) in activePanels.map(p => p.split(':'))"
                    :key="index" :class="fullscreenStatus[index]">
             <template #panel-title><div class="panel-title">{{panels[panelName].panelTitle}}</div></template>
@@ -98,6 +98,18 @@ export default {
         isFullscreen() {
             return this.fullscreenStatus.includes('panel-fullscreen')
         },
+        layoutClass() {
+            // return the CSS class used to determine the panel layout
+            if (this.isFullscreen) {
+                return 'dashboard-1x1'
+            }
+            return {
+                1: 'dashboard-1x1',
+                2: 'dashboard-2x1',
+                3: 'dashboard-2x2',
+                4: 'dashboard-2x2',
+            }[Object.keys(this.activePanels).length] ?? false
+        },
     },
     watch: {
         getActivePanels() {
@@ -179,7 +191,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .dashboard-view-wrapper{
+    .dashboard-view-wrapper {
         font-family: "Roboto", sans-serif;
         width:100%;
         height:100%;
@@ -195,9 +207,18 @@ export default {
         grid-column-gap: 16px;
         overflow: auto;
     }
-    .dashboard-onepanel {
+    /* force specific layouts when there are few panels */
+    .dashboard-1x1 {
         grid-template-rows: 1fr;
         grid-template-columns: 1fr;
+    }
+    .dashboard-2x1 {
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr;
+    }
+    .dashboard-2x2 {
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .panel-menu {
