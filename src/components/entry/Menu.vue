@@ -11,7 +11,6 @@
                 <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
                 <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
-                <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <!-- <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button> -->
                 <button :class="{'hidden': !showLiveMode}" form="login-form" class="btn-normal"
@@ -52,11 +51,11 @@ export default {
         const {surveyWasPrompted} = storeToRefs(modal)
         const {setSimulationData} = dashboard
         const {setConfiguration, setLiveConfig} = wizard
-        const {alert, showSurvey} = modal
+        const {alert} = modal
         return {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
             setSimulationData, activeConfigType, setConfiguration, setLiveConfig, surveyWasPrompted,
-            alert, showSurvey,
+            alert,
         }
     },
     data() {

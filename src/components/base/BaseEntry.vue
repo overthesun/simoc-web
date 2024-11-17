@@ -20,6 +20,10 @@
                href="https://simoc.space/">
                 SIMOC
             </a>
+            <a class="link" title="Contact us and leave us feedback" target="_blank"
+               href="https://simoc.space/about/contact/">
+                Contact Us
+            </a>
             <a class="link" target="_blank" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
                 Report Bug
             </a>
@@ -161,7 +165,7 @@ export default {
     }
 
     .footer{
-        width: 100%;
+        width: 80%;
         height: 24px;
         min-height:24px;
         display:flex;
