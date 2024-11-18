@@ -218,7 +218,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '../../sass/components/configuration-input';
+    @use '../../sass/components/configuration-input';
 
     .list-input {
         margin-top: 0.5em;

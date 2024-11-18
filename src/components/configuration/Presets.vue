@@ -156,7 +156,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
 .presets-dropdown,
 .custom-preset {
