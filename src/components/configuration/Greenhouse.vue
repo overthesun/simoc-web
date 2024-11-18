@@ -347,25 +347,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @use '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
-    .input-plant-wrapper{
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
+.input-plant-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.input-field-select{
+    margin-right: 24px;
+}
+
+.plant-row-icon{
+    &:first-of-type{
+        margin-left: auto;
     }
 
-    .input-field-select{
-        margin-right:24px;
-    }
-
-    .plant-row-icon{
-        &:first-of-type{
-            margin-left:auto;
-        }
-
-        margin-right:24px;
-    }
+    margin-right: 24px;
+}
 
 .crop-mgmt-description{
     display: flex;

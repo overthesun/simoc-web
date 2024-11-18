@@ -183,5 +183,4 @@ export default {
 #menu-buttons{
     margin-top: 32px;
 }
-
 </style>

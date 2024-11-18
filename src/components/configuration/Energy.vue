@@ -114,6 +114,6 @@ export default {
 @use '../../sass/components/configuration-input';
 
 .input-field-select{
-    margin-right:24px;
+    margin-right: 24px;
 }
 </style>
