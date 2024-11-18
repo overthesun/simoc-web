@@ -37,6 +37,12 @@ export default defineConfig({
         assetsDir: 'static',
     },
     css: {
+        preprocessorOptions: {
+            // this section can probably be removed on Vite 6
+            scss: {
+                api: 'modern',
+            },
+        },
         postcss: {
             plugins: [
                 postcssNesting,
