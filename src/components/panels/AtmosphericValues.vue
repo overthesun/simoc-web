@@ -8,7 +8,6 @@
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {StringFormatter} from '../../javascript/utils'
 import {CardList} from '../basepanel'
 
 export default {
@@ -19,9 +18,9 @@ export default {
     modes: ['sim'],
     setup() {
         const dashboard = useDashboardStore()
-        const {humanAtmosphere, currentStepBuffer, currencyDict, gameConfig} = storeToRefs(dashboard)
-        const {getData, getUnit} = dashboard
-        return {humanAtmosphere, currentStepBuffer, getData, currencyDict, gameConfig, getUnit}
+        const {currentStepBuffer, gameConfig} = storeToRefs(dashboard)
+        const {getData} = dashboard
+        return {currentStepBuffer, getData, gameConfig}
     },
     data() {
         return {
@@ -39,7 +38,7 @@ export default {
                 return
             }
             // find the agents for crew quarters and greenhouse
-            const agents = this.gameConfig.agents
+            const {agents} = this.gameConfig
             const cq_type = Object.keys(agents).find(key => key.startsWith('crew_habitat'))
             const gh_type = Object.keys(agents).find(key => key.startsWith('greenhouse'))
             // loop through them and get co2 and o2 values
@@ -56,11 +55,6 @@ export default {
                 data[`O₂ ${label}`] = `${o2_perc.toFixed(2)}%`
             })
             this.activeData = data
-        },
-        stringFormatter: StringFormatter,
-        getLabel(currency) {
-            const desc = this.currencyDict[currency]
-            return desc ? desc.label : currency
         },
     },
 }

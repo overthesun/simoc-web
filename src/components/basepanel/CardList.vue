@@ -14,7 +14,7 @@
 <script>
 
 export default {
-    name: 'DataDisplay',
+    name: 'CardList',
     props: {
         data: {type: Object, required: true},
     },
