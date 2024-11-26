@@ -34,9 +34,7 @@ export default {
     },
     methods: {
         setActiveData(step) {
-            if (!step) {
-                return
-            }
+            if (!step) return
             // find the agents for crew quarters and greenhouse
             const {agents} = this.gameConfig
             const cq_type = Object.keys(agents).find(key => key.startsWith('crew_habitat'))
@@ -47,9 +45,11 @@ export default {
             storages.forEach(([storage, label]) => {
                 if (!storage) return  // skip storage if it's not defined
                 const tot_atmo = this.getData([storage, 'storage', 'SUM', 1])
+                // find the CO2 amount in ppm
                 const co2_kg = this.getData([storage, 'storage', 'co2', step])
                 const co2_ppm = Math.round(co2_kg / tot_atmo * 1000000)
                 data[`CO₂ ${label}`] = `${co2_ppm}ppm`
+                // find the O2 amount in percentage
                 const o2_kg = this.getData([storage, 'storage', 'o2', step])
                 const o2_perc = o2_kg / tot_atmo * 100
                 data[`O₂ ${label}`] = `${o2_perc.toFixed(2)}%`

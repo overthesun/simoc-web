@@ -11,8 +11,8 @@
     </section>
 </template>
 
-<script>
 
+<script>
 export default {
     name: 'CardList',
     props: {
@@ -20,6 +20,7 @@ export default {
     },
 }
 </script>
+
 
 <style lang="scss" scoped>
 .cards-list-wrapper {
