@@ -95,7 +95,6 @@ export default {
     },
     data() {
         return {
-            forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             // add a CSS class while validating to make missing required fields red
             validating: false,
             // true while waiting for a response after clicking on "Launch Simulation"
