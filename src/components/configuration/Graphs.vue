@@ -4,15 +4,7 @@ This component would have a similar functionality to that of the reference wiki.
 -->
 
 <template>
-    <section class="graphs-wrapper" :class="simLocation"><!--
-        <PowerUsage class="power-config-graph" :id="'pu-config-canvas-'+ canvasNumber"
-            v-if="(activeConfigType === 'Custom' ||
-                   (activeReference === 'Graphs' &&
-                    (getActiveForm !== 'Initial' || getActiveForm === 'Finalize'))"/>
-        <GreenhouseDoughnut class="greenhouse-config-graph" :id="'gh-config-canvas-'+ canvasNumber"
-            v-if="(activeConfigType === 'Custom' ||
-                   (activeReference === 'Graphs' &&
-                    (getActiveForm === 'Greenhouse' || getActiveForm === 'Finalize'))"/>-->
+    <section class="graphs-wrapper" :class="simLocation">
         <!-- The wrapper divs make ChartJS happy. -->
         <div v-if="simLocation === 'mars'">
             <PowerUsage id="pu-config-canvas" />
@@ -42,10 +34,10 @@ export default {
     },
     setup() {
         const wizard = useWizardStore()
-        const {activeConfigType, activeReference, getActiveForm} = storeToRefs(wizard)
+        const {activeReference, getActiveForm} = storeToRefs(wizard)
         const dashboard = useDashboardStore()
         const {simLocation} = storeToRefs(dashboard)
-        return {activeConfigType, activeReference, getActiveForm, simLocation}
+        return {activeReference, getActiveForm, simLocation}
     },
 }
 </script>
