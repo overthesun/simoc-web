@@ -34,10 +34,10 @@ export default {
     },
     setup() {
         const wizard = useWizardStore()
-        const {activeReference, getActiveForm} = storeToRefs(wizard)
+        const {activeReference} = storeToRefs(wizard)
         const dashboard = useDashboardStore()
         const {simLocation} = storeToRefs(dashboard)
-        return {activeReference, getActiveForm, simLocation}
+        return {activeReference, simLocation}
     },
 }
 </script>
