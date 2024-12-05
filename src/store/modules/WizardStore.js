@@ -6,12 +6,6 @@ export const useWizardStore = defineStore('WizardStore', {
         dashboard: useDashboardStore(),
         // stores the configuration values
         configuration: {},
-        // the type of configuration being used (e.g. Guided, Custom)
-        activeConfigType: null,
-        // the index of the currently-selected form
-        activeFormIndex: 0,
-        // array of component names used within the ConfigurationView. Used to display by index
-        formOrder: ['Initial', 'Inhabitants', 'ECLSS', 'Greenhouse', 'Energy', 'Finalize'],
         // which window on the reference side is active
         activeReference: 'Layout',  // see also resetConfigDefault below
         // which entry is currently active within the reference
@@ -340,8 +334,6 @@ export const useWizardStore = defineStore('WizardStore', {
     getters: {
         // This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
-        getActiveForm: state => state.formOrder[state.activeFormIndex],
-
         getTotalMissionHours(state) {
             let totalHours = 0
             const durationLength = state.configuration.duration.amount
@@ -519,7 +511,6 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         resetConfigDefault(location) {
             this.configuration = this.getDefaultPreset(location)
-            this.activeFormIndex = 0
             this.activeReference = location === 'mars' ? 'Layout' : 'Reference'
             this.activeRefEntry = 'Welcome'
         },

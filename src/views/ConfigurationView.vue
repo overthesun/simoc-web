@@ -6,28 +6,10 @@
         <ConfigurationMenu v-if="menuActive" />
         <router-view v-slot="{Component}">
             <component :is="Component">
-                <!-- Wizard Jump Options, only available in Guided Configuration -->
-                <template #navigation-section-select>
-                    <!-- Set the activeForm index if the user changes the value to something other than selected -->
-                    <select class="section-select" @change="setActiveForm">
-                        <option selected disabled>Jump To Section</option>
-                        <option :selected="formIndex === 0" value="0">Initial</option>
-                        <option :selected="formIndex === 1" value="1">Inhabitants</option>
-                        <option :selected="formIndex === 2" value="2">Greenhouse</option>
-                        <option :selected="formIndex === 3" value="3">Energy</option>
-                        <option :selected="formIndex === 4" value="4">Finalize</option>
-                    </select>
-                </template>
                 <template #main-wizard-input>
                     <form ref="form" class="form-wrapper" @submit.prevent="">
-                        <!-- If we are in Guided config and not at the finalize step,
-                             only show the activeForm component -->
-                        <component :is="activeForm" v-if="activeConfigType === 'Guided' && activeForm != 'Finalize'" />
-                        <!-- Else, if we are in the Custom config or in the Finalize step
-                            of the Guided config, show all components -->
-                        <section v-else-if="activeConfigType === 'Custom' || activeForm === 'Finalize'"
-                                 :class="{'validating': validating}" class="form-wrapper">
-                            <Presets v-if="activeConfigType === 'Custom'" ref="presets" />
+                        <section :class="{'validating': validating}" class="form-wrapper">
+                            <Presets ref="presets" />
                             <Initial ref="initial" />
                             <Inhabitants ref="inhabitants" />
                             <ECLSS ref="eclss" />
@@ -41,16 +23,7 @@
                     </form>
                 </template>
                 <template #wizard-configuration-footer>
-                    <!-- Guided config bottom nav, with prev/next section and Launch Simulation buttons -->
-                    <nav v-if="activeConfigType === 'Guided'" class="configuration-button-wrapper">
-                        <!-- These use v-if instead of class binding, since they are simply either displayed or hidden.
-                            No animations present to require it. -->
-                        <button v-if="!isFirstForm" class="btn-previous" @click="decrementIndex">Previous Section</button>
-                        <button v-if="!isFinalForm" class="btn-next" @click="incrementIndex">Next Section</button>
-                        <button v-if="isFinalForm" class="btn-launch" @click="launchSimulation">Launch Simulation</button>
-                    </nav>
-                    <!-- Custom config bottom nav, no sections, only Launch Simulation button -->
-                    <nav v-if="activeConfigType === 'Custom'" class="configuration-button-wrapper">
+                    <nav class="configuration-button-wrapper">
                         <button class="btn-launch" @click="launchSimulation">Launch Simulation</button>
                     </nav>
                 </template>
@@ -59,8 +32,6 @@
                     <keep-alive>
                         <component :is="activeReference" />
                     </keep-alive>
-                    <!--<Reference/>-->
-                    <!--<GreenhouseDoughnut/>-->
                 </template>
                 <template #footer-wizard-reference />
             </component>
@@ -107,9 +78,8 @@ export default {
             simLocation,
         } = storeToRefs(dashboard)
         const {
-            configuration, getFormattedConfiguration, getPresets, activeConfigType, getActiveForm,
-            activeFormIndex, formOrder, getTotalMissionHours, activeReference, activeRefEntry,
-            simdataLocation,
+            configuration, getFormattedConfiguration, getPresets, getTotalMissionHours,
+            activeReference, activeRefEntry, simdataLocation,
         } = storeToRefs(wizard)
         const {modalActive} = storeToRefs(modal)
         const {setGameParams, setSimulationData, setGameId} = dashboard
@@ -117,18 +87,14 @@ export default {
         const {alert, setModalParams} = modal
         return {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            simLocation, setGameParams, setSimulationData, setGameId, configuration,
-            getFormattedConfiguration, activeConfigType, getActiveForm, formOrder,
-            getTotalMissionHours, activeReference, activeRefEntry, getPresets, simdataLocation,
-            resetConfigDefault, activeFormIndex, setConfiguration, alert, modalActive,
-            setModalParams,
+            simLocation, setGameParams, setSimulationData, setGameId,
+            configuration, getFormattedConfiguration, getPresets, getTotalMissionHours,
+            activeReference, activeRefEntry, simdataLocation, resetConfigDefault,
+            setConfiguration, modalActive, alert, setModalParams,
         }
     },
     data() {
         return {
-            formIndex: 0, // Current index of the form that should be used from the wizard store
-            activeForm: 'Initial', // Default starting form
-            forms: ['initial', 'inhabitants', 'greenhouse', 'energy'],  // list of forms components
             // add a CSS class while validating to make missing required fields red
             validating: false,
             // true while waiting for a response after clicking on "Launch Simulation"
@@ -151,57 +117,14 @@ export default {
                 return marsUrl
             }
         },
-        // Used to hide the normal button and display the active button
-        isFinalForm() {
-            return (this.formOrder.length-1) === this.formIndex
-        },
-        // Hides the prvevious button if the active form is the first one.
-        isFirstForm() {
-            return this.formIndex === 0
-        },
-    },
-    watch: {
-        // If the active form changes update the activeForm variable with the one at the formIndex
-        getActiveForm: {
-            handler() {
-                this.activeForm = this.getActiveForm
-            },
-            deep: true,
-        },
-        // If the form index changes update the active form with the one at the formIndex
-        // Mostly used for when either the buttons or the select menu or used to navigate
-        formIndex: {
-            handler() {
-                this.activeFormIndex = this.formIndex
-                this.activeForm = this.getActiveForm
-            },
-        },
     },
     beforeMount() {
         this.resetConfigDefault(this.simLocation)
         this.menuActive = false
-        this.activeForm = this.getActiveForm
     },
     methods: {
         toggleMenu() {
             this.menuActive = !this.menuActive
-        },
-
-        // Sets the active form, using the value from the select field
-        // This happens automatically by changing the watched formIndex
-        setActiveForm(event) {
-            const {value: index} = event.target
-            this.formIndex = parseInt(index, 10)
-        },
-
-        decrementIndex() {
-            const index = Math.max(0, (this.formIndex-1))
-            this.formIndex = index
-        },
-
-        incrementIndex() {
-            const max = this.formOrder.length-1
-            this.formIndex = Math.min(max, (this.formIndex+1))
         },
 
         handleAxiosError(error, msg) {
@@ -326,7 +249,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.base-configuration-wrapper{
+.base-configuration-wrapper {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -339,84 +262,38 @@ export default {
     background-position: 50% 10%;
 }
 
-    .form-wrapper{
-        margin-bottom:24px;
+.form-wrapper {
+    margin-bottom: 24px;
+}
+
+.configuration-button-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.btn-launch{
+    width: 196px;
+    height: 48px;
+    min-height: 48px;
+    margin-left: auto;
+    margin-bottom: 24px;
+    border-radius: 5px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #0099ee;
+    border: none;
+    color: #eee;
+
+    &:hover{
+        cursor: pointer;
     }
 
-    .configuration-button-wrapper{
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
+    &:focus{
+        outline:none;
     }
-
-    .btn-next{
-        width: 196px;
-        height: 48px;
-        min-height: 48px;
-        margin-left: auto;
-        margin-bottom: 24px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: #0099ee;
-        border:none;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
-    .btn-previous{
-        width: 196px;
-        height: 48px;
-        min-height: 48px;
-        margin-bottom: 24px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: transparent;
-        border:2px solid #ff3100;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
-    .btn-launch{
-        width: 196px;
-        height: 48px;
-        min-height: 48px;
-        margin-left:auto;
-        margin-bottom: 24px;
-        border-radius: 5px;
-        padding: 12px 16px;
-        font-size: 16px;
-        font-weight: 600;
-        background-color: #0099ee;
-        border:none;
-        color: #eee;
-
-        &:hover{
-            cursor: pointer;
-        }
-
-        &:focus{
-            outline:none;
-        }
-    }
-
+}
 </style>
 
 <style lang="scss">
