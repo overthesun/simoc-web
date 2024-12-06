@@ -43,7 +43,7 @@ export default {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
             terminated, menuActive, leaveWithoutConfirmation,
         } = storeToRefs(dashboard)
-        const {configuration, activeConfigType} = storeToRefs(wizard)
+        const {configuration} = storeToRefs(wizard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
             getLayoutName, setDefaultPanels,
@@ -53,7 +53,7 @@ export default {
             isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
             terminated, menuActive, leaveWithoutConfirmation,
             getSimulationData, setStopped, startTimer, pauseTimer,
-            getLayoutName, setDefaultPanels, configuration, activeConfigType, confirm, alert,
+            getLayoutName, setDefaultPanels, configuration, confirm, alert,
         }
     },
     data() {
@@ -139,10 +139,6 @@ export default {
                 message: 'Stop the current simulation and configure a new one?',
                 confirmCallback: () => {
                     this.timerWasRunning = false  // make sure the timer doesn't restart
-                    // menuconfig is currently skipped, we default on Custom config
-                    // this.$router.push("menuconfig")
-                    this.activeConfigType = 'Custom'
-
                     // the user already confirmed, don't ask twice
                     this.leaveWithoutConfirmation = true
                     // rely on DashboardView.beforeDestroy to stop the sim

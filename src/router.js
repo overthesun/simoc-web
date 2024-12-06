@@ -24,17 +24,7 @@ export default createRouter({
                     name: 'menu',
                     component: () => import('@/components/entry/Menu.vue'),
                 },
-                {
-                    path: 'menuconfig',
-                    name: 'menuconfig',
-                    component: () => import('@/components/entry/MenuConfig.vue'),
-                },
             ],
-        },
-        {
-            path: '/menuconfig',
-            name: 'menuconfig',
-            component: () => import('@/components/entry/MenuConfig.vue'),
         },
         /*
         {
