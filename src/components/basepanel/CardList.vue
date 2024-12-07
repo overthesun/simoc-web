@@ -47,6 +47,9 @@ export default {
     align-items: center;
     flex: 1 1 auto;
 }
+.panel-fullscreen .cards-list li {
+    font-size: 400%;
+}
 .cards-list span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
