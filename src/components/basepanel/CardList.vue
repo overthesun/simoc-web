@@ -50,5 +50,6 @@ export default {
 .cards-list span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
