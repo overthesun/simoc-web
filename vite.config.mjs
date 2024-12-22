@@ -14,7 +14,7 @@ import path from 'path'
 //   *: the rest are the routers defined in router.js
 // These paths should go to vite, everything else will go to nginx.
 const nginx_paths = ('^/(?!$|@|src|node_modules|favicon\\.ico|' +
-                     'entry|menu|menuconfig|configuration|dashboard|simdata)')
+                     'entry|menu|configuration|dashboard|simdata)')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -37,6 +37,12 @@ export default defineConfig({
         assetsDir: 'static',
     },
     css: {
+        preprocessorOptions: {
+            // this section can probably be removed on Vite 6
+            scss: {
+                api: 'modern',
+            },
+        },
         postcss: {
             plugins: [
                 postcssNesting,
@@ -55,8 +61,10 @@ export default defineConfig({
     test: {
         globals: true,
         environment: 'happy-dom',
-        deps: {
-            inline: ['vuetify'],
+        server: {
+            deps: {
+                inline: ['vuetify'],
+            },
         },
     },
 })

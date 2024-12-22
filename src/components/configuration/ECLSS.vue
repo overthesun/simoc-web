@@ -140,9 +140,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
-    .list-input {
-        margin: 4px 0px 8px 0px;
-    }
+.list-input {
+    margin: 4px 0 8px 0;
+}
 </style>

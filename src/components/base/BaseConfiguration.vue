@@ -12,12 +12,8 @@ menu button being present on other unrelated configurations.
 <template>
     <div class="configuration-wrapper">
         <!-- The form side of the wizard screen -->
-        <section :class="{'no-form-select-dropdown': activeConfigType === 'Custom'}" class="wizard-wrapper">
+        <section class="wizard-wrapper">
             <header>SIMULATION CONFIGURATION</header>
-            <!-- Dropdown used to select sections, only available in Guided Configuration -->
-            <nav v-if="activeConfigType === 'Guided'" class="navigation-wrapper">
-                <slot name="navigation-section-select" />
-            </nav>
             <main class="main main-wizard">
                 <slot name="main-wizard-input" />
             </main>
@@ -68,8 +64,8 @@ export default {
         const wizard = useWizardStore()
         const dashboard = useDashboardStore()
         const {simLocation} = storeToRefs(dashboard)
-        const {activeConfigType, activeReference} = storeToRefs(wizard)
-        return {activeConfigType, activeReference, simLocation}
+        const {activeReference} = storeToRefs(wizard)
+        return {activeReference, simLocation}
     },
 }
 </script>
@@ -90,37 +86,28 @@ export default {
     border-radius: 5px;
 }
 
-    .wizard-wrapper{
-        height:100%;
-        width:100%;
-        padding:16px;
-        border-right: 1px solid #666;
-        box-sizing:border-box;
-    }
+.wizard-wrapper, .reference-wrapper {
+    height: 100%;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    display: grid;
+    grid-row-gap: 32px;
+}
 
-    .wizard-wrapper,.reference-wrapper{
-        display:grid;
-        grid-template-rows: 22px 32px minmax(0,1fr) 48px;
-        grid-row-gap: 32px;
-    }
+.wizard-wrapper {
+    border-right: 1px solid #666;
+    grid-template-rows: 22px minmax(0,1fr) 48px;
+}
 
-    /* omit the form select dropdown from the Custom config grid template */
-    .wizard-wrapper.no-form-select-dropdown{
-        grid-template-rows: 22px minmax(0,1fr) 48px;
-    }
+.reference-wrapper {
+    grid-template-rows: 22px 32px minmax(0,1fr) 48px;
+}
 
-.main-reference{
+.main-reference {
     width: 100%;
     overflow: hidden;
 }
-
-    .reference-wrapper{
-        height:100%;
-        max-width:100%;
-        padding:16px;
-        box-sizing:border-box;
-        overflow:hidden;
-    }
 
     header {
         font-family: "Nasalization", "Open Sans", sans-serif;

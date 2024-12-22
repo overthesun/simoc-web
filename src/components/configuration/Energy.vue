@@ -111,9 +111,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
 .input-field-select{
-    margin-right:24px;
+    margin-right: 24px;
 }
 </style>

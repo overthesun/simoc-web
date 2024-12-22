@@ -108,15 +108,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
-    .input-initial-wrapper{
-        display:flex;
-        justify-content: flex-start;
-        align-items:center;
-    }
+.input-initial-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 
-    .input-field-number{
-        margin-right:24px;
-    }
+.input-field-number{
+    margin-right: 24px;
+}
 </style>
