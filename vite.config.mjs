@@ -1,9 +1,9 @@
+import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import eslint from 'vite-plugin-eslint'
 import postcssNesting from 'postcss-nesting'
-import path from 'path'
 
 
 // This regex lists the paths that should NOT go to nginx, including
@@ -60,7 +60,7 @@ export default defineConfig({
         }),
         eslint({
             failOnError: false,
-        })
+        }),
     ],
     test: {
         globals: true,

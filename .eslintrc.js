@@ -15,10 +15,10 @@ module.exports = {
         'vitest-globals/env': true,
     },
     extends: [
-        'eslint:recommended',
-        'plugin:vue/vue3-recommended',
-        'plugin:vitest/recommended',
-        'plugin:vitest-globals/recommended', // rules list: https://eslint.vuejs.org/rules/
+        'eslint:recommended',  // https://eslint.org/docs/latest/rules/
+        'plugin:vue/vue3-recommended',  // https://eslint.vuejs.org/rules/
+        'plugin:vitest/recommended',  // https://github.com/vitest-dev/eslint-plugin-vitest#rules
+        'plugin:vitest-globals/recommended',
     ],
     parser: 'vue-eslint-parser',
     parserOptions: {
