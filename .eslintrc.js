@@ -15,17 +15,17 @@ module.exports = {
         'vitest-globals/env': true,
     },
     extends: [
+        'eslint:recommended',
         'plugin:vue/vue3-recommended',
         'plugin:vitest/recommended',
         'plugin:vitest-globals/recommended', // rules list: https://eslint.vuejs.org/rules/
-        'airbnb-base',
     ],
     parser: 'vue-eslint-parser',
     parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['vue', 'vitest'],
+    plugins: ['vue', 'vitest', 'import'],
     rules: {
     // SPACING
         'indent': [

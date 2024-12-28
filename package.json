@@ -35,10 +35,9 @@
   },
   "devDependencies": {
     "@pinia/testing": "^0.1.6",
-    "@vue/eslint-config-airbnb": "^8.0.0",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^8.57.1",
-    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-vitest": "^0.3.22",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "eslint-plugin-vue": "^9.32.0",
