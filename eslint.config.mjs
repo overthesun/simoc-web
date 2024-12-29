@@ -202,4 +202,13 @@ export default [
             globals: {__dirname: true},
         },
     },
+    {
+        // test-specific rules
+        files: ['**/test/**'],
+        // TODO: reenable this and fix the tests
+        // ...vitest.configs.all,
+        languageOptions: {
+            globals: {...vitest.environments.env.globals},
+        },
+    },
 ]
