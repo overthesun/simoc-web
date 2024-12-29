@@ -1,33 +1,26 @@
 // Defines the linting rules.
 //
-// Run with `npm run lint -- --no-fix`.
-// `npm run lint` fixes by default,
-// `npm run serve` and `npm run build`
-// run the linter but don't auto-fix.
+// Run with `npm run lint`.
+// `npm run serve` and `npm run build` run the linter too
+// (this is defined in vite.config.mjs).
 //
-// Base ESLint Rules:
-// https://eslint.org/docs/rules/
+// Rules:
+// https://eslint.org/docs/latest/rules/
+// https://eslint.vuejs.org/rules/
+// https://github.com/vitest-dev/eslint-plugin-vitest#rules
 
-module.exports = {
-    root: true,
-    env: {
-        'es2021': true,
-        'vitest-globals/env': true,
-    },
-    extends: [
-        'eslint:recommended',  // https://eslint.org/docs/latest/rules/
-        'plugin:vue/vue3-recommended',  // https://eslint.vuejs.org/rules/
-        'plugin:vitest/recommended',  // https://github.com/vitest-dev/eslint-plugin-vitest#rules
-        'plugin:vitest-globals/recommended',
-    ],
-    parser: 'vue-eslint-parser',
-    parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-    },
-    plugins: ['vue', 'vitest', 'import'],
+import js from "@eslint/js"
+import pluginVue from 'eslint-plugin-vue'
+import vitest from "@vitest/eslint-plugin"
+
+
+export default [
+    js.configs.recommended,
+    ...pluginVue.configs['flat/recommended'],
+    {
     rules: {
-    // SPACING
+
+        // SPACING
         'indent': [
             'error',
             4,
@@ -129,7 +122,6 @@ module.exports = {
         'no-lonely-if': 'off',
         'no-else-return': 'off',
         'array-callback-return': 'error',
-        // TODO: set these 2 back to 'error' once we have proper popups
         'no-console': 'off',
         'no-alert': 'error',
         'no-floating-decimal': 'error',
@@ -191,32 +183,13 @@ module.exports = {
         'vue/singleline-html-element-content-newline': 'off',
         'vue/multiline-html-element-content-newline': 'off',
         'vue/multi-word-component-names': 'off',
-
-        // IMPORT
-        'import/newline-after-import': 'error',
-        'import/first': 'error',
-        'import/order': 'error',
-        'import/extensions': ['error', 'ignorePackages', {js: 'never'}],
-        // eslint-import-resolver-alias has a way to specify an alias for '@'
-        // that supposedly fixes some "Unable to resolve path to module" errors:
-        //   settings: {'import/resolver': {alias: ['@', 'src']}}
-        // However installing this requires eslint-plugin-import too,
-        // which apparently enables several other checks that fail (particularly
-        // in threejs/) so just disable the `import/no-unresolved` rule altogether.
-        'import/no-unresolved': 'off',
-        'import/no-dynamic-require': 'warn',
-        'import/no-extraneous-dependencies': 'error',
-        'import/no-useless-path-segments': 'error',
-
-        'import/prefer-default-export': 'off',
-        'global-require': 'off',
+    }
     },
-    overrides: [
-        {
-            files: ['*.vue'],
-            rules: {
-                'max-len': 'off', // overriden by vue/max-len
-            },
+    {
+        // disable standard max-len rules for vue files and use vue/max-len
+        files: ["**/*.vue"],
+        rules: {
+            "max-len": "off",
         },
-    ],
-}
+    },
+]
