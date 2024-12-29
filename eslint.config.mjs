@@ -195,4 +195,11 @@ export default [
             'max-len': 'off',
         },
     },
+    {
+        // some mjs files in the root use __dirname
+        files: ['*.mjs'],
+        languageOptions: {
+            globals: {__dirname: true},
+        },
+    },
 ]
