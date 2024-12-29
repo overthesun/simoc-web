@@ -37,8 +37,8 @@ to activate and populate it.
 
 <script>
 import {storeToRefs} from 'pinia'
-import Survey from './Survey.vue'
 import {useModalStore} from '../../store/modules/ModalStore'
+import Survey from './Survey.vue'
 
 export default {
     components: {

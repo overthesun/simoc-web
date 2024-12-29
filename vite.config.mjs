@@ -1,8 +1,9 @@
+import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
+import eslint from 'vite-plugin-eslint'
 import postcssNesting from 'postcss-nesting'
-import path from 'path'
 
 
 // This regex lists the paths that should NOT go to nginx, including
@@ -56,6 +57,9 @@ export default defineConfig({
             styles: {
                 configFile: 'src/sass/components/_variables.scss',
             },
+        }),
+        eslint({
+            failOnError: false,
         }),
     ],
     test: {
