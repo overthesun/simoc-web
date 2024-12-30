@@ -11,11 +11,16 @@ const vuetify = createVuetify({
     directives,
 })
 
-test('contains proceed button', () => {
-    const wrapper = mount(Welcome, {
-        global: {
-            plugins: [vuetify, createTestingPinia()],
-        },
+describe('welcome smoke test', () => {
+    it('contains proceed button', () => {
+        expect.assertions(1)
+
+        const wrapper = mount(Welcome, {
+            global: {
+                plugins: [vuetify, createTestingPinia()],
+            },
+        })
+
+        expect(wrapper.text()).toContain('PROCEED')
     })
-    expect(wrapper.text()).toContain('PROCEED')
 })
