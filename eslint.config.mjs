@@ -205,8 +205,7 @@ export default [
     {
         // test-specific rules
         files: ['**/test/**'],
-        // TODO: reenable this and fix the tests
-        // ...vitest.configs.all,
+        ...vitest.configs.all,
         languageOptions: {
             globals: {...vitest.environments.env.globals},
         },
