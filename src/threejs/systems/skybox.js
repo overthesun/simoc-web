@@ -7,13 +7,11 @@ const buildSkybox = async(scene, settings) => {
     await Promise.all([...angles, 'ground'].map(async angle => {
         // image source: https://opengameart.org/content/mayhems-skyboxes-more
         // ref: (acdcjunior's answer) https://stackoverflow.com/a/49080214
-        // eslint-disable-next-line prefer-template
         const image = await import(`../../assets/skybox/${angle}.jpg`)
         images[angle] = image.default
     }))
 
     // Add the skybox
-    // eslint-disable-next-line vue/no-mutating-props
     scene.background = new THREE.CubeTextureLoader()
             .load(angles.map(angle => images[angle]))
 

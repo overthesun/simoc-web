@@ -76,7 +76,6 @@ export const parseData = (data, path) => {
             const indices = index.split(',').map(i => i.trim())
             if (indices.length > 0) {
                 const output = {}
-                // eslint-disable-next-line no-restricted-syntax
                 for (const i of indices) {
                     const res = parseData(data[i], remainder)
                     if (res !== null) {
