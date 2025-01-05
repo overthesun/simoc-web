@@ -96,14 +96,11 @@ export default {
             camera = buildCamera()
             renderer = buildRenderer(this.containerId, this.settings)
             loader = new Loader(this.settings, this.showLoadingScreen)
-
-            // eslint-disable-next-line no-new
             this.resizer = new Resizer(camera, renderer, this.addHookup, this.$refs.sceneContainer)
             buildControls(camera, renderer.domElement, this.settings, this.addTick)
             buildLights(this.settings, scene)
             buildSkybox(scene, this.settings)
             if (this.settings.stats) {
-                // eslint-disable-next-line no-new
                 new StatsBox(this.containerId, this.addTick)
             }
         },
