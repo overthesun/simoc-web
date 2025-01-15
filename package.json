@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@nabla/vite-plugin-eslint": "^2.0.5",
-    "@pinia/testing": "^0.1.6",
+    "@pinia/testing": "^0.1.7",
     "@vitest/eslint-plugin": "^1.1.25",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^9.18.0",
