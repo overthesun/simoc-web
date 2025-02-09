@@ -98,9 +98,9 @@ def shell():
     return docker_run('-it', IMGNAME)
 
 @cmd
-def serve():
-    """Serve the frontend using `npm run serve`."""
-    return docker_run('-it', '--entrypoint', 'npm', IMGNAME, 'run', 'serve')
+def dev():
+    """Serve the frontend using `npm run dev`."""
+    return docker_run('-it', '--entrypoint', 'npm', IMGNAME, 'run', 'dev')
 
 @cmd
 def build():
