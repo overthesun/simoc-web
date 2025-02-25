@@ -42,7 +42,7 @@
     "eslint-plugin-vue": "^9.32.0",
     "happy-dom": "^17.1.1",
     "resize-observer-polyfill": "^1.5.1",
-    "sass": "^1.85.0",
+    "sass": "^1.85.1",
     "vitest": "^3.0.6"
   },
   "postcss": {
