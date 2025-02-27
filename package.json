@@ -43,7 +43,7 @@
     "happy-dom": "^17.1.8",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.85.0",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.7"
   },
   "postcss": {
     "plugins": {
