@@ -31,19 +31,19 @@
     "vue": "^3.5.13",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.5.0",
-    "vuetify": "^3.7.11"
+    "vuetify": "^3.7.14"
   },
   "devDependencies": {
     "@nabla/vite-plugin-eslint": "^2.0.5",
     "@pinia/testing": "^0.1.6",
     "@vitest/eslint-plugin": "^1.1.31",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "^9.20.1",
+    "eslint": "^9.21.0",
     "eslint-plugin-vue": "^9.32.0",
-    "happy-dom": "^17.1.1",
+    "happy-dom": "^17.1.8",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.85.1",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.7"
   },
   "postcss": {
     "plugins": {
