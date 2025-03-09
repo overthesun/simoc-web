@@ -100,10 +100,8 @@ import {StringFormatter} from '../../javascript/utils'
 export default {
     panelTitle: 'Mission Information',
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentStepBuffer, simLocation, parameters} = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {currentStepBuffer, simLocation, parameters, getData} = useDashboardStore()
         const {configuration, getTotalMissionHours} = storeToRefs(wizard)
         return {currentStepBuffer, simLocation, parameters, getData, configuration,
                 getTotalMissionHours}
