@@ -41,13 +41,11 @@
 </template>
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
-        const {kioskMode} = storeToRefs(dashboard)
+        const {kioskMode} = useDashboardStore()
         return {kioskMode}
     },
     data() {

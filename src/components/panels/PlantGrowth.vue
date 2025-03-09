@@ -27,10 +27,8 @@ import {StringFormatter} from '../../javascript/utils'
 export default {
     panelTitle: 'Greenhouse Plant Growth',
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {currentStepBuffer, getData} = useDashboardStore()
         const {configuration} = storeToRefs(wizard)
         return {currentStepBuffer, getData, configuration}
     },

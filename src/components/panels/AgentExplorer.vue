@@ -40,10 +40,8 @@ export default {
     },
     emits: ['panel-section-changed'],
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {activePanels, data} = storeToRefs(dashboard)
-        const {parseAttributes} = dashboard
+        const {activePanels, data, parseAttributes} = useDashboardStore()
         const {getTotalMissionHours} = storeToRefs(wizard)
         return {activePanels, parseAttributes, getTotalMissionHours, activeData: data}
     },

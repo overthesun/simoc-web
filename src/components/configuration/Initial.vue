@@ -41,9 +41,8 @@ import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         const {configuration, validValues} = storeToRefs(wizard)
         const {setInitial, setActiveRefEntry} = wizard
         return {simLocation, configuration, validValues, setInitial, setActiveRefEntry}

@@ -48,10 +48,9 @@ import {useModalStore} from '../../store/modules/ModalStore'
 const CUSTOM = 'custom'
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         const {configuration, resetConfig, getDefaultPresetName, getPresets} = storeToRefs(wizard)
         const {setActiveRefEntry, resetConfigDefault, setConfiguration, setPreset} = wizard
         const {alert, confirm} = modal

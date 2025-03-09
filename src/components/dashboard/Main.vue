@@ -53,7 +53,6 @@ The layout of each panel is defined in BasePanel.vue to avoid duplication.
 </template>
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {BasePanel} from '../basepanel'
 import panels from '../panels'  // import all panels
@@ -64,9 +63,9 @@ export default {
         ...panels,  // add all panels as components
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {currentMode, simLocation, activePanels} = storeToRefs(dashboard)
-        const {setDefaultPanels, getLayoutName} = dashboard
+        const {
+            currentMode, simLocation, activePanels, setDefaultPanels, getLayoutName,
+        } = useDashboardStore()
         return {currentMode, simLocation, setDefaultPanels, getLayoutName,
                 getActivePanels: activePanels}
     },

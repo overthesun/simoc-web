@@ -35,9 +35,8 @@ export const idleMixin = {
         }
     },
     beforeMount() {
-        const dashboard = useDashboardStore()
         const modal = useModalStore()
-        this.kioskMode = storeToRefs(dashboard).kioskMode
+        this.kioskMode = useDashboardStore().kioskMode
         this.getCountdownIsRunning = storeToRefs(modal).getCountdownIsRunning
         this.countdownEnded = storeToRefs(modal).countdownEnded
         this.timeout = modal.timeout

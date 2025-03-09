@@ -15,7 +15,6 @@ Valid categories:
 <script>
 import {Chart, LineController, LineElement,
         LinearScale, CategoryScale, Tooltip, Legend} from 'chart.js'
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter, make_labels, colors} from '../../javascript/utils'
 
@@ -31,10 +30,10 @@ export default {
         nsteps: {type: Number, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
-               data} = storeToRefs(dashboard)
-        const {getData, parseAttributes} = dashboard
+        const {
+            isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
+            data, getData, parseAttributes,
+        } = useDashboardStore()
         return {isTimerRunning, currentStepBuffer, maxStepBuffer, currencyDict,
                 getData, parseAttributes, activeData: data}
     },

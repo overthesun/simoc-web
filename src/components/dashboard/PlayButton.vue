@@ -12,14 +12,13 @@
 </template>
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
-        const {isTimerRunning, currentMode, isLive} = storeToRefs(dashboard)
-        const {pauseTimer, startTimer, setStepInterval} = dashboard
+        const {
+            isTimerRunning, currentMode, isLive, pauseTimer, startTimer, setStepInterval,
+        } = useDashboardStore()
         return {isTimerRunning, currentMode, isLive, pauseTimer, startTimer,
                 setStepInterval}
     },

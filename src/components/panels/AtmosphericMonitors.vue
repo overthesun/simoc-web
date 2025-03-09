@@ -55,9 +55,7 @@ export default {
         canvasNumber: {type: Number, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {humanAtmosphere, gameConfig, currencyDict} = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {humanAtmosphere, gameConfig, currencyDict, getData} = useDashboardStore()
         return {humanAtmosphere, gameConfig, getData, currencyDict}
     },
     computed: {

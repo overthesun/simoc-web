@@ -70,19 +70,17 @@ export default {
     },
     mixins: [idleMixin],
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
         const {
             menuActive, parameters, loadFromSimData, maxStepBuffer, currentMode, isLive,
-            simLocation,
-        } = storeToRefs(dashboard)
+            simLocation, setGameParams, setSimulationData, setGameId,
+        } = useDashboardStore()
         const {
             configuration, getFormattedConfiguration, getPresets, getTotalMissionHours,
             activeReference, activeRefEntry, simdataLocation,
         } = storeToRefs(wizard)
         const {modalActive} = storeToRefs(modal)
-        const {setGameParams, setSimulationData, setGameId} = dashboard
         const {resetConfigDefault, setConfiguration} = wizard
         const {alert, setModalParams} = modal
         return {

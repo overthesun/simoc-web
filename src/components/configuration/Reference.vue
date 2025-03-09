@@ -238,8 +238,7 @@ export default {
     setup() {
         const wizard = useWizardStore()
         const {activeRefEntry, activeReference} = storeToRefs(wizard)
-        const dashboard = useDashboardStore()
-        const {kioskMode, simLocation} = storeToRefs(dashboard)
+        const {kioskMode, simLocation} = useDashboardStore()
         const {setActiveRefEntry} = wizard
         return {activeRefEntry, setActiveRefEntry, activeReference, kioskMode, simLocation}
     },

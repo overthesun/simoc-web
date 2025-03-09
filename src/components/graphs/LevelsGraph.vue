@@ -13,7 +13,6 @@ See chart.js documentation for further details on the related mounted functions.
 <script>
 import {Chart, LineController, LineElement, PointElement,
         LinearScale, CategoryScale, Tooltip, Legend, Filler} from 'chart.js'
-import {storeToRefs} from 'pinia'
 import {make_labels} from '../../javascript/utils'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
@@ -29,9 +28,7 @@ export default {
         nsteps: {type: Number, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {currentStepBuffer, getData} = useDashboardStore()
         return {currentStepBuffer, getData}
     },
     data() {

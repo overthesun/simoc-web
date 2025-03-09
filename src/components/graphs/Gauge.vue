@@ -16,7 +16,6 @@ See chart.js documentation for further explantion of below fucntionality.
 <script>
 import {Chart, DoughnutController, ArcElement, Title, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 
 Chart.register(DoughnutController, ArcElement, Title, Tooltip)
@@ -31,8 +30,7 @@ export default {
         getter: {type: Function, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {currentStepBuffer} = useDashboardStore()
         return {currentStepBuffer}
     },
     watch: {

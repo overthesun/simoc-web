@@ -62,8 +62,7 @@ import {useDashboardStore} from '../../store/modules/DashboardStore'
 export default {
     setup() {
         const wizard = useWizardStore()
-        const dashboard = useDashboardStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         const {activeReference} = storeToRefs(wizard)
         return {activeReference, simLocation}
     },

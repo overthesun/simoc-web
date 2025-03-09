@@ -79,9 +79,8 @@ export default {
         BaseEntry,
     },
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentMode, parameters, simLocation} = storeToRefs(dashboard)
+        const {currentMode, parameters, simLocation} = useDashboardStore()
         const {setLiveConfig} = wizard
         return {currentMode, parameters, simLocation, setLiveConfig}
     },
