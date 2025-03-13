@@ -37,9 +37,8 @@ export default {
     },
     emits: ['panel-section-changed'],
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {gameConfig, currencyDict} = storeToRefs(dashboard)
+        const {gameConfig, currencyDict} = useDashboardStore()
         const {getTotalMissionHours} = storeToRefs(wizard)
         return {gameConfig, currencyDict, getTotalMissionHours}
     },

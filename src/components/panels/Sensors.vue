@@ -29,9 +29,8 @@ export default {
     panelTitle: 'Sensors',
     modes: ['live'],
     setup() {
-        const dashboard = useDashboardStore()
         const liveStore = useLiveStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {currentStepBuffer} = useDashboardStore()
         const {sensorInfo, dataBundles} = storeToRefs(liveStore)
         const {getReadings} = liveStore
         return {currentStepBuffer, sensorInfo, dataBundles, getReadings}

@@ -38,9 +38,8 @@ export default {
     },
     emits: ['panel-section-changed'],
     setup() {
-        const dashboard = useDashboardStore()
         const liveStore = useLiveStore()
-        const {activePanels} = storeToRefs(dashboard)
+        const {activePanels} = useDashboardStore()
         const {sensorInfo} = storeToRefs(liveStore)
         return {activePanels, sensorInfo}
     },

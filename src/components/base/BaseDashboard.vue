@@ -40,11 +40,9 @@ export default {
         Dashboard,
     },
     setup() {
-        const dashboard = useDashboardStore()
         const modal = useModalStore()
-        const {isTimerRunning, menuActive, currentMode} = storeToRefs(dashboard)
+        const {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer} = useDashboardStore()
         const {modalActive} = storeToRefs(modal)
-        const {startTimer, pauseTimer} = dashboard
         return {isTimerRunning, menuActive, currentMode, startTimer, pauseTimer, modalActive}
     },
     data() {

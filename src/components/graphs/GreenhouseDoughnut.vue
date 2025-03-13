@@ -15,7 +15,6 @@ See chart.js documentation for more details.
 <script>
 import {Chart, DoughnutController, ArcElement, Legend, Tooltip} from 'chart.js'
 import 'chartjs-plugin-annotation'
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {StringFormatter, colors} from '../../javascript/utils'
@@ -27,9 +26,8 @@ export default {
         id: {type: String, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {currentStepBuffer} = useDashboardStore()
         const {configuration} = storeToRefs(wizard)
         return {currentStepBuffer, configuration}
     },

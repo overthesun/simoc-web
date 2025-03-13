@@ -35,8 +35,7 @@ export default {
     setup() {
         const wizard = useWizardStore()
         const {activeReference} = storeToRefs(wizard)
-        const dashboard = useDashboardStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         return {activeReference, simLocation}
     },
 }

@@ -54,9 +54,8 @@ export default {
         nsteps: {type: Number, required: true},
     },
     setup() {
-        const dashboard = useDashboardStore()
         const liveStore = useLiveStore()
-        const {currentStepBuffer} = storeToRefs(dashboard)
+        const {currentStepBuffer} = useDashboardStore()
         const {sensorInfo} = storeToRefs(liveStore)
         const {getReadings, getTimestamp} = liveStore
         return {currentStepBuffer, sensorInfo, getReadings, getTimestamp}
