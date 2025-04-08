@@ -39,14 +39,12 @@ export default {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-        const {
-            isTimerRunning, activePanels, gameCurrencies, currentMode, kioskMode,
-            terminated, menuActive, leaveWithoutConfirmation,
-        } = storeToRefs(dashboard)
         const {configuration} = storeToRefs(wizard)
         const {
             getSimulationData, setStopped, startTimer, pauseTimer,
-            getLayoutName, setDefaultPanels,
+            getLayoutName, setDefaultPanels, isTimerRunning, activePanels,
+            gameCurrencies, currentMode, kioskMode, terminated, menuActive,
+            leaveWithoutConfirmation,
         } = dashboard
         const {confirm, alert} = modal
         return {

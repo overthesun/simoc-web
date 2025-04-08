@@ -69,9 +69,8 @@ import {StringFormatter} from '../../javascript/utils'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         const {configuration, validValues} = storeToRefs(wizard)
         const {setInhabitants, setActiveRefEntry} = wizard
         return {simLocation, configuration, validValues, setInhabitants, setActiveRefEntry}

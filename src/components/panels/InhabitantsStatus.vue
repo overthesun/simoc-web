@@ -53,12 +53,10 @@ export default {
     panelTitle: 'Inhabitants Status',
     modes: ['sim'],
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
-            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,
-        } = storeToRefs(dashboard)
-        const {getData} = dashboard
+            currentStepBuffer, gameConfig, currencyDict, humanAtmosphere, getData,
+        } = useDashboardStore()
         const {configuration} = storeToRefs(wizard)
         return {
             currentStepBuffer, gameConfig, currencyDict, humanAtmosphere,

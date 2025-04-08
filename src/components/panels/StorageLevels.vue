@@ -22,16 +22,13 @@
 
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {StringFormatter} from '../../javascript/utils'
 
 export default {
     panelTitle: 'Storage Levels',
     setup() {
-        const dashboard = useDashboardStore()
-        const {currentStepBuffer, currencyDict} = storeToRefs(dashboard)
-        const {getData, getUnit} = dashboard
+        const {currentStepBuffer, currencyDict, getData, getUnit} = useDashboardStore()
         return {currentStepBuffer, currencyDict, getUnit, getData}
     },
     modes: ['sim'],

@@ -64,9 +64,8 @@ import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
-        const {simLocation} = storeToRefs(dashboard)
+        const {simLocation} = useDashboardStore()
         const {configuration, validValues, activeReference} = storeToRefs(wizard)
         const {
             setGreenhouse, addPlantSpecies, updatePlantSpecies, removePlantSpecies,

@@ -36,10 +36,9 @@ export default {
         Logout,
     },
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-        const {kioskMode, simLocation} = storeToRefs(dashboard)
+        const {kioskMode, simLocation} = useDashboardStore()
         const {configuration, resetConfig} = storeToRefs(wizard)
         const {setConfiguration} = wizard
         const {confirm} = modal
