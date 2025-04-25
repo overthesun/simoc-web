@@ -65,7 +65,6 @@ export default {
     },
 
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const liveStore = useLiveStore()
         const modal = useModalStore()
@@ -73,14 +72,12 @@ export default {
             getStepsTimerID, stopped, terminated, parameters, isTimerRunning,
             currentStepBuffer, maxStepBuffer, loadFromSimData, timerID,
             menuActive, currentMode, kioskMode, leaveWithoutConfirmation, simLocation,
-        } = storeToRefs(dashboard)
+            setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
+            stopTimer, setCurrentStepBuffer, setStopped,
+        } = useDashboardStore()
         const {getTotalMissionHours} = storeToRefs(wizard)
         const {bundleNum, initBundleNum} = storeToRefs(liveStore)
         const {surveyWasPrompted, countdownEnded} = storeToRefs(modal)
-        const {
-            setMinStepNumber, initGame, parseStep, startTimer, pauseTimer,
-            stopTimer, setCurrentStepBuffer, setStopped,
-        } = dashboard
         const {setLiveConfig} = wizard
         const {setHabitatInfo, setSensorInfo, parseData} = liveStore
         const {confirm, stopCountdownTimer} = modal

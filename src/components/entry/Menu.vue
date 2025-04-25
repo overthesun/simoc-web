@@ -41,14 +41,13 @@ export default {
         BaseEntry,
     },
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const modal = useModalStore()
-        const {
-            maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
-        } = storeToRefs(dashboard)
         const {surveyWasPrompted} = storeToRefs(modal)
-        const {setSimulationData} = dashboard
+        const {
+            maxStepBuffer, loadFromSimData, currentMode, kioskMode, 
+            parameters, isLive, simLocation, setSimulationData
+        } = useDashboardStore()
         const {setConfiguration, setLiveConfig} = wizard
         const {alert} = modal
         return {

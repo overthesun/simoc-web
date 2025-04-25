@@ -16,18 +16,17 @@
 </template>
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {useWizardStore} from '../../store/modules/WizardStore'
 import {useLiveStore} from '../../store/modules/LiveStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const liveStore = useLiveStore()
-        const {currentStepBuffer, currentMode} = storeToRefs(dashboard)
-        const {setCurrentStepBuffer} = dashboard
+        const {
+            currentStepBuffer, currentMode, setCurrentStepBuffer,
+        } = useDashboardStore()
         const {getTotalMissionHours} = wizard
         const {getTimestamp} = liveStore
         return {currentStepBuffer, currentMode, setCurrentStepBuffer,
