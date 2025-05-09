@@ -11,9 +11,14 @@
                 <button form="login-form" class="btn-normal btn-mars" @click="toConfiguration('mars')">MARS</button>
                 <button form="login-form" class="btn-normal btn-biosphere2" @click="toConfiguration('b2')">BIOSPHERE 2</button>
                 <button form="login-form" class="btn-normal" @click="uploadSimData">LOAD SIMULATION DATA</button>
+<<<<<<< HEAD
                 <button class="btn-normal" @click="showSurvey">LEAVE FEEDBACK</button>
                 <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
                         @click="toAce">AGENT EDITOR</button>
+=======
+                <!-- <button :class="{'hidden': !showAgentEditor}" form="login-form" class="btn-normal"
+                        @click="toAce">AGENT EDITOR</button> -->
+>>>>>>> master
                 <button :class="{'hidden': !showLiveMode}" form="login-form" class="btn-normal"
                         @click="toLiveDashboard">LIVE MODE</button>
                 <input id="simDataInputFile" ref="simDataInputFile" type="file"
@@ -48,15 +53,14 @@ export default {
         const {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
         } = storeToRefs(dashboard)
-        const {activeConfigType} = storeToRefs(wizard)
         const {surveyWasPrompted} = storeToRefs(modal)
         const {setSimulationData} = dashboard
         const {setConfiguration, setLiveConfig} = wizard
-        const {alert, showSurvey} = modal
+        const {alert} = modal
         return {
             maxStepBuffer, loadFromSimData, currentMode, kioskMode, parameters, isLive, simLocation,
-            setSimulationData, activeConfigType, setConfiguration, setLiveConfig, surveyWasPrompted,
-            alert, showSurvey,
+            setSimulationData, setConfiguration, setLiveConfig, surveyWasPrompted,
+            alert,
         }
     },
     data() {
@@ -74,17 +78,20 @@ export default {
     methods: {
         // Sends the user to the configuration menu screen. See router.js
         toConfiguration(location) {
-            // menuconfig is currently skipped, we default on Custom config
-            // this.$router.push('menuconfig')
             this.simLocation = location
-            this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
         // Send the user to the ACE Configuration Editor
+<<<<<<< HEAD
         toAce() {
             this.activeConfigType = 'Custom'
             this.$router.push('ace')
         },
+=======
+        // toAce() {
+        //     this.$router.push('ace')
+        // },
+>>>>>>> master
         /** Routes the user to the live Dashboard. The minimum configuration required for any
          *  Dashboard instance to open without error is the min_step_num and a duration object
          *  composed of an 'amount' key-value pairing. Both of these values can be 0, but the

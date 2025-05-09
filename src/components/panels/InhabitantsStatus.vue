@@ -172,7 +172,7 @@ export default {
         attempt_read(func) {
             try {
                 return func()
-            } catch (error) {
+            } catch {
                 return '[loading data...]'
             }
         },

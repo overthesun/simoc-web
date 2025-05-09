@@ -4,8 +4,8 @@
 
 <script>
 import {storeToRefs} from 'pinia'
-import World from '@/threejs/World.vue'
 import {useWizardStore} from '../../store/modules/WizardStore'
+import World from '@/threejs/World.vue'
 
 export default {
     panelTitle: 'Habitat View',

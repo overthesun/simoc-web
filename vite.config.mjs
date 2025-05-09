@@ -1,8 +1,9 @@
+import path from 'path'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
+import eslintPlugin from '@nabla/vite-plugin-eslint'
 import postcssNesting from 'postcss-nesting'
-import path from 'path'
 
 
 // This regex lists the paths that should NOT go to nginx, including
@@ -14,7 +15,7 @@ import path from 'path'
 //   *: the rest are the routers defined in router.js
 // These paths should go to vite, everything else will go to nginx.
 const nginx_paths = ('^/(?!$|@|src|node_modules|favicon\\.ico|' +
-                     'entry|menu|menuconfig|configuration|dashboard|simdata)')
+                     'entry|menu|configuration|dashboard|simdata)')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -37,6 +38,12 @@ export default defineConfig({
         assetsDir: 'static',
     },
     css: {
+        preprocessorOptions: {
+            // this section can probably be removed on Vite 6
+            scss: {
+                api: 'modern',
+            },
+        },
         postcss: {
             plugins: [
                 postcssNesting,
@@ -51,12 +58,15 @@ export default defineConfig({
                 configFile: 'src/sass/components/_variables.scss',
             },
         }),
+        eslintPlugin(),
     ],
     test: {
         globals: true,
         environment: 'happy-dom',
-        deps: {
-            inline: ['vuetify'],
+        server: {
+            deps: {
+                inline: ['vuetify'],
+            },
         },
     },
 })

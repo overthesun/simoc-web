@@ -8,7 +8,7 @@ the list of plants, when the user is in the 'Simulation Configuration' area prio
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
+            <div class="input-description">Select the size of your greenhouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <select ref="greenhouse_type" v-model="greenhouse.type"
                     class="input-field-select" required @change="setGreenhouseHandler">
                 <option value="none" selected>None</option>
@@ -41,7 +41,7 @@ the list of plants, when the user is in the 'Simulation Configuration' area prio
                     <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="removePlantSpecies(index)">
-                    <!-- Deletes the object at the specicied key within the wizard store. -->
+                    <!-- Deletes the object at the specified key within the wizard store. -->
                     <fa-icon :icon="['fa-solid','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>
             </div>
@@ -360,25 +360,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
-    .input-plant-wrapper{
-        display:flex;
-        justify-content:flex-start;
-        align-items:center;
+.input-plant-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.input-field-select{
+    margin-right: 24px;
+}
+
+.plant-row-icon{
+    &:first-of-type{
+        margin-left: auto;
     }
 
-    .input-field-select{
-        margin-right:24px;
-    }
-
-    .plant-row-icon{
-        &:first-of-type{
-            margin-left:auto;
-        }
-
-        margin-right:24px;
-    }
+    margin-right: 24px;
+}
 
 .crop-mgmt-description{
     display: flex;

@@ -5,7 +5,6 @@
         <header class="header">
             <img src="../../assets/simoc-logo.svg" class="simoc-logo">
             <span class="simoc-logo-title">SIMOC</span>
-            <img src="../../assets/natgeo-trans.png" class="natgeo-logo">
         </header>
         <div class="main-options">
             <slot name="option-items" />
@@ -20,6 +19,10 @@
             <a class="link" title="Go to the simoc.space homepage" target="_blank"
                href="https://simoc.space/">
                 SIMOC
+            </a>
+            <a class="link" title="Contact us and leave us feedback" target="_blank"
+               href="https://simoc.space/about/contact/">
+                Contact Us
             </a>
             <a class="link" target="_blank" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
                 Report Bug
@@ -109,20 +112,13 @@ export default {
         display:flex;
         justify-content:center;
         align-items:center;
-        margin-bottom: 32px;
+        margin-bottom: 16px;
     }
 
     .simoc-logo{
         width: auto;
         height: 48px;
         margin-right:8px;
-    }
-
-    .natgeo-logo{
-        width: auto;
-        height: 60px;
-        /* must be at least a full logo away from the rest */
-        margin-left: 48px;
     }
 
     .simoc-logo-title{
@@ -146,11 +142,10 @@ export default {
         position:relative;
     }
 
-    .main-options{
+    .main-options {
         display:flex;
         justify-content:center;
         align-items:center;
-        margin-bottom: 36px;
     }
 
     .entry-button-wrapper{
@@ -170,7 +165,7 @@ export default {
     }
 
     .footer{
-        width: 100%;
+        width: 80%;
         height: 24px;
         min-height:24px;
         display:flex;
@@ -187,7 +182,7 @@ export default {
 <style lang="scss">
     .option-item {
         box-sizing:border-box;
-        margin: 0px 16px;
+        margin: 0 16px 32px;
         font-weight: 600;
         font-size: 24px;
         position: relative;

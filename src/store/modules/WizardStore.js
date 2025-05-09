@@ -6,12 +6,6 @@ export const useWizardStore = defineStore('WizardStore', {
         dashboard: useDashboardStore(),
         // stores the configuration values
         configuration: {},
-        // the type of configuration being used (e.g. Guided, Custom)
-        activeConfigType: null,
-        // the index of the currently-selected form
-        activeFormIndex: 0,
-        // array of component names used within the ConfigurationView. Used to display by index
-        formOrder: ['Initial', 'Inhabitants', 'ECLSS', 'Greenhouse', 'Energy', 'Finalize'],
         // which window on the reference side is active
         activeReference: 'Layout',  // see also resetConfigDefault below
         // which entry is currently active within the reference
@@ -98,7 +92,7 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         mars_presets: {
             one_human: {
-                name: '1 Human',
+                name: '1 Human + ECLSS',
                 simdata_file: 'simoc-simdata-1-human-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 10, units: 'day'},
@@ -112,7 +106,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: '', amount: ''}],
             },
             one_human_radish: {
-                name: '1 Human + Radish',
+                name: '1 Human + ECLSS + Radish',
                 simdata_file: 'simoc-simdata-1-human-radish-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 30, units: 'day'},
@@ -126,7 +120,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: 'radish', amount: 40}],
             },
             four_humans: {
-                name: '4 Humans',
+                name: '4 Humans + ECLSS',
                 simdata_file: 'simoc-simdata-4-human-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 10, units: 'day'},
@@ -140,7 +134,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 plantSpecies: [{type: '', amount: ''}],
             },
             four_humans_garden: {
-                name: '4 Humans + Garden',
+                name: '4 Humans + ECLSS + Garden',
                 simdata_file: 'simoc-simdata-4-human-garden-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 100, units: 'day'},
@@ -161,7 +155,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 ],
             },
             sam_one_human_garden: {
-                name: 'SAM: 1 Human + Garden',
+                name: 'SAM: 1 Human + ECLSS + Garden',
                 simdata_file: 'simoc-simdata-sam-1-human-garden-preset.json',
                 location: 'mars',
                 duration: {type: 'none', amount: 100, units: 'day'},
@@ -340,8 +334,6 @@ export const useWizardStore = defineStore('WizardStore', {
     getters: {
         // This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
-        getActiveForm: state => state.formOrder[state.activeFormIndex],
-
         getTotalMissionHours(state) {
             let totalHours = 0
             const durationLength = state.configuration.duration.amount
@@ -519,7 +511,6 @@ export const useWizardStore = defineStore('WizardStore', {
         },
         resetConfigDefault(location) {
             this.configuration = this.getDefaultPreset(location)
-            this.activeFormIndex = 0
             this.activeReference = location === 'mars' ? 'Layout' : 'Reference'
             this.activeRefEntry = 'Welcome'
         },

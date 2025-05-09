@@ -147,7 +147,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../sass/components/configuration-input';
+@use '../../sass/components/configuration-input';
 
 .question{
     display: flex;
@@ -183,5 +183,4 @@ export default {
 #menu-buttons{
     margin-top: 32px;
 }
-
 </style>

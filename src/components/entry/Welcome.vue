@@ -77,7 +77,6 @@ to the entry screens to prevent this from popping up on repeat vistors.
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
-import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -86,17 +85,14 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const wizard = useWizardStore()
         const {kioskMode} = storeToRefs(dashboard)
-        const {activeConfigType} = storeToRefs(wizard)
-        return {kioskMode, activeConfigType}
+        return {kioskMode}
     },
     methods: {
         toLogin() {
             this.$router.push('entry')
         },
         toConfiguration() {
-            this.activeConfigType = 'Custom'
             this.$router.push('configuration')
         },
     },

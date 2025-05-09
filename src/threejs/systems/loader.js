@@ -23,7 +23,6 @@ class Loader {
     }
 
     async loadModel(assetName, place) {
-        // eslint-disable-next-line prefer-template
         const asset = await import(`../../assets/models/${assetName}.glb`)
         let model = await this.loader.loadAsync(asset.default)
         model = model.scene
@@ -72,7 +71,6 @@ class Loader {
         return model
     }
 
-    // eslint-disable-next-line class-methods-use-this
     clearCache(layout) {
         // Remove items from cache which are not part of current layout
         // Technically it doesn't need to be a method of loader as it doesn't
