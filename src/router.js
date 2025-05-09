@@ -26,15 +26,6 @@ export default createRouter({
                 },
             ],
         },
-<<<<<<< HEAD
-        {
-            path: '/menuconfig',
-            name: 'menuconfig',
-            component: () => import('@/components/entry/MenuConfig.vue'),
-        },
-=======
-        /*
->>>>>>> master
         {
             path: '/ace',
             name: 'ACE',
