@@ -77,16 +77,9 @@ export default {
             this.$router.push('configuration')
         },
         // Send the user to the ACE Configuration Editor
-<<<<<<< HEAD
         toAce() {
-            this.activeConfigType = 'Custom'
             this.$router.push('ace')
         },
-=======
-        // toAce() {
-        //     this.$router.push('ace')
-        // },
->>>>>>> master
         /** Routes the user to the live Dashboard. The minimum configuration required for any
          *  Dashboard instance to open without error is the min_step_num and a duration object
          *  composed of an 'amount' key-value pairing. Both of these values can be 0, but the
