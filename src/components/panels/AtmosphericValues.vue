@@ -6,7 +6,6 @@
 
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {CardList} from '../basepanel'
 
@@ -17,9 +16,7 @@ export default {
     },
     modes: ['sim'],
     setup() {
-        const dashboard = useDashboardStore()
-        const {currentStepBuffer, gameConfig} = storeToRefs(dashboard)
-        const {getData} = dashboard
+        const {currentStepBuffer, gameConfig, getData} = useDashboardStore()
         return {currentStepBuffer, getData, gameConfig}
     },
     data() {

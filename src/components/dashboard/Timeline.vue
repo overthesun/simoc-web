@@ -18,15 +18,12 @@ import {useWizardStore} from '../../store/modules/WizardStore'
 
 export default {
     setup() {
-        const dashboard = useDashboardStore()
         const wizard = useWizardStore()
         const {
             isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, isLive,
-        } = storeToRefs(dashboard)
-        const {
             initTimer, pauseTimer, startTimer, setCurrentStepBuffer,
             setStepInterval,
-        } = dashboard
+        } = useDashboardStore()
         const {getTotalMissionHours} = storeToRefs(wizard)
         return {
             isTimerRunning, timerId, currentStepBuffer, maxStepBuffer, isLive,

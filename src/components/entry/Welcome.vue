@@ -75,7 +75,6 @@ to the entry screens to prevent this from popping up on repeat vistors.
 </template>
 
 <script>
-import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
 import {BaseEntry} from '../base'
 
@@ -84,8 +83,7 @@ export default {
         BaseEntry,
     },
     setup() {
-        const dashboard = useDashboardStore()
-        const {kioskMode} = storeToRefs(dashboard)
+        const {kioskMode} = useDashboardStore()
         return {kioskMode}
     },
     methods: {
