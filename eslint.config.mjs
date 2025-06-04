@@ -18,6 +18,13 @@ export default [
     js.configs.recommended,
     ...pluginVue.configs['flat/recommended'],
     {
+        languageOptions: {
+            globals: {
+                document: true,
+                window: true,
+                console: true,
+            },
+        },
         rules: {
 
             // SPACING
