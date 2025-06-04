@@ -12,6 +12,7 @@
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import vitest from '@vitest/eslint-plugin'
+import globals from 'globals'
 
 
 export default [
@@ -20,9 +21,7 @@ export default [
     {
         languageOptions: {
             globals: {
-                document: true,
-                window: true,
-                console: true,
+                ...globals.browser,
             },
         },
         rules: {
