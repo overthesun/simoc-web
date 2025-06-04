@@ -48,7 +48,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <v-btn-menu @click="toLogin">PROCEED</v-btn-menu>
+                <v-btn-menu @click="toLiveDashboard">PROCEED</v-btn-menu>
             </template>
         </BaseEntry>
         <!-- Kiosk Mode -->
@@ -77,6 +77,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -85,15 +86,20 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {kioskMode} = storeToRefs(dashboard)
-        return {kioskMode}
+        const wizard = useWizardStore()
+        const {currentMode, parameters, kioskMode, simLocation} = storeToRefs(dashboard)
+        const {setLiveConfig} = wizard
+        return {currentMode, parameters, kioskMode, simLocation, setLiveConfig}
     },
     methods: {
-        toLogin() {
-            this.$router.push('entry')
-        },
         toConfiguration() {
             this.$router.push('configuration')
+        },
+        toLiveDashboard() {
+            this.currentMode = 'live'  // set 'live' mode
+            this.parameters = {min_step_num: 0}  // create min_step_num parameter
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
+            this.$router.push('dashboard')
         },
     },
 }
