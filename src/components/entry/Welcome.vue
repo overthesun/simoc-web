@@ -84,6 +84,7 @@ export default {
             this.$router.push('configuration')
         },
         toLiveDashboard() {
+        // duplicated in Menu.vue and Login.vue
             this.currentMode = 'live'  // set 'live' mode
             this.parameters = {min_step_num: 0}  // create min_step_num parameter
             this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
