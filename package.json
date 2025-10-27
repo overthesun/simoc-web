@@ -41,7 +41,7 @@
     "eslint": "^9.38.0",
     "eslint-plugin-vue": "^10.5.1",
     "globals": "^16.4.0",
-    "happy-dom": "^20.0.5",
+    "happy-dom": "^20.0.8",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.93.2",
     "vitest": "^3.2.4"
