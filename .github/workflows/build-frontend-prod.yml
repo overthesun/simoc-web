@@ -17,7 +17,7 @@ jobs:
       NODE_OPTIONS: '--max-old-space-size=3584'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node Environment
         uses: actions/setup-node@v6
         with:
