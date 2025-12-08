@@ -160,7 +160,7 @@ export const useWizardStore = defineStore('WizardStore', {
                 location: 'mars',
                 duration: {type: 'none', amount: 100, units: 'day'},
                 humans: {type: 'human_agent', amount: 1, units: ''},
-                food: {type: 'food_storage', amount: 300, units: 'kg'},
+                food: {type: 'food_storage', amount: 50, units: 'kg'},
                 crewQuarters: {type: 'crew_habitat_sam', amount: 1, units: ''},
                 eclss: {type: 'eclss', amount: 1, units: ''},
                 powerGeneration: {type: 'solar_pv_array_mars', amount: 100, units: ''},
