@@ -56,6 +56,7 @@ import {parseData} from '../../javascript/parseData'
 export const useDashboardStore = defineStore('DashboardStore', {
     state: () => ({
         // Game Management
+        gameId: null,
         currentMode: '',  // either 'sim' or 'live'
         kioskMode: false,  // if true, enable kiosk mode
         simLocation: 'mars',
