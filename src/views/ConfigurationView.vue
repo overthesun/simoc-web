@@ -219,8 +219,8 @@ export default {
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
-                        const preset = presets[preset_name]
-                        this.validateSimdataConfiguration(configuration, preset, preset_name)
+                        const store_config = presets[preset_name]
+                        this.validateSimdataConfiguration(configuration, store_config, preset_name)
                         this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData(simdata)
                         this.currentMode = 'sim'
