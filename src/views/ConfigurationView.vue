@@ -15,6 +15,7 @@
                             <ECLSS ref="eclss" />
                             <Greenhouse ref="greenhouse" />
                             <Energy v-if="simLocation === 'mars'" ref="energy" />
+                            <CustomAgents ref="customAgents" />
                             <!--
                             This works, but breaks the $refs (i.e. this.$refs works, but not this.$refs.component.$refs)
                             <component :is="formName" v-for="formName in forms" :ref="formName.toLowerCase()" />
@@ -49,7 +50,8 @@ import {useWizardStore} from '../store/modules/WizardStore'
 import {useModalStore} from '../store/modules/ModalStore'
 import {TheTopBar} from '../components/bars'
 import {ConfigurationMenu, Presets, Initial, Inhabitants, ECLSS,
-        Greenhouse, Energy, Reference, Graphs, Layout} from '../components/configuration'
+        Greenhouse, Energy, Reference, Graphs, Layout,
+        CustomAgents} from '../components/configuration'
 import {idleMixin} from '../javascript/mixins'
 import b2Url from '@/assets/b2-bg.jpg'
 import marsUrl from '@/assets/mars-bg.jpg'
@@ -67,6 +69,7 @@ export default {
         Reference,
         Graphs,
         Layout,
+        CustomAgents,
     },
     mixins: [idleMixin],
     setup() {
@@ -179,7 +182,9 @@ export default {
             // load cached simdata if the user selects a preset
             const presets = this.getPresets(this.simLocation)
             const preset_name = this.$refs.presets.$refs.preset_dropdown.value
+            let preset_in_use = false
             if (preset_name in presets) {
+                preset_in_use = true
                 let data
                 try {
                     if (this.simLocation === 'b2') {
@@ -218,6 +223,31 @@ export default {
                 // the store will also validate it and throw errors if it's invalid
                 configParams = {step_num: this.getTotalMissionHours,
                                 game_config: this.getFormattedConfiguration}
+                // Inject custom agents
+                if (!preset_in_use) {
+                    let customAgents = localStorage.getItem('customAgents')
+                    let customCurrencies = localStorage.getItem('customCurrencies')
+                    if ((customAgents != null) && (Object.keys(customAgents).length>0)) {
+                        customAgents = JSON.parse(customAgents)
+                        // Add custom agents to config
+                        const agentNames = Object.keys(customAgents)
+                        for (let index=0; index<agentNames.length; ++index) {
+                            const name = (agentNames[index])
+                            configParams.game_config[name]=customAgents[name]
+                        }
+                    }
+                    if ((customCurrencies != null) && (Object.keys(customCurrencies).length>0)) {
+                        customCurrencies = JSON.parse(customCurrencies)
+                        configParams.game_config.currencies = {}
+                        // Add custom currencies to config
+                        const currencyNames = Object.keys(customCurrencies)
+                        for (let index=0; index<currencyNames.length; ++index) {
+                            const name = (currencyNames[index])
+                            configParams.game_config.currencies[name]=customCurrencies[name]
+                        }
+                    }
+                    console.log(configParams)
+                }
             } catch (err_msg) {
                 this.alert(err_msg)
                 return  // abort if there are any errors

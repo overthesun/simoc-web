@@ -1,3 +1,6 @@
+/* This component establishes the user interface for configuring the greenhouse, including
+the list of plants, when the user is in the 'Simulation Configuration' area prior to pressing
+'Launch Simulation' button */
 <template>
     <div>
         <label v-if="simLocation === 'mars'" class="input-wrapper">
@@ -5,7 +8,7 @@
                 Greenhouse <fa-icon :icon="['fa-solid','circle-info']" />
             </div> <!-- On click make the value the active entry on the reference. Set the wiki as active.-->
 
-            <div class="input-description">Select the size of your greenouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
+            <div class="input-description">Select the size of your greenhouse. See <a class="reference-link" href="#" @click="activeReference = 'Graphs'">graph at right</a>.</div>
             <select ref="greenhouse_type" v-model="greenhouse.type"
                     class="input-field-select" required @change="setGreenhouseHandler">
                 <option value="none" selected>None</option>
@@ -38,7 +41,7 @@
                     <fa-icon :icon="['fa-solid','circle-plus']" />
                 </fa-layers>
                 <fa-layers class="fa-2x plant-row-icon icon-trash" @click="removePlantSpecies(index)">
-                    <!-- Deletes the object at the specicied key within the wizard store. -->
+                    <!-- Deletes the object at the specified key within the wizard store. -->
                     <fa-icon :icon="['fa-solid','trash']" mask="circle" transform="shrink-7" />
                 </fa-layers>
             </div>
@@ -81,10 +84,10 @@ export default {
     data() {
         return {
             // Initialize the localized variables used for v-model
-            greenhouse: undefined,
-            plantSpecies: undefined,
-            plantValue: [],
-            plantFormatted: [],
+            greenhouse: undefined, // Used in the v-model for selection of greenhouse.type
+            plantSpecies: undefined, // Used in the v-model to specify sent plant data, including amount
+            plantValue: [], // This list corresponds to the values for the list of config plants
+            plantFormatted: [], // The formatted list of plants to display in the user drop down
             plantMax: [],  // the max m2 for each plant species to fit in the greenhouse
             plant_selects: {},  // map index -> <select> for the plant type dropdown
             plant_inputs: {},  // map index -> <input> for the plant amount
@@ -181,7 +184,7 @@ export default {
             //const indexType = plantSpecies[index].type
 
             let selectedValues = plantSpecies.splice(index,1)
-            return false;
+            return false
         },
 
         // This method should have returned a list of all plant values
@@ -231,16 +234,12 @@ export default {
         // of similar route calls. Simply to reduce the callback hell look.
         retrievePlantSpecies() {
             axios.defaults.withCredentials = true
-
             const params = {agent_class: 'plants'}
-
             axios.get('/get_agent_types', {params}).then(response => {
                 if (response.status === 200) {
                     response.data.forEach(item => {
                         const {name} = item
-                        this.plantValue.push(name)
-                        // console.log(this.formatPlantName(name))
-                        this.formatPlantName(name)
+                        this.listPlant(name)
                     })
                 }
             }).catch(error => {
@@ -249,6 +248,20 @@ export default {
                     console.log('Plant retrieval error')
                 }
             })
+            // Get plants from local data
+            let customAgents = localStorage.getItem('customAgents')
+            if (customAgents == null) return
+            customAgents = JSON.parse(customAgents)
+            const agentNames = Object.keys(customAgents)
+            for (let index=0; index<agentNames.length; ++index) {
+                const name = (agentNames[index])
+                if (customAgents[name].agent_class === 'plants') this.listPlant(name)
+            }
+        },
+        listPlant(name) {
+            // Add the plant to the menu list
+            this.plantValue.push(name)
+            this.formatPlantName(name)
         },
         updateAndValidate() {
             // validate and update greenhouse type
