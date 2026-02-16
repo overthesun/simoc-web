@@ -13,30 +13,18 @@ to the entry screens to prevent this from popping up on repeat vistors.
         <BaseEntry v-if="!kioskMode">
             <template #entry-main>
                 <div class="welcome-wrapper">
-                    <p class="welcome-title">WELCOME TO SIMOC</p>
+                    <p class="welcome-title">WELCOME TO SIMOC Live</p>
 
-                    <p>SIMOC is a Scalable, Interactive Model of an Off-world Community.</p>
+                    <p>SIMOC Live is a real-time environmental monitoring system for space habitat analogs.</p>
 
-                    <p>Through the SIMOC web interface you will configure and then test a Mars
-                        habitat of your design. You will select food rations, life support,
-                        solar panels and batteries, crew quarters and greenhouse, and plants to
-                        clean the air and provide food. Set your model in motion and learn if
-                        your astronauts make it ... or not! As an iterative research tool, SIMOC
-                        encourages you to make adjustments and try again until you find the
-                        right combination to sustain your mission on Mars.</p>
+                    <p>Through the SIMOC Live interface, you will have access to real-time data collected from
+                        environmental sensors in space habitat analogs. The system continuously monitors critical
+                        atmospheric components including CO2 levels, relative humidity, temperature, pressure, and
+                        volatile organic compounds (VOCs). Originally developed for SAM (Space Analog for the Moon and Mars)
+                        at the University of Arizona's Biosphere 2, this system helps validate habitat simulation models
+                        with real-world data.</p>
 
-                    <p>In using SIMOC, no personal information will be stored or used by SIMOC
-                        or its developer Over the Sun, LLC. Login information is required only
-                        for the creation of user sessions, storing user settings, and holding
-                        session data. The server may be reset from time to time, so be certain
-                        to download your preferred configurations and simulation data.</p>
-
-                    <p>If you experience a bug while using SIMOC, please submit a report to
-                        <a class="link" href="mailto:bugs@simoc.space?subject=SIMOC%20Bug%3A%20">
-                            bugs@simoc.space</a> with a complete description, including what you were
-                        doing prior to the issue.</p>
-
-                    <p>To learn more about SIMOC, enjoy tutorials, and download classroom
+                    <p>To learn more about SIMOC and SIMOC Live, enjoy tutorials, and download classroom
                         curricula visit: <a class="link" target="_blank" href="https://simoc.space/">
                             simoc.space</a></p>
 
@@ -48,7 +36,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
             </template>
 
             <template #entry-button>
-                <v-btn-menu @click="toLogin">PROCEED</v-btn-menu>
+                <v-btn-menu @click="toLiveDashboard">PROCEED</v-btn-menu>
             </template>
         </BaseEntry>
         <!-- Kiosk Mode -->
@@ -77,6 +65,7 @@ to the entry screens to prevent this from popping up on repeat vistors.
 <script>
 import {storeToRefs} from 'pinia'
 import {useDashboardStore} from '../../store/modules/DashboardStore'
+import {useWizardStore} from '../../store/modules/WizardStore'
 import {BaseEntry} from '../base'
 
 export default {
@@ -85,15 +74,21 @@ export default {
     },
     setup() {
         const dashboard = useDashboardStore()
-        const {kioskMode} = storeToRefs(dashboard)
-        return {kioskMode}
+        const wizard = useWizardStore()
+        const {currentMode, parameters, kioskMode, simLocation} = storeToRefs(dashboard)
+        const {setLiveConfig} = wizard
+        return {currentMode, parameters, kioskMode, simLocation, setLiveConfig}
     },
     methods: {
-        toLogin() {
-            this.$router.push('entry')
-        },
         toConfiguration() {
             this.$router.push('configuration')
+        },
+        toLiveDashboard() {
+        // duplicated in Menu.vue and Login.vue
+            this.currentMode = 'live'  // set 'live' mode
+            this.parameters = {min_step_num: 0}  // create min_step_num parameter
+            this.setLiveConfig({duration: {amount: 0}}, this.simLocation)  // set duration in wizard store
+            this.$router.push('dashboard')
         },
     },
 }
