@@ -2,13 +2,8 @@
     <v-app>
         <v-main class="bg">
             <div class="app">
-                <div class="orientation-portrait">
-                    <img src="./assets/orientation.svg" class="orientation-logo">
-                </div>
-                <div class="normal orientation-landscape">
-                    <ModalWindow />
-                    <router-view />
-                </div>
+                <ModalWindow />
+                <router-view />
             </div>
         </v-main>
     </v-app>
@@ -44,28 +39,13 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
     background-color: #1e1e1e;
   }
 
-  .orientation-portrait{
-    display:none;
-  }
 
-  .orientation-landscape{
-    display:block;
-  }
-
-  .orientation-logo{
-    width: 256px;
-    height: auto;
-  }
-
-   .app{
+  .app {
     width: 100vw;
     height: 100vh;
-    min-width: 600px;
-    //position: relative;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .v-application {
@@ -75,21 +55,7 @@ import ModalWindow from '@/components/menu/ModalWindow.vue'
   .v-btn.v-btn--menu {
     font-family: sans-serif !important;
     cursor: pointer;
-}
-
-   @media all and (orientation: portrait){
-    .orientation-portrait{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(#1e1e1e,.75);
-    }
-
-    .orientation-landscape{
-      display:none;
-    }
   }
+
 
 </style>

@@ -15,18 +15,17 @@ export default {
 
 <style lang="scss" scoped>
 .base-entry-wrapper{
-    position:relative;
-    width: 480px;
-    height: 600px;
+    position: relative;
+    width: 95%;
+    height: 95%;
+    max-width: 480px;
     max-height: 600px;
+    margin: 0 auto;
     background-color: #1e1e1eaa;
     border: 1px solid #666;
     border-radius: 5px;
-
-    box-sizing:border-box;
+    box-sizing: border-box;
     padding: 16px;
-
-    overflow:hidden;
 }
 
 
