@@ -165,7 +165,7 @@ export default {
     }
 
     .footer{
-        width: 80%;
+        width: 90%;
         height: 24px;
         min-height:24px;
         display:flex;
