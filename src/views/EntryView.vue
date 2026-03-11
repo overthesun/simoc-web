@@ -26,6 +26,7 @@ export default {
     border-radius: 5px;
     box-sizing: border-box;
     padding: 16px;
+    overflow: hidden;
 }
 
 
