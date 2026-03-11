@@ -93,7 +93,7 @@ export default {
     box-sizing: border-box;
     background: linear-gradient(#444, #333);
 
-    @media (max-width: 850px) {
+    @media (max-width: 400px) {
         /* use two rows on narrow screens, controls on top, scrubber below */
         flex-wrap: wrap;
         height: auto;
