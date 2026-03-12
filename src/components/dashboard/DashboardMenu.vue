@@ -10,6 +10,9 @@ use some of these features.
         <template v-if="!kioskMode" #menu-buttons>
             <button @click="toConfiguration">New Simulation</button>
             <!--<button @click="stopSimulation">Stop Simulation</button>-->
+            <button v-if="isMobileDevice()" @click="toggleFullscreen">
+                {{ isFullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen' }}
+            </button>
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
             <button @click="resetPanelsLayout">Reset Panels Layout</button>
@@ -35,6 +38,7 @@ export default {
     components: {
         BaseMenu,
     },
+    inject: ['isMobileDevice', 'isFullscreen', 'toggleFullscreen'],
     setup() {
         const dashboard = useDashboardStore()
         const wizard = useWizardStore()
