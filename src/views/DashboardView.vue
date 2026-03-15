@@ -21,6 +21,14 @@ import marsUrl from '@/assets/mars-bg.jpg'
 export default {
     mixins: [idleMixin],
 
+    provide() {
+        return {
+            isMobileDevice: () => this.isMobileDevice,
+            isFullscreen: () => this.isFullscreen,
+            toggleFullscreen: this.toggleFullscreen,
+        }
+    },
+
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
         // This might happen when the user starts a new sim or logs off,
@@ -96,14 +104,6 @@ export default {
         }
     },
 
-    provide() {
-        return {
-            isMobileDevice: () => this.isMobileDevice,
-            isFullscreen: () => this.isFullscreen,
-            toggleFullscreen: this.toggleFullscreen,
-        }
-    },
-
     data() {
         return {
             socket: null,  // the websocket used to get the steps
@@ -116,11 +116,9 @@ export default {
             // check if device is mobile based on screen width or touch support
             return window.innerWidth <= 850 || navigator.maxTouchPoints > 0
         },
-    },
 
-    computed: {
-        // Returns the imported static urls for the page backgrounds of mars and earth
         bgImage() {
+            // return the imported static urls for the page backgrounds of mars and earth
             if (this.simLocation === 'b2') {
                 return b2Url
             } else {

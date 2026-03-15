@@ -11,7 +11,7 @@ use some of these features.
             <button @click="toConfiguration">New Simulation</button>
             <!--<button @click="stopSimulation">Stop Simulation</button>-->
             <button v-if="isMobileDevice()" @click="toggleFullscreen">
-                {{ isFullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen' }}
+                {{isFullscreen() ? 'Exit Fullscreen' : 'Enter Fullscreen'}}
             </button>
             <button @click="downloadSimData">Download Simulation Data</button>
             <button @click="savePanelsLayout">Save Panels Layout</button>
