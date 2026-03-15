@@ -21,6 +21,14 @@ import marsUrl from '@/assets/mars-bg.jpg'
 export default {
     mixins: [idleMixin],
 
+    provide() {
+        return {
+            isMobileDevice: this.isMobileDevice,
+            isFullscreen: this.isFullscreen,
+            toggleFullscreen: this.toggleFullscreen,
+        }
+    },
+
     beforeRouteLeave(to, from, next) {
         // Triggered when leaving the dashboard to go to another page.
         // This might happen when the user starts a new sim or logs off,
@@ -103,8 +111,8 @@ export default {
     },
 
     computed: {
-        // Returns the imported static urls for the page backgrounds of mars and earth
         bgImage() {
+            // return the imported static urls for the page backgrounds of mars and earth
             if (this.simLocation === 'b2') {
                 return b2Url
             } else {
@@ -192,6 +200,9 @@ export default {
     mounted() {
         // add keyboard shortcuts -- see the keyListener method below
         window.addEventListener('keydown', this.keyListener)
+        // request fullscreen on mobile to hide browser UI
+        this.enterFullscreen()
+        window.addEventListener('orientationchange', this.enterFullscreen)
     },
 
     beforeUnmount() {
@@ -204,13 +215,16 @@ export default {
         }
         // disconnect and destroy the websocket
         this.tearDownWebSocket()
+        this.exitFullscreen()
         // remove these if when we leave the dashboard
         window.removeEventListener('beforeunload', this.confirmBeforeLeaving)
         window.removeEventListener('unload', this.killGameOnUnload)
         window.removeEventListener('keydown', this.keyListener)
+        window.removeEventListener('orientationchange', this.enterFullscreen)
     },
 
     methods: {
+
         setupWebsocket() {
             const socket = io()
             this.socket = socket
@@ -395,6 +409,40 @@ export default {
             const status = navigator.sendBeacon('/kill_game', JSON.stringify(params))
             if (status) {
                 console.log('Simulation terminated.')
+            }
+        },
+
+        isMobileDevice() {
+            // check if device is mobile based on screen width or touch support
+            return window.innerWidth <= 850 || navigator.maxTouchPoints > 0
+        },
+
+        isFullscreen() {
+            // check if currently in fullscreen mode
+            return !!document.fullscreenElement
+        },
+
+        enterFullscreen() {
+            // enable fullscreen on mobile to hide browser UI (e.g. address bar)
+            if (this.isFullscreen() || !this.isMobileDevice()) {
+                return  // skip if already in fullscreen or not on mobile
+            }
+            document.documentElement.requestFullscreen?.().catch(err => {
+                console.log('Fullscreen not supported:', err.message)
+            })
+        },
+
+        exitFullscreen() {
+            if (this.isFullscreen()) {
+                document.exitFullscreen?.()
+            }
+        },
+
+        toggleFullscreen() {
+            if (this.isFullscreen()) {
+                this.exitFullscreen()
+            } else {
+                this.enterFullscreen()
             }
         },
 
