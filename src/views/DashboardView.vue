@@ -23,8 +23,8 @@ export default {
 
     provide() {
         return {
-            isMobileDevice: () => this.isMobileDevice,
-            isFullscreen: () => this.isFullscreen,
+            isMobileDevice: this.isMobileDevice,
+            isFullscreen: this.isFullscreen,
             toggleFullscreen: this.toggleFullscreen,
         }
     },
@@ -107,16 +107,10 @@ export default {
     data() {
         return {
             socket: null,  // the websocket used to get the steps
-            isFullscreen: false,  // track fullscreen state
         }
     },
 
     computed: {
-        isMobileDevice() {
-            // check if device is mobile based on screen width or touch support
-            return window.innerWidth <= 850 || navigator.maxTouchPoints > 0
-        },
-
         bgImage() {
             // return the imported static urls for the page backgrounds of mars and earth
             if (this.simLocation === 'b2') {
@@ -209,8 +203,6 @@ export default {
         // request fullscreen on mobile to hide browser UI
         this.enterFullscreen()
         window.addEventListener('orientationchange', this.enterFullscreen)
-        document.addEventListener('fullscreenchange', this.updateFullscreenState)
-        this.updateFullscreenState()
     },
 
     beforeUnmount() {
@@ -229,10 +221,10 @@ export default {
         window.removeEventListener('unload', this.killGameOnUnload)
         window.removeEventListener('keydown', this.keyListener)
         window.removeEventListener('orientationchange', this.enterFullscreen)
-        document.removeEventListener('fullscreenchange', this.updateFullscreenState)
     },
 
     methods: {
+
         setupWebsocket() {
             const socket = io()
             this.socket = socket
@@ -420,9 +412,19 @@ export default {
             }
         },
 
+        isMobileDevice() {
+            // check if device is mobile based on screen width or touch support
+            return window.innerWidth <= 850 || navigator.maxTouchPoints > 0
+        },
+
+        isFullscreen() {
+            // check if currently in fullscreen mode
+            return !!document.fullscreenElement
+        },
+
         enterFullscreen() {
             // enable fullscreen on mobile to hide browser UI (e.g. address bar)
-            if (this.isFullscreen || !this.isMobileDevice) {
+            if (this.isFullscreen() || !this.isMobileDevice()) {
                 return  // skip if already in fullscreen or not on mobile
             }
             document.documentElement.requestFullscreen?.().catch(err => {
@@ -431,21 +433,17 @@ export default {
         },
 
         exitFullscreen() {
-            if (this.isFullscreen) {
+            if (this.isFullscreen()) {
                 document.exitFullscreen?.()
             }
         },
 
         toggleFullscreen() {
-            if (this.isFullscreen) {
+            if (this.isFullscreen()) {
                 this.exitFullscreen()
             } else {
                 this.enterFullscreen()
             }
-        },
-
-        updateFullscreenState() {
-            this.isFullscreen = !!document.fullscreenElement
         },
 
         keyListener(e) {
