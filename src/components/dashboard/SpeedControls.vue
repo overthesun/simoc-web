@@ -62,5 +62,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+#speed-controls {
+    @media (max-width: 850px) {
+        /* on narrow screens, hide the speed controls */
+        display: none;
+    }
+}
 </style>

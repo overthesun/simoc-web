@@ -30,7 +30,7 @@ export default {
     display: grid;
     grid-template-columns: minmax(0px,1fr) 50px;
     background: linear-gradient(#333, #444);
-    padding: 0 16px;
+    padding: 0 8px;
 }
 #logo-wrapper {
     display: flex;
