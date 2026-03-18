@@ -11,17 +11,17 @@ fi
 
 echo '* Updating/downloading simdata/models/skybox files...'
 cd public
-wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
+wget -r -q --timestamping -erobots=off -nH --cut-dirs=1 --no-parent \
     --accept="*.gz" \
     https://simoc.space/download/simdata/
-echo '* Simdata files downloaded to <public/simdata>'
+echo '* Simdata files downloaded/updated in <public/simdata>'
 cd ..
 cd src/assets
-wget -c -r -erobots=off -q -nH --cut-dirs=1 --no-parent \
+wget -r -q --timestamping -erobots=off -nH --cut-dirs=1 --no-parent \
     --accept="*.glb,*.jpg" \
     https://simoc.space/download/models/ \
     https://simoc.space/download/skybox/
-echo '* Models and skybox files downloaded to <src/assets>'
+echo '* Models and skybox files downloaded/updated in <src/assets>'
 cd ../..
 
 echo '* To start the dev server use: npm run dev'

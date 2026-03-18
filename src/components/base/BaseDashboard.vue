@@ -77,6 +77,11 @@ export default {
     min-height: 100vh;
     display: grid;
     grid-template-rows: 50px minmax(0px,1fr) 50px;
+
+    @media (max-width: 850px) {
+        /* allow footer to expand vertically on two rows */
+        grid-template-rows: 50px minmax(0px,1fr) auto;
+    }
 }
 
 #footer-wrapper {
@@ -87,6 +92,14 @@ export default {
     align-items: center;
     box-sizing: border-box;
     background: linear-gradient(#444, #333);
+
+    @media (max-width: 400px) {
+        /* use two rows on narrow screens, controls on top, scrubber below */
+        flex-wrap: wrap;
+        height: auto;
+        padding: 4px 0;
+        row-gap: 4px;
+    }
 }
 
 #dashboard-live-text div {

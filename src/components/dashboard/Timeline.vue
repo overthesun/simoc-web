@@ -129,6 +129,14 @@ export default {
         grid-template-columns: auto 1fr auto;
         margin: 8px 0px;
         position:relative;
+
+        @media (max-width: 400px) {
+            /* on narrow screens, move to second row and take 90% width */
+            width: 90%;
+            order: 10; /* push to end to wrap on the second row */
+            margin: 0;
+            grid-template-columns: auto;
+        }
     }
 
 
@@ -152,6 +160,11 @@ export default {
         outline:none;
         background:transparent;
         background-repeat:no-repeat;
+
+        @media (max-width: 400px) {
+            /* on narrow screens, scrubber takes whole second row width */
+            width: 100%;
+        }
     }
 
     .live-timeline:hover::-webkit-slider-thumb, .live-timeline:hover::-moz-range-thumb{

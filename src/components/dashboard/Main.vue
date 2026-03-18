@@ -206,6 +206,13 @@ export default {
         grid-row-gap: 16px;
         grid-column-gap: 16px;
         overflow: auto;
+
+        @media (max-width: 850px) {
+            /* on narrow screens, show panels on a single column */
+            grid-template-columns: 1fr;
+            padding: 8px;
+            grid-row-gap: 8px;
+        }
     }
     /* force specific layouts when there are few panels */
     .dashboard-1x1 {
