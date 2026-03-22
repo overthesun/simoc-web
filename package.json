@@ -34,7 +34,7 @@
     "vuetify": "^3.11.8"
   },
   "devDependencies": {
-    "@nabla/vite-plugin-eslint": "^2.0.6",
+    "@nabla/vite-plugin-eslint": "^3.0.1",
     "@pinia/testing": "^1.0.3",
     "@vitest/eslint-plugin": "^1.6.12",
     "@vue/test-utils": "^2.4.6",
