@@ -335,7 +335,7 @@ export const useWizardStore = defineStore('WizardStore', {
         // This method converts the total mission time to hours regardless of the units selected.
         // As one step = one hour.
         getTotalMissionHours(state) {
-            let totalHours = 0
+            let totalHours
             const durationLength = state.configuration.duration.amount
             const durationUnits = state.configuration.duration.units
 

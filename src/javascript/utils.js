@@ -8,7 +8,7 @@ export function StringFormatter(value) {
 
     // replace underscores with spaces and capitalizes the first letter of each word
     // e.g. 'food_ration' -> 'Food Ration'
-    let formatted = ''
+    let formatted
 
     formatted = value.replace(/_/g, ' ')
     formatted = formatted.toLowerCase()

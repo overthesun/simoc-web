@@ -18,7 +18,7 @@ library.add(faPlay, faPause, faBackwardStep, faForwardStep, faMinus, faPlus, faX
 // Gtag/Analytics tracking
 // Beta and NGS have two different tracking ids
 // Tracking is only active in production mode
-let tracking_id = null
+let tracking_id
 if (window.location.hostname.startsWith('beta')) {
     tracking_id = 'G-6M7C80DGTR'  // beta id
 } else {
