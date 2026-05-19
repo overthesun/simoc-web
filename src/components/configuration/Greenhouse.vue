@@ -212,7 +212,7 @@ export default {
         // remove any underscores or dashes and replace them with spaces.
         // TODO: use the function in javascript/utils.js
         formatPlantName(name) {
-            let formatted = ''
+            let formatted
 
             formatted = name.replace(/_/g, ' ')
             formatted = formatted.toLowerCase()
