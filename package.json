@@ -44,7 +44,7 @@
     "globals": "^17.6.0",
     "happy-dom": "^20.9.0",
     "resize-observer-polyfill": "^1.5.1",
-    "sass": "^1.99.0",
+    "sass": "^1.100.0",
     "vitest": "^4.1.7"
   },
   "postcss": {
