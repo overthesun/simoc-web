@@ -37,7 +37,7 @@
     "@eslint/js": "^10.0.1",
     "@nabla/vite-plugin-eslint": "^3.0.1",
     "@pinia/testing": "^1.0.3",
-    "@vitest/eslint-plugin": "^1.6.18",
+    "@vitest/eslint-plugin": "^1.6.19",
     "@vue/test-utils": "^2.4.10",
     "eslint": "^10.4.0",
     "eslint-plugin-vue": "^10.9.1",
