@@ -31,7 +31,7 @@
     "vue": "^3.5.35",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^5.1.0",
-    "vuetify": "^4.0.7"
+    "vuetify": "^4.1.1"
   },
   "devDependencies": {    
     "@eslint/js": "^10.0.1",
