@@ -209,6 +209,10 @@ using v-for to populate all links with the title and the approriate value for th
             <p>The battery holds a maximum of 10,000 kilowatt-hours (kWh).</p>
         </ReferenceItem>
 
+        <ReferenceItem v-if="activeRefEntry === 'CustomAgents'" heading="Custom Agents">
+            <p>For custom agents that are not <a class="reference-link" href="#" @click="setActiveRefEntry('PlantSpecies')">plants</a>, you can specify the quantity here. This could be something like custom electronic devices that consume power. These are user defined agents created by the agent editor.</p>
+        </ReferenceItem>
+
         <div v-if="activeRefEntry === 'Table'">
             <div class="reference-item-title">Table of Contents</div>
             <ul v-if="simLocation === 'mars'">
