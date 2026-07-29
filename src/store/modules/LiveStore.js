@@ -63,16 +63,16 @@ export const useLiveStore = defineStore('LiveStore', {
         },
         /** Sets the timestamp for each bundleNum 'n' and splitting it into a date and
          *  time dict—received with timestamp[n].date and timestamp[n].time.
+         *  The timestamp is received as UTC and converted to local time.
          */
         setTimestamp(value) {
             const {n: bundle_n} = value
             const {timestamp: t} = value
 
-            const dateTime = t.split(' ')
-            this.timestamp[bundle_n - this.initBundleNum] = {
-                date: dateTime[0],
-                time: dateTime[1].split('.')[0],  // Remove milliseconds from time
-            }
+            const local = new Date(t)
+            const date = local.toLocaleDateString('en-CA')  // YYYY-MM-DD
+            const time = local.toLocaleTimeString('en-GB')  // HH:MM:SS
+            this.timestamp[bundle_n - this.initBundleNum] = {date, time}
         },
         /** Sets the data bundles array, pushing all bundles—composed of bundleNum 'n',
          *  readings object, and timestamp—received by the client.

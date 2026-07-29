@@ -10,13 +10,13 @@
     "test": "vitest --dom"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^7.2.0",
-    "@fortawesome/fontawesome-svg-core": "^7.2.0",
-    "@fortawesome/free-solid-svg-icons": "^7.2.0",
-    "@fortawesome/vue-fontawesome": "^3.2.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/vue-fontawesome": "^3.3.2",
     "@json-editor/json-editor": "^2.16.0",
     "@vitejs/plugin-vue": "^6.0.7",
-    "axios": "^1.17.0",
+    "axios": "^1.18.1",
     "chart.js": "^4.5.1",
     "chartjs-plugin-annotation": "^3.1.0",
     "idle-js": "^1.2.0",
@@ -25,27 +25,27 @@
     "pinia": "^3.0.4",
     "postcss-nesting": "^14.0.0",
     "socket.io-client": "^4.8.3",
-    "three": "^0.184.0",
+    "three": "^0.185.1",
     "vite": "^8.0.16",
     "vite-plugin-vuetify": "^2.1.3",
-    "vue": "^3.5.35",
+    "vue": "^3.5.39",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^5.1.0",
-    "vuetify": "^4.1.1"
+    "vuetify": "^4.1.5"
   },
   "devDependencies": {    
     "@eslint/js": "^10.0.1",
     "@nabla/vite-plugin-eslint": "^3.0.1",
     "@pinia/testing": "^1.0.3",
-    "@vitest/eslint-plugin": "^1.6.18",
-    "@vue/test-utils": "^2.4.10",
+    "@vitest/eslint-plugin": "^1.6.20",
+    "@vue/test-utils": "^2.4.11",
     "eslint": "^10.4.1",
     "eslint-plugin-vue": "^10.9.2",
-    "globals": "^17.6.0",
-    "happy-dom": "^20.10.3",
+    "globals": "^17.7.0",
+    "happy-dom": "^20.10.6",
     "resize-observer-polyfill": "^1.5.1",
-    "sass": "^1.100.0",
-    "vitest": "^4.1.8"
+    "sass": "^1.101.0",
+    "vitest": "^4.1.10"
   },
   "postcss": {
     "plugins": {

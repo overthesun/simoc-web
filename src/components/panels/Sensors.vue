@@ -82,7 +82,7 @@ export default {
                 if (reading[0] === sensorId) {
                     Object.entries(reading[1]).forEach(item => {
                         if (item[0] === itemName) {
-                            value = item[1].toFixed(2)
+                            value = item[1]?.toFixed(2) ?? '-'
                         }
                     })
                 }
