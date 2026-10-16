@@ -2,7 +2,7 @@
 
 This is the web frontend for [SIMOC](https://github.com/overthesun/simoc).
 
-![SIMOC Dashboard](https://simoc.space/wp-content/uploads/2020/09/simoc_b2_dashboard.jpg)
+![SIMOC Dashboard](https://simoc.space/wp-content/uploads/2025/06/simoc_b2_dashboard-1920x886-1-1024x473.jpg)
 
 ## Project setup
 
