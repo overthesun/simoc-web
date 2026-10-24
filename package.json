@@ -36,7 +36,7 @@
   "devDependencies": {    
     "@eslint/js": "^10.0.1",
     "@nabla/vite-plugin-eslint": "^3.0.1",
-    "@pinia/testing": "^1.0.3",
+    "@pinia/testing": "^2.0.2",
     "@vitest/eslint-plugin": "^1.6.27",
     "@vue/test-utils": "^2.5.1",
     "eslint": "^10.11.0",
