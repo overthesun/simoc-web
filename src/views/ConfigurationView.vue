@@ -139,6 +139,29 @@ export default {
             }
         },
 
+        validateSimdataConfiguration(configuration, presetDef, presetName) {
+            // Validate that simdata configuration matches the preset definition
+            const mismatchFields = []
+            Object.keys(presetDef).forEach(field => {
+                const configValue = configuration[field]
+                const presetValue = presetDef[field]
+                if (configValue !== undefined && presetValue !== undefined) {
+                    if (JSON.stringify(configValue) !== JSON.stringify(presetValue)) {
+                        mismatchFields.push({field, preset: presetValue, simdata: configValue})
+                    }
+                }
+            })
+            if (mismatchFields.length > 0) {
+                console.error('⚠️ Simdata configuration mismatch detected')
+                console.error(`Preset "${presetName}" differs from simdata file:`)
+                mismatchFields.forEach(({field, preset: p, simdata: s}) => {
+                    console.error(`  ${field}:`)
+                    console.error(`    Preset:  ${JSON.stringify(p)}`)
+                    console.error(`    Simdata: ${JSON.stringify(s)}`)
+                })
+                console.error('The simdata file on the server may need to be updated.')
+            }
+        },
 
         async importPresetData(preset) {
             // import cached simulation data for the preset
@@ -196,6 +219,8 @@ export default {
                 if (data) {
                     try {
                         const {configuration, ...simdata} = data
+                        const store_config = presets[preset_name]
+                        this.validateSimdataConfiguration(configuration, store_config, preset_name)
                         this.setConfiguration(configuration, this.simLocation)
                         this.setSimulationData(simdata)
                         this.currentMode = 'sim'
